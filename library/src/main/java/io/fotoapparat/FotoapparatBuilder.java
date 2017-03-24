@@ -1,6 +1,6 @@
 package io.fotoapparat;
 
-import io.fotoapparat.parameter.Side;
+import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 
@@ -13,7 +13,7 @@ public class FotoapparatBuilder {
         return this;
     }
 
-    public FotoapparatBuilder cameraSide(SelectorFunction<Side> selector) {
+    public FotoapparatBuilder cameraSide(SelectorFunction<LensPosition> selector) {
         return this;
     }
 

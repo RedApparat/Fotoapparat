@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import io.fotoapparat.Fotoapparat;
 
-import static io.fotoapparat.parameter.selector.SideSelectors.front;
+import static io.fotoapparat.parameter.selector.LensPositionSelectors.front;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 
 public class MainActivity extends AppCompatActivity {
