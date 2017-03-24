@@ -1,5 +1,7 @@
 package io.fotoapparat.hardware;
 
+import io.fotoapparat.photo.Photo;
+
 /**
  * Abstraction for camera hardware.
  */
@@ -17,6 +19,6 @@ public interface CameraDevice {
 
 	void updateParameters(Parameters parameters);
 
-	void takePicture(PhotoCallback callback);
+	Photo takePicture();
 
 }
