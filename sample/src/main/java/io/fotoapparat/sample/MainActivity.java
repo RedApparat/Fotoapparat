@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import io.fotoapparat.Fotoapparat;
 
+import static io.fotoapparat.parameter.selector.SideSelectors.front;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 		fotoapparat = Fotoapparat
 				.with(this)
 				.photoSize(biggestSize())
+				.cameraSide(front())
 				.build();
 	}
 
