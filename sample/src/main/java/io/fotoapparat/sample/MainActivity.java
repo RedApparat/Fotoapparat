@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 		fotoapparat = Fotoapparat
 				.with(this)
 				.photoSize(biggestSize())
-				.cameraSide(front())
+				.lensPosition(front())
 				.build();
 	}
 

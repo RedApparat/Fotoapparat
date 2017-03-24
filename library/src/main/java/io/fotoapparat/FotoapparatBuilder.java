@@ -18,7 +18,7 @@ public class FotoapparatBuilder {
         return this;
     }
 
-    public FotoapparatBuilder cameraSide(SelectorFunction<LensPosition> selector) {
+    public FotoapparatBuilder lensPosition(SelectorFunction<LensPosition> selector) {
         return this;
     }
 
