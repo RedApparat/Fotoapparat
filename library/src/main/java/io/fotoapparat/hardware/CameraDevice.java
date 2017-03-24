@@ -1,7 +1,5 @@
 package io.fotoapparat.hardware;
 
-import android.view.View;
-
 /**
  * Abstraction for camera hardware.
  */
@@ -15,7 +13,7 @@ public interface CameraDevice {
 
 	void stopPreview();
 
-	void setDisplaySurface(View displaySurface);
+	void setDisplaySurface(Object displaySurface);
 
 	void updateParameters(Parameters parameters);
 
