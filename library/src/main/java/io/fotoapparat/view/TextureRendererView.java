@@ -52,19 +52,35 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
 
 	private void init() {
 		TextureView textureView = new TextureView(getContext());
+		tryToInitializeSurfaceTexture(textureView);
 
 		addView(textureView);
 	}
 
+	private void tryToInitializeSurfaceTexture(TextureView textureView) {
+		surfaceTexture = textureView.getSurfaceTexture();
+		if (surfaceTexture == null) {
+			textureView.setSurfaceTextureListener(new TextureListener());
+		}
+	}
+
 	@Override
 	public void attachCamera(CameraDevice camera) {
+		awaitSurfaceTexture();
+
+		camera.setDisplaySurface(surfaceTexture);
+	}
+
+	private void awaitSurfaceTexture() {
+		if (surfaceTexture != null) {
+			return;
+		}
+
 		try {
 			textureLatch.await();
 		} catch (InterruptedException e) {
 			// Do nothing
 		}
-
-		camera.setDisplaySurface(surfaceTexture);
 	}
 
 	private class TextureListener implements TextureView.SurfaceTextureListener {

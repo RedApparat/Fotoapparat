@@ -46,6 +46,8 @@ public class CameraView extends FrameLayout implements CameraRenderer {
 
 	private void init() {
 		rendererView = new TextureRendererView(getContext());
+
+		addView(rendererView);
 	}
 
 	@Override
