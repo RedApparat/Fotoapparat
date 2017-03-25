@@ -1,5 +1,7 @@
 package io.fotoapparat.hardware;
 
+import android.graphics.SurfaceTexture;
+
 import io.fotoapparat.photo.Photo;
 
 /**
@@ -15,7 +17,7 @@ public interface CameraDevice {
 
     void stopPreview();
 
-    void setDisplaySurface(Object displaySurface);
+    void setDisplaySurface(SurfaceTexture displaySurface);
 
     Photo takePicture();
 

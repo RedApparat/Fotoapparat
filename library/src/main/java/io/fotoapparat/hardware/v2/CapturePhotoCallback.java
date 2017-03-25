@@ -15,26 +15,28 @@ import java.util.concurrent.CountDownLatch;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 class CapturePhotoCallback extends CameraCaptureSession.CaptureCallback {
 
-    private final CountDownLatch countDownLatch = new CountDownLatch(1);
-    private TotalCaptureResult result;
+	private final CountDownLatch countDownLatch = new CountDownLatch(1);
+	private TotalCaptureResult result;
 
-    @Override
-    public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
-        super.onCaptureCompleted(session, request, result);
+	@Override
+	public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
+		super.onCaptureCompleted(session, request, result);
 
-        this.result = result;
-        countDownLatch.countDown();
-    }
+		this.result = result;
+		countDownLatch.countDown();
+	}
 
-    /**
-     * Waits and returns a capture result upon completion.
-     *
-     * @return a {@link TotalCaptureResult} when the capture has been completed.
-     * @throws InterruptedException if the thread has been interrupted before
-     *                              the photo capture has been completed.
-     */
-    public TotalCaptureResult getResult() throws InterruptedException {
-        countDownLatch.await();
-        return result;
-    }
+	/**
+	 * Waits and returns a capture result upon completion.
+	 *
+	 * @return a {@link TotalCaptureResult} when the capture has been completed.
+	 */
+	public TotalCaptureResult getResult() {
+		try {
+			countDownLatch.await();
+		} catch (InterruptedException e) {
+			// do nothing
+		}
+		return result;
+	}
 }

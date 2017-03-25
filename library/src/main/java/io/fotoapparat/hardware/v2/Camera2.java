@@ -1,15 +1,11 @@
 package io.fotoapparat.hardware.v2;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraManager;
-import android.hardware.camera2.TotalCaptureResult;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.view.Surface;
-
-import java.util.Collections;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
@@ -19,80 +15,53 @@ import io.fotoapparat.photo.Photo;
 /**
  * Camera support for v2 {@link Camera2} API.
  */
+@SuppressWarnings("MissingPermission")
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class Camera2 implements CameraDevice {
+public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 
+	private final CameraManager manager;
+	private final io.fotoapparat.hardware.v2.CameraManager cameraManager;
 
-    private final CameraManager manager;
-    public android.hardware.camera2.CameraDevice camera;
-    private CameraCaptureSession session;
+	public Camera2(Context context) {
+		manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+		cameraManager = new io.fotoapparat.hardware.v2.CameraManager(manager);
+	}
 
-    public Camera2(Context context) {
-        manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
-    }
+	@Override
+	public void open(Parameters parameters) {
+		try {
+			final String[] cameraIdList = manager.getCameraIdList();
 
-    @SuppressWarnings("MissingPermission")
-    @Override
-    public void open(Parameters parameters) {
-        try {
-            String[] cameraIdList = manager.getCameraIdList();
+			// todo choose camera
 
-            // todo choose camera
+			cameraManager.open(cameraIdList[0]);
+		} catch (CameraAccessException e) {
+			throw new CameraException(e);
+		}
+	}
 
-            OpenCameraCallback openCameraCallback = new OpenCameraCallback();
-            manager.openCamera(cameraIdList[0], openCameraCallback, null);
+	@Override
+	public void close() {
+		cameraManager.close();
+	}
 
-            camera = openCameraCallback.getCamera();
+	@Override
+	public void startPreview() {
+		cameraManager.startPreview();
+	}
 
+	@Override
+	public void stopPreview() {
+		cameraManager.stopPreview();
+	}
 
-        } catch (CameraAccessException | InterruptedException e) {
-            throw new CameraException(e);
-        }
-    }
+	@Override
+	public void setDisplaySurface(SurfaceTexture displaySurface) {
+		cameraManager.setSurface(displaySurface);
+	}
 
-    @Override
-    public void close() {
-        if (camera != null) {
-            camera.close();
-        }
-        if (session != null) {
-            session.close();
-        }
-
-    }
-
-    @Override
-    public void startPreview() {
-
-    }
-
-    @Override
-    public void stopPreview() {
-
-    }
-
-    @Override
-    public void setDisplaySurface(Object displaySurface) {
-        try {
-            CaptureSessionCallback captureSession = new CaptureSessionCallback();
-            camera.createCaptureSession(Collections.singletonList((Surface) displaySurface), captureSession, null);
-
-            session = captureSession.getSession();
-
-        } catch (InterruptedException | CameraAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public Photo takePicture() {
-        try {
-            CapturePhotoCallback photoCapture = new CapturePhotoCallback();
-            session.capture(null, photoCapture, null);
-            TotalCaptureResult result = photoCapture.getResult();
-        } catch (CameraAccessException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+	@Override
+	public Photo takePicture() {
+		return cameraManager.takePicture();
+	}
 }
