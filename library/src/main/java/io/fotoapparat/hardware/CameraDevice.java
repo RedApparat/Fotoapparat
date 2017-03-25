@@ -7,18 +7,16 @@ import io.fotoapparat.photo.Photo;
  */
 public interface CameraDevice {
 
-	void open();
+    void open(Parameters parameters);
 
-	void close();
+    void close();
 
-	void startPreview();
+    void startPreview();
 
-	void stopPreview();
+    void stopPreview();
 
-	void setDisplaySurface(Object displaySurface);
+    void setDisplaySurface(Object displaySurface);
 
-	void updateParameters(Parameters parameters);
-
-	Photo takePicture();
+    Photo takePicture();
 
 }
