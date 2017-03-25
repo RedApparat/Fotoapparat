@@ -56,8 +56,12 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 	}
 
 	@Override
-	public void setDisplaySurface(SurfaceTexture displaySurface) {
-		cameraManager.setSurface(displaySurface);
+	public void setDisplaySurface(Object displaySurface) {
+		if (displaySurface instanceof SurfaceTexture) {
+			cameraManager.setSurface(((SurfaceTexture) displaySurface));
+		} else {
+			throw new IllegalArgumentException("Unsupported display surface: " + displaySurface);
+		}
 	}
 
 	@Override
