@@ -13,7 +13,7 @@ import io.fotoapparat.hardware.Parameters;
 import io.fotoapparat.photo.Photo;
 
 /**
- * Camera support for v2 {@link Camera2} API.
+ * Camera hardware driver for v2 {@link Camera2} API.
  */
 @SuppressWarnings("MissingPermission")
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
