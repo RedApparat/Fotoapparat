@@ -9,7 +9,7 @@ import android.support.annotation.RequiresApi;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
-import io.fotoapparat.hardware.Parameters;
+import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.Photo;
 
 /**
@@ -28,7 +28,7 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 	}
 
 	@Override
-	public void open(Parameters parameters) {
+	public void open(LensPosition lensPosition) {
 		try {
 			final String[] cameraIdList = manager.getCameraIdList();
 
