@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
+import io.fotoapparat.hardware.Parameters;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.Photo;
 
@@ -62,6 +63,11 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 		} else {
 			throw new IllegalArgumentException("Unsupported display surface: " + displaySurface);
 		}
+	}
+
+	@Override
+	public void updateParameters(Parameters parameters) {
+		// TODO actually do something
 	}
 
 	@Override

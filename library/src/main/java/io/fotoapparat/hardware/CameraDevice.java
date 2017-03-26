@@ -18,6 +18,8 @@ public interface CameraDevice {
 
 	void setDisplaySurface(Object displaySurface);
 
+	void updateParameters(Parameters parameters);
+
 	Photo takePicture();
 
 }

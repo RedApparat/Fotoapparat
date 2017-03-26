@@ -9,6 +9,7 @@ import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
+import io.fotoapparat.hardware.Parameters;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.Photo;
 
@@ -63,6 +64,11 @@ public class Camera1 implements CameraDevice {
 		} catch (IOException e) {
 			throw new CameraException(e);
 		}
+	}
+
+	@Override
+	public void updateParameters(Parameters parameters) {
+		// TODO actually do something
 	}
 
 	private void trySetDisplaySurface(Object displaySurface) throws IOException {
