@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
+import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.Parameters;
 import io.fotoapparat.hardware.v2.captor.PhotoCaptor;
 import io.fotoapparat.hardware.v2.session.PreviewOperator;
@@ -70,6 +71,13 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 	@Override
 	public void updateParameters(Parameters parameters) {
 		// TODO actually do something
+	}
+
+	@Override
+	public Capabilities getCapabilities() {
+		cameraManager.getCharacteristics();
+		// TODO: return the capabilties of the camera device
+		return null;
 	}
 
 	@Override

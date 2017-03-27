@@ -2,6 +2,7 @@ package io.fotoapparat.hardware.v2;
 
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
@@ -23,9 +24,14 @@ class CameraManager implements PreviewOperator, PhotoCaptor {
 	private final OpenCameraAction openCameraAction = new OpenCameraAction();
 	private final android.hardware.camera2.CameraManager manager;
 	private Session session;
+	private CameraCharacteristics characteristics;
 
 	CameraManager(android.hardware.camera2.CameraManager manager) {
 		this.manager = manager;
+	}
+
+	public void getCharacteristics() {
+
 	}
 
 	void open(final String cameraId) {
@@ -37,6 +43,7 @@ class CameraManager implements PreviewOperator, PhotoCaptor {
 					@Override
 					public void run() {
 						try {
+							characteristics = manager.getCameraCharacteristics(cameraId);
 							manager.openCamera(cameraId, openCameraAction, null);
 						} catch (CameraAccessException e) {
 							// do nothing
@@ -78,4 +85,5 @@ class CameraManager implements PreviewOperator, PhotoCaptor {
 		}
 		return session.takePicture();
 	}
+
 }

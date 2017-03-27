@@ -20,6 +20,8 @@ public interface CameraDevice {
 
 	void updateParameters(Parameters parameters);
 
+	Capabilities getCapabilities();
+
 	Photo takePicture();
 
 }
