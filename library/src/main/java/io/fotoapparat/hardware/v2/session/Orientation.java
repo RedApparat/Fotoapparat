@@ -1,11 +1,10 @@
 package io.fotoapparat.hardware.v2.session;
 
 import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraMetadata;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
-import static android.hardware.camera2.CameraCharacteristics.LENS_FACING;
-import static android.hardware.camera2.CameraMetadata.LENS_FACING_FRONT;
 import static android.view.OrientationEventListener.ORIENTATION_UNKNOWN;
 
 /**
@@ -43,7 +42,7 @@ public class Orientation {
 		// Round device orientation to a multiple of 90
 		deviceOrientation = (deviceOrientation + 45) / 90 * 90;
 
-		boolean shouldReverseOrientation = characteristics.get(LENS_FACING) == LENS_FACING_FRONT;
+		boolean shouldReverseOrientation = characteristics.get(CameraCharacteristics.LENS_FACING) == CameraMetadata.LENS_FACING_FRONT;
 
 		if (shouldReverseOrientation) {
 			deviceOrientation *= -1;
