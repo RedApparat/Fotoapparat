@@ -8,8 +8,6 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
-import io.fotoapparat.hardware.v2.PreviewOperator;
-
 import static android.hardware.camera2.CameraDevice.TEMPLATE_PREVIEW;
 
 /**

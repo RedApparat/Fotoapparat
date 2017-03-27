@@ -5,6 +5,8 @@ import android.hardware.camera2.CameraAccessException;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
+import io.fotoapparat.hardware.v2.captor.PhotoCaptor;
+import io.fotoapparat.hardware.v2.session.PreviewOperator;
 import io.fotoapparat.hardware.v2.session.PreviewSession;
 import io.fotoapparat.hardware.v2.session.Session;
 import io.fotoapparat.photo.Photo;

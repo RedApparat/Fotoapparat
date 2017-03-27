@@ -1,4 +1,4 @@
-package io.fotoapparat.hardware.v2;
+package io.fotoapparat.hardware.v2.captor;
 
 import io.fotoapparat.photo.Photo;
 

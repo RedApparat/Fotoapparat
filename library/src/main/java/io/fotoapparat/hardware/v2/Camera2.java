@@ -10,6 +10,8 @@ import android.support.annotation.RequiresApi;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Parameters;
+import io.fotoapparat.hardware.v2.captor.PhotoCaptor;
+import io.fotoapparat.hardware.v2.session.PreviewOperator;
 import io.fotoapparat.photo.Photo;
 
 /**
