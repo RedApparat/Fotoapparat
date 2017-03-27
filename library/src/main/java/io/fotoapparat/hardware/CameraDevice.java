@@ -1,5 +1,6 @@
 package io.fotoapparat.hardware;
 
+import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.Photo;
 
 /**
@@ -7,16 +8,18 @@ import io.fotoapparat.photo.Photo;
  */
 public interface CameraDevice {
 
-    void open(Parameters parameters);
+	void open(LensPosition lensPosition);
 
-    void close();
+	void close();
 
-    void startPreview();
+	void startPreview();
 
-    void stopPreview();
+	void stopPreview();
 
-    void setDisplaySurface(Object displaySurface);
+	void setDisplaySurface(Object displaySurface);
 
-    Photo takePicture();
+	void updateParameters(Parameters parameters);
+
+	Photo takePicture();
 
 }

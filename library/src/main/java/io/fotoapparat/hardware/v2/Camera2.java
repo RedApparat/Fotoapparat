@@ -12,6 +12,7 @@ import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Parameters;
 import io.fotoapparat.hardware.v2.captor.PhotoCaptor;
 import io.fotoapparat.hardware.v2.session.PreviewOperator;
+import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.Photo;
 
 /**
@@ -30,7 +31,7 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 	}
 
 	@Override
-	public void open(Parameters parameters) {
+	public void open(LensPosition lensPosition) {
 		try {
 			final String[] cameraIdList = manager.getCameraIdList();
 
@@ -64,6 +65,11 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 		} else {
 			throw new IllegalArgumentException("Unsupported display surface: " + displaySurface);
 		}
+	}
+
+	@Override
+	public void updateParameters(Parameters parameters) {
+		// TODO actually do something
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package io.fotoapparat;
 
 import android.content.Context;
 
+import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.photo.PhotoResult;
 import io.fotoapparat.request.PhotoRequest;
 
@@ -17,8 +18,8 @@ public class Fotoapparat {
 		return new FotoapparatBuilder();
 	}
 
-	public void getCharacteristics() {
-		return;
+	public Capabilities getCapabilities() {
+		return null;
 	}
 
 	public PhotoResult takePhoto() {

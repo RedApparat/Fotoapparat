@@ -22,9 +22,7 @@ public class Parameters {
 
 	public enum Type {
 
-		PICTURE_SIZE,
-		LENS_POSITION
-
+		PICTURE_SIZE
 	}
 
 }
