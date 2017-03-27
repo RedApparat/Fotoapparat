@@ -4,9 +4,6 @@ import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.TotalCaptureResult;
-import android.media.Image;
-import android.media.ImageReader;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
@@ -45,11 +42,10 @@ public class PictureCaptor implements PhotoCaptor {
 
 	@Override
 	public Photo takePicture() {
-
-		ImageReader imageReader = ImageReader.newInstance(0, 0, 0, 1);
-		TotalCaptureResult result = capturePhotoAction.getResult();
-		Image image = imageReader.acquireLatestImage();
-		imageReader.
-		return null;
+		byte[] result = capturePhotoAction.getPhotoBytes();
+		return new Photo(
+				result,
+				0 // fixme
+		);
 	}
 }

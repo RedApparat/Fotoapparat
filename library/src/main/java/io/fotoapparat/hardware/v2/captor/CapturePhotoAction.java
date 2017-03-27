@@ -4,6 +4,7 @@ import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CaptureFailure;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.TotalCaptureResult;
+import android.media.ImageReader;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -17,19 +18,29 @@ import java.util.concurrent.CountDownLatch;
 class CapturePhotoAction extends CameraCaptureSession.CaptureCallback {
 
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
-	private TotalCaptureResult result;
+	private final ImageReader imageReader;
+	private byte[] photoBytes;
+
+	public CapturePhotoAction() {
+		imageReader = ImageReader.newInstance(0, 0, 0, 1); // FIXME: 27.03.17 : dynamic properties
+
+	}
 
 	@Override
 	public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
 		super.onCaptureCompleted(session, request, result);
 
-		this.result = result;
+		ImageAvailabilityAction imageAvailabilityAction = new ImageAvailabilityAction();
+		imageReader.setOnImageAvailableListener(imageAvailabilityAction, null);
+
+		this.photoBytes = imageAvailabilityAction.getBytes();
 		countDownLatch.countDown();
 	}
 
 	@Override
 	public void onCaptureFailed(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull CaptureFailure failure) {
 		super.onCaptureFailed(session, request, failure);
+		// TODO: 27.03.17
 	}
 
 	/**
@@ -37,12 +48,12 @@ class CapturePhotoAction extends CameraCaptureSession.CaptureCallback {
 	 *
 	 * @return a {@link TotalCaptureResult} when the capture has been completed.
 	 */
-	TotalCaptureResult getResult() {
+	byte[] getPhotoBytes() {
 		try {
 			countDownLatch.await();
 		} catch (InterruptedException e) {
 			// do nothing
 		}
-		return result;
+		return photoBytes;
 	}
 }
