@@ -5,16 +5,20 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.view.CameraRenderer;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FotoapparatBuilderTest {
 
+	@Mock
+	CameraProvider cameraProvider;
 	@Mock
 	CameraRenderer cameraRenderer;
 	@Mock
@@ -25,15 +29,35 @@ public class FotoapparatBuilderTest {
 	@Test
 	public void onlyMandatoryParameters() throws Exception {
 		// Given
-		FotoapparatBuilder builder = new FotoapparatBuilder()
-				.lensPosition(lensPositionSelector)
-				.into(cameraRenderer);
+		FotoapparatBuilder builder = builderWithMandatoryArguments();
 
 		// When
 		Fotoapparat result = builder.build();
 
 		// Then
 		assertNotNull(result);
+	}
+
+	@Test
+	public void cameraProvider_HasDefault() throws Exception {
+		// When
+		FotoapparatBuilder builder = builderWithMandatoryArguments();
+
+		// Then
+		assertNotNull(builder.cameraProvider);
+	}
+
+	@Test
+	public void cameraProvider_IsConfigurable() throws Exception {
+		// When
+		FotoapparatBuilder builder = builderWithMandatoryArguments()
+				.cameraProvider(cameraProvider);
+
+		// Then
+		assertEquals(
+				cameraProvider,
+				builder.cameraProvider
+		);
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -62,6 +86,12 @@ public class FotoapparatBuilderTest {
 
 		// Then
 		// Expect exception
+	}
+
+	private FotoapparatBuilder builderWithMandatoryArguments() {
+		return new FotoapparatBuilder()
+				.lensPosition(lensPositionSelector)
+				.into(cameraRenderer);
 	}
 
 }

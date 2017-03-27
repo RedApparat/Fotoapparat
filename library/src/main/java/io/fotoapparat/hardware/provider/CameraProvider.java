@@ -1,4 +1,6 @@
-package io.fotoapparat.hardware;
+package io.fotoapparat.hardware.provider;
+
+import io.fotoapparat.hardware.CameraDevice;
 
 /**
  * Abstraction for providing camera.
