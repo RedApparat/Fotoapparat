@@ -1,5 +1,7 @@
 package io.fotoapparat;
 
+import io.fotoapparat.hardware.provider.CameraProvider;
+import io.fotoapparat.hardware.provider.V1Provider;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
@@ -10,12 +12,18 @@ import io.fotoapparat.view.CameraRenderer;
  */
 public class FotoapparatBuilder {
 
+	CameraProvider cameraProvider = new V1Provider();
 	CameraRenderer renderer;
 	SelectorFunction<Size> photoSizeSelector;
 	SelectorFunction<LensPosition> lensPositionSelector;
 
 	FotoapparatBuilder() {
 		// Do nothing
+	}
+
+	FotoapparatBuilder cameraProvider(CameraProvider cameraProvider) {
+		this.cameraProvider = cameraProvider;
+		return this;
 	}
 
 	public FotoapparatBuilder photoSize(SelectorFunction<Size> selector) {
@@ -36,7 +44,7 @@ public class FotoapparatBuilder {
 	public Fotoapparat build() {
 		validate();
 
-		return new Fotoapparat(this);
+		return Fotoapparat.create(this);
 	}
 
 	private void validate() {
