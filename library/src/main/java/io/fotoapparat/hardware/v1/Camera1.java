@@ -5,6 +5,7 @@ import android.hardware.Camera;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.CameraDevice;
@@ -69,6 +70,12 @@ public class Camera1 implements CameraDevice {
 	@Override
 	public void updateParameters(Parameters parameters) {
 		// TODO actually do something
+	}
+
+	@Override
+	public List<LensPosition> getSupportedLensPositions() {
+		// TODO implement
+		return null;
 	}
 
 	private void trySetDisplaySurface(Object displaySurface) throws IOException {
