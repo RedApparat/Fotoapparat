@@ -8,10 +8,6 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
-import io.fotoapparat.hardware.v2.PreviewOperator;
-
-import static android.hardware.camera2.CameraDevice.TEMPLATE_PREVIEW;
-
 /**
  * Wrapper around the internal {@link android.hardware.camera2.CameraCaptureSession}
  * for a particular {@link CameraDevice}.
@@ -34,7 +30,7 @@ public class PreviewSession extends Session implements PreviewOperator {
 	@Override
 	public void startPreview() {
 		try {
-			CaptureRequest.Builder captureRequest = camera.createCaptureRequest(TEMPLATE_PREVIEW);
+			CaptureRequest.Builder captureRequest = camera.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
 			captureRequest.addTarget(surface);
 			getSession().setRepeatingRequest(captureRequest.build(), null, null);
 		} catch (CameraAccessException e) {

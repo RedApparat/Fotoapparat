@@ -11,7 +11,8 @@ import java.util.Collections;
 import java.util.List;
 
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.PhotoCaptor;
+import io.fotoapparat.hardware.v2.captor.PhotoCaptor;
+import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 import io.fotoapparat.photo.Photo;
 
 /**
@@ -22,6 +23,7 @@ import io.fotoapparat.photo.Photo;
 public class Session implements PhotoCaptor {
 
 	private final CaptureSessionAction captureSessionAction = new CaptureSessionAction();
+	private final CameraDevice camera;
 
 	public Session(CameraDevice camera) {
 		this(camera, Collections.<Surface>emptyList());
@@ -32,6 +34,7 @@ public class Session implements PhotoCaptor {
 	}
 
 	private Session(final CameraDevice camera, final List<Surface> surfaces) {
+		this.camera = camera;
 		CameraThread
 				.getInstance()
 				.getHandler()
@@ -59,6 +62,8 @@ public class Session implements PhotoCaptor {
 	@Override
 	public Photo takePicture() {
 		// TODO: 25/03/17
+
+		PictureCaptor pictureCaptor = new PictureCaptor(camera, getSession());
 		return null;
 	}
 }

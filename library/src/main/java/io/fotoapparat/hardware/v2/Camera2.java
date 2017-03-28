@@ -11,7 +11,10 @@ import java.util.List;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
+import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.Parameters;
+import io.fotoapparat.hardware.v2.captor.PhotoCaptor;
+import io.fotoapparat.hardware.v2.session.PreviewOperator;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.Photo;
 
@@ -75,6 +78,13 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 	@Override
 	public List<LensPosition> getSupportedLensPositions() {
 		// TODO implement
+		return null;
+	}
+
+	@Override
+	public Capabilities getCapabilities() {
+		cameraManager.getCharacteristics();
+		// TODO: return the capabilties of the camera device
 		return null;
 	}
 

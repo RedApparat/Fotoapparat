@@ -24,6 +24,8 @@ public interface CameraDevice {
 
 	List<LensPosition> getSupportedLensPositions();
 
+	Capabilities getCapabilities();
+
 	Photo takePicture();
 
 }

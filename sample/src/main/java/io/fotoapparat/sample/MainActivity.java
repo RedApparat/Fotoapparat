@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 				.photoSize(biggestSize())
 				.lensPosition(front())
 				.build();
+
 	}
 
 	@Override
