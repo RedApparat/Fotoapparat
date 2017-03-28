@@ -12,14 +12,15 @@ public class OrientationSensor {
 
 	private final OrientationEventListener orientationEventListener;
 
-	public OrientationSensor(@NonNull Context context,
-							 @NonNull final Listener listener) {
+	private Listener listener;
+
+	public OrientationSensor(@NonNull Context context) {
 
 		orientationEventListener = new OrientationEventListener(context, SensorManager.SENSOR_DELAY_NORMAL) {
 
 			@Override
 			public void onOrientationChanged(int orientation) {
-				if (canDetectOrientation()) {
+				if (listener != null && canDetectOrientation()) {
 					listener.onOrientationChanged(orientation);
 				}
 			}
@@ -30,7 +31,8 @@ public class OrientationSensor {
 	/**
 	 * Starts monitoring device's orientation.
 	 */
-	public void start() {
+	public void start(Listener listener) {
+		this.listener = listener;
 		orientationEventListener.enable();
 	}
 
@@ -39,6 +41,7 @@ public class OrientationSensor {
 	 */
 	public void stop() {
 		orientationEventListener.disable();
+		listener = null;
 	}
 
 	/**
