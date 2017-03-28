@@ -1,6 +1,8 @@
 package io.fotoapparat;
 
+import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.provider.CameraProvider;
+import io.fotoapparat.hardware.provider.V1AvailableLensPositionProvider;
 import io.fotoapparat.hardware.provider.V1Provider;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Size;
@@ -12,6 +14,7 @@ import io.fotoapparat.view.CameraRenderer;
  */
 public class FotoapparatBuilder {
 
+	AvailableLensPositionsProvider availableLensPositionsProvider = new V1AvailableLensPositionProvider();
 	CameraProvider cameraProvider = new V1Provider();
 	CameraRenderer renderer;
 	SelectorFunction<Size> photoSizeSelector;
@@ -23,6 +26,11 @@ public class FotoapparatBuilder {
 
 	FotoapparatBuilder cameraProvider(CameraProvider cameraProvider) {
 		this.cameraProvider = cameraProvider;
+		return this;
+	}
+
+	FotoapparatBuilder availableLensPositionsProvider(AvailableLensPositionsProvider availableLensPositionsProvider) {
+		this.availableLensPositionsProvider = availableLensPositionsProvider;
 		return this;
 	}
 

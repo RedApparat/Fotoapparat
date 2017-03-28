@@ -22,8 +22,6 @@ public interface CameraDevice {
 
 	void updateParameters(Parameters parameters);
 
-	List<LensPosition> getSupportedLensPositions();
-
 	Capabilities getCapabilities();
 
 	Photo takePicture();

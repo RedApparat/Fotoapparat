@@ -7,8 +7,6 @@ import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
-import java.util.List;
-
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Capabilities;
@@ -73,12 +71,6 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 	@Override
 	public void updateParameters(Parameters parameters) {
 		// TODO actually do something
-	}
-
-	@Override
-	public List<LensPosition> getSupportedLensPositions() {
-		// TODO implement
-		return null;
 	}
 
 	@Override

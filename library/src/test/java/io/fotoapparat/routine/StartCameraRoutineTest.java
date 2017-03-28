@@ -10,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
+import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.selector.SelectorFunction;
@@ -22,6 +23,8 @@ import static org.mockito.Mockito.inOrder;
 @RunWith(MockitoJUnitRunner.class)
 public class StartCameraRoutineTest {
 
+	@Mock
+	AvailableLensPositionsProvider availableLensPositionsProvider;
 	@Mock
 	CameraDevice cameraDevice;
 	@Mock
@@ -67,7 +70,7 @@ public class StartCameraRoutineTest {
 	}
 
 	private void givenLensPositionsAvailable(List<LensPosition> lensPositions) {
-		given(cameraDevice.getSupportedLensPositions())
+		given(availableLensPositionsProvider.getAvailableLensPositions())
 				.willReturn(lensPositions);
 	}
 

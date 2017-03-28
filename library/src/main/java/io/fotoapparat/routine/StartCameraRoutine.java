@@ -1,5 +1,6 @@
 package io.fotoapparat.routine;
 
+import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.selector.SelectorFunction;
@@ -10,13 +11,16 @@ import io.fotoapparat.view.CameraRenderer;
  */
 public class StartCameraRoutine implements Runnable {
 
+	private final AvailableLensPositionsProvider availableLensPositionsProvider;
 	private final CameraDevice cameraDevice;
 	private final CameraRenderer cameraRenderer;
 	private final SelectorFunction<LensPosition> lensPositionSelector;
 
-	public StartCameraRoutine(CameraDevice cameraDevice,
+	public StartCameraRoutine(AvailableLensPositionsProvider availableLensPositionsProvider,
+							  CameraDevice cameraDevice,
 							  CameraRenderer cameraRenderer,
 							  SelectorFunction<LensPosition> lensPositionSelector) {
+		this.availableLensPositionsProvider = availableLensPositionsProvider;
 		this.cameraDevice = cameraDevice;
 		this.cameraRenderer = cameraRenderer;
 		this.lensPositionSelector = lensPositionSelector;
@@ -25,7 +29,7 @@ public class StartCameraRoutine implements Runnable {
 	@Override
 	public void run() {
 		LensPosition lensPosition = lensPositionSelector.select(
-				cameraDevice.getSupportedLensPositions()
+				availableLensPositionsProvider.getAvailableLensPositions()
 		);
 
 		cameraDevice.open(lensPosition);

@@ -31,6 +31,7 @@ public class Fotoapparat {
 	static Fotoapparat create(FotoapparatBuilder builder) {
 		return new Fotoapparat(
 				new StartCameraRoutine(
+						builder.availableLensPositionsProvider,
 						builder.cameraProvider.get(),
 						builder.renderer,
 						builder.lensPositionSelector
