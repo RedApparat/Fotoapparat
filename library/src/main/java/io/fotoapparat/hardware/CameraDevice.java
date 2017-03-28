@@ -1,7 +1,5 @@
 package io.fotoapparat.hardware;
 
-import java.util.List;
-
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.Photo;
 
@@ -19,6 +17,8 @@ public interface CameraDevice {
 	void stopPreview();
 
 	void setDisplaySurface(Object displaySurface);
+
+	void setDisplayOrientation(int degrees);
 
 	void updateParameters(Parameters parameters);
 

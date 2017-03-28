@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.routine.StartCameraRoutine;
+import io.fotoapparat.routine.UpdateOrientationRoutine;
 import io.fotoapparat.test.ImmediateExecutor;
 
 import static org.mockito.Mockito.verify;
@@ -16,6 +17,8 @@ public class FotoapparatTest {
 
 	@Mock
 	StartCameraRoutine startCameraRoutine;
+	@Mock
+	UpdateOrientationRoutine updateOrientationRoutine;
 
 	Fotoapparat testee;
 
@@ -23,6 +26,7 @@ public class FotoapparatTest {
 	public void setUp() throws Exception {
 		testee = new Fotoapparat(
 				startCameraRoutine,
+				updateOrientationRoutine,
 				new ImmediateExecutor()
 		);
 	}
@@ -34,6 +38,15 @@ public class FotoapparatTest {
 
 		// Then
 		verify(startCameraRoutine).run();
+		verify(updateOrientationRoutine).start();
 	}
 
+	@Test
+	public void stop() throws Exception {
+		// When
+		testee.stop();
+
+		// Then
+		verify(updateOrientationRoutine).stop();
+	}
 }
