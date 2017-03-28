@@ -10,7 +10,7 @@ public class Selectors {
 	 *
 	 * @param functions functions in order of importance.
 	 */
-	public static <T> SelectorFunction<T> firstAvailable(SelectorFunction<T>... functions) {
+	public static <T> SelectorFunction<T> firstAvailable(SelectorFunction<T> function, SelectorFunction... functions) {
 		return null;
 	}
 

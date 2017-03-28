@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.view.CameraView;
 
+import static io.fotoapparat.parameter.selector.LensPositionSelectors.back;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.front;
+import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,7 +27,10 @@ public class MainActivity extends AppCompatActivity {
 				.with(this)
 				.into(cameraView)
 				.photoSize(biggestSize())
-				.lensPosition(front())
+				.lensPosition(firstAvailable(
+						front(),
+						back()
+				))
 				.build();
 
 	}
