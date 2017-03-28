@@ -10,12 +10,10 @@ import android.view.OrientationEventListener;
  */
 public class OrientationSensor {
 
-	private final Listener listener;
 	private final OrientationEventListener orientationEventListener;
 
 	public OrientationSensor(@NonNull Context context,
 							 @NonNull final Listener listener) {
-		this.listener = listener;
 
 		orientationEventListener = new OrientationEventListener(context, SensorManager.SENSOR_DELAY_NORMAL) {
 

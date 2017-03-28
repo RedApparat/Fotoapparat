@@ -69,6 +69,11 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 	}
 
 	@Override
+	public void setDisplayOrientation(int degrees) {
+		// TODO implement
+	}
+
+	@Override
 	public void updateParameters(Parameters parameters) {
 		// TODO actually do something
 	}
