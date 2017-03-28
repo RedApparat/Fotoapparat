@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import io.fotoapparat.Fotoapparat;
+import io.fotoapparat.log.LogcatLogger;
 import io.fotoapparat.view.CameraView;
 
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.back;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 						front(),
 						back()
 				))
+				.logger(new LogcatLogger())
 				.build();
 	}
 

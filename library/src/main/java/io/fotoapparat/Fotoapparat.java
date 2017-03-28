@@ -40,7 +40,8 @@ public class Fotoapparat {
 	}
 
 	static Fotoapparat create(FotoapparatBuilder builder) {
-		CameraDevice cameraDevice = builder.cameraProvider.get();
+		CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
+
 		ExecutorService cameraExecutor = Executors.newSingleThreadExecutor();
 
 		StartCameraRoutine startCameraRoutine = new StartCameraRoutine(

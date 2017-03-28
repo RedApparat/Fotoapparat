@@ -12,6 +12,7 @@ import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.Parameters;
 import io.fotoapparat.hardware.orientation.OrientationUtils;
+import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.Photo;
 
@@ -21,13 +22,19 @@ import io.fotoapparat.photo.Photo;
 @SuppressWarnings("deprecation")
 public class Camera1 implements CameraDevice {
 
+	private final Logger logger;
+
 	private Camera camera;
 
 	private Throwable lastStacktrace;
 
+	public Camera1(Logger logger) {
+		this.logger = logger;
+	}
+
 	@Override
 	public void open(LensPosition lensPosition) {
-		recordStackTrace();
+		recordMethod();
 
 		try {
 			camera = Camera.open(
@@ -79,7 +86,7 @@ public class Camera1 implements CameraDevice {
 
 	@Override
 	public void close() {
-		recordStackTrace();
+		recordMethod();
 
 		if (camera != null) {
 			camera.release();
@@ -88,21 +95,21 @@ public class Camera1 implements CameraDevice {
 
 	@Override
 	public void startPreview() {
-		recordStackTrace();
+		recordMethod();
 
 		camera.startPreview();
 	}
 
 	@Override
 	public void stopPreview() {
-		recordStackTrace();
+		recordMethod();
 
 		camera.stopPreview();
 	}
 
 	@Override
 	public void setDisplaySurface(Object displaySurface) {
-		recordStackTrace();
+		recordMethod();
 
 		try {
 			trySetDisplaySurface(displaySurface);
@@ -113,7 +120,7 @@ public class Camera1 implements CameraDevice {
 
 	@Override
 	public void setDisplayOrientation(int degrees) {
-		recordStackTrace();
+		recordMethod();
 
 		camera.setDisplayOrientation(
 				OrientationUtils.toClosestRightAngle(degrees)
@@ -122,13 +129,13 @@ public class Camera1 implements CameraDevice {
 
 	@Override
 	public void updateParameters(Parameters parameters) {
-		recordStackTrace();
+		recordMethod();
 		// TODO actually do something
 	}
 
 	@Override
 	public Capabilities getCapabilities() {
-		recordStackTrace();
+		recordMethod();
 		// TODO: return the capabilties of the camera device
 		return null;
 	}
@@ -145,7 +152,7 @@ public class Camera1 implements CameraDevice {
 
 	@Override
 	public Photo takePicture() {
-		recordStackTrace();
+		recordMethod();
 
 		final CountDownLatch latch = new CountDownLatch(1);
 
@@ -172,8 +179,12 @@ public class Camera1 implements CameraDevice {
 		return null;
 	}
 
-	private void recordStackTrace() {
+	private void recordMethod() {
 		lastStacktrace = new Exception();
+
+		logger.log(
+				lastStacktrace.getStackTrace()[1].getMethodName()
+		);
 	}
 
 }

@@ -6,6 +6,8 @@ import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.hardware.provider.V1AvailableLensPositionProvider;
 import io.fotoapparat.hardware.provider.V1Provider;
+import io.fotoapparat.log.DummyLogger;
+import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
@@ -22,6 +24,7 @@ public class FotoapparatBuilder {
 	CameraRenderer renderer;
 	SelectorFunction<Size> photoSizeSelector;
 	SelectorFunction<LensPosition> lensPositionSelector;
+	Logger logger = new DummyLogger();
 
 	FotoapparatBuilder(Context context) {
 		this.context = context;
@@ -39,6 +42,11 @@ public class FotoapparatBuilder {
 
 	public FotoapparatBuilder lensPosition(SelectorFunction<LensPosition> selector) {
 		lensPositionSelector = selector;
+		return this;
+	}
+
+	public FotoapparatBuilder logger(Logger logger) {
+		this.logger = logger;
 		return this;
 	}
 

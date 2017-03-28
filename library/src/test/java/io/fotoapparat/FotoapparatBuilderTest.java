@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.hardware.provider.CameraProvider;
+import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
@@ -29,6 +30,8 @@ public class FotoapparatBuilderTest {
 	SelectorFunction<Size> photoSizeSelector;
 	@Mock
 	SelectorFunction<LensPosition> lensPositionSelector;
+	@Mock
+	Logger logger;
 
 	@Test
 	public void onlyMandatoryParameters() throws Exception {
@@ -61,6 +64,28 @@ public class FotoapparatBuilderTest {
 		assertEquals(
 				cameraProvider,
 				builder.cameraProvider
+		);
+	}
+
+	@Test
+	public void logger_HasDefault() throws Exception {
+		// When
+		FotoapparatBuilder builder = builderWithMandatoryArguments();
+
+		// Then
+		assertNotNull(builder.logger);
+	}
+
+	@Test
+	public void logger_IsConfigurable() throws Exception {
+		// When
+		FotoapparatBuilder builder = builderWithMandatoryArguments()
+				.logger(logger);
+
+		// Then
+		assertEquals(
+				logger,
+				builder.logger
 		);
 	}
 
