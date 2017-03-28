@@ -2,6 +2,7 @@ package io.fotoapparat.hardware.v2.session;
 
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
+import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -24,17 +25,24 @@ public class Session implements PhotoCaptor {
 
 	private final CaptureSessionAction captureSessionAction = new CaptureSessionAction();
 	private final CameraDevice camera;
+	private final CameraCharacteristics cameraCharacteristics;
+	private final List<Surface> surfaces;
 
-	public Session(CameraDevice camera) {
-		this(camera, Collections.<Surface>emptyList());
+	public Session(CameraDevice camera, CameraCharacteristics cameraCharacteristics) {
+		this(camera, cameraCharacteristics, Collections.<Surface>emptyList());
 	}
 
-	Session(CameraDevice camera, Surface surface) {
-		this(camera, Collections.singletonList(surface));
+	Session(CameraDevice camera, CameraCharacteristics cameraCharacteristics, Surface surface) {
+		this(camera, cameraCharacteristics, Collections.singletonList(surface));
 	}
 
-	private Session(final CameraDevice camera, final List<Surface> surfaces) {
+	private Session(final CameraDevice camera,
+					CameraCharacteristics cameraCharacteristics,
+					final List<Surface> surfaces) {
 		this.camera = camera;
+		this.cameraCharacteristics = cameraCharacteristics;
+		this.surfaces = surfaces;
+
 		CameraThread
 				.getInstance()
 				.getHandler()
@@ -61,8 +69,13 @@ public class Session implements PhotoCaptor {
 
 	@Override
 	public Photo takePicture() {
-		PictureCaptor pictureCaptor = new PictureCaptor(camera, getCaptureSession());
 
+		PictureCaptor pictureCaptor = new PictureCaptor(
+				camera,
+				cameraCharacteristics,
+				surfaces,
+				getCaptureSession()
+		);
 		return pictureCaptor.takePicture();
 	}
 }

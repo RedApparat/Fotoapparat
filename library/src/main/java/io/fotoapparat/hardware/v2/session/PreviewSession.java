@@ -2,6 +2,7 @@ package io.fotoapparat.hardware.v2.session;
 
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CaptureRequest;
 import android.os.Build;
@@ -20,8 +21,8 @@ public class PreviewSession extends Session implements PreviewOperator {
 	private final CameraDevice camera;
 	private final Surface surface;
 
-	public PreviewSession(final CameraDevice camera, final SurfaceTexture surfaceTexture) {
-		super(camera, new Surface(surfaceTexture));
+	public PreviewSession(final CameraDevice camera, CameraCharacteristics capabilities, final SurfaceTexture surfaceTexture) {
+		super(camera, capabilities, new Surface(surfaceTexture));
 		this.camera = camera;
 		this.surface = new Surface(surfaceTexture);
 	}

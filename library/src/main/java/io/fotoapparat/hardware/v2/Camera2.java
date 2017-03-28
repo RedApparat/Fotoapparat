@@ -79,7 +79,7 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 
 	@Override
 	public Capabilities getCapabilities() {
-		cameraManager.getCharacteristics();
+		cameraManager.getCapabilities();
 		// TODO: return the capabilties of the camera device
 		return null;
 	}

@@ -6,6 +6,7 @@ import android.hardware.camera2.CameraCharacteristics;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
+import io.fotoapparat.hardware.v2.capabilities.CameraCapabilities;
 import io.fotoapparat.hardware.v2.captor.PhotoCaptor;
 import io.fotoapparat.hardware.v2.session.PreviewOperator;
 import io.fotoapparat.hardware.v2.session.PreviewSession;
@@ -24,14 +25,15 @@ class CameraManager implements PreviewOperator, PhotoCaptor {
 	private final OpenCameraAction openCameraAction = new OpenCameraAction();
 	private final android.hardware.camera2.CameraManager manager;
 	private Session session;
-	private CameraCharacteristics characteristics;
+	private CameraCapabilities capabilities;
 
 	CameraManager(android.hardware.camera2.CameraManager manager) {
 		this.manager = manager;
+		capabilities = new CameraCapabilities(manager);
 	}
 
-	public void getCharacteristics() {
-
+	CameraCharacteristics getCapabilities() {
+		return capabilities.getCameraCharacteristics();
 	}
 
 	void open(final String cameraId) {
@@ -43,8 +45,8 @@ class CameraManager implements PreviewOperator, PhotoCaptor {
 					@Override
 					public void run() {
 						try {
-							characteristics = manager.getCameraCharacteristics(cameraId);
 							manager.openCamera(cameraId, openCameraAction, null);
+							capabilities.setCamera(cameraId);
 						} catch (CameraAccessException e) {
 							// do nothing
 						}
@@ -61,7 +63,7 @@ class CameraManager implements PreviewOperator, PhotoCaptor {
 	}
 
 	public void setSurface(SurfaceTexture displaySurface) {
-		session = new PreviewSession(getCamera(), displaySurface);
+		session = new PreviewSession(getCamera(), getCapabilities(), displaySurface);
 	}
 
 	@Override
@@ -81,7 +83,7 @@ class CameraManager implements PreviewOperator, PhotoCaptor {
 	@Override
 	public Photo takePicture() {
 		if (session == null) {
-			session = new Session(getCamera());
+			session = new Session(getCamera(), getCapabilities());
 		}
 		return session.takePicture();
 	}
