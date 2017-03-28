@@ -23,22 +23,22 @@ import io.fotoapparat.photo.Photo;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 
-	private final CameraManager manager;
 	private final io.fotoapparat.hardware.v2.CameraManager cameraManager;
+	private final CameraManager manager;
+	private final CameraSelector cameraSelector;
 
 	public Camera2(Context context) {
 		manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
 		cameraManager = new io.fotoapparat.hardware.v2.CameraManager(manager);
+		cameraSelector = new CameraSelector(manager);
 	}
 
 	@Override
 	public void open(LensPosition lensPosition) {
 		try {
-			final String[] cameraIdList = manager.getCameraIdList();
+			String cameraId = cameraSelector.findCameraId(lensPosition);
+			cameraManager.open(cameraId);
 
-			// todo choose camera
-
-			cameraManager.open(cameraIdList[0]);
 		} catch (CameraAccessException e) {
 			throw new CameraException(e);
 		}

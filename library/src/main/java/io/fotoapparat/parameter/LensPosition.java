@@ -5,19 +5,19 @@ package io.fotoapparat.parameter;
  */
 public enum LensPosition {
 
-    /**
-     * The back camera.
-     */
-    BACK,
+	/**
+	 * The back camera.
+	 */
+	BACK,
 
-    /**
-     * The front camera.
-     */
-    FRONT,
+	/**
+	 * The front camera.
+	 */
+	FRONT,
 
-    /**
-     * An external camera.
-     */
-    EXTERNAL
+	/**
+	 * An external camera.
+	 */
+	EXTERNAL
 
 }
