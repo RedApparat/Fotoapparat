@@ -25,8 +25,9 @@ public class Camera1 implements CameraDevice {
 	@Override
 	public void open(LensPosition lensPosition) {
 		try {
-			// TODO pick lens position
-			camera = Camera.open();
+			camera = Camera.open(
+					cameraIdForLensPosition(lensPosition)
+			);
 		} catch (RuntimeException e) {
 			throw new CameraException(e);
 		}
@@ -39,6 +40,32 @@ public class Camera1 implements CameraDevice {
 				throw new IllegalStateException("Camera error code: " + error);
 			}
 		});
+	}
+
+	private int cameraIdForLensPosition(LensPosition lensPosition) {
+		int numberOfCameras = Camera.getNumberOfCameras();
+
+		for (int i = 0; i < numberOfCameras; i++) {
+			Camera.CameraInfo info = new Camera.CameraInfo();
+			Camera.getCameraInfo(i, info);
+
+			if (info.facing == facingForLensPosition(lensPosition)) {
+				return i;
+			}
+		}
+
+		return 0;
+	}
+
+	private int facingForLensPosition(LensPosition lensPosition) {
+		switch (lensPosition) {
+			case FRONT:
+				return Camera.CameraInfo.CAMERA_FACING_FRONT;
+			case BACK:
+				return Camera.CameraInfo.CAMERA_FACING_BACK;
+			default:
+				throw new IllegalArgumentException("Camera is not supported: " + lensPosition);
+		}
 	}
 
 	@Override
