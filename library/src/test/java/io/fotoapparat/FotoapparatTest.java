@@ -3,20 +3,24 @@ package io.fotoapparat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.routine.StartCameraRoutine;
+import io.fotoapparat.routine.StopCameraRoutine;
 import io.fotoapparat.routine.UpdateOrientationRoutine;
 import io.fotoapparat.test.ImmediateExecutor;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.inOrder;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FotoapparatTest {
 
 	@Mock
 	StartCameraRoutine startCameraRoutine;
+	@Mock
+	StopCameraRoutine stopCameraRoutine;
 	@Mock
 	UpdateOrientationRoutine updateOrientationRoutine;
 
@@ -26,6 +30,7 @@ public class FotoapparatTest {
 	public void setUp() throws Exception {
 		testee = new Fotoapparat(
 				startCameraRoutine,
+				stopCameraRoutine,
 				updateOrientationRoutine,
 				new ImmediateExecutor()
 		);
@@ -37,8 +42,13 @@ public class FotoapparatTest {
 		testee.start();
 
 		// Then
-		verify(startCameraRoutine).run();
-		verify(updateOrientationRoutine).start();
+		InOrder inOrder = inOrder(
+				startCameraRoutine,
+				updateOrientationRoutine
+		);
+
+		inOrder.verify(startCameraRoutine).run();
+		inOrder.verify(updateOrientationRoutine).start();
 	}
 
 	@Test
@@ -47,6 +57,12 @@ public class FotoapparatTest {
 		testee.stop();
 
 		// Then
-		verify(updateOrientationRoutine).stop();
+		InOrder inOrder = inOrder(
+				stopCameraRoutine,
+				updateOrientationRoutine
+		);
+
+		inOrder.verify(updateOrientationRoutine).stop();
+		inOrder.verify(stopCameraRoutine).run();
 	}
 }
