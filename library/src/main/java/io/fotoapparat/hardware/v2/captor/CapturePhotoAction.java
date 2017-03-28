@@ -21,13 +21,14 @@ class CapturePhotoAction extends CameraCaptureSession.CaptureCallback {
 	private final ImageReader imageReader;
 	private byte[] photoBytes;
 
-	public CapturePhotoAction() {
-		imageReader = ImageReader.newInstance(0, 0, 0, 1); // FIXME: 27.03.17 : dynamic properties
-
+	CapturePhotoAction(ImageReader imageReader) {
+		this.imageReader = imageReader;
 	}
 
 	@Override
-	public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
+	public void onCaptureCompleted(@NonNull CameraCaptureSession session,
+								   @NonNull CaptureRequest request,
+								   @NonNull TotalCaptureResult result) {
 		super.onCaptureCompleted(session, request, result);
 
 		ImageAvailabilityAction imageAvailabilityAction = new ImageAvailabilityAction();
@@ -38,9 +39,11 @@ class CapturePhotoAction extends CameraCaptureSession.CaptureCallback {
 	}
 
 	@Override
-	public void onCaptureFailed(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull CaptureFailure failure) {
+	public void onCaptureFailed(@NonNull CameraCaptureSession session,
+								@NonNull CaptureRequest request,
+								@NonNull CaptureFailure failure) {
 		super.onCaptureFailed(session, request, failure);
-		// TODO: 27.03.17
+		// TODO: 27.03.17 support failure
 	}
 
 	/**

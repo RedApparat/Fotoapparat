@@ -24,11 +24,10 @@ import io.fotoapparat.photo.Photo;
 public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 
 	private final io.fotoapparat.hardware.v2.CameraManager cameraManager;
-	private final CameraManager manager;
 	private final CameraSelector cameraSelector;
 
 	public Camera2(Context context) {
-		manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+		CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
 		cameraManager = new io.fotoapparat.hardware.v2.CameraManager(manager);
 		cameraSelector = new CameraSelector(manager);
 	}
@@ -80,7 +79,7 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 
 	@Override
 	public Capabilities getCapabilities() {
-		cameraManager.getCharacteristics();
+		cameraManager.getCapabilities();
 		// TODO: return the capabilties of the camera device
 		return null;
 	}
