@@ -3,7 +3,6 @@ package io.fotoapparat;
 import android.content.Context;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.fotoapparat.hardware.CameraDevice;
@@ -19,6 +18,8 @@ import io.fotoapparat.routine.UpdateOrientationRoutine;
  * Camera. Takes pictures.
  */
 public class Fotoapparat {
+
+	private static final Executor SERIAL_EXECUTOR = Executors.newSingleThreadExecutor();
 
 	private final StartCameraRoutine startCameraRoutine;
 	private final StopCameraRoutine stopCameraRoutine;
@@ -42,8 +43,6 @@ public class Fotoapparat {
 	static Fotoapparat create(FotoapparatBuilder builder) {
 		CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
 
-		ExecutorService cameraExecutor = Executors.newSingleThreadExecutor();
-
 		StartCameraRoutine startCameraRoutine = new StartCameraRoutine(
 				builder.availableLensPositionsProvider,
 				cameraDevice,
@@ -56,14 +55,14 @@ public class Fotoapparat {
 		UpdateOrientationRoutine updateOrientationRoutine = new UpdateOrientationRoutine(
 				cameraDevice,
 				new OrientationSensor(builder.context),
-				cameraExecutor
+				SERIAL_EXECUTOR
 		);
 
 		return new Fotoapparat(
 				startCameraRoutine,
 				stopCameraRoutine,
 				updateOrientationRoutine,
-				cameraExecutor
+				SERIAL_EXECUTOR
 		);
 	}
 
