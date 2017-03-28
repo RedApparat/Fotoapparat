@@ -43,19 +43,25 @@ public class Fotoapparat {
 		CameraDevice cameraDevice = builder.cameraProvider.get();
 		ExecutorService cameraExecutor = Executors.newSingleThreadExecutor();
 
+		StartCameraRoutine startCameraRoutine = new StartCameraRoutine(
+				builder.availableLensPositionsProvider,
+				cameraDevice,
+				builder.renderer,
+				builder.lensPositionSelector
+		);
+
+		StopCameraRoutine stopCameraRoutine = new StopCameraRoutine(cameraDevice);
+
+		UpdateOrientationRoutine updateOrientationRoutine = new UpdateOrientationRoutine(
+				cameraDevice,
+				new OrientationSensor(builder.context),
+				cameraExecutor
+		);
+
 		return new Fotoapparat(
-				new StartCameraRoutine(
-						builder.availableLensPositionsProvider,
-						cameraDevice,
-						builder.renderer,
-						builder.lensPositionSelector
-				),
-				new StopCameraRoutine(cameraDevice),
-				new UpdateOrientationRoutine(
-						cameraDevice,
-						new OrientationSensor(builder.context),
-						cameraExecutor
-				),
+				startCameraRoutine,
+				stopCameraRoutine,
+				updateOrientationRoutine,
 				cameraExecutor
 		);
 	}
