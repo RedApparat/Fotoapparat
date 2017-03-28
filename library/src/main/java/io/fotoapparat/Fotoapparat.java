@@ -12,6 +12,7 @@ import io.fotoapparat.hardware.orientation.OrientationSensor;
 import io.fotoapparat.photo.PhotoResult;
 import io.fotoapparat.request.PhotoRequest;
 import io.fotoapparat.routine.StartCameraRoutine;
+import io.fotoapparat.routine.StopCameraRoutine;
 import io.fotoapparat.routine.UpdateOrientationRoutine;
 
 /**
@@ -20,13 +21,16 @@ import io.fotoapparat.routine.UpdateOrientationRoutine;
 public class Fotoapparat {
 
 	private final StartCameraRoutine startCameraRoutine;
+	private final StopCameraRoutine stopCameraRoutine;
 	private final UpdateOrientationRoutine updateOrientationRoutine;
 	private final Executor executor;
 
 	public Fotoapparat(StartCameraRoutine startCameraRoutine,
+					   StopCameraRoutine stopCameraRoutine,
 					   UpdateOrientationRoutine updateOrientationRoutine,
 					   Executor executor) {
 		this.startCameraRoutine = startCameraRoutine;
+		this.stopCameraRoutine = stopCameraRoutine;
 		this.updateOrientationRoutine = updateOrientationRoutine;
 		this.executor = executor;
 	}
@@ -46,6 +50,7 @@ public class Fotoapparat {
 						builder.renderer,
 						builder.lensPositionSelector
 				),
+				new StopCameraRoutine(cameraDevice),
 				new UpdateOrientationRoutine(
 						cameraDevice,
 						new OrientationSensor(builder.context),
@@ -76,6 +81,9 @@ public class Fotoapparat {
 
 	public void stop() {
 		updateOrientationRoutine.stop();
+		executor.execute(
+				stopCameraRoutine
+		);
 	}
 
 }
