@@ -55,15 +55,14 @@ public class Session implements PhotoCaptor {
 				});
 	}
 
-	CameraCaptureSession getSession() {
-		return captureSessionAction.getSession();
+	CameraCaptureSession getCaptureSession() {
+		return captureSessionAction.getCaptureSession();
 	}
 
 	@Override
 	public Photo takePicture() {
-		// TODO: 25/03/17
+		PictureCaptor pictureCaptor = new PictureCaptor(camera, getCaptureSession());
 
-		PictureCaptor pictureCaptor = new PictureCaptor(camera, getSession());
-		return null;
+		return pictureCaptor.takePicture();
 	}
 }

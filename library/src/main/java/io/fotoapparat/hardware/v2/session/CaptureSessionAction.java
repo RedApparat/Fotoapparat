@@ -34,7 +34,7 @@ class CaptureSessionAction extends CameraCaptureSession.StateCallback {
 	 *
 	 * @return the requested {@link CameraCaptureSession} to open
 	 */
-	CameraCaptureSession getSession() {
+	CameraCaptureSession getCaptureSession() {
 		try {
 			countDownLatch.await();
 		} catch (InterruptedException e) {

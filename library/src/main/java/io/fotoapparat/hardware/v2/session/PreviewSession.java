@@ -32,7 +32,7 @@ public class PreviewSession extends Session implements PreviewOperator {
 		try {
 			CaptureRequest.Builder captureRequest = camera.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
 			captureRequest.addTarget(surface);
-			getSession().setRepeatingRequest(captureRequest.build(), null, null);
+			getCaptureSession().setRepeatingRequest(captureRequest.build(), null, null);
 		} catch (CameraAccessException e) {
 			e.printStackTrace();
 		}
