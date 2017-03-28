@@ -15,14 +15,13 @@ import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 public class MainActivity extends AppCompatActivity {
 
 	private Fotoapparat fotoapparat;
-	private CameraView cameraView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		cameraView = (CameraView) findViewById(R.id.camera_view);
+		CameraView cameraView = (CameraView) findViewById(R.id.camera_view);
 
 		fotoapparat = Fotoapparat
 				.with(this)

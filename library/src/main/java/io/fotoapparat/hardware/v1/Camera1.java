@@ -2,6 +2,7 @@ package io.fotoapparat.hardware.v1;
 
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.support.annotation.NonNull;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class Camera1 implements CameraDevice {
 	private final Logger logger;
 
 	private Camera camera;
+	private int cameraId;
 
 	private Throwable lastStacktrace;
 
@@ -37,9 +39,8 @@ public class Camera1 implements CameraDevice {
 		recordMethod();
 
 		try {
-			camera = Camera.open(
-					cameraIdForLensPosition(lensPosition)
-			);
+			cameraId = cameraIdForLensPosition(lensPosition);
+			camera = Camera.open(cameraId);
 		} catch (RuntimeException e) {
 			throw new CameraException(e);
 		}
@@ -62,8 +63,7 @@ public class Camera1 implements CameraDevice {
 		int numberOfCameras = Camera.getNumberOfCameras();
 
 		for (int i = 0; i < numberOfCameras; i++) {
-			Camera.CameraInfo info = new Camera.CameraInfo();
-			Camera.getCameraInfo(i, info);
+			Camera.CameraInfo info = getCameraInfo(i);
 
 			if (info.facing == facingForLensPosition(lensPosition)) {
 				return i;
@@ -122,9 +122,17 @@ public class Camera1 implements CameraDevice {
 	public void setDisplayOrientation(int degrees) {
 		recordMethod();
 
-		camera.setDisplayOrientation(
-				OrientationUtils.toClosestRightAngle(degrees)
-		);
+		degrees = OrientationUtils.toClosestRightAngle(degrees);
+
+		Camera.CameraInfo info = getCameraInfo(cameraId);
+		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+			degrees = (info.orientation - degrees) % 360;
+			degrees = (360 - degrees) % 360;
+		} else {
+			degrees = (info.orientation + degrees + 360) % 360;
+		}
+
+		camera.setDisplayOrientation(degrees);
 	}
 
 	@Override
@@ -177,6 +185,13 @@ public class Camera1 implements CameraDevice {
 		}
 
 		return null;
+	}
+
+	@NonNull
+	private Camera.CameraInfo getCameraInfo(int id) {
+		Camera.CameraInfo info = new Camera.CameraInfo();
+		Camera.getCameraInfo(id, info);
+		return info;
 	}
 
 	private void recordMethod() {
