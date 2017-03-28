@@ -52,7 +52,9 @@ public class Fotoapparat {
 	}
 
 	public void start() {
-
+		executor.execute(
+				startCameraRoutine
+		);
 	}
 
 	public void stop() {
