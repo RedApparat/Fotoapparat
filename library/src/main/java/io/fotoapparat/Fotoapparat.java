@@ -12,6 +12,7 @@ import io.fotoapparat.photo.PhotoResult;
 import io.fotoapparat.request.PhotoRequest;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
+import io.fotoapparat.routine.TakePictureRoutine;
 
 /**
  * Camera. Takes pictures.
@@ -22,15 +23,18 @@ public class Fotoapparat {
 
 	private final StartCameraRoutine startCameraRoutine;
 	private final StopCameraRoutine stopCameraRoutine;
+	private final TakePictureRoutine takePictureRoutine;
 	private final Executor executor;
 
 	private boolean started = false;
 
 	public Fotoapparat(StartCameraRoutine startCameraRoutine,
 					   StopCameraRoutine stopCameraRoutine,
+					   TakePictureRoutine takePictureRoutine,
 					   Executor executor) {
 		this.startCameraRoutine = startCameraRoutine;
 		this.stopCameraRoutine = stopCameraRoutine;
+		this.takePictureRoutine = takePictureRoutine;
 		this.executor = executor;
 	}
 
@@ -53,9 +57,12 @@ public class Fotoapparat {
 
 		StopCameraRoutine stopCameraRoutine = new StopCameraRoutine(cameraDevice);
 
+		TakePictureRoutine takePictureRoutine = new TakePictureRoutine(cameraDevice, SERIAL_EXECUTOR);
+
 		return new Fotoapparat(
 				startCameraRoutine,
 				stopCameraRoutine,
+				takePictureRoutine,
 				SERIAL_EXECUTOR
 		);
 	}
@@ -65,11 +72,17 @@ public class Fotoapparat {
 	}
 
 	public final PhotoResult takePicture() {
-		return null;
+		return takePicture(
+				PhotoRequest.empty()
+		);
 	}
 
 	public PhotoResult takePicture(PhotoRequest photoRequest) {
-		return null;
+		ensureStarted();
+
+		return takePictureRoutine.takePicture(
+				photoRequest
+		);
 	}
 
 	/**

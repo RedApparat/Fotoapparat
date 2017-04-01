@@ -13,4 +13,13 @@ public class PhotoRequest {
 		return new PhotoRequest(null);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof PhotoRequest;
+	}
+
+	@Override
+	public int hashCode() {
+		return 0;
+	}
 }

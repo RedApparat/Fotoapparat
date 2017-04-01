@@ -6,19 +6,35 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import io.fotoapparat.photo.Photo;
+import io.fotoapparat.photo.PhotoResult;
+import io.fotoapparat.request.PhotoRequest;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
+import io.fotoapparat.routine.TakePictureRoutine;
 import io.fotoapparat.test.ImmediateExecutor;
 
+import static io.fotoapparat.request.PhotoRequest.empty;
+import static io.fotoapparat.test.TestUtils.immediateFuture;
+import static junit.framework.Assert.assertEquals;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FotoapparatTest {
 
+	static final PhotoResult PHOTO_RESULT = PhotoResult.fromFuture(
+			immediateFuture(
+					new Photo(new byte[0], 0)
+			)
+	);
+
 	@Mock
 	StartCameraRoutine startCameraRoutine;
 	@Mock
 	StopCameraRoutine stopCameraRoutine;
+	@Mock
+	TakePictureRoutine takePictureRoutine;
 
 	Fotoapparat testee;
 
@@ -27,6 +43,7 @@ public class FotoapparatTest {
 		testee = new Fotoapparat(
 				startCameraRoutine,
 				stopCameraRoutine,
+				takePictureRoutine,
 				new ImmediateExecutor()
 		);
 	}
@@ -73,4 +90,50 @@ public class FotoapparatTest {
 		// Expect exception
 	}
 
+	@Test
+	public void takePicture_DefaultParameters() throws Exception {
+		// Given
+		given(takePictureRoutine.takePicture(empty()))
+				.willReturn(PHOTO_RESULT);
+
+		testee.start();
+
+		// When
+		PhotoResult result = testee.takePicture();
+
+		// Then
+		assertEquals(
+				PHOTO_RESULT,
+				result
+		);
+	}
+
+	@Test
+	public void takePicture_CustomParameters() throws Exception {
+		// Given
+		PhotoRequest photoRequest = empty();
+
+		given(takePictureRoutine.takePicture(photoRequest))
+				.willReturn(PHOTO_RESULT);
+
+		testee.start();
+
+		// When
+		PhotoResult result = testee.takePicture(photoRequest);
+
+		// Then
+		assertEquals(
+				PHOTO_RESULT,
+				result
+		);
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void takePicture_NotStartedYet() throws Exception {
+		// When
+		testee.takePicture();
+
+		// Then
+		// Expect exception
+	}
 }
