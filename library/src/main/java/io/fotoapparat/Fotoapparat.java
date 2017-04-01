@@ -1,6 +1,6 @@
 package io.fotoapparat;
 
-import android.content.Context;
+import android.app.Activity;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -32,14 +32,14 @@ public class Fotoapparat {
 		this.executor = executor;
 	}
 
-	public static FotoapparatBuilder with(Context context) {
-		return new FotoapparatBuilder(context);
+	public static FotoapparatBuilder with(Activity activity) {
+		return new FotoapparatBuilder(activity);
 	}
 
 	static Fotoapparat create(FotoapparatBuilder builder) {
 		CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
 
-		ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
+		ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.activity);
 
 		StartCameraRoutine startCameraRoutine = new StartCameraRoutine(
 				builder.availableLensPositionsProvider,

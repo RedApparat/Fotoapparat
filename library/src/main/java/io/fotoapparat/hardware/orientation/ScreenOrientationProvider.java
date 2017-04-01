@@ -1,7 +1,6 @@
 package io.fotoapparat.hardware.orientation;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.Surface;
 
@@ -10,17 +9,17 @@ import android.view.Surface;
  */
 public class ScreenOrientationProvider {
 
-	private final Context context;
+	private final Activity activity;
 
-	public ScreenOrientationProvider(@NonNull Context context) {
-		this.context = context;
+	public ScreenOrientationProvider(@NonNull Activity activity) {
+		this.activity = activity;
 	}
 
 	/**
 	 * @return rotation of the screen in degrees.
 	 */
 	public int getScreenRotation() {
-		int rotation = ((Activity) context)
+		int rotation = activity
 				.getWindowManager()
 				.getDefaultDisplay()
 				.getRotation();

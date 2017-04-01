@@ -1,6 +1,6 @@
 package io.fotoapparat;
 
-import android.content.Context;
+import android.app.Activity;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,7 @@ import static junit.framework.Assert.assertNotNull;
 public class FotoapparatBuilderTest {
 
 	@Mock
-	Context context;
+	Activity activity;
 	@Mock
 	CameraProvider cameraProvider;
 	@Mock
@@ -92,7 +92,7 @@ public class FotoapparatBuilderTest {
 	@Test(expected = IllegalStateException.class)
 	public void rendererIsMandatory() throws Exception {
 		// Given
-		FotoapparatBuilder builder = new FotoapparatBuilder(context)
+		FotoapparatBuilder builder = new FotoapparatBuilder(activity)
 				.photoSize(photoSizeSelector)
 				.lensPosition(lensPositionSelector);
 
@@ -106,7 +106,7 @@ public class FotoapparatBuilderTest {
 	@Test(expected = IllegalStateException.class)
 	public void lensPositionIsMandatory() throws Exception {
 		// Given
-		FotoapparatBuilder builder = new FotoapparatBuilder(context)
+		FotoapparatBuilder builder = new FotoapparatBuilder(activity)
 				.photoSize(photoSizeSelector)
 				.into(cameraRenderer);
 
@@ -118,7 +118,7 @@ public class FotoapparatBuilderTest {
 	}
 
 	private FotoapparatBuilder builderWithMandatoryArguments() {
-		return new FotoapparatBuilder(context)
+		return new FotoapparatBuilder(activity)
 				.lensPosition(lensPositionSelector)
 				.into(cameraRenderer);
 	}
