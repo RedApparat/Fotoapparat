@@ -24,6 +24,8 @@ public class Fotoapparat {
 	private final StopCameraRoutine stopCameraRoutine;
 	private final Executor executor;
 
+	private boolean started = false;
+
 	public Fotoapparat(StartCameraRoutine startCameraRoutine,
 					   StopCameraRoutine stopCameraRoutine,
 					   Executor executor) {
@@ -62,7 +64,7 @@ public class Fotoapparat {
 		return null;
 	}
 
-	public PhotoResult takePhoto() {
+	public final PhotoResult takePhoto() {
 		return null;
 	}
 
@@ -70,16 +72,44 @@ public class Fotoapparat {
 		return null;
 	}
 
+	/**
+	 * Starts camera.
+	 *
+	 * @throws IllegalStateException if camera was already started.
+	 */
 	public void start() {
+		ensureNotStarted();
+		started = true;
+
 		executor.execute(
 				startCameraRoutine
 		);
 	}
 
+	/**
+	 * Stops camera.
+	 *
+	 * @throws IllegalStateException if camera is not started.
+	 */
 	public void stop() {
+		ensureStarted();
+		started = false;
+
 		executor.execute(
 				stopCameraRoutine
 		);
+	}
+
+	private void ensureStarted() {
+		if (!started) {
+			throw new IllegalStateException("Camera is not started!");
+		}
+	}
+
+	private void ensureNotStarted() {
+		if (started) {
+			throw new IllegalStateException("Camera is already started!");
+		}
 	}
 
 }

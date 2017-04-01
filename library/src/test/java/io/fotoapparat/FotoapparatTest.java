@@ -40,12 +40,37 @@ public class FotoapparatTest {
 		verify(startCameraRoutine).run();
 	}
 
+	@Test(expected = IllegalStateException.class)
+	public void start_SecondTime() throws Exception {
+		// Given
+		testee.start();
+
+		// When
+		testee.start();
+
+		// Then
+		// Expect exception
+	}
+
 	@Test
 	public void stop() throws Exception {
+		// Given
+		testee.start();
+
 		// When
 		testee.stop();
 
 		// Then
 		verify(stopCameraRoutine).run();
 	}
+
+	@Test(expected = IllegalStateException.class)
+	public void stop_NotStarted() throws Exception {
+		// When
+		testee.stop();
+
+		// Then
+		// Expect exception
+	}
+
 }
