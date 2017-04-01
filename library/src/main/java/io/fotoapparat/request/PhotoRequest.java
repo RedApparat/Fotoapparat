@@ -5,8 +5,12 @@ package io.fotoapparat.request;
  */
 public class PhotoRequest {
 
-    public PhotoRequest(PhotoRequestBuilder photoRequestBuilder) {
+	public PhotoRequest(PhotoRequestBuilder photoRequestBuilder) {
 
-    }
+	}
+
+	public static PhotoRequest empty() {
+		return new PhotoRequest(null);
+	}
 
 }
