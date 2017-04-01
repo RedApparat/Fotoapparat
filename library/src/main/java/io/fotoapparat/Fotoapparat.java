@@ -71,12 +71,21 @@ public class Fotoapparat {
 		return null;
 	}
 
+	/**
+	 * Same as {@link #takePicture(PhotoRequest)} but with default parameters.
+	 */
 	public final PhotoResult takePicture() {
 		return takePicture(
 				PhotoRequest.empty()
 		);
 	}
 
+	/**
+	 * Takes picture. Returns immediately.
+	 *
+	 * @param photoRequest requirements for the photo.
+	 * @return {@link PhotoResult} which will deliver result asynchronously.
+	 */
 	public PhotoResult takePicture(PhotoRequest photoRequest) {
 		ensureStarted();
 
