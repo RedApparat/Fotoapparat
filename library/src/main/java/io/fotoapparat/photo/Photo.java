@@ -1,5 +1,7 @@
 package io.fotoapparat.photo;
 
+import java.util.Arrays;
+
 /**
  * Taken photo.
  */
@@ -20,6 +22,24 @@ public class Photo {
 				 int rotationDegrees) {
 		this.encodedImage = encodedImage;
 		this.rotationDegrees = rotationDegrees;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Photo photo = (Photo) o;
+
+		return rotationDegrees == photo.rotationDegrees
+				&& Arrays.equals(encodedImage, photo.encodedImage);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Arrays.hashCode(encodedImage);
+		result = 31 * result + rotationDegrees;
+		return result;
 	}
 
 }

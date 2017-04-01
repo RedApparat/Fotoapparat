@@ -64,11 +64,11 @@ public class Fotoapparat {
 		return null;
 	}
 
-	public final PhotoResult takePhoto() {
+	public final PhotoResult takePicture() {
 		return null;
 	}
 
-	public PhotoResult takePhoto(PhotoRequest photoRequest) {
+	public PhotoResult takePicture(PhotoRequest photoRequest) {
 		return null;
 	}
 
