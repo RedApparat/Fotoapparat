@@ -25,7 +25,7 @@ public class FotoapparatTest {
 
 	static final PhotoResult PHOTO_RESULT = PhotoResult.fromFuture(
 			immediateFuture(
-					new Photo(new byte[0], 0)
+					Photo.empty()
 			)
 	);
 

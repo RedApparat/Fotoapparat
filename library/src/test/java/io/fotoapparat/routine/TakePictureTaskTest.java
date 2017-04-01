@@ -16,7 +16,7 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class TakePictureTaskTest {
 
-	static final Photo PHOTO = new Photo(new byte[]{1, 2, 3}, 90);
+	static final Photo PHOTO = Photo.empty();
 
 	@Mock
 	CameraDevice cameraDevice;
