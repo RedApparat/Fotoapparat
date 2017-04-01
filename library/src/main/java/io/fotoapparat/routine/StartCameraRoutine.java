@@ -1,5 +1,6 @@
 package io.fotoapparat.routine;
 
+import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.parameter.LensPosition;
@@ -15,15 +16,18 @@ public class StartCameraRoutine implements Runnable {
 	private final CameraDevice cameraDevice;
 	private final CameraRenderer cameraRenderer;
 	private final SelectorFunction<LensPosition> lensPositionSelector;
+	private final ScreenOrientationProvider screenOrientationProvider;
 
 	public StartCameraRoutine(AvailableLensPositionsProvider availableLensPositionsProvider,
 							  CameraDevice cameraDevice,
 							  CameraRenderer cameraRenderer,
-							  SelectorFunction<LensPosition> lensPositionSelector) {
+							  SelectorFunction<LensPosition> lensPositionSelector,
+							  ScreenOrientationProvider screenOrientationProvider) {
 		this.availableLensPositionsProvider = availableLensPositionsProvider;
 		this.cameraDevice = cameraDevice;
 		this.cameraRenderer = cameraRenderer;
 		this.lensPositionSelector = lensPositionSelector;
+		this.screenOrientationProvider = screenOrientationProvider;
 	}
 
 	@Override
@@ -34,6 +38,9 @@ public class StartCameraRoutine implements Runnable {
 
 		cameraDevice.open(lensPosition);
 		cameraRenderer.attachCamera(cameraDevice);
+		cameraDevice.setDisplayOrientation(
+				screenOrientationProvider.getScreenRotation()
+		);
 		cameraDevice.startPreview();
 	}
 

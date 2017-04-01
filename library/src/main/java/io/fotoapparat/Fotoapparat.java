@@ -7,12 +7,11 @@ import java.util.concurrent.Executors;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
-import io.fotoapparat.hardware.orientation.OrientationSensor;
+import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
 import io.fotoapparat.photo.PhotoResult;
 import io.fotoapparat.request.PhotoRequest;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
-import io.fotoapparat.routine.UpdateOrientationRoutine;
 
 /**
  * Camera. Takes pictures.
@@ -23,16 +22,13 @@ public class Fotoapparat {
 
 	private final StartCameraRoutine startCameraRoutine;
 	private final StopCameraRoutine stopCameraRoutine;
-	private final UpdateOrientationRoutine updateOrientationRoutine;
 	private final Executor executor;
 
 	public Fotoapparat(StartCameraRoutine startCameraRoutine,
 					   StopCameraRoutine stopCameraRoutine,
-					   UpdateOrientationRoutine updateOrientationRoutine,
 					   Executor executor) {
 		this.startCameraRoutine = startCameraRoutine;
 		this.stopCameraRoutine = stopCameraRoutine;
-		this.updateOrientationRoutine = updateOrientationRoutine;
 		this.executor = executor;
 	}
 
@@ -43,25 +39,21 @@ public class Fotoapparat {
 	static Fotoapparat create(FotoapparatBuilder builder) {
 		CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
 
+		ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
+
 		StartCameraRoutine startCameraRoutine = new StartCameraRoutine(
 				builder.availableLensPositionsProvider,
 				cameraDevice,
 				builder.renderer,
-				builder.lensPositionSelector
+				builder.lensPositionSelector,
+				screenOrientationProvider
 		);
 
 		StopCameraRoutine stopCameraRoutine = new StopCameraRoutine(cameraDevice);
 
-		UpdateOrientationRoutine updateOrientationRoutine = new UpdateOrientationRoutine(
-				cameraDevice,
-				new OrientationSensor(builder.context),
-				SERIAL_EXECUTOR
-		);
-
 		return new Fotoapparat(
 				startCameraRoutine,
 				stopCameraRoutine,
-				updateOrientationRoutine,
 				SERIAL_EXECUTOR
 		);
 	}
@@ -82,11 +74,9 @@ public class Fotoapparat {
 		executor.execute(
 				startCameraRoutine
 		);
-		updateOrientationRoutine.start();
 	}
 
 	public void stop() {
-		updateOrientationRoutine.stop();
 		executor.execute(
 				stopCameraRoutine
 		);

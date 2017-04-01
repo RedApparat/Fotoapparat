@@ -126,10 +126,10 @@ public class Camera1 implements CameraDevice {
 
 		Camera.CameraInfo info = getCameraInfo(cameraId);
 		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-			degrees = (info.orientation - degrees) % 360;
+			degrees = (info.orientation + degrees) % 360;
 			degrees = (360 - degrees) % 360;
 		} else {
-			degrees = (info.orientation + degrees + 360) % 360;
+			degrees = (info.orientation - degrees + 360) % 360;
 		}
 
 		camera.setDisplayOrientation(degrees);

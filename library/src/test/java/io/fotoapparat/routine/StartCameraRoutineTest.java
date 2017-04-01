@@ -10,8 +10,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
-import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.CameraDevice;
+import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
+import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.view.CameraRenderer;
@@ -23,6 +24,8 @@ import static org.mockito.Mockito.inOrder;
 @RunWith(MockitoJUnitRunner.class)
 public class StartCameraRoutineTest {
 
+	static final int SCREEN_ROTATION_DEGREES = 90;
+
 	@Mock
 	AvailableLensPositionsProvider availableLensPositionsProvider;
 	@Mock
@@ -31,6 +34,8 @@ public class StartCameraRoutineTest {
 	CameraRenderer cameraRenderer;
 	@Mock
 	SelectorFunction<LensPosition> lensPositionSelector;
+	@Mock
+	ScreenOrientationProvider screenOrientationProvider;
 
 	@InjectMocks
 	StartCameraRoutine testee;
@@ -47,6 +52,7 @@ public class StartCameraRoutineTest {
 
 		givenLensPositionsAvailable(availableLensPositions);
 		givenPositionSelected(preferredLensPosition);
+		givenScreenRotation();
 
 		// When
 		testee.run();
@@ -61,7 +67,13 @@ public class StartCameraRoutineTest {
 		inOrder.verify(lensPositionSelector).select(availableLensPositions);
 		inOrder.verify(cameraDevice).open(preferredLensPosition);
 		inOrder.verify(cameraRenderer).attachCamera(cameraDevice);
+		inOrder.verify(cameraDevice).setDisplayOrientation(SCREEN_ROTATION_DEGREES);
 		inOrder.verify(cameraDevice).startPreview();
+	}
+
+	private void givenScreenRotation() {
+		given(screenOrientationProvider.getScreenRotation())
+				.willReturn(SCREEN_ROTATION_DEGREES);
 	}
 
 	private void givenPositionSelected(LensPosition lensPosition) {
