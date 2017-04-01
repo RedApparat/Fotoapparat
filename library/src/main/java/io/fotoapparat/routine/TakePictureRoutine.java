@@ -3,7 +3,7 @@ package io.fotoapparat.routine;
 import java.util.concurrent.Executor;
 
 import io.fotoapparat.hardware.CameraDevice;
-import io.fotoapparat.photo.PhotoResult;
+import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.request.PhotoRequest;
 
 /**

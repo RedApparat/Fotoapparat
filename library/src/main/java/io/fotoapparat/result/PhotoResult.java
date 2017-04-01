@@ -1,6 +1,8 @@
-package io.fotoapparat.photo;
+package io.fotoapparat.result;
 
 import java.util.concurrent.Future;
+
+import io.fotoapparat.photo.Photo;
 
 /**
  * Result of taking the photo.

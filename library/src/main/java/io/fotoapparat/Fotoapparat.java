@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
-import io.fotoapparat.photo.PhotoResult;
+import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.request.PhotoRequest;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;

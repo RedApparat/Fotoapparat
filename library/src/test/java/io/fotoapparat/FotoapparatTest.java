@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.photo.Photo;
-import io.fotoapparat.photo.PhotoResult;
+import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.request.PhotoRequest;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
