@@ -36,6 +36,7 @@ public class SurfaceReader implements ImageReader.OnImageAvailableListener {
 		if (planes.length > 0) {
 			ByteBuffer buffer = planes[0].getBuffer();
 			bytes = new byte[buffer.remaining()];
+			buffer.get(bytes);
 			countDownLatch.countDown();
 		}
 	}
