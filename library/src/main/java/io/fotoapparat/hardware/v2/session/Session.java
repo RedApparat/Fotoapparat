@@ -43,24 +43,17 @@ public class Session implements PhotoCaptor {
 		this.cameraCharacteristics = cameraCharacteristics;
 		this.surfaces = surfaces;
 
-		CameraThread
-				.getInstance()
-				.getHandler()
-				.post(new Runnable() {
-					@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-					@Override
-					public void run() {
-						try {
-							camera.createCaptureSession(
-									surfaces,
-									captureSessionAction,
-									null
-							);
-						} catch (CameraAccessException e) {
-							// Do nothing
-						}
-					}
-				});
+		try {
+			camera.createCaptureSession(
+					surfaces,
+					captureSessionAction,
+					CameraThread
+							.getInstance()
+							.getHandler()
+			);
+		} catch (CameraAccessException e) {
+			// Do nothing
+		}
 	}
 
 	CameraCaptureSession getCaptureSession() {
