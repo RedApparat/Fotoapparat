@@ -7,6 +7,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
+import io.fotoapparat.result.transformer.Transformer;
+
 /**
  * Result which might not be readily available at the given moment but will be available in the
  * future.

@@ -5,6 +5,7 @@ import java.util.concurrent.Future;
 
 import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.photo.Photo;
+import io.fotoapparat.result.transformer.BitmapPhotoTransformer;
 
 /**
  * Result of taking the photo.
@@ -24,7 +25,8 @@ public class PhotoResult {
 	}
 
 	public PendingResult<BitmapPhoto> toBitmap() {
-		return null;
+		return pendingResult
+				.transform(new BitmapPhotoTransformer());
 	}
 
 	public PendingResult<?> saveToFile(File file) {

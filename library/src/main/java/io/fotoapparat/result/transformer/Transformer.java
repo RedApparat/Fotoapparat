@@ -1,9 +1,9 @@
-package io.fotoapparat.result;
+package io.fotoapparat.result.transformer;
 
 /**
  * Transforms one type to another.
  */
-interface Transformer<T, R> {
+public interface Transformer<T, R> {
 
 	/**
 	 * Transforms input type to some other type.

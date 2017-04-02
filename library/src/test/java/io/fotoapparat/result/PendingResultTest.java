@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import io.fotoapparat.result.transformer.Transformer;
 import io.fotoapparat.test.ImmediateExecutor;
 
 import static io.fotoapparat.test.TestUtils.immediateFuture;
