@@ -1,5 +1,8 @@
 package io.fotoapparat.result;
 
+import android.os.Handler;
+import android.support.annotation.NonNull;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -16,6 +19,7 @@ import io.fotoapparat.result.transformer.Transformer;
 public class PendingResult<T> {
 
 	private static final Executor TASK_EXECUTOR = Executors.newSingleThreadExecutor();
+	private static final Handler MAIN_THREAD_HANDLER = new Handler();
 
 	private final Future<T> future;
 	private final Executor executor;
@@ -29,7 +33,7 @@ public class PendingResult<T> {
 	/**
 	 * @return {@link PendingResult} which waits for the result of {@link Future}.
 	 */
-	public static <T> PendingResult<T> fromFuture(Future<T> future) {
+	public static <T> PendingResult<T> fromFuture(@NonNull Future<T> future) {
 		return new PendingResult<>(
 				future,
 				TASK_EXECUTOR
@@ -43,7 +47,7 @@ public class PendingResult<T> {
 	 *                    type.
 	 * @return {@link PendingResult} of another type.
 	 */
-	public <R> PendingResult<R> transform(final Transformer<T, R> transformer) {
+	public <R> PendingResult<R> transform(@NonNull final Transformer<T, R> transformer) {
 		FutureTask<R> transformTask = new FutureTask<>(new Callable<R>() {
 			@Override
 			public R call() throws Exception {
@@ -68,6 +72,51 @@ public class PendingResult<T> {
 	 */
 	public T await() throws ExecutionException, InterruptedException {
 		return future.get();
+	}
+
+	/**
+	 * Notifies given callback as soon as result is available. Callback will always be notified on
+	 * a main thread.
+	 */
+	public void whenAvailable(@NonNull final Callback<T> callback) {
+		executor.execute(new Runnable() {
+			@Override
+			public void run() {
+				final T result = getResultUnsafe();
+
+				notifyCallbackOnMainThread(result, callback);
+			}
+		});
+	}
+
+	private void notifyCallbackOnMainThread(final T result,
+											final Callback<T> callback) {
+		MAIN_THREAD_HANDLER.post(new Runnable() {
+			@Override
+			public void run() {
+				callback.onResult(result);
+			}
+		});
+	}
+
+	private T getResultUnsafe() {
+		try {
+			return future.get();
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Notified when result becomes available.
+	 */
+	public interface Callback<T> {
+
+		/**
+		 * Called as soon as result is available.
+		 */
+		void onResult(T result);
+
 	}
 
 }
