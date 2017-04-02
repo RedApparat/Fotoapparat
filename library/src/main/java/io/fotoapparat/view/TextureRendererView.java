@@ -1,7 +1,6 @@
 package io.fotoapparat.view;
 
 import android.content.Context;
-import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
@@ -12,8 +11,6 @@ import android.util.AttributeSet;
 import android.view.TextureView;
 import android.widget.FrameLayout;
 
-import java.util.concurrent.CountDownLatch;
-
 import io.fotoapparat.hardware.CameraDevice;
 
 /**
@@ -21,9 +18,7 @@ import io.fotoapparat.hardware.CameraDevice;
  */
 class TextureRendererView extends FrameLayout implements CameraRenderer {
 
-	private final CountDownLatch textureLatch = new CountDownLatch(1);
-
-	private SurfaceTexture surfaceTexture;
+	private TextureView textureView;
 
 	public TextureRendererView(@NonNull Context context) {
 		super(context);
@@ -51,62 +46,13 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
 	}
 
 	private void init() {
-		TextureView textureView = new TextureView(getContext());
-		tryToInitializeSurfaceTexture(textureView);
+		textureView = new TextureView(getContext());
 
 		addView(textureView);
 	}
 
-	private void tryToInitializeSurfaceTexture(TextureView textureView) {
-		surfaceTexture = textureView.getSurfaceTexture();
-		if (surfaceTexture == null) {
-			textureView.setSurfaceTextureListener(new TextureListener());
-		}
-	}
-
 	@Override
 	public void attachCamera(CameraDevice camera) {
-		awaitSurfaceTexture();
-
-		camera.setDisplaySurface(surfaceTexture);
+		camera.setDisplaySurface(textureView);
 	}
-
-	private void awaitSurfaceTexture() {
-		if (surfaceTexture != null) {
-			return;
-		}
-
-		try {
-			textureLatch.await();
-		} catch (InterruptedException e) {
-			// Do nothing
-		}
-	}
-
-	private class TextureListener implements TextureView.SurfaceTextureListener {
-
-		@Override
-		public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-			surfaceTexture = surface;
-			textureLatch.countDown();
-		}
-
-		@Override
-		public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-			// Do nothing
-		}
-
-		@Override
-		public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-			// Do nothing
-
-			return true;
-		}
-
-		@Override
-		public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-			// Do nothing
-		}
-	}
-
 }

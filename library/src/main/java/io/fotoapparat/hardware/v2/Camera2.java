@@ -1,17 +1,19 @@
 package io.fotoapparat.hardware.v2;
 
 import android.content.Context;
-import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.view.TextureView;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.Parameters;
+import io.fotoapparat.hardware.v2.capabilities.CameraCapabilities;
 import io.fotoapparat.hardware.v2.captor.PhotoCaptor;
+import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.session.PreviewOperator;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.Photo;
@@ -28,8 +30,16 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 
 	public Camera2(Context context) {
 		CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
-		cameraManager = new io.fotoapparat.hardware.v2.CameraManager(manager);
+
 		cameraSelector = new CameraSelector(manager);
+
+		CameraConnection cameraConnection = new CameraConnection(manager);
+		CameraCapabilities cameraCapabilities = new CameraCapabilities(manager);
+
+		cameraManager = new io.fotoapparat.hardware.v2.CameraManager(
+				cameraConnection,
+				cameraCapabilities
+		);
 	}
 
 	@Override
@@ -37,7 +47,6 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 		try {
 			String cameraId = cameraSelector.findCameraId(lensPosition);
 			cameraManager.open(cameraId);
-
 		} catch (CameraAccessException e) {
 			throw new CameraException(e);
 		}
@@ -59,17 +68,13 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 	}
 
 	@Override
-	public void setDisplaySurface(Object displaySurface) {
-		if (displaySurface instanceof SurfaceTexture) {
-			cameraManager.setSurface(((SurfaceTexture) displaySurface));
-		} else {
-			throw new IllegalArgumentException("Unsupported display surface: " + displaySurface);
-		}
+	public void setDisplaySurface(TextureView textureView) {
+		cameraManager.setSurface(textureView);
 	}
 
 	@Override
 	public void setDisplayOrientation(int degrees) {
-		// TODO implement
+		cameraManager.onOrientationChanged(degrees);
 	}
 
 	@Override

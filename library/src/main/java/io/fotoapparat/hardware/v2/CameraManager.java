@@ -3,11 +3,15 @@ package io.fotoapparat.hardware.v2;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraDevice;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.view.TextureView;
 
 import io.fotoapparat.hardware.v2.capabilities.CameraCapabilities;
 import io.fotoapparat.hardware.v2.captor.PhotoCaptor;
+import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.session.PreviewOperator;
 import io.fotoapparat.hardware.v2.session.PreviewSession;
 import io.fotoapparat.hardware.v2.session.Session;
@@ -20,38 +24,26 @@ import io.fotoapparat.photo.Photo;
  */
 @SuppressWarnings("MissingPermission")
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-class CameraManager implements PreviewOperator, PhotoCaptor {
+class CameraManager implements PreviewOperator, PhotoCaptor, OrientationObserver, OrientationObserver.OrientationListener {
 
-	private final OpenCameraAction openCameraAction = new OpenCameraAction();
-	private final android.hardware.camera2.CameraManager manager;
+	private final TextureManager textureManager = new TextureManager(this);
+	private final CameraConnection cameraConnection;
 	private Session session;
 	private CameraCapabilities capabilities;
+	private OrientationListener orientationListener;
 
-	CameraManager(android.hardware.camera2.CameraManager manager) {
-		this.manager = manager;
-		capabilities = new CameraCapabilities(manager);
+	CameraManager(CameraConnection cameraConnection, CameraCapabilities capabilities) {
+		this.cameraConnection = cameraConnection;
+		this.capabilities = capabilities;
 	}
 
 	CameraCharacteristics getCapabilities() {
 		return capabilities.getCameraCharacteristics();
 	}
 
-	void open(final String cameraId) {
-		CameraThread
-				.getInstance()
-				.getHandler()
-				.post(new Runnable() {
-
-					@Override
-					public void run() {
-						try {
-							manager.openCamera(cameraId, openCameraAction, null);
-							capabilities.setCamera(cameraId);
-						} catch (CameraAccessException e) {
-							// do nothing
-						}
-					}
-				});
+	void open(final String cameraId) throws CameraAccessException {
+		cameraConnection.open(cameraId);
+		capabilities.setCameraId(cameraId);
 	}
 
 	void close() {
@@ -59,11 +51,16 @@ class CameraManager implements PreviewOperator, PhotoCaptor {
 	}
 
 	android.hardware.camera2.CameraDevice getCamera() {
-		return openCameraAction.getCamera();
+		return cameraConnection.getCamera();
 	}
 
-	public void setSurface(SurfaceTexture displaySurface) {
-		session = new PreviewSession(getCamera(), getCapabilities(), displaySurface);
+	public void setSurface(TextureView textureView) {
+		textureManager.setTextureView(textureView);
+
+		CameraDevice camera = getCamera();
+		CameraCharacteristics capabilities = getCapabilities();
+		SurfaceTexture surface = textureManager.getSurface();
+		session = new PreviewSession(camera, capabilities, surface);
 	}
 
 	@Override
@@ -88,4 +85,15 @@ class CameraManager implements PreviewOperator, PhotoCaptor {
 		return session.takePicture();
 	}
 
+	@Override
+	public void setOrientationListener(@NonNull OrientationListener orientationListener) {
+		this.orientationListener = orientationListener;
+	}
+
+	@Override
+	public void onOrientationChanged(int orientation) {
+		if (orientationListener != null) {
+			orientationListener.onOrientationChanged(orientation);
+		}
+	}
 }
