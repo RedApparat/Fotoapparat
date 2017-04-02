@@ -32,7 +32,7 @@ public class CameraConnection extends CameraDevice.StateCallback {
 				this,
 				CameraThread
 						.getInstance()
-						.getHandler()
+						.createHandler()
 		);
 	}
 

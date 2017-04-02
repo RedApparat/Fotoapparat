@@ -49,7 +49,7 @@ public class Session implements PhotoCaptor {
 					captureSessionAction,
 					CameraThread
 							.getInstance()
-							.getHandler()
+							.createHandler()
 			);
 		} catch (CameraAccessException e) {
 			// Do nothing

@@ -43,7 +43,7 @@ public class PictureCaptor implements PhotoCaptor {
 
 		CameraThread
 				.getInstance()
-				.getHandler()
+				.createHandler()
 				.post(new Runnable() {
 					@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 					@Override

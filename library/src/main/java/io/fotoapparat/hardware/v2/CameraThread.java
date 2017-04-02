@@ -10,8 +10,6 @@ public class CameraThread extends HandlerThread {
 
 	private static CameraThread INSTANCE;
 
-	private Handler handler;
-
 	/**
 	 * @return the instance of this class.
 	 */
@@ -28,12 +26,11 @@ public class CameraThread extends HandlerThread {
 	}
 
 	/**
-	 * @return the handler for this thread.
+	 * Creates a new handler for the this thread.
+	 *
+	 * @return the new handler for this thread.
 	 */
-	public Handler getHandler() {
-		if (handler == null) {
-			handler = new Handler(getLooper());
-		}
-		return handler;
+	public Handler createHandler() {
+		return new Handler(getLooper());
 	}
 }
