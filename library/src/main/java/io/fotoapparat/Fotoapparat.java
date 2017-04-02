@@ -49,10 +49,10 @@ public class Fotoapparat {
 	}
 
 	static Fotoapparat create(FotoapparatBuilder builder) {
-
 		CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
-		ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
+
 		RotationListener rotationListener = new RotationListener(builder.context);
+		ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
 
 		StartCameraRoutine startCameraRoutine = new StartCameraRoutine(
 				builder.availableLensPositionsProvider,

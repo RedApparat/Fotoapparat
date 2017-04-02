@@ -13,6 +13,7 @@ import android.support.annotation.RequiresApi;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
+import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.photo.Photo;
 
 /**
@@ -23,10 +24,14 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 
 	private final SurfaceReader surfaceReader;
 	private final CameraConnection cameraConnection;
+	private final OrientationManager orientationManager;
 
-	public PictureCaptor(SurfaceReader surfaceReader, CameraConnection cameraConnection) {
+	public PictureCaptor(SurfaceReader surfaceReader,
+						 CameraConnection cameraConnection,
+						 OrientationManager orientationManager) {
 		this.surfaceReader = surfaceReader;
 		this.cameraConnection = cameraConnection;
+		this.orientationManager = orientationManager;
 	}
 
 	@Override
@@ -49,28 +54,26 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 	 *
 	 * @param captureSession the currently opened capture session of the camera
 	 * @return a new Photo
-	 * @throws CameraAccessException if the camera device is no longer connected or has encountered
-	 *                               a fatal error
 	 */
 	public Photo takePhoto(CameraCaptureSession captureSession) {
+		Integer sensorOrientation = orientationManager.getSensorOrientation();
 		try {
-			capture(captureSession);
+			capture(captureSession, sensorOrientation);
 		} catch (CameraAccessException e) {
 			throw new CameraException(e);
 		}
 
-		byte[] photoBytes = surfaceReader.getPhotoBytes();
-
 		return new Photo(
-				photoBytes,
-				0 // fixme
+				surfaceReader.getPhotoBytes(),
+				sensorOrientation
 		);
 	}
 
-	private void capture(CameraCaptureSession session) throws CameraAccessException {
-		CaptureRequest captureRequest = createCaptureRequest();
+	private void capture(CameraCaptureSession session,
+						 Integer sensorOrientation) throws CameraAccessException {
+		CaptureRequest captureRequest = createCaptureRequest(sensorOrientation);
 
-		session.stopRepeating();
+//		session.stopRepeating();
 		session.capture(captureRequest,
 				this,
 				CameraThread
@@ -79,13 +82,13 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 		);
 	}
 
-	private CaptureRequest createCaptureRequest() throws CameraAccessException {
+	private CaptureRequest createCaptureRequest(Integer sensorOrientation) throws CameraAccessException {
 		CaptureRequest.Builder requestBuilder = cameraConnection
 				.getCamera()
 				.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
 
 		requestBuilder.addTarget(surfaceReader.getSurface());
-		requestBuilder.set(CaptureRequest.JPEG_ORIENTATION, 0); // TODO: 02/04/17
+		requestBuilder.set(CaptureRequest.JPEG_ORIENTATION, sensorOrientation);
 
 		return requestBuilder.build();
 	}

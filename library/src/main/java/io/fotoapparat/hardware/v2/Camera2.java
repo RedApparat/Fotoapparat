@@ -10,6 +10,8 @@ import io.fotoapparat.hardware.Parameters;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 import io.fotoapparat.hardware.v2.captor.SurfaceReader;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
+import io.fotoapparat.hardware.v2.orientation.OrientationManager;
+import io.fotoapparat.hardware.v2.orientation.TextureManager;
 import io.fotoapparat.hardware.v2.selection.CameraSelector;
 import io.fotoapparat.hardware.v2.session.PreviewOperator;
 import io.fotoapparat.hardware.v2.session.PreviewSession;
@@ -24,6 +26,7 @@ import io.fotoapparat.photo.Photo;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Camera2 implements CameraDevice, PreviewOperator {
 
+	private final OrientationManager orientationManager;
 	private final TextureManager textureManager;
 	private final CameraSelector cameraSelector;
 	private final CameraConnection connection;
@@ -36,11 +39,13 @@ public class Camera2 implements CameraDevice, PreviewOperator {
 				   CameraConnection connection,
 				   SurfaceReader surfaceReader,
 				   PictureCaptor pictureCaptor,
+				   OrientationManager orientationManager,
 				   TextureManager textureManager) {
 		this.cameraSelector = cameraSelector;
 		this.connection = connection;
 		this.surfaceReader = surfaceReader;
 		this.pictureCaptor = pictureCaptor;
+		this.orientationManager = orientationManager;
 		this.textureManager = textureManager;
 	}
 
@@ -89,7 +94,7 @@ public class Camera2 implements CameraDevice, PreviewOperator {
 
 	@Override
 	public void setDisplayOrientation(int degrees) {
-		textureManager.onDisplayOrientationChanged(degrees);
+		orientationManager.onDisplayOrientationChanged(degrees);
 	}
 
 	@Override

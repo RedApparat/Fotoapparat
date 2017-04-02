@@ -1,4 +1,4 @@
-package io.fotoapparat.hardware.v2;
+package io.fotoapparat.hardware.v2.orientation;
 
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
@@ -16,12 +16,17 @@ import io.fotoapparat.view.TextureListener;
  * Manages the {@link SurfaceTexture} of a {@link TextureView}.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class TextureManager implements TextureListener.Listener {
+public class TextureManager implements TextureListener.Listener, OrientationManager.Listener {
 
 	private final CountDownLatch surfaceLatch = new CountDownLatch(1);
+	private final OrientationManager orientationManager;
 	private SurfaceTexture surface;
-	private int orientation;
 	private TextureView textureView;
+
+	public TextureManager(OrientationManager orientationManager) {
+		this.orientationManager = orientationManager;
+		orientationManager.setListener(this);
+	}
 
 	private static float[] getDst(int orientation, int width, int height) {
 		if (orientation == 90) {
@@ -42,11 +47,9 @@ public class TextureManager implements TextureListener.Listener {
 
 	/**
 	 * Notifies that the display orientation has changed.
-	 *
-	 * @param orientation the display orientation in degrees. One of: 0, 90, 180 and 270
 	 */
-	void onDisplayOrientationChanged(int orientation) {
-		this.orientation = orientation;
+	@Override
+	public void onDisplayOrientationChanged() {
 		correctOrientation(textureView.getWidth(), textureView.getHeight());
 	}
 
@@ -55,7 +58,7 @@ public class TextureManager implements TextureListener.Listener {
 	 *
 	 * @param textureView the textureView to interact
 	 */
-	void setTextureView(TextureView textureView) {
+	public void setTextureView(TextureView textureView) {
 		this.textureView = textureView;
 		surface = textureView.getSurfaceTexture();
 		if (surface != null) {
@@ -69,7 +72,7 @@ public class TextureManager implements TextureListener.Listener {
 	 * @return the {@link SurfaceTexture} of the {@link TextureView} but only when it becomes
 	 * available.
 	 */
-	SurfaceTexture getSurface() {
+	public SurfaceTexture getSurface() {
 		try {
 			surfaceLatch.await();
 		} catch (InterruptedException e) {
@@ -91,7 +94,9 @@ public class TextureManager implements TextureListener.Listener {
 
 	private void correctOrientation(int width, int height) {
 		final Matrix matrix = new Matrix();
-		if (orientation % 180 == 90) {
+		int screenOrientation = orientationManager.getScreenOrientation();
+
+		if (screenOrientation % 180 == 90) {
 			float[] src = {
 					0.f, 0.f, // top left
 					width, 0.f, // top right
@@ -99,7 +104,7 @@ public class TextureManager implements TextureListener.Listener {
 					width, height, // bottom right
 			};
 
-			float[] dst = getDst(orientation, width, height);
+			float[] dst = getDst(screenOrientation, width, height);
 
 			matrix.setPolyToPoly(src, 0, dst, 0, 4);
 		}
