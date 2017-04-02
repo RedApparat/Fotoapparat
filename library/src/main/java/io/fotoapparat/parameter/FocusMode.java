@@ -3,7 +3,7 @@ package io.fotoapparat.parameter;
 /**
  * Focus modes which camera can use.
  */
-public enum FocusModes {
+public enum FocusMode {
 
     /**
      * Focus is not adjustable. It is always used by devices which do not support auto-focus.
