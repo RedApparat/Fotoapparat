@@ -21,7 +21,7 @@ public class PreviewSession extends Session implements PreviewOperator {
 	private final CameraDevice camera;
 	private final Surface surface;
 
-	public PreviewSession(final CameraDevice camera, CameraCharacteristics capabilities, final SurfaceTexture surfaceTexture) {
+	public PreviewSession(CameraDevice camera, CameraCharacteristics capabilities, SurfaceTexture surfaceTexture) {
 		super(camera, capabilities, new Surface(surfaceTexture));
 		this.camera = camera;
 		this.surface = new Surface(surfaceTexture);
