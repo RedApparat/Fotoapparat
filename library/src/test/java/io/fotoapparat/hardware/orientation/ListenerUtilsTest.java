@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
-public class OrientationListenerUtilsTest {
+public class ListenerUtilsTest {
 
 	@Test
 	public void toClosestRightAngle_0() throws Exception {

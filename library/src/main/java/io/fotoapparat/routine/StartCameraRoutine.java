@@ -1,8 +1,8 @@
 package io.fotoapparat.routine;
 
+import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
-import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.view.CameraRenderer;
@@ -43,5 +43,4 @@ public class StartCameraRoutine implements Runnable {
 		);
 		cameraDevice.startPreview();
 	}
-
 }

@@ -7,11 +7,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.photo.Photo;
-import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.request.PhotoRequest;
+import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
 import io.fotoapparat.routine.TakePictureRoutine;
+import io.fotoapparat.routine.UpdateOrientationRoutine;
 import io.fotoapparat.test.ImmediateExecutor;
 
 import static io.fotoapparat.request.PhotoRequest.empty;
@@ -34,6 +35,8 @@ public class FotoapparatTest {
 	@Mock
 	StopCameraRoutine stopCameraRoutine;
 	@Mock
+	UpdateOrientationRoutine updateOrientationRoutine;
+	@Mock
 	TakePictureRoutine takePictureRoutine;
 
 	Fotoapparat testee;
@@ -43,6 +46,7 @@ public class FotoapparatTest {
 		testee = new Fotoapparat(
 				startCameraRoutine,
 				stopCameraRoutine,
+				updateOrientationRoutine,
 				takePictureRoutine,
 				new ImmediateExecutor()
 		);
