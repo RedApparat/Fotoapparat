@@ -1,6 +1,6 @@
 package io.fotoapparat;
 
-import android.app.Activity;
+import android.content.Context;
 
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.provider.CameraProvider;
@@ -18,7 +18,7 @@ import io.fotoapparat.view.CameraRenderer;
  */
 public class FotoapparatBuilder {
 
-	Activity activity;
+	Context context;
 	AvailableLensPositionsProvider availableLensPositionsProvider = new V1AvailableLensPositionProvider();
 	CameraProvider cameraProvider = new V1Provider();
 	CameraRenderer renderer;
@@ -26,8 +26,8 @@ public class FotoapparatBuilder {
 	SelectorFunction<LensPosition> lensPositionSelector;
 	Logger logger = new DummyLogger();
 
-	FotoapparatBuilder(Activity activity) {
-		this.activity = activity;
+	FotoapparatBuilder(Context context) {
+		this.context = context;
 	}
 
 	FotoapparatBuilder cameraProvider(CameraProvider cameraProvider) {
@@ -70,5 +70,4 @@ public class FotoapparatBuilder {
 			throw new IllegalStateException("LensPosition selector is mandatory.");
 		}
 	}
-
 }

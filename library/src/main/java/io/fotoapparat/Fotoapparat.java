@@ -1,6 +1,6 @@
 package io.fotoapparat;
 
-import android.app.Activity;
+import android.content.Context;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -8,8 +8,8 @@ import java.util.concurrent.Executors;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
-import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.request.PhotoRequest;
+import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
 import io.fotoapparat.routine.TakePictureRoutine;
@@ -38,14 +38,14 @@ public class Fotoapparat {
 		this.executor = executor;
 	}
 
-	public static FotoapparatBuilder with(Activity activity) {
-		return new FotoapparatBuilder(activity);
+	public static FotoapparatBuilder with(Context context) {
+		return new FotoapparatBuilder(context);
 	}
 
 	static Fotoapparat create(FotoapparatBuilder builder) {
 		CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
 
-		ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.activity);
+		ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
 
 		StartCameraRoutine startCameraRoutine = new StartCameraRoutine(
 				builder.availableLensPositionsProvider,

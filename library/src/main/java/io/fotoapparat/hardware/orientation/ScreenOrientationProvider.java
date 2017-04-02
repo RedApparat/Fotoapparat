@@ -1,28 +1,28 @@
 package io.fotoapparat.hardware.orientation;
 
-import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.view.Display;
 import android.view.Surface;
+import android.view.WindowManager;
 
 /**
  * Provides orientation of the screen.
  */
 public class ScreenOrientationProvider {
 
-	private final Activity activity;
+	private final Display display;
 
-	public ScreenOrientationProvider(@NonNull Activity activity) {
-		this.activity = activity;
+	public ScreenOrientationProvider(@NonNull Context context) {
+		WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		display = windowManager.getDefaultDisplay();
 	}
 
 	/**
 	 * @return rotation of the screen in degrees.
 	 */
 	public int getScreenRotation() {
-		int rotation = activity
-				.getWindowManager()
-				.getDefaultDisplay()
-				.getRotation();
+		int rotation = display.getRotation();
 
 		switch (rotation) {
 			case Surface.ROTATION_90:
@@ -36,5 +36,4 @@ public class ScreenOrientationProvider {
 				return 0;
 		}
 	}
-
 }
