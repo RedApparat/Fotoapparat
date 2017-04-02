@@ -10,7 +10,12 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.Parameters;
+import io.fotoapparat.hardware.v2.captor.PictureCaptor;
+import io.fotoapparat.hardware.v2.captor.SurfaceReader;
+import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.session.PreviewOperator;
+import io.fotoapparat.hardware.v2.session.PreviewSession;
+import io.fotoapparat.hardware.v2.session.Session;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.Photo;
 
@@ -22,17 +27,29 @@ import io.fotoapparat.photo.Photo;
 public class Camera2 implements CameraDevice, PreviewOperator, OrientationObserver, OrientationObserver.OrientationListener {
 
 	private final TextureManager textureManager = new TextureManager(this);
-	private final io.fotoapparat.hardware.v2.CameraManager cameraManager;
 	private OrientationListener orientationListener;
 
-	public Camera2(io.fotoapparat.hardware.v2.CameraManager cameraManager) {
-		this.cameraManager = cameraManager;
+	private final CameraSelector cameraSelector;
+	private final CameraConnection connection;
+	private final SurfaceReader surfaceReader;
+	private final PictureCaptor pictureCaptor;
+	private Session session;
+
+	public Camera2(CameraSelector cameraSelector,
+				   CameraConnection connection,
+				   SurfaceReader surfaceReader,
+				   PictureCaptor pictureCaptor) {
+		this.cameraSelector = cameraSelector;
+		this.connection = connection;
+		this.surfaceReader = surfaceReader;
+		this.pictureCaptor = pictureCaptor;
 	}
 
 	@Override
 	public void open(LensPosition lensPosition) {
 		try {
-			cameraManager.open(lensPosition);
+			String cameraId = cameraSelector.findCameraId(lensPosition);
+			connection.openById(cameraId);
 		} catch (CameraAccessException e) {
 			// // TODO: 02/04/17  fail gracefully
 			throw new CameraException(e);
@@ -41,17 +58,24 @@ public class Camera2 implements CameraDevice, PreviewOperator, OrientationObserv
 
 	@Override
 	public void close() {
-		cameraManager.close();
+		connection.close();
+		if (session != null) {
+			session.close();
+		}
 	}
 
 	@Override
 	public void startPreview() {
-		cameraManager.startPreview();
+		if (session instanceof PreviewSession) {
+			((PreviewSession) session).startPreview();
+		}
 	}
 
 	@Override
 	public void stopPreview() {
-		cameraManager.stopPreview();
+		if (session instanceof PreviewSession) {
+			((PreviewSession) session).stopPreview();
+		}
 	}
 
 	@Override
@@ -59,7 +83,9 @@ public class Camera2 implements CameraDevice, PreviewOperator, OrientationObserv
 		if (displaySurface instanceof TextureView) {
 			textureManager.setTextureView((TextureView) displaySurface);
 
-			cameraManager.setSurface(textureManager.getSurface());
+			session = PreviewSession.create(connection.getCamera(),
+					surfaceReader,
+					textureManager.getSurface());
 		} else {
 			throw new IllegalArgumentException("Unsupported display surface: " + displaySurface);
 		}
@@ -86,7 +112,10 @@ public class Camera2 implements CameraDevice, PreviewOperator, OrientationObserv
 	@Override
 	public Photo takePicture() {
 		try {
-			return cameraManager.takePicture();
+			if (session == null) {
+				session = new Session(connection.getCamera(), surfaceReader);
+			}
+			return pictureCaptor.takePhoto(session.getCaptureSession());
 		} catch (CameraAccessException e) {
 			// // TODO: 02/04/17  fail gracefully
 			throw new CameraException(e);

@@ -44,13 +44,9 @@ public class V2Provider implements CameraProvider {
 
 		PictureCaptor pictureCaptor = new PictureCaptor(surfaceReader, cameraConnection);
 
-		io.fotoapparat.hardware.v2.CameraManager cameraManager = new io.fotoapparat.hardware.v2.CameraManager(
-				cameraSelector,
+		return new Camera2(cameraSelector,
 				cameraConnection,
 				surfaceReader,
-				pictureCaptor
-		);
-
-		return new Camera2(cameraManager);
+				pictureCaptor);
 	}
 }
