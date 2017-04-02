@@ -13,4 +13,9 @@
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp"/>
 
+    <ImageView
+        android:id="@+id/result"
+        android:layout_width="200dp"
+        android:layout_height="200dp"/>
+
 </FrameLayout>
