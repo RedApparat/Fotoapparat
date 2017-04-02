@@ -90,6 +90,9 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 		requestBuilder.addTarget(surfaceReader.getSurface());
 		requestBuilder.set(CaptureRequest.JPEG_ORIENTATION, sensorOrientation);
 
+		requestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
+				CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE); // TODO: 02/04/17 make it same with the preview
+
 		return requestBuilder.build();
 	}
 }

@@ -44,19 +44,16 @@ public class OrientationManager {
 	/**
 	 * Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
 	 * We have to take that into account and rotate JPEG properly.
-	 * For devices with orientation of 90, we simply return our mapping from ORIENTATIONS.
-	 * For devices with orientation of 270, we need to rotate the JPEG 180 degrees.
 	 *
 	 * @return The clockwise rotation angle in degrees, relative to the orientation to the camera,
 	 * that the JPEG picture needs to be rotated by, to be viewed upright.
 	 */
-
 	@SuppressWarnings("ConstantConditions")
 	public Integer getSensorOrientation() {
 		CameraCharacteristics cameraCharacteristics = cameraCapabilities.getCameraCharacteristics();
 		Integer sensorOrientation = cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
 
-		return (orientation + sensorOrientation + 270) % 360;
+		return (orientation + sensorOrientation + 360) % 360;
 	}
 
 	/**
