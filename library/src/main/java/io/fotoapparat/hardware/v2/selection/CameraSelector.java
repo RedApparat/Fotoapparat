@@ -1,8 +1,9 @@
-package io.fotoapparat.hardware.v2;
+package io.fotoapparat.hardware.v2.selection;
 
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
 import io.fotoapparat.hardware.CameraException;
@@ -24,12 +25,19 @@ public class CameraSelector {
 	 * @param lensPosition the position of the lens relatively to the device's screen
 	 * @return the id of the camera as returned from the {@link android.hardware.camera2.CameraManager}
 	 * based on the given lens parameter
-	 * @throws CameraAccessException {@see android.hardware.camera2.CameraManager#getCameraIdList}
-	 * @throws CameraException       when the device has no camera for the given {@link
-	 *                               LensPosition}
 	 */
+	@NonNull
+	public String findCameraId(LensPosition lensPosition) {
+		try {
+			return getCameraIdUnsafe(lensPosition);
+		} catch (CameraAccessException e) {
+			throw new CameraException(e);
+		}
+	}
+
+	@NonNull
 	@SuppressWarnings("ConstantConditions")
-	public String findCameraId(LensPosition lensPosition) throws CameraAccessException, CameraException {
+	private String getCameraIdUnsafe(LensPosition lensPosition) throws CameraAccessException {
 		final String[] cameraIdList = manager.getCameraIdList();
 
 		for (String cameraId : cameraIdList) {
@@ -41,7 +49,6 @@ public class CameraSelector {
 				return cameraId;
 			}
 		}
-
 		throw new CameraException("No camera found with position: " + lensPosition);
 	}
 

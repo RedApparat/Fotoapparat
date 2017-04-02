@@ -9,9 +9,9 @@ import android.support.annotation.RequiresApi;
 
 import java.util.concurrent.CountDownLatch;
 
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.capabilities.CameraCapabilities;
-import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 
 /**
  * A wrapper around {@link CameraDevice.StateCallback} to provide the opened
@@ -35,18 +35,19 @@ public class CameraConnection extends CameraDevice.StateCallback {
 	 * Open a connection to a camera with the given ID.
 	 *
 	 * @param cameraId the camera id
-	 * @throws CameraAccessException if the camera is disabled by device policy, has been
-	 *                               disconnected, or is being used by a higher-priority camera API
-	 *                               client.
 	 */
-	public void openById(String cameraId) throws CameraAccessException {
-		capabilities.setCameraId(cameraId);
-		manager.openCamera(cameraId,
-				this,
-				CameraThread
-						.getInstance()
-						.createHandler()
-		);
+	public void openById(String cameraId) {
+		try {
+			capabilities.setCameraId(cameraId);
+			manager.openCamera(cameraId,
+					this,
+					CameraThread
+							.getInstance()
+							.createHandler()
+			);
+		} catch (CameraAccessException e) {
+			throw new CameraException(e);
+		}
 	}
 
 	/**

@@ -1,18 +1,16 @@
 package io.fotoapparat.hardware.v2;
 
-import android.hardware.camera2.CameraAccessException;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.view.TextureView;
 
 import io.fotoapparat.hardware.CameraDevice;
-import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.Parameters;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 import io.fotoapparat.hardware.v2.captor.SurfaceReader;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
+import io.fotoapparat.hardware.v2.selection.CameraSelector;
 import io.fotoapparat.hardware.v2.session.PreviewOperator;
 import io.fotoapparat.hardware.v2.session.PreviewSession;
 import io.fotoapparat.hardware.v2.session.Session;
@@ -24,36 +22,32 @@ import io.fotoapparat.photo.Photo;
  */
 @SuppressWarnings("MissingPermission")
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class Camera2 implements CameraDevice, PreviewOperator, OrientationObserver, OrientationObserver.OrientationListener {
+public class Camera2 implements CameraDevice, PreviewOperator {
 
-	private final TextureManager textureManager = new TextureManager(this);
-	private OrientationListener orientationListener;
-
+	private final TextureManager textureManager;
 	private final CameraSelector cameraSelector;
 	private final CameraConnection connection;
 	private final SurfaceReader surfaceReader;
 	private final PictureCaptor pictureCaptor;
+
 	private Session session;
 
 	public Camera2(CameraSelector cameraSelector,
 				   CameraConnection connection,
 				   SurfaceReader surfaceReader,
-				   PictureCaptor pictureCaptor) {
+				   PictureCaptor pictureCaptor,
+				   TextureManager textureManager) {
 		this.cameraSelector = cameraSelector;
 		this.connection = connection;
 		this.surfaceReader = surfaceReader;
 		this.pictureCaptor = pictureCaptor;
+		this.textureManager = textureManager;
 	}
 
 	@Override
 	public void open(LensPosition lensPosition) {
-		try {
-			String cameraId = cameraSelector.findCameraId(lensPosition);
-			connection.openById(cameraId);
-		} catch (CameraAccessException e) {
-			// // TODO: 02/04/17  fail gracefully
-			throw new CameraException(e);
-		}
+		String cameraId = cameraSelector.findCameraId(lensPosition);
+		connection.openById(cameraId);
 	}
 
 	@Override
@@ -83,9 +77,11 @@ public class Camera2 implements CameraDevice, PreviewOperator, OrientationObserv
 		if (displaySurface instanceof TextureView) {
 			textureManager.setTextureView((TextureView) displaySurface);
 
-			session = PreviewSession.create(connection.getCamera(),
+			session = PreviewSession.create(
+					connection.getCamera(),
 					surfaceReader,
-					textureManager.getSurface());
+					textureManager.getSurface()
+			);
 		} else {
 			throw new IllegalArgumentException("Unsupported display surface: " + displaySurface);
 		}
@@ -93,9 +89,7 @@ public class Camera2 implements CameraDevice, PreviewOperator, OrientationObserv
 
 	@Override
 	public void setDisplayOrientation(int degrees) {
-		if (orientationListener != null) {
-			orientationListener.setDisplayOrientation(degrees);
-		}
+		textureManager.onDisplayOrientationChanged(degrees);
 	}
 
 	@Override
@@ -111,19 +105,9 @@ public class Camera2 implements CameraDevice, PreviewOperator, OrientationObserv
 
 	@Override
 	public Photo takePicture() {
-		try {
-			if (session == null) {
-				session = new Session(connection.getCamera(), surfaceReader);
-			}
-			return pictureCaptor.takePhoto(session.getCaptureSession());
-		} catch (CameraAccessException e) {
-			// // TODO: 02/04/17  fail gracefully
-			throw new CameraException(e);
+		if (session == null) {
+			session = new Session(connection.getCamera(), surfaceReader);
 		}
-	}
-
-	@Override
-	public void setOrientationListener(@NonNull OrientationListener orientationListener) {
-		this.orientationListener = orientationListener;
+		return pictureCaptor.takePhoto(session.getCaptureSession());
 	}
 }

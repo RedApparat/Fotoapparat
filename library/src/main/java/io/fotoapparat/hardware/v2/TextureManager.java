@@ -16,16 +16,12 @@ import io.fotoapparat.view.TextureListener;
  * Manages the {@link SurfaceTexture} of a {@link TextureView}.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-class TextureManager implements TextureListener.Listener, OrientationObserver.OrientationListener {
+public class TextureManager implements TextureListener.Listener {
 
 	private final CountDownLatch surfaceLatch = new CountDownLatch(1);
 	private SurfaceTexture surface;
 	private int orientation;
 	private TextureView textureView;
-
-	TextureManager(OrientationObserver observer) {
-		observer.setOrientationListener(this);
-	}
 
 	private static float[] getDst(int orientation, int width, int height) {
 		if (orientation == 90) {
@@ -45,6 +41,16 @@ class TextureManager implements TextureListener.Listener, OrientationObserver.Or
 	}
 
 	/**
+	 * Notifies that the display orientation has changed.
+	 *
+	 * @param orientation the display orientation in degrees. One of: 0, 90, 180 and 270
+	 */
+	void onDisplayOrientationChanged(int orientation) {
+		this.orientation = orientation;
+		correctOrientation(textureView.getWidth(), textureView.getHeight());
+	}
+
+	/**
 	 * Set a {@link TextureView} to the manager to interact with
 	 *
 	 * @param textureView the textureView to interact
@@ -60,7 +66,8 @@ class TextureManager implements TextureListener.Listener, OrientationObserver.Or
 	}
 
 	/**
-	 * @return the {@link SurfaceTexture} of the {@link TextureView} but only when it becomes available.
+	 * @return the {@link SurfaceTexture} of the {@link TextureView} but only when it becomes
+	 * available.
 	 */
 	SurfaceTexture getSurface() {
 		try {
@@ -80,12 +87,6 @@ class TextureManager implements TextureListener.Listener, OrientationObserver.Or
 	@Override
 	public void onTextureSizeChanged(int width, int height) {
 		correctOrientation(width, height);
-	}
-
-	@Override
-	public void setDisplayOrientation(int orientation) {
-		this.orientation = orientation;
-		correctOrientation(textureView.getWidth(), textureView.getHeight());
 	}
 
 	private void correctOrientation(int width, int height) {

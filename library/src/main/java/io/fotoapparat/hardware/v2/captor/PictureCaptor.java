@@ -10,6 +10,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.photo.Photo;
@@ -51,8 +52,12 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 	 * @throws CameraAccessException if the camera device is no longer connected or has encountered
 	 *                               a fatal error
 	 */
-	public Photo takePhoto(CameraCaptureSession captureSession) throws CameraAccessException {
-		capture(captureSession);
+	public Photo takePhoto(CameraCaptureSession captureSession) {
+		try {
+			capture(captureSession);
+		} catch (CameraAccessException e) {
+			throw new CameraException(e);
+		}
 
 		byte[] photoBytes = surfaceReader.getPhotoBytes();
 
