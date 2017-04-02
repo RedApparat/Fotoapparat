@@ -16,6 +16,7 @@ public class CameraCapabilities {
 
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
 	private final CameraManager manager;
+
 	private CameraCharacteristics cameraCharacteristics;
 
 	public CameraCapabilities(CameraManager manager) {

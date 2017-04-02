@@ -2,50 +2,38 @@ package io.fotoapparat.hardware.v2.session;
 
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
 
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.captor.PhotoCaptor;
-import io.fotoapparat.hardware.v2.captor.PictureCaptor;
-import io.fotoapparat.photo.Photo;
+import io.fotoapparat.hardware.v2.captor.SurfaceReader;
 
 /**
  * Basic wrapper around the internal {@link CameraCaptureSession}
  * for a particular {@link CameraDevice}.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class Session implements PhotoCaptor {
+public class Session {
 
 	private final CaptureSessionAction captureSessionAction = new CaptureSessionAction();
-	private final CameraDevice camera;
-	private final CameraCharacteristics cameraCharacteristics;
-	private final List<Surface> surfaces;
+	private final Surface surface;
 
-	public Session(CameraDevice camera, CameraCharacteristics cameraCharacteristics) {
-		this(camera, cameraCharacteristics, Collections.<Surface>emptyList());
+	public Session(CameraDevice camera, SurfaceReader surfaceReader) {
+		this(camera, surfaceReader, null);
 	}
 
-	Session(CameraDevice camera, CameraCharacteristics cameraCharacteristics, Surface surface) {
-		this(camera, cameraCharacteristics, Collections.singletonList(surface));
-	}
-
-	private Session(final CameraDevice camera,
-					CameraCharacteristics cameraCharacteristics,
-					final List<Surface> surfaces) {
-		this.camera = camera;
-		this.cameraCharacteristics = cameraCharacteristics;
-		this.surfaces = surfaces;
+	Session(final CameraDevice camera,
+			final SurfaceReader surfaceReader,
+			final Surface surface) {
+		this.surface = surface;
 
 		try {
 			camera.createCaptureSession(
-					surfaces,
+					Arrays.asList(surface, surfaceReader.getSurface()),
 					captureSessionAction,
 					CameraThread
 							.getInstance()
@@ -56,19 +44,11 @@ public class Session implements PhotoCaptor {
 		}
 	}
 
-	CameraCaptureSession getCaptureSession() {
-		return captureSessionAction.getCaptureSession();
+	Surface getSurface() {
+		return surface;
 	}
 
-	@Override
-	public Photo takePicture() {
-
-		PictureCaptor pictureCaptor = new PictureCaptor(
-				camera,
-				cameraCharacteristics,
-				surfaces,
-				getCaptureSession()
-		);
-		return pictureCaptor.takePicture();
+	public CameraCaptureSession getCaptureSession() {
+		return captureSessionAction.getCaptureSession();
 	}
 }

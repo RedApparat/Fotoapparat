@@ -32,7 +32,7 @@ class CaptureSessionAction extends CameraCaptureSession.StateCallback {
 	 * Waits and returns the {@link CameraCaptureSession} synchronously after it has been
 	 * obtained.
 	 *
-	 * @return the requested {@link CameraCaptureSession} to open
+	 * @return the requested {@link CameraCaptureSession} to openById
 	 */
 	CameraCaptureSession getCaptureSession() {
 		try {

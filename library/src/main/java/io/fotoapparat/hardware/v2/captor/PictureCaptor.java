@@ -1,79 +1,88 @@
 package io.fotoapparat.hardware.v2.captor;
 
-import android.graphics.ImageFormat;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CaptureFailure;
 import android.hardware.camera2.CaptureRequest;
-import android.media.ImageReader;
+import android.hardware.camera2.TotalCaptureResult;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.util.Size;
-import android.view.Surface;
 
-import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
+import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.photo.Photo;
 
 /**
  * Takes a picture
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class PictureCaptor implements PhotoCaptor {
+public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 
-	private final CapturePhotoAction capturePhotoAction;
+	private final CountDownLatch countDownLatch = new CountDownLatch(1);
+	private final SurfaceReader surfaceReader;
+	private final CameraConnection cameraConnection;
+	private byte[] photoBytes;
 
-	public PictureCaptor(final CameraDevice camera,
-						 CameraCharacteristics cameraCharacteristics,
-						 final List<Surface> surfaces, final CameraCaptureSession session) {
-
-		SizeCapability sizeCapability = new SizeCapability(cameraCharacteristics);
-		Size largestSize = sizeCapability.getLargestSize();
-
-		ImageReader imageReader = ImageReader
-				.newInstance(largestSize.getWidth(),
-						largestSize.getHeight(),
-						ImageFormat.JPEG,
-						1
-				);
-		capturePhotoAction = new CapturePhotoAction(imageReader);
-
-		CameraThread
-				.getInstance()
-				.createHandler()
-				.post(new Runnable() {
-					@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-					@Override
-					public void run() {
-						try {
-							CaptureRequest captureRequest = createCaptureRequest(camera, surfaces);
-							session.capture(captureRequest, capturePhotoAction, null);
-						} catch (CameraAccessException e) {
-							// Do nothing
-						}
-					}
-				});
+	public PictureCaptor(SurfaceReader surfaceReader, CameraConnection cameraConnection) {
+		this.surfaceReader = surfaceReader;
+		this.cameraConnection = cameraConnection;
 	}
 
-	private CaptureRequest createCaptureRequest(CameraDevice camera,
-												List<Surface> surfaces) throws CameraAccessException {
-		CaptureRequest.Builder requestBuilder = camera.createCaptureRequest(
-				CameraDevice.TEMPLATE_STILL_CAPTURE);
+	private CaptureRequest createCaptureRequest() throws CameraAccessException {
+		CaptureRequest.Builder requestBuilder = cameraConnection
+				.getCamera()
+				.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
 
-		for (Surface surface : surfaces) {
-			requestBuilder.addTarget(surface);
-		}
+		requestBuilder.addTarget(surfaceReader.getSurface());
+
 		return requestBuilder.build();
 	}
 
+	private void capture(CameraCaptureSession session) throws CameraAccessException {
+		CaptureRequest captureRequest = createCaptureRequest();
+
+		session.stopRepeating();
+		session.capture(captureRequest,
+				this,
+				CameraThread
+						.getInstance()
+						.createHandler()
+		);
+	}
+
 	@Override
-	public Photo takePicture() {
-		byte[] result = capturePhotoAction.getPhotoBytes();
+	public void onCaptureCompleted(@NonNull CameraCaptureSession session,
+								   @NonNull CaptureRequest request,
+								   @NonNull TotalCaptureResult result) {
+		super.onCaptureCompleted(session, request, result);
+
+		this.photoBytes = surfaceReader.getPhotoBytes();
+		countDownLatch.countDown();
+	}
+
+	@Override
+	public void onCaptureFailed(@NonNull CameraCaptureSession session,
+								@NonNull CaptureRequest request,
+								@NonNull CaptureFailure failure) {
+		super.onCaptureFailed(session, request, failure);
+		// TODO: 27.03.17 support failure
+	}
+
+	public Photo takePicture(CameraCaptureSession captureSession) throws CameraAccessException {
+		capture(captureSession);
+
+		try {
+			countDownLatch.await();
+		} catch (InterruptedException e) {
+			// do nothing
+		}
+
 		return new Photo(
-				result,
+				photoBytes,
 				0 // fixme
 		);
 	}
