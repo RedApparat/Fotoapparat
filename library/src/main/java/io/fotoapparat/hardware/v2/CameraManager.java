@@ -12,6 +12,7 @@ import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.session.PreviewOperator;
 import io.fotoapparat.hardware.v2.session.PreviewSession;
 import io.fotoapparat.hardware.v2.session.Session;
+import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.Photo;
 
 /**
@@ -21,20 +22,26 @@ import io.fotoapparat.photo.Photo;
  */
 @SuppressWarnings("MissingPermission")
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-class CameraManager implements PreviewOperator {
+public class CameraManager implements PreviewOperator {
 
+	private final CameraSelector cameraSelector;
 	private final CameraConnection connection;
 	private final SurfaceReader surfaceReader;
 	private final PictureCaptor pictureCaptor;
 	private Session session;
 
-	CameraManager(CameraConnection connection, SurfaceReader surfaceReader, PictureCaptor pictureCaptor) {
+	public CameraManager(CameraSelector cameraSelector,
+						 CameraConnection connection,
+						 SurfaceReader surfaceReader,
+						 PictureCaptor pictureCaptor) {
+		this.cameraSelector = cameraSelector;
 		this.connection = connection;
 		this.surfaceReader = surfaceReader;
 		this.pictureCaptor = pictureCaptor;
 	}
 
-	void open(String cameraId) throws CameraAccessException {
+	void open(LensPosition lensPosition) throws CameraAccessException {
+		String cameraId = cameraSelector.findCameraId(lensPosition);
 		connection.openById(cameraId);
 	}
 

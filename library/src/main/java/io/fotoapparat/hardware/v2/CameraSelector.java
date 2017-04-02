@@ -12,11 +12,11 @@ import io.fotoapparat.parameter.LensPosition;
  * Finds the device's camera from the {@link android.hardware.camera2.CameraManager}.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-class CameraSelector {
+public class CameraSelector {
 
 	private final android.hardware.camera2.CameraManager manager;
 
-	CameraSelector(android.hardware.camera2.CameraManager manager) {
+	public CameraSelector(android.hardware.camera2.CameraManager manager) {
 		this.manager = manager;
 	}
 
@@ -29,7 +29,7 @@ class CameraSelector {
 	 *                               LensPosition}
 	 */
 	@SuppressWarnings("ConstantConditions")
-	String findCameraId(LensPosition lensPosition) throws CameraAccessException, CameraException {
+	public String findCameraId(LensPosition lensPosition) throws CameraAccessException, CameraException {
 		final String[] cameraIdList = manager.getCameraIdList();
 
 		for (String cameraId : cameraIdList) {
@@ -74,5 +74,4 @@ class CameraSelector {
 		}
 		throw new IllegalStateException("Cannot return CameraCharacteristic for LensPosition: " + lensPosition);
 	}
-
 }
