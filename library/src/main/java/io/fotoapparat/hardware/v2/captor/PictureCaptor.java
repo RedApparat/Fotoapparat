@@ -25,7 +25,6 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
 	private final SurfaceReader surfaceReader;
 	private final CameraConnection cameraConnection;
-	private byte[] photoBytes;
 
 	public PictureCaptor(SurfaceReader surfaceReader, CameraConnection cameraConnection) {
 		this.surfaceReader = surfaceReader;
@@ -37,9 +36,6 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 								   @NonNull CaptureRequest request,
 								   @NonNull TotalCaptureResult result) {
 		super.onCaptureCompleted(session, request, result);
-
-		this.photoBytes = surfaceReader.getPhotoBytes();
-		countDownLatch.countDown();
 	}
 
 	@Override
@@ -61,11 +57,7 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 	public Photo takePhoto(CameraCaptureSession captureSession) throws CameraAccessException {
 		capture(captureSession);
 
-		try {
-			countDownLatch.await();
-		} catch (InterruptedException e) {
-			// do nothing
-		}
+		byte[] photoBytes = surfaceReader.getPhotoBytes();
 
 		return new Photo(
 				photoBytes,
@@ -76,7 +68,7 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 	private void capture(CameraCaptureSession session) throws CameraAccessException {
 		CaptureRequest captureRequest = createCaptureRequest();
 
-//		session.stopRepeating();
+		session.stopRepeating();
 		session.capture(captureRequest,
 				this,
 				CameraThread

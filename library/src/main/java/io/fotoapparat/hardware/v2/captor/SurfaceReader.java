@@ -6,6 +6,7 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 
@@ -23,9 +24,8 @@ import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
 public class SurfaceReader implements ImageReader.OnImageAvailableListener {
 
 	private final CameraCapabilities cameraCapabilities;
-	private ImageReader imageReader;
-
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
+	private ImageReader imageReader;
 	private byte[] bytes;
 
 	public SurfaceReader(CameraCapabilities cameraCapabilities) {
@@ -34,10 +34,14 @@ public class SurfaceReader implements ImageReader.OnImageAvailableListener {
 
 	@Override
 	public void onImageAvailable(ImageReader reader) {
+		Log.wtf("SurfaceReader", "onImageAvailable: ");
 		Image image = reader.acquireNextImage();
-		ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-		bytes = new byte[buffer.remaining()];
-		countDownLatch.countDown();
+		Image.Plane[] planes = image.getPlanes();
+		if (planes.length > 0) {
+			ByteBuffer buffer = planes[0].getBuffer();
+			bytes = new byte[buffer.remaining()];
+			countDownLatch.countDown();
+		}
 	}
 
 	/**
@@ -58,13 +62,6 @@ public class SurfaceReader implements ImageReader.OnImageAvailableListener {
 	 * @return the Image as byte array.
 	 */
 	public byte[] getPhotoBytes() {
-		imageReader.setOnImageAvailableListener(
-				this,
-				CameraThread
-						.getInstance()
-						.createHandler()
-		);
-
 		try {
 			countDownLatch.await();
 		} catch (InterruptedException e) {
@@ -87,5 +84,12 @@ public class SurfaceReader implements ImageReader.OnImageAvailableListener {
 						ImageFormat.JPEG,
 						1
 				);
+
+		imageReader.setOnImageAvailableListener(
+				this,
+				CameraThread
+						.getInstance()
+						.createHandler()
+		);
 	}
 }

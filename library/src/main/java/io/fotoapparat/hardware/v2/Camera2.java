@@ -106,11 +106,10 @@ public class Camera2 implements CameraDevice, PreviewOperator, OrientationObserv
 
 	@Override
 	public Photo takePicture() {
-
 		try {
 			return cameraManager.takePicture();
 		} catch (CameraAccessException e) {
-			// // TODO: 02/04/17  fail
+			// // TODO: 02/04/17  fail gracefully
 			throw new CameraException(e);
 		}
 	}
