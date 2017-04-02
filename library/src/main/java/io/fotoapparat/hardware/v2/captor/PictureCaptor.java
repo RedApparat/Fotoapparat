@@ -10,8 +10,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
-import java.util.concurrent.CountDownLatch;
-
 import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.photo.Photo;
@@ -22,7 +20,6 @@ import io.fotoapparat.photo.Photo;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 
-	private final CountDownLatch countDownLatch = new CountDownLatch(1);
 	private final SurfaceReader surfaceReader;
 	private final CameraConnection cameraConnection;
 

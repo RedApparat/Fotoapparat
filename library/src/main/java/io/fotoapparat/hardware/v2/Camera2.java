@@ -13,6 +13,7 @@ import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.Parameters;
 import io.fotoapparat.hardware.v2.capabilities.CameraCapabilities;
+import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 import io.fotoapparat.hardware.v2.captor.SurfaceReader;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
@@ -38,7 +39,10 @@ public class Camera2 implements CameraDevice, PreviewOperator, OrientationObserv
 		cameraSelector = new CameraSelector(manager);
 
 		CameraCapabilities cameraCapabilities = new CameraCapabilities(manager);
-		SurfaceReader surfaceReader = new SurfaceReader(cameraCapabilities);
+
+		SizeCapability sizeCapability = new SizeCapability(cameraCapabilities);
+		SurfaceReader surfaceReader = new SurfaceReader(sizeCapability);
+
 		CameraConnection cameraConnection = new CameraConnection(manager, cameraCapabilities);
 
 		PictureCaptor pictureCaptor = new PictureCaptor(surfaceReader, cameraConnection);

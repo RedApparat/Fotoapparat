@@ -1,12 +1,10 @@
 package io.fotoapparat.hardware.v2.captor;
 
 import android.graphics.ImageFormat;
-import android.hardware.camera2.CameraCharacteristics;
 import android.media.Image;
 import android.media.ImageReader;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 
@@ -14,7 +12,6 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.capabilities.CameraCapabilities;
 import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
 
 /**
@@ -23,18 +20,17 @@ import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class SurfaceReader implements ImageReader.OnImageAvailableListener {
 
-	private final CameraCapabilities cameraCapabilities;
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
+	private final SizeCapability sizeCapability;
 	private ImageReader imageReader;
 	private byte[] bytes;
 
-	public SurfaceReader(CameraCapabilities cameraCapabilities) {
-		this.cameraCapabilities = cameraCapabilities;
+	public SurfaceReader(SizeCapability sizeCapability) {
+		this.sizeCapability = sizeCapability;
 	}
 
 	@Override
 	public void onImageAvailable(ImageReader reader) {
-		Log.wtf("SurfaceReader", "onImageAvailable: ");
 		Image image = reader.acquireNextImage();
 		Image.Plane[] planes = image.getPlanes();
 		if (planes.length > 0) {
@@ -72,9 +68,6 @@ public class SurfaceReader implements ImageReader.OnImageAvailableListener {
 	}
 
 	private void createImageReader() {
-		CameraCharacteristics cameraCharacteristics = cameraCapabilities.getCameraCharacteristics();
-
-		SizeCapability sizeCapability = new SizeCapability(cameraCharacteristics);
 		Size largestSize = sizeCapability.getLargestSize();
 
 		imageReader = ImageReader
