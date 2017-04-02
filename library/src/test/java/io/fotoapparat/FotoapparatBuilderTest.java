@@ -1,10 +1,13 @@
 package io.fotoapparat;
 
-import android.app.Activity;
+import android.content.Context;
+import android.view.WindowManager;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.hardware.provider.CameraProvider;
@@ -16,12 +19,13 @@ import io.fotoapparat.view.CameraRenderer;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FotoapparatBuilderTest {
 
 	@Mock
-	Activity activity;
+	Context context;
 	@Mock
 	CameraProvider cameraProvider;
 	@Mock
@@ -32,6 +36,12 @@ public class FotoapparatBuilderTest {
 	SelectorFunction<LensPosition> lensPositionSelector;
 	@Mock
 	Logger logger;
+
+	@Before
+	public void setUp() throws Exception {
+		given(context.getSystemService(Context.WINDOW_SERVICE))
+				.willReturn(Mockito.mock(WindowManager.class));
+	}
 
 	@Test
 	public void onlyMandatoryParameters() throws Exception {
@@ -92,7 +102,7 @@ public class FotoapparatBuilderTest {
 	@Test(expected = IllegalStateException.class)
 	public void rendererIsMandatory() throws Exception {
 		// Given
-		FotoapparatBuilder builder = new FotoapparatBuilder(activity)
+		FotoapparatBuilder builder = new FotoapparatBuilder(context)
 				.photoSize(photoSizeSelector)
 				.lensPosition(lensPositionSelector);
 
@@ -106,7 +116,7 @@ public class FotoapparatBuilderTest {
 	@Test(expected = IllegalStateException.class)
 	public void lensPositionIsMandatory() throws Exception {
 		// Given
-		FotoapparatBuilder builder = new FotoapparatBuilder(activity)
+		FotoapparatBuilder builder = new FotoapparatBuilder(context)
 				.photoSize(photoSizeSelector)
 				.into(cameraRenderer);
 
@@ -118,9 +128,8 @@ public class FotoapparatBuilderTest {
 	}
 
 	private FotoapparatBuilder builderWithMandatoryArguments() {
-		return new FotoapparatBuilder(activity)
+		return new FotoapparatBuilder(context)
 				.lensPosition(lensPositionSelector)
 				.into(cameraRenderer);
 	}
-
 }
