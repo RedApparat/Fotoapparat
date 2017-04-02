@@ -7,6 +7,7 @@ import android.view.SurfaceHolder;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
@@ -126,10 +127,10 @@ public class Camera1 implements CameraDevice {
 
 		Camera.CameraInfo info = getCameraInfo(cameraId);
 		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-			degrees = (info.orientation - degrees) % 360;
+			degrees = (info.orientation + degrees) % 360;
 			degrees = (360 - degrees) % 360;
 		} else {
-			degrees = (info.orientation + degrees + 360) % 360;
+			degrees = (info.orientation - degrees + 360) % 360;
 		}
 
 		camera.setDisplayOrientation(degrees);
@@ -163,6 +164,7 @@ public class Camera1 implements CameraDevice {
 		recordMethod();
 
 		final CountDownLatch latch = new CountDownLatch(1);
+		final AtomicReference<Photo> photoReference = new AtomicReference<>();
 
 		camera.takePicture(
 				null,
@@ -171,8 +173,13 @@ public class Camera1 implements CameraDevice {
 				new Camera.PictureCallback() {
 					@Override
 					public void onPictureTaken(byte[] data, Camera camera) {
-						// TODO take result
-						// TODO check current screen orientation
+						photoReference.set(
+								new Photo(
+										data,
+										0 // TODO check current screen orientation
+								)
+						);
+
 						latch.countDown();
 					}
 				}
@@ -184,7 +191,7 @@ public class Camera1 implements CameraDevice {
 			// Do nothing
 		}
 
-		return null;
+		return photoReference.get();
 	}
 
 	@NonNull

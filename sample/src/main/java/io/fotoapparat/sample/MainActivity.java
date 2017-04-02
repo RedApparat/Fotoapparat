@@ -2,9 +2,13 @@ package io.fotoapparat.sample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ImageView;
 
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.log.LogcatLogger;
+import io.fotoapparat.photo.BitmapPhoto;
+import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.view.CameraView;
 
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.back;
@@ -33,6 +37,27 @@ public class MainActivity extends AppCompatActivity {
 				))
 				.logger(new LogcatLogger())
 				.build();
+
+		cameraView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				takePicture();
+			}
+		});
+	}
+
+	private void takePicture() {
+		fotoapparat
+				.takePicture()
+				.toBitmap()
+				.whenAvailable(new PendingResult.Callback<BitmapPhoto>() {
+					@Override
+					public void onResult(BitmapPhoto result) {
+						ImageView imageView = (ImageView) findViewById(R.id.result);
+
+						imageView.setImageBitmap(result.bitmap);
+					}
+				});
 	}
 
 	@Override

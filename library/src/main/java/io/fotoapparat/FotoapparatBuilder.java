@@ -1,6 +1,6 @@
 package io.fotoapparat;
 
-import android.content.Context;
+import android.app.Activity;
 
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.provider.CameraProvider;
@@ -18,7 +18,7 @@ import io.fotoapparat.view.CameraRenderer;
  */
 public class FotoapparatBuilder {
 
-	Context context;
+	Activity activity;
 	AvailableLensPositionsProvider availableLensPositionsProvider = new V1AvailableLensPositionProvider();
 	CameraProvider cameraProvider = new V1Provider();
 	CameraRenderer renderer;
@@ -26,8 +26,8 @@ public class FotoapparatBuilder {
 	SelectorFunction<LensPosition> lensPositionSelector;
 	Logger logger = new DummyLogger();
 
-	FotoapparatBuilder(Context context) {
-		this.context = context;
+	FotoapparatBuilder(Activity activity) {
+		this.activity = activity;
 	}
 
 	FotoapparatBuilder cameraProvider(CameraProvider cameraProvider) {

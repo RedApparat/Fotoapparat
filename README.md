@@ -1,5 +1,5 @@
 # Fotoapparat
 
-![Build status](https://travis-ci.org/dmitry-zaitsev/Fotoapparat.svg?branch=master)
+![Build status](https://travis-ci.org/Fotoapparat/Fotoapparat.svg?branch=master)
 
 Making Camera for Android more friendly.

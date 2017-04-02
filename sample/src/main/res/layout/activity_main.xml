@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.fotoapparat.sample.MainActivity">
+    tools:activity="io.fotoapparat.sample.MainActivity">
 
     <io.fotoapparat.view.CameraView
         android:id="@+id/camera_view"
@@ -12,5 +12,10 @@
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp"/>
+
+    <ImageView
+        android:id="@+id/result"
+        android:layout_width="200dp"
+        android:layout_height="200dp"/>
 
 </FrameLayout>
