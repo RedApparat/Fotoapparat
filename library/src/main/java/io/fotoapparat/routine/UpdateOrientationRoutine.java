@@ -3,22 +3,22 @@ package io.fotoapparat.routine;
 import java.util.concurrent.Executor;
 
 import io.fotoapparat.hardware.CameraDevice;
-import io.fotoapparat.hardware.orientation.OrientationSensor;
+import io.fotoapparat.hardware.orientation.DisplayOrientationSensor;
 
 /**
  * Observes current device orientation and updates {@link CameraDevice} accordingly.
  */
-public class UpdateOrientationRoutine implements OrientationSensor.Listener {
+public class UpdateOrientationRoutine implements DisplayOrientationSensor.Listener {
 
 	private final CameraDevice cameraDevice;
-	private final OrientationSensor orientationSensor;
+	private final DisplayOrientationSensor displayOrientationSensor;
 	private final Executor cameraExecutor;
 
 	public UpdateOrientationRoutine(CameraDevice cameraDevice,
-									OrientationSensor orientationSensor,
+									DisplayOrientationSensor displayOrientationSensor,
 									Executor cameraExecutor) {
 		this.cameraDevice = cameraDevice;
-		this.orientationSensor = orientationSensor;
+		this.displayOrientationSensor = displayOrientationSensor;
 		this.cameraExecutor = cameraExecutor;
 	}
 
@@ -26,14 +26,14 @@ public class UpdateOrientationRoutine implements OrientationSensor.Listener {
 	 * Starts routine.
 	 */
 	public void start() {
-		orientationSensor.start(this);
+		displayOrientationSensor.start(this);
 	}
 
 	/**
 	 * Stops routine.
 	 */
 	public void stop() {
-		orientationSensor.stop();
+		displayOrientationSensor.stop();
 	}
 
 	@Override
