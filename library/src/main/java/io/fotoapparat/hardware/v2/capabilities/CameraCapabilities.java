@@ -34,6 +34,11 @@ public class CameraCapabilities {
 		countDownLatch.countDown();
 	}
 
+	/**
+	 * Returns synchronously the camera characteristics for a given camera id.
+	 *
+	 * @return the {@link CameraCharacteristics}
+	 */
 	public CameraCharacteristics getCameraCharacteristics() {
 		try {
 			countDownLatch.await();
