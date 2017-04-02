@@ -28,7 +28,7 @@ public class CameraCapabilities {
 	 * @param cameraId the device camera id
 	 * @throws CameraAccessException if the camera device has been disconnected.
 	 */
-	public void setCamera(String cameraId) throws CameraAccessException {
+	public void setCameraId(String cameraId) throws CameraAccessException {
 		cameraCharacteristics = manager.getCameraCharacteristics(cameraId);
 		countDownLatch.countDown();
 	}
