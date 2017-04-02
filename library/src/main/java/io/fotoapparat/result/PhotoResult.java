@@ -1,10 +1,9 @@
 package io.fotoapparat.result;
 
-import android.graphics.Bitmap;
-
 import java.io.File;
 import java.util.concurrent.Future;
 
+import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.photo.Photo;
 
 /**
@@ -24,7 +23,7 @@ public class PhotoResult {
 		);
 	}
 
-	public PendingResult<Bitmap> toBitmap() {
+	public PendingResult<BitmapPhoto> toBitmap() {
 		return null;
 	}
 
