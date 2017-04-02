@@ -17,7 +17,7 @@ import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.photo.Photo;
 
 /**
- * Takes a picture
+ * Responsible to capture a picture.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
@@ -30,28 +30,6 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 	public PictureCaptor(SurfaceReader surfaceReader, CameraConnection cameraConnection) {
 		this.surfaceReader = surfaceReader;
 		this.cameraConnection = cameraConnection;
-	}
-
-	private CaptureRequest createCaptureRequest() throws CameraAccessException {
-		CaptureRequest.Builder requestBuilder = cameraConnection
-				.getCamera()
-				.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-
-		requestBuilder.addTarget(surfaceReader.getSurface());
-
-		return requestBuilder.build();
-	}
-
-	private void capture(CameraCaptureSession session) throws CameraAccessException {
-		CaptureRequest captureRequest = createCaptureRequest();
-
-		session.stopRepeating();
-		session.capture(captureRequest,
-				this,
-				CameraThread
-						.getInstance()
-						.createHandler()
-		);
 	}
 
 	@Override
@@ -72,7 +50,15 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 		// TODO: 27.03.17 support failure
 	}
 
-	public Photo takePicture(CameraCaptureSession captureSession) throws CameraAccessException {
+	/**
+	 * Captures photo synchronously.
+	 *
+	 * @param captureSession the currently opened capture session of the camera
+	 * @return a new Photo
+	 * @throws CameraAccessException if the camera device is no longer connected or has encountered
+	 *                               a fatal error
+	 */
+	public Photo takePhoto(CameraCaptureSession captureSession) throws CameraAccessException {
 		capture(captureSession);
 
 		try {
@@ -85,5 +71,28 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 				photoBytes,
 				0 // fixme
 		);
+	}
+
+	private void capture(CameraCaptureSession session) throws CameraAccessException {
+		CaptureRequest captureRequest = createCaptureRequest();
+
+//		session.stopRepeating();
+		session.capture(captureRequest,
+				this,
+				CameraThread
+						.getInstance()
+						.createHandler()
+		);
+	}
+
+	private CaptureRequest createCaptureRequest() throws CameraAccessException {
+		CaptureRequest.Builder requestBuilder = cameraConnection
+				.getCamera()
+				.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+
+		requestBuilder.addTarget(surfaceReader.getSurface());
+		requestBuilder.set(CaptureRequest.JPEG_ORIENTATION, 0); // TODO: 02/04/17
+
+		return requestBuilder.build();
 	}
 }

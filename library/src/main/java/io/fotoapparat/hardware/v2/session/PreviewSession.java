@@ -20,10 +20,19 @@ import io.fotoapparat.hardware.v2.captor.SurfaceReader;
 public class PreviewSession extends Session implements PreviewOperator {
 
 	private final CameraDevice camera;
+	private final Surface surface;
 
-	public PreviewSession(CameraDevice camera, SurfaceReader surfaceReader, SurfaceTexture surfaceTexture) {
-		super(camera, surfaceReader, new Surface(surfaceTexture));
+	private PreviewSession(CameraDevice camera, SurfaceReader surfaceReader, Surface surface) {
+		super(camera, surfaceReader, surface);
 		this.camera = camera;
+		this.surface = surface;
+	}
+
+	/**
+	 * Creates a new instance of this session.
+	 */
+	public static PreviewSession create(CameraDevice camera, SurfaceReader surfaceReader, SurfaceTexture surfaceTexture) {
+		return new PreviewSession(camera, surfaceReader, new Surface(surfaceTexture));
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -31,7 +40,7 @@ public class PreviewSession extends Session implements PreviewOperator {
 	public void startPreview() {
 		try {
 			CaptureRequest.Builder captureRequest = camera.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-			captureRequest.addTarget(getSurface());
+			captureRequest.addTarget(surface);
 			getCaptureSession().setRepeatingRequest(captureRequest.build(), null, null);
 		} catch (CameraAccessException e) {
 			e.printStackTrace();

@@ -40,14 +40,14 @@ class CameraManager implements PreviewOperator {
 
 	void close() {
 		connection.close();
-		if (session != null && (session instanceof PreviewSession)) {
-			((PreviewSession) session).stopPreview();
+		if (session != null) {
+			session.close();
 		}
 	}
 
 	public void setSurface(SurfaceTexture surfaceTexture) {
 		CameraDevice camera = getCamera();
-		session = new PreviewSession(camera, surfaceReader, surfaceTexture);
+		session = PreviewSession.create(camera, surfaceReader, surfaceTexture);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ class CameraManager implements PreviewOperator {
 		if (session == null) {
 			session = new Session(getCamera(), surfaceReader);
 		}
-		return pictureCaptor.takePicture(session.getCaptureSession());
+		return pictureCaptor.takePhoto(session.getCaptureSession());
 	}
 
 	private android.hardware.camera2.CameraDevice getCamera() {
