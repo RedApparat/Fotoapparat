@@ -11,7 +11,6 @@ import java.util.concurrent.Executor;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.result.PhotoResult;
-import io.fotoapparat.request.PhotoRequest;
 import io.fotoapparat.test.ImmediateExecutor;
 
 import static org.junit.Assert.assertNotNull;
@@ -21,25 +20,23 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class TakePictureRoutineTest {
 
-	@Mock
-	CameraDevice cameraDevice;
-	@Spy
-	Executor executor = new ImmediateExecutor();
+    @Mock
+    CameraDevice cameraDevice;
+    @Spy
+    Executor executor = new ImmediateExecutor();
 
-	@InjectMocks
-	TakePictureRoutine testee;
+    @InjectMocks
+    TakePictureRoutine testee;
 
-	@Test
-	public void takePicture_EmptyRequest() throws Exception {
-		// When
-		PhotoResult result = testee.takePicture(
-				PhotoRequest.empty()
-		);
+    @Test
+    public void takePicture_EmptyRequest() throws Exception {
+        // When
+        PhotoResult result = testee.takePicture();
 
-		// Then
-		verify(executor).execute(isA(TakePictureTask.class));
+        // Then
+        verify(executor).execute(isA(TakePictureTask.class));
 
-		assertNotNull(result);
-	}
+        assertNotNull(result);
+    }
 
 }
