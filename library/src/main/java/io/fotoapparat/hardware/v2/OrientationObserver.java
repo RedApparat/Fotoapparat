@@ -10,6 +10,7 @@ interface OrientationObserver {
 	void setOrientationListener(@NonNull OrientationListener listener);
 
 	interface OrientationListener {
-		void onOrientationChanged(int orientation);
+
+		void setDisplayOrientation(int orientation);
 	}
 }

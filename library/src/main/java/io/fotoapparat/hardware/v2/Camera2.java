@@ -4,6 +4,7 @@ import android.content.Context;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.view.TextureView;
 
@@ -23,10 +24,12 @@ import io.fotoapparat.photo.Photo;
  */
 @SuppressWarnings("MissingPermission")
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
+public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor, OrientationObserver, OrientationObserver.OrientationListener {
 
+	private final TextureManager textureManager = new TextureManager(this);
 	private final io.fotoapparat.hardware.v2.CameraManager cameraManager;
 	private final CameraSelector cameraSelector;
+	private OrientationListener orientationListener;
 
 	public Camera2(Context context) {
 		CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
@@ -70,7 +73,9 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 	@Override
 	public void setDisplaySurface(Object displaySurface) {
 		if (displaySurface instanceof TextureView) {
-			cameraManager.setSurface(((TextureView) displaySurface));
+			textureManager.setTextureView((TextureView) displaySurface);
+
+			cameraManager.setSurface(textureManager.getSurface());
 		} else {
 			throw new IllegalArgumentException("Unsupported display surface: " + displaySurface);
 		}
@@ -78,7 +83,9 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 
 	@Override
 	public void setDisplayOrientation(int degrees) {
-		cameraManager.onOrientationChanged(degrees);
+		if (orientationListener != null) {
+			orientationListener.setDisplayOrientation(degrees);
+		}
 	}
 
 	@Override
@@ -96,5 +103,10 @@ public class Camera2 implements CameraDevice, PreviewOperator, PhotoCaptor {
 	@Override
 	public Photo takePicture() {
 		return cameraManager.takePicture();
+	}
+
+	@Override
+	public void setOrientationListener(@NonNull OrientationListener orientationListener) {
+		this.orientationListener = orientationListener;
 	}
 }

@@ -5,9 +5,7 @@ import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.view.TextureView;
 
 import io.fotoapparat.hardware.v2.capabilities.CameraCapabilities;
 import io.fotoapparat.hardware.v2.captor.PhotoCaptor;
@@ -24,13 +22,11 @@ import io.fotoapparat.photo.Photo;
  */
 @SuppressWarnings("MissingPermission")
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-class CameraManager implements PreviewOperator, PhotoCaptor, OrientationObserver, OrientationObserver.OrientationListener {
+class CameraManager implements PreviewOperator, PhotoCaptor {
 
-	private final TextureManager textureManager = new TextureManager(this);
 	private final CameraConnection cameraConnection;
 	private Session session;
 	private CameraCapabilities capabilities;
-	private OrientationListener orientationListener;
 
 	CameraManager(CameraConnection cameraConnection, CameraCapabilities capabilities) {
 		this.cameraConnection = cameraConnection;
@@ -54,12 +50,9 @@ class CameraManager implements PreviewOperator, PhotoCaptor, OrientationObserver
 		return cameraConnection.getCamera();
 	}
 
-	public void setSurface(TextureView textureView) {
-		textureManager.setTextureView(textureView);
-
+	public void setSurface(SurfaceTexture surface) {
 		CameraDevice camera = getCamera();
 		CameraCharacteristics capabilities = getCapabilities();
-		SurfaceTexture surface = textureManager.getSurface();
 		session = new PreviewSession(camera, capabilities, surface);
 	}
 
@@ -83,17 +76,5 @@ class CameraManager implements PreviewOperator, PhotoCaptor, OrientationObserver
 			session = new Session(getCamera(), getCapabilities());
 		}
 		return session.takePicture();
-	}
-
-	@Override
-	public void setOrientationListener(@NonNull OrientationListener orientationListener) {
-		this.orientationListener = orientationListener;
-	}
-
-	@Override
-	public void onOrientationChanged(int orientation) {
-		if (orientationListener != null) {
-			orientationListener.onOrientationChanged(orientation);
-		}
 	}
 }

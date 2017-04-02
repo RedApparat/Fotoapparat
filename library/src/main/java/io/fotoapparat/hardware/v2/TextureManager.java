@@ -23,8 +23,8 @@ class TextureManager implements TextureListener.Listener, OrientationObserver.Or
 	private int orientation;
 	private TextureView textureView;
 
-	TextureManager(CameraManager cameraManager) {
-		cameraManager.setOrientationListener(this);
+	TextureManager(OrientationObserver observer) {
+		observer.setOrientationListener(this);
 	}
 
 	private static float[] getDst(int orientation, int width, int height) {
@@ -83,7 +83,7 @@ class TextureManager implements TextureListener.Listener, OrientationObserver.Or
 	}
 
 	@Override
-	public void onOrientationChanged(int orientation) {
+	public void setDisplayOrientation(int orientation) {
 		this.orientation = orientation;
 		correctOrientation(textureView.getWidth(), textureView.getHeight());
 	}
