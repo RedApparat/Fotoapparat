@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import io.fotoapparat.hardware.Parameters;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.FocusMode;
 
 import static junit.framework.Assert.assertSame;

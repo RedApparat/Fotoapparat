@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Capabilities;
-import io.fotoapparat.hardware.Parameters;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.hardware.orientation.OrientationUtils;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
@@ -49,8 +49,6 @@ public class Camera1 implements CameraDevice {
         } catch (RuntimeException e) {
             throw new CameraException(e);
         }
-
-        // TODO apply parameters
 
         camera.setErrorCallback(new Camera.ErrorCallback() {
             @Override

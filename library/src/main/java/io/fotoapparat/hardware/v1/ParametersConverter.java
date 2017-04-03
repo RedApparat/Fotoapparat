@@ -2,7 +2,7 @@ package io.fotoapparat.hardware.v1;
 
 import android.hardware.Camera;
 
-import io.fotoapparat.hardware.Parameters;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.FocusMode;
 
 /**

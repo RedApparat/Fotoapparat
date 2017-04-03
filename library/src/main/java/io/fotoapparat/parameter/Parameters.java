@@ -1,11 +1,10 @@
-package io.fotoapparat.hardware;
+package io.fotoapparat.parameter;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import io.fotoapparat.parameter.FocusMode;
-import io.fotoapparat.parameter.Size;
+import io.fotoapparat.hardware.CameraDevice;
 
 /**
  * Parameters of {@link CameraDevice}.

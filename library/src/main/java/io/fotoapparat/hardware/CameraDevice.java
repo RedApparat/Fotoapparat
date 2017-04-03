@@ -1,6 +1,7 @@
 package io.fotoapparat.hardware;
 
 import io.fotoapparat.parameter.LensPosition;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.photo.Photo;
 
 /**

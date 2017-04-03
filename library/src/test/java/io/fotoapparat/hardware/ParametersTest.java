@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.Set;
 
 import io.fotoapparat.parameter.FocusMode;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
 
 import static io.fotoapparat.test.TestUtils.asSet;

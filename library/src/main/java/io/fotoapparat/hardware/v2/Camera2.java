@@ -6,7 +6,7 @@ import android.view.TextureView;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
-import io.fotoapparat.hardware.Parameters;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 import io.fotoapparat.hardware.v2.captor.SurfaceReader;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
