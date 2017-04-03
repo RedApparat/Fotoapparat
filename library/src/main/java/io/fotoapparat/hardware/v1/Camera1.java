@@ -24,189 +24,193 @@ import io.fotoapparat.photo.Photo;
 @SuppressWarnings("deprecation")
 public class Camera1 implements CameraDevice {
 
-	private final Logger logger;
+    private final CapabilitiesFactory capabilitiesFactory;
+    private final Logger logger;
 
-	private Camera camera;
-	private int cameraId;
+    private Camera camera;
+    private int cameraId;
 
-	private Throwable lastStacktrace;
+    private Throwable lastStacktrace;
 
-	public Camera1(Logger logger) {
-		this.logger = logger;
-	}
+    public Camera1(Logger logger) {
+        this.capabilitiesFactory = new CapabilitiesFactory();
+        this.logger = logger;
+    }
 
-	@Override
-	public void open(LensPosition lensPosition) {
-		recordMethod();
+    @Override
+    public void open(LensPosition lensPosition) {
+        recordMethod();
 
-		try {
-			cameraId = cameraIdForLensPosition(lensPosition);
-			camera = Camera.open(cameraId);
-		} catch (RuntimeException e) {
-			throw new CameraException(e);
-		}
+        try {
+            cameraId = cameraIdForLensPosition(lensPosition);
+            camera = Camera.open(cameraId);
+        } catch (RuntimeException e) {
+            throw new CameraException(e);
+        }
 
-		// TODO apply parameters
+        // TODO apply parameters
 
-		camera.setErrorCallback(new Camera.ErrorCallback() {
-			@Override
-			public void onError(int error, Camera camera) {
-				if (lastStacktrace != null) {
-					lastStacktrace.printStackTrace();
-				}
+        camera.setErrorCallback(new Camera.ErrorCallback() {
+            @Override
+            public void onError(int error, Camera camera) {
+                if (lastStacktrace != null) {
+                    lastStacktrace.printStackTrace();
+                }
 
-				throw new IllegalStateException("Camera error code: " + error);
-			}
-		});
-	}
+                throw new IllegalStateException("Camera error code: " + error);
+            }
+        });
+    }
 
-	private int cameraIdForLensPosition(LensPosition lensPosition) {
-		int numberOfCameras = Camera.getNumberOfCameras();
+    private int cameraIdForLensPosition(LensPosition lensPosition) {
+        int numberOfCameras = Camera.getNumberOfCameras();
 
-		for (int i = 0; i < numberOfCameras; i++) {
-			Camera.CameraInfo info = getCameraInfo(i);
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.CameraInfo info = getCameraInfo(i);
 
-			if (info.facing == facingForLensPosition(lensPosition)) {
-				return i;
-			}
-		}
+            if (info.facing == facingForLensPosition(lensPosition)) {
+                return i;
+            }
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 
-	private int facingForLensPosition(LensPosition lensPosition) {
-		switch (lensPosition) {
-			case FRONT:
-				return Camera.CameraInfo.CAMERA_FACING_FRONT;
-			case BACK:
-				return Camera.CameraInfo.CAMERA_FACING_BACK;
-			default:
-				throw new IllegalArgumentException("Camera is not supported: " + lensPosition);
-		}
-	}
+    private int facingForLensPosition(LensPosition lensPosition) {
+        switch (lensPosition) {
+            case FRONT:
+                return Camera.CameraInfo.CAMERA_FACING_FRONT;
+            case BACK:
+                return Camera.CameraInfo.CAMERA_FACING_BACK;
+            default:
+                throw new IllegalArgumentException("Camera is not supported: " + lensPosition);
+        }
+    }
 
-	@Override
-	public void close() {
-		recordMethod();
+    @Override
+    public void close() {
+        recordMethod();
 
-		if (camera != null) {
-			camera.release();
-		}
-	}
+        if (camera != null) {
+            camera.release();
+        }
+    }
 
-	@Override
-	public void startPreview() {
-		recordMethod();
+    @Override
+    public void startPreview() {
+        recordMethod();
 
-		camera.startPreview();
-	}
+        camera.startPreview();
+    }
 
-	@Override
-	public void stopPreview() {
-		recordMethod();
+    @Override
+    public void stopPreview() {
+        recordMethod();
 
-		camera.stopPreview();
-	}
+        camera.stopPreview();
+    }
 
-	@Override
-	public void setDisplaySurface(Object displaySurface) {
-		recordMethod();
+    @Override
+    public void setDisplaySurface(Object displaySurface) {
+        recordMethod();
 
-		try {
-			trySetDisplaySurface(displaySurface);
-		} catch (IOException e) {
-			throw new CameraException(e);
-		}
-	}
+        try {
+            trySetDisplaySurface(displaySurface);
+        } catch (IOException e) {
+            throw new CameraException(e);
+        }
+    }
 
-	@Override
-	public void setDisplayOrientation(int degrees) {
-		recordMethod();
+    @Override
+    public void setDisplayOrientation(int degrees) {
+        recordMethod();
 
-		degrees = OrientationUtils.toClosestRightAngle(degrees);
+        degrees = OrientationUtils.toClosestRightAngle(degrees);
 
-		Camera.CameraInfo info = getCameraInfo(cameraId);
-		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-			degrees = (info.orientation + degrees) % 360;
-			degrees = (360 - degrees) % 360;
-		} else {
-			degrees = (info.orientation - degrees + 360) % 360;
-		}
+        Camera.CameraInfo info = getCameraInfo(cameraId);
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            degrees = (info.orientation + degrees) % 360;
+            degrees = (360 - degrees) % 360;
+        } else {
+            degrees = (info.orientation - degrees + 360) % 360;
+        }
 
-		camera.setDisplayOrientation(degrees);
-	}
+        camera.setDisplayOrientation(degrees);
+    }
 
-	@Override
-	public void updateParameters(Parameters parameters) {
-		recordMethod();
-		// TODO actually do something
-	}
+    @Override
+    public void updateParameters(Parameters parameters) {
+        recordMethod();
+        // TODO actually do something
+    }
 
-	@Override
-	public Capabilities getCapabilities() {
-		recordMethod();
-		// TODO: return the capabilties of the camera device
-		return null;
-	}
+    @Override
+    public Capabilities getCapabilities() {
+        recordMethod();
 
-	private void trySetDisplaySurface(Object displaySurface) throws IOException {
-		if (displaySurface instanceof SurfaceTexture) {
-			camera.setPreviewTexture(((SurfaceTexture) displaySurface));
-		} else if (displaySurface instanceof SurfaceHolder) {
-			camera.setPreviewDisplay(((SurfaceHolder) displaySurface));
-		} else {
-			throw new IllegalArgumentException("Unsupported display surface: " + displaySurface);
-		}
-	}
+        return capabilitiesFactory.fromParameters(
+                camera.getParameters()
+        );
+    }
 
-	@Override
-	public Photo takePicture() {
-		recordMethod();
+    private void trySetDisplaySurface(Object displaySurface) throws IOException {
+        if (displaySurface instanceof SurfaceTexture) {
+            camera.setPreviewTexture(((SurfaceTexture) displaySurface));
+        } else if (displaySurface instanceof SurfaceHolder) {
+            camera.setPreviewDisplay(((SurfaceHolder) displaySurface));
+        } else {
+            throw new IllegalArgumentException("Unsupported display surface: " + displaySurface);
+        }
+    }
 
-		final CountDownLatch latch = new CountDownLatch(1);
-		final AtomicReference<Photo> photoReference = new AtomicReference<>();
+    @Override
+    public Photo takePicture() {
+        recordMethod();
 
-		camera.takePicture(
-				null,
-				null,
-				null,
-				new Camera.PictureCallback() {
-					@Override
-					public void onPictureTaken(byte[] data, Camera camera) {
-						photoReference.set(
-								new Photo(
-										data,
-										0 // TODO check current screen orientation
-								)
-						);
+        final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicReference<Photo> photoReference = new AtomicReference<>();
 
-						latch.countDown();
-					}
-				}
-		);
+        camera.takePicture(
+                null,
+                null,
+                null,
+                new Camera.PictureCallback() {
+                    @Override
+                    public void onPictureTaken(byte[] data, Camera camera) {
+                        photoReference.set(
+                                new Photo(
+                                        data,
+                                        0 // TODO check current screen orientation
+                                )
+                        );
 
-		try {
-			latch.await();
-		} catch (InterruptedException e) {
-			// Do nothing
-		}
+                        latch.countDown();
+                    }
+                }
+        );
 
-		return photoReference.get();
-	}
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            // Do nothing
+        }
 
-	@NonNull
-	private Camera.CameraInfo getCameraInfo(int id) {
-		Camera.CameraInfo info = new Camera.CameraInfo();
-		Camera.getCameraInfo(id, info);
-		return info;
-	}
+        return photoReference.get();
+    }
 
-	private void recordMethod() {
-		lastStacktrace = new Exception();
+    @NonNull
+    private Camera.CameraInfo getCameraInfo(int id) {
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(id, info);
+        return info;
+    }
 
-		logger.log(
-				lastStacktrace.getStackTrace()[1].getMethodName()
-		);
-	}
+    private void recordMethod() {
+        lastStacktrace = new Exception();
+
+        logger.log(
+                lastStacktrace.getStackTrace()[1].getMethodName()
+        );
+    }
 
 }
