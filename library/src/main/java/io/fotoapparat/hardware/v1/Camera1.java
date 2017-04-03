@@ -141,6 +141,7 @@ public class Camera1 implements CameraDevice {
     @Override
     public void updateParameters(Parameters parameters) {
         recordMethod();
+
         // TODO actually do something
     }
 

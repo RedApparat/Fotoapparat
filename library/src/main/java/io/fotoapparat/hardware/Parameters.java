@@ -1,28 +1,77 @@
 package io.fotoapparat.hardware;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-import static java.util.Collections.emptyList;
+import io.fotoapparat.parameter.FocusMode;
+import io.fotoapparat.parameter.Size;
 
 /**
  * Parameters of {@link CameraDevice}.
  */
 public class Parameters {
 
-	public void putValue(Type type, Object value) {
-	}
+    private final Map<Type, Object> values = new HashMap<>();
 
-	public <T> T getValue(Type type) {
-		return null;
-	}
+    /**
+     * Puts value of given type, rewriting existing one (if any). Note that given value must be of
+     * the type specified by {@link Type}.
+     *
+     * @param type  type of the parameter to store.
+     * @param value value of the parameter.
+     */
+    public void putValue(Type type, Object value) {
+        ensureType(type, value);
 
-	public List<Type> storedTypes() {
-		return emptyList();
-	}
+        values.put(type, value);
+    }
 
-	public enum Type {
+    private void ensureType(Type type, Object value) {
+        if (!type.clazz.isInstance(value)) {
+            throw new IllegalArgumentException("Provided value must be of type " + type.clazz + ". Was " + value);
+        }
+    }
 
-		PICTURE_SIZE
-	}
+    /**
+     * Reads stored parameter.
+     *
+     * @param type type of the stored parameter.
+     * @return stored parameter or {@code null} if there is none.
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getValue(Type type) {
+        return (T) values.get(type);
+    }
+
+    /**
+     * @return set of all stored types. That is, all types for which {@link #getValue(Type)} will
+     * return non-null value.
+     */
+    public Set<Type> storedTypes() {
+        return values.keySet();
+    }
+
+    /**
+     * Type of values which can be stored in {@link Parameters}.
+     */
+    public enum Type {
+
+        /**
+         * Size of the photo. Expected type: {@link Size}.
+         */
+        PICTURE_SIZE(Size.class),
+
+        /**
+         * Focus mode of the camera. Expected type: {@link FocusMode}.
+         */
+        FOCUS_MODE(FocusMode.class);
+
+        private final Class<?> clazz;
+
+        Type(Class<?> clazz) {
+            this.clazz = clazz;
+        }
+    }
 
 }

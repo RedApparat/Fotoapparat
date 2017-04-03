@@ -53,14 +53,14 @@ public class CapabilitiesFactoryTest {
 
         // Then
         assertEquals(
-                capabilities.supportedFocusModes(),
                 asSet(
                         FocusMode.AUTO,
                         FocusMode.FIXED,
                         FocusMode.CONTINUOUS_FOCUS,
                         FocusMode.INFINITY,
                         FocusMode.MACRO
-                )
+                ),
+                capabilities.supportedFocusModes()
         );
     }
 
