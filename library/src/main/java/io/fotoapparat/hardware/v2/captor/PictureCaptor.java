@@ -1,80 +1,98 @@
 package io.fotoapparat.hardware.v2.captor;
 
-import android.graphics.ImageFormat;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CaptureFailure;
 import android.hardware.camera2.CaptureRequest;
-import android.media.ImageReader;
+import android.hardware.camera2.TotalCaptureResult;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.util.Size;
-import android.view.Surface;
 
-import java.util.List;
-
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
+import io.fotoapparat.hardware.v2.connection.CameraConnection;
+import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.photo.Photo;
 
 /**
- * Takes a picture
+ * Responsible to capture a picture.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class PictureCaptor implements PhotoCaptor {
+public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 
-	private final CapturePhotoAction capturePhotoAction;
+	private final SurfaceReader surfaceReader;
+	private final CameraConnection cameraConnection;
+	private final OrientationManager orientationManager;
 
-	public PictureCaptor(final CameraDevice camera,
-						 CameraCharacteristics cameraCharacteristics,
-						 final List<Surface> surfaces, final CameraCaptureSession session) {
-
-		SizeCapability sizeCapability = new SizeCapability(cameraCharacteristics);
-		Size largestSize = sizeCapability.getLargestSize();
-
-		ImageReader imageReader = ImageReader
-				.newInstance(largestSize.getWidth(),
-						largestSize.getHeight(),
-						ImageFormat.JPEG,
-						1
-				);
-		capturePhotoAction = new CapturePhotoAction(imageReader);
-
-		CameraThread
-				.getInstance()
-				.createHandler()
-				.post(new Runnable() {
-					@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-					@Override
-					public void run() {
-						try {
-							CaptureRequest captureRequest = createCaptureRequest(camera, surfaces);
-							session.capture(captureRequest, capturePhotoAction, null);
-						} catch (CameraAccessException e) {
-							// Do nothing
-						}
-					}
-				});
-	}
-
-	private CaptureRequest createCaptureRequest(CameraDevice camera,
-												List<Surface> surfaces) throws CameraAccessException {
-		CaptureRequest.Builder requestBuilder = camera.createCaptureRequest(
-				CameraDevice.TEMPLATE_STILL_CAPTURE);
-
-		for (Surface surface : surfaces) {
-			requestBuilder.addTarget(surface);
-		}
-		return requestBuilder.build();
+	public PictureCaptor(SurfaceReader surfaceReader,
+						 CameraConnection cameraConnection,
+						 OrientationManager orientationManager) {
+		this.surfaceReader = surfaceReader;
+		this.cameraConnection = cameraConnection;
+		this.orientationManager = orientationManager;
 	}
 
 	@Override
-	public Photo takePicture() {
-		byte[] result = capturePhotoAction.getPhotoBytes();
+	public void onCaptureCompleted(@NonNull CameraCaptureSession session,
+								   @NonNull CaptureRequest request,
+								   @NonNull TotalCaptureResult result) {
+		super.onCaptureCompleted(session, request, result);
+	}
+
+	@Override
+	public void onCaptureFailed(@NonNull CameraCaptureSession session,
+								@NonNull CaptureRequest request,
+								@NonNull CaptureFailure failure) {
+		super.onCaptureFailed(session, request, failure);
+		// TODO: 27.03.17 support failure
+	}
+
+	/**
+	 * Captures photo synchronously.
+	 *
+	 * @param captureSession the currently opened capture session of the camera
+	 * @return a new Photo
+	 */
+	public Photo takePhoto(CameraCaptureSession captureSession) {
+		Integer sensorOrientation = orientationManager.getSensorOrientation();
+		try {
+			capture(captureSession, sensorOrientation);
+		} catch (CameraAccessException e) {
+			throw new CameraException(e);
+		}
+
 		return new Photo(
-				result,
-				0 // fixme
+				surfaceReader.getPhotoBytes(),
+				sensorOrientation
 		);
+	}
+
+	private void capture(CameraCaptureSession session,
+						 Integer sensorOrientation) throws CameraAccessException {
+		CaptureRequest captureRequest = createCaptureRequest(sensorOrientation);
+
+//		session.stopRepeating();
+		session.capture(captureRequest,
+				this,
+				CameraThread
+						.getInstance()
+						.createHandler()
+		);
+	}
+
+	private CaptureRequest createCaptureRequest(Integer sensorOrientation) throws CameraAccessException {
+		CaptureRequest.Builder requestBuilder = cameraConnection
+				.getCamera()
+				.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+
+		requestBuilder.addTarget(surfaceReader.getSurface());
+		requestBuilder.set(CaptureRequest.JPEG_ORIENTATION, sensorOrientation);
+
+		requestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
+				CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE); // TODO: 02/04/17 make it same with the preview
+
+		return requestBuilder.build();
 	}
 }

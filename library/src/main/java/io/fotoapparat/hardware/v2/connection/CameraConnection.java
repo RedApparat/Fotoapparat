@@ -9,7 +9,9 @@ import android.support.annotation.RequiresApi;
 
 import java.util.concurrent.CountDownLatch;
 
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.v2.CameraThread;
+import io.fotoapparat.hardware.v2.capabilities.CameraCapabilities;
 
 /**
  * A wrapper around {@link CameraDevice.StateCallback} to provide the opened
@@ -21,19 +23,40 @@ public class CameraConnection extends CameraDevice.StateCallback {
 
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
 	private final CameraManager manager;
+	private final CameraCapabilities capabilities;
 	private CameraDevice camera;
 
-	public CameraConnection(android.hardware.camera2.CameraManager manager) {
+	public CameraConnection(CameraManager manager, CameraCapabilities capabilities) {
 		this.manager = manager;
+		this.capabilities = capabilities;
 	}
 
-	public void open(String cameraId) throws CameraAccessException {
-		manager.openCamera(cameraId,
-				this,
-				CameraThread
-						.getInstance()
-						.createHandler()
-		);
+	/**
+	 * Open a connection to a camera with the given ID.
+	 *
+	 * @param cameraId the camera id
+	 */
+	public void openById(String cameraId) {
+		try {
+			capabilities.setCameraId(cameraId);
+			manager.openCamera(cameraId,
+					this,
+					CameraThread
+							.getInstance()
+							.createHandler()
+			);
+		} catch (CameraAccessException e) {
+			throw new CameraException(e);
+		}
+	}
+
+	/**
+	 * Closes a connection if a camera has opened.
+	 */
+	public void close() {
+		if (camera != null) {
+			camera.close();
+		}
 	}
 
 	@Override
@@ -56,7 +79,7 @@ public class CameraConnection extends CameraDevice.StateCallback {
 	 * Waits and returns the {@link CameraDevice} synchronously after it has been
 	 * obtained.
 	 *
-	 * @return the requested {@link CameraDevice} to open
+	 * @return the requested {@link CameraDevice} to openById
 	 */
 	public CameraDevice getCamera() {
 		try {

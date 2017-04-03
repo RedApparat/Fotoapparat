@@ -2,73 +2,93 @@ package io.fotoapparat.hardware.v2.session;
 
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
+import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.captor.PhotoCaptor;
-import io.fotoapparat.hardware.v2.captor.PictureCaptor;
-import io.fotoapparat.photo.Photo;
+import io.fotoapparat.hardware.v2.captor.SurfaceReader;
 
 /**
  * Basic wrapper around the internal {@link CameraCaptureSession}
- * for a particular {@link CameraDevice}.
+ * for a {@link CameraDevice} to provide the opened session synchronously.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class Session implements PhotoCaptor {
+public class Session extends CameraCaptureSession.StateCallback {
 
-	private final CaptureSessionAction captureSessionAction = new CaptureSessionAction();
+	private final CountDownLatch sessionLatch = new CountDownLatch(1);
 	private final CameraDevice camera;
-	private final CameraCharacteristics cameraCharacteristics;
-	private final List<Surface> surfaces;
+	private final SurfaceReader surfaceReader;
+	private final Surface surface;
+	private CameraCaptureSession session;
 
-	public Session(CameraDevice camera, CameraCharacteristics cameraCharacteristics) {
-		this(camera, cameraCharacteristics, Collections.<Surface>emptyList());
+	public Session(CameraDevice camera, SurfaceReader surfaceReader) {
+		this(camera, surfaceReader, null);
 	}
 
-	Session(CameraDevice camera, CameraCharacteristics cameraCharacteristics, Surface surface) {
-		this(camera, cameraCharacteristics, Collections.singletonList(surface));
-	}
-
-	private Session(final CameraDevice camera,
-					CameraCharacteristics cameraCharacteristics,
-					final List<Surface> surfaces) {
+	Session(final CameraDevice camera,
+			final SurfaceReader surfaceReader,
+			final Surface surface) {
 		this.camera = camera;
-		this.cameraCharacteristics = cameraCharacteristics;
-		this.surfaces = surfaces;
+		this.surfaceReader = surfaceReader;
+		this.surface = surface;
+	}
 
+	/**
+	 * Waits and returns the {@link CameraCaptureSession} synchronously after it has been
+	 * obtained.
+	 *
+	 * @return the requested {@link CameraCaptureSession} to open
+	 */
+	public CameraCaptureSession getCaptureSession() {
+		if (session == null) {
+			createCaptureSession();
+		}
+		return session;
+	}
+
+	/**
+	 * Closes the {@link CameraCaptureSession} asynchronously.
+	 */
+	public void close() {
+		if (session != null) {
+			session.close();
+		}
+	}
+
+	@Override
+	public void onConfigured(@NonNull CameraCaptureSession session) {
+		this.session = session;
+		sessionLatch.countDown();
+	}
+
+	@Override
+	public void onConfigureFailed(@NonNull CameraCaptureSession session) {
+		session.close();
+	}
+
+	@Override
+	public void onClosed(@NonNull CameraCaptureSession session) {
+		super.onClosed(session);
+	}
+
+	private void createCaptureSession() {
 		try {
 			camera.createCaptureSession(
-					surfaces,
-					captureSessionAction,
+					Arrays.asList(surface, surfaceReader.getSurface()),
+					this,
 					CameraThread
 							.getInstance()
 							.createHandler()
 			);
-		} catch (CameraAccessException e) {
+			sessionLatch.await();
+		} catch (CameraAccessException | InterruptedException e) {
 			// Do nothing
 		}
-	}
-
-	CameraCaptureSession getCaptureSession() {
-		return captureSessionAction.getCaptureSession();
-	}
-
-	@Override
-	public Photo takePicture() {
-
-		PictureCaptor pictureCaptor = new PictureCaptor(
-				camera,
-				cameraCharacteristics,
-				surfaces,
-				getCaptureSession()
-		);
-		return pictureCaptor.takePicture();
 	}
 }

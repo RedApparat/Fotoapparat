@@ -17,16 +17,20 @@ import java.util.Comparator;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class SizeCapability {
 
-	private final StreamConfigurationMap configurationMap;
+	private final CameraCapabilities cameraCapabilities;
 
-	public SizeCapability(CameraCharacteristics characteristics) {
-		configurationMap = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+	public SizeCapability(CameraCapabilities cameraCapabilities) {
+		this.cameraCapabilities = cameraCapabilities;
 	}
 
 	/**
 	 * @return the largest size the camera can take a picture of
 	 */
+	@SuppressWarnings("ConstantConditions")
 	public Size getLargestSize() {
+		CameraCharacteristics characteristics = cameraCapabilities.getCameraCharacteristics();
+		StreamConfigurationMap configurationMap = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+
 		return Collections.max(
 				Arrays.asList(configurationMap.getOutputSizes(ImageFormat.JPEG)),
 				new CompareSizesByArea()
@@ -44,6 +48,5 @@ public class SizeCapability {
 			return Long.signum((long) lhs.getWidth() * lhs.getHeight() -
 					(long) rhs.getWidth() * rhs.getHeight());
 		}
-
 	}
 }

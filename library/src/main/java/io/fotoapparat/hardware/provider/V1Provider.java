@@ -13,5 +13,4 @@ public class V1Provider implements CameraProvider {
 	public CameraDevice get(Logger logger) {
 		return new Camera1(logger);
 	}
-
 }

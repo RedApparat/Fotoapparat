@@ -12,5 +12,4 @@ public interface CameraProvider {
 	 * @return a {@link CameraDevice}.
 	 */
 	CameraDevice get(Logger logger);
-
 }

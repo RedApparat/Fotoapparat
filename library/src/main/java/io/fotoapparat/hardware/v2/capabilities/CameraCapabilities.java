@@ -16,6 +16,7 @@ public class CameraCapabilities {
 
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
 	private final CameraManager manager;
+
 	private CameraCharacteristics cameraCharacteristics;
 
 	public CameraCapabilities(CameraManager manager) {
@@ -33,6 +34,11 @@ public class CameraCapabilities {
 		countDownLatch.countDown();
 	}
 
+	/**
+	 * Returns synchronously the camera characteristics for a given camera id.
+	 *
+	 * @return the {@link CameraCharacteristics}
+	 */
 	public CameraCharacteristics getCameraCharacteristics() {
 		try {
 			countDownLatch.await();
