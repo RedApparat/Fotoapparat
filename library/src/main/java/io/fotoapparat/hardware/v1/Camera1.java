@@ -25,6 +25,7 @@ import io.fotoapparat.photo.Photo;
 public class Camera1 implements CameraDevice {
 
     private final CapabilitiesFactory capabilitiesFactory;
+    private final ParametersConverter parametersConverter;
     private final Logger logger;
 
     private Camera camera;
@@ -34,6 +35,7 @@ public class Camera1 implements CameraDevice {
 
     public Camera1(Logger logger) {
         this.capabilitiesFactory = new CapabilitiesFactory();
+        this.parametersConverter = new ParametersConverter();
         this.logger = logger;
     }
 
@@ -142,7 +144,12 @@ public class Camera1 implements CameraDevice {
     public void updateParameters(Parameters parameters) {
         recordMethod();
 
-        // TODO actually do something
+        Camera.Parameters cameraParameters = parametersConverter.convert(
+                parameters,
+                camera.getParameters()
+        );
+
+        camera.setParameters(cameraParameters);
     }
 
     @Override
