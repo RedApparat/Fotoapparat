@@ -56,7 +56,7 @@ public class ParametersConverterTest {
         );
 
         // When
-        Camera.Parameters result = testee.convert(
+        testee.convert(
                 input,
                 outputParameters
         );
