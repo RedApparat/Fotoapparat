@@ -10,6 +10,7 @@ import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.orientation.OrientationSensor;
 import io.fotoapparat.hardware.orientation.RotationListener;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
+import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
@@ -52,13 +53,18 @@ public class Fotoapparat {
         CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
         ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
         RotationListener rotationListener = new RotationListener(builder.context);
+        InitialParametersProvider initialParametersProvider = new InitialParametersProvider(
+                cameraDevice,
+                builder.focusModeSelector
+        );
 
         StartCameraRoutine startCameraRoutine = new StartCameraRoutine(
                 builder.availableLensPositionsProvider,
                 cameraDevice,
                 builder.renderer,
                 builder.lensPositionSelector,
-                screenOrientationProvider
+                screenOrientationProvider,
+                initialParametersProvider
         );
 
         StopCameraRoutine stopCameraRoutine = new StopCameraRoutine(cameraDevice);

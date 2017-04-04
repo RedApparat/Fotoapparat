@@ -9,37 +9,47 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SelectorsTest {
 
-	@Mock
-	SelectorFunction<String> functionA;
-	@Mock
-	SelectorFunction<String> functionB;
+    @Mock
+    SelectorFunction<String> functionA;
+    @Mock
+    SelectorFunction<String> functionB;
 
-	@Test
-	public void firstAvailable() throws Exception {
-		// Given
-		List<String> options = asList("B", "C");
+    @Test
+    public void firstAvailable() throws Exception {
+        // Given
+        List<String> options = asList("B", "C");
 
-		given(functionA.select(options))
-				.willReturn(null);
+        given(functionA.select(options))
+                .willReturn(null);
 
-		given(functionB.select(options))
-				.willReturn("B");
+        given(functionB.select(options))
+                .willReturn("B");
 
-		// When
-		String result = Selectors
-				.firstAvailable(
-						functionA,
-						functionB
-				)
-				.select(options);
+        // When
+        String result = Selectors
+                .firstAvailable(
+                        functionA,
+                        functionB
+                )
+                .select(options);
 
-		// Then
-		assertEquals("B", result);
-	}
+        // Then
+        assertEquals("B", result);
+    }
 
+    @Test
+    public void nothing() throws Exception {
+        // When
+        String result = Selectors.<String>nothing()
+                .select(asList("A", "B", "C"));
+
+        // Then
+        assertNull(result);
+    }
 }
