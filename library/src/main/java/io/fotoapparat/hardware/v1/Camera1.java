@@ -1,9 +1,9 @@
 package io.fotoapparat.hardware.v1;
 
-import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.support.annotation.NonNull;
-import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.TextureView;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -12,10 +12,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Capabilities;
-import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.hardware.orientation.OrientationUtils;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.photo.Photo;
 
 /**
@@ -160,10 +160,10 @@ public class Camera1 implements CameraDevice {
     }
 
     private void trySetDisplaySurface(Object displaySurface) throws IOException {
-        if (displaySurface instanceof SurfaceTexture) {
-            camera.setPreviewTexture(((SurfaceTexture) displaySurface));
-        } else if (displaySurface instanceof SurfaceHolder) {
-            camera.setPreviewDisplay(((SurfaceHolder) displaySurface));
+        if (displaySurface instanceof TextureView) {
+            camera.setPreviewTexture(((TextureView) displaySurface).getSurfaceTexture());
+        } else if (displaySurface instanceof SurfaceView) {
+            camera.setPreviewDisplay(((SurfaceView) displaySurface).getHolder());
         } else {
             throw new IllegalArgumentException("Unsupported display surface: " + displaySurface);
         }
