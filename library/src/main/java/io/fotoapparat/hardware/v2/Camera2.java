@@ -6,7 +6,7 @@ import android.view.TextureView;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
-import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 import io.fotoapparat.hardware.v2.captor.SurfaceReader;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
@@ -17,6 +17,7 @@ import io.fotoapparat.hardware.v2.session.PreviewOperator;
 import io.fotoapparat.hardware.v2.session.PreviewSession;
 import io.fotoapparat.hardware.v2.session.Session;
 import io.fotoapparat.parameter.LensPosition;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.photo.Photo;
 
 /**
@@ -29,6 +30,7 @@ public class Camera2 implements CameraDevice, PreviewOperator {
 	private final OrientationManager orientationManager;
 	private final TextureManager textureManager;
 	private final CameraSelector cameraSelector;
+	private final CapabilitiesFactory capabilitiesFactory;
 	private final CameraConnection connection;
 	private final SurfaceReader surfaceReader;
 	private final PictureCaptor pictureCaptor;
@@ -36,12 +38,14 @@ public class Camera2 implements CameraDevice, PreviewOperator {
 	private Session session;
 
 	public Camera2(CameraSelector cameraSelector,
+				   CapabilitiesFactory capabilitiesFactory,
 				   CameraConnection connection,
 				   SurfaceReader surfaceReader,
 				   PictureCaptor pictureCaptor,
 				   OrientationManager orientationManager,
 				   TextureManager textureManager) {
 		this.cameraSelector = cameraSelector;
+		this.capabilitiesFactory = capabilitiesFactory;
 		this.connection = connection;
 		this.surfaceReader = surfaceReader;
 		this.pictureCaptor = pictureCaptor;
@@ -104,8 +108,7 @@ public class Camera2 implements CameraDevice, PreviewOperator {
 
 	@Override
 	public Capabilities getCapabilities() {
-		// TODO: return the capabilties of the camera device
-		return null;
+		return capabilitiesFactory.getCapabilities();
 	}
 
 	@Override

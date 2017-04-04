@@ -11,7 +11,7 @@ import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.capabilities.CameraCapabilities;
+import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 
 /**
  * A wrapper around {@link CameraDevice.StateCallback} to provide the opened
@@ -23,10 +23,10 @@ public class CameraConnection extends CameraDevice.StateCallback {
 
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
 	private final CameraManager manager;
-	private final CameraCapabilities capabilities;
+	private final Characteristics capabilities;
 	private CameraDevice camera;
 
-	public CameraConnection(CameraManager manager, CameraCapabilities capabilities) {
+	public CameraConnection(CameraManager manager, Characteristics capabilities) {
 		this.manager = manager;
 		this.capabilities = capabilities;
 	}

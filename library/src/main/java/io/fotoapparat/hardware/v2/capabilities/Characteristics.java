@@ -9,17 +9,17 @@ import android.support.annotation.RequiresApi;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Wrapper around api's {@link android.hardware.camera2.CameraCharacteristics}
+ * Wrapper around api's {@link CameraCharacteristics}
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class CameraCapabilities {
+public class Characteristics {
 
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
 	private final CameraManager manager;
 
 	private CameraCharacteristics cameraCharacteristics;
 
-	public CameraCapabilities(CameraManager manager) {
+	public Characteristics(CameraManager manager) {
 		this.manager = manager;
 	}
 

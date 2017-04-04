@@ -7,7 +7,8 @@ import android.support.annotation.RequiresApi;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.v2.Camera2;
-import io.fotoapparat.hardware.v2.capabilities.CameraCapabilities;
+import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
+import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 import io.fotoapparat.hardware.v2.captor.SurfaceReader;
@@ -34,11 +35,12 @@ public class V2Provider implements CameraProvider {
 	public CameraDevice get(Logger logger) {
 
 		CameraSelector cameraSelector = new CameraSelector(manager);
-		CameraCapabilities cameraCapabilities = new CameraCapabilities(manager);
+		Characteristics characteristics = new Characteristics(manager);
 
-		SizeCapability sizeCapability = new SizeCapability(cameraCapabilities);
-		OrientationManager orientationManager = new OrientationManager(cameraCapabilities);
-		CameraConnection cameraConnection = new CameraConnection(manager, cameraCapabilities);
+		CapabilitiesFactory capabilitiesFactory = new CapabilitiesFactory(characteristics);
+		SizeCapability sizeCapability = new SizeCapability(characteristics);
+		OrientationManager orientationManager = new OrientationManager(characteristics);
+		CameraConnection cameraConnection = new CameraConnection(manager, characteristics);
 
 		SurfaceReader surfaceReader = new SurfaceReader(sizeCapability);
 
@@ -52,6 +54,7 @@ public class V2Provider implements CameraProvider {
 
 		return new Camera2(
 				cameraSelector,
+				capabilitiesFactory,
 				cameraConnection,
 				surfaceReader,
 				pictureCaptor,

@@ -1,10 +1,9 @@
 package io.fotoapparat.hardware.v2.orientation;
 
-import android.hardware.camera2.CameraCharacteristics;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
-import io.fotoapparat.hardware.v2.capabilities.CameraCapabilities;
+import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 
 /**
  * Object is which is aware of orientation related values.
@@ -12,12 +11,12 @@ import io.fotoapparat.hardware.v2.capabilities.CameraCapabilities;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class OrientationManager {
 
-	private final CameraCapabilities cameraCapabilities;
+	private final Characteristics characteristics;
 	private int orientation;
 	private Listener listener;
 
-	public OrientationManager(CameraCapabilities cameraCapabilities) {
-		this.cameraCapabilities = cameraCapabilities;
+	public OrientationManager(Characteristics characteristics) {
+		this.characteristics = characteristics;
 	}
 
 	/**
@@ -50,8 +49,8 @@ public class OrientationManager {
 	 */
 	@SuppressWarnings("ConstantConditions")
 	public Integer getSensorOrientation() {
-		CameraCharacteristics cameraCharacteristics = cameraCapabilities.getCameraCharacteristics();
-		Integer sensorOrientation = cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
+		android.hardware.camera2.CameraCharacteristics cameraCharacteristics = this.characteristics.getCameraCharacteristics();
+		Integer sensorOrientation = cameraCharacteristics.get(android.hardware.camera2.CameraCharacteristics.SENSOR_ORIENTATION);
 
 		return (orientation + sensorOrientation + 360) % 360;
 	}

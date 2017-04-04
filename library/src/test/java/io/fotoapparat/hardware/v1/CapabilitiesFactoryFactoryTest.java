@@ -20,7 +20,7 @@ import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("deprecation")
-public class CapabilitiesFactoryTest {
+public class CapabilitiesFactoryFactoryTest {
 
     @Mock
     Camera.Parameters parameters;

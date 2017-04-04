@@ -17,10 +17,10 @@ import java.util.Comparator;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class SizeCapability {
 
-	private final CameraCapabilities cameraCapabilities;
+	private final Characteristics characteristics;
 
-	public SizeCapability(CameraCapabilities cameraCapabilities) {
-		this.cameraCapabilities = cameraCapabilities;
+	public SizeCapability(Characteristics characteristics) {
+		this.characteristics = characteristics;
 	}
 
 	/**
@@ -28,8 +28,9 @@ public class SizeCapability {
 	 */
 	@SuppressWarnings("ConstantConditions")
 	public Size getLargestSize() {
-		CameraCharacteristics characteristics = cameraCapabilities.getCameraCharacteristics();
-		StreamConfigurationMap configurationMap = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+		StreamConfigurationMap configurationMap = characteristics
+				.getCameraCharacteristics()
+				.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
 
 		return Collections.max(
 				Arrays.asList(configurationMap.getOutputSizes(ImageFormat.JPEG)),
