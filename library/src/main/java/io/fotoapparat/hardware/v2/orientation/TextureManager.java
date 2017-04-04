@@ -10,21 +10,27 @@ import android.view.TextureView;
 
 import java.util.concurrent.CountDownLatch;
 
+import io.fotoapparat.hardware.operators.SurfaceOperator;
+import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.view.TextureListener;
 
 /**
  * Manages the {@link SurfaceTexture} of a {@link TextureView}.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class TextureManager implements TextureListener.Listener, OrientationManager.Listener {
+public class TextureManager
+		implements TextureListener.Listener, OrientationManager.Listener, SurfaceOperator {
 
 	private final CountDownLatch surfaceLatch = new CountDownLatch(1);
 	private final OrientationManager orientationManager;
 	private SurfaceTexture surface;
 	private TextureView textureView;
+	private SessionManager sessionManager;
 
-	public TextureManager(OrientationManager orientationManager) {
+	public TextureManager(OrientationManager orientationManager,
+						  SessionManager sessionManager) {
 		this.orientationManager = orientationManager;
+		this.sessionManager = sessionManager;
 		orientationManager.setListener(this);
 	}
 
@@ -53,33 +59,24 @@ public class TextureManager implements TextureListener.Listener, OrientationMana
 		correctOrientation(textureView.getWidth(), textureView.getHeight());
 	}
 
-	/**
-	 * Set a {@link TextureView} to the manager to interact with
-	 *
-	 * @param textureView the textureView to interact
-	 */
-	public void setTextureView(TextureView textureView) {
-		this.textureView = textureView;
+	@Override
+	public void setDisplaySurface(Object displaySurface) {
+		if (!(displaySurface instanceof TextureView)) {
+			throw new IllegalArgumentException("Unsupported display surface: " + displaySurface);
+		}
+
+		textureView = (TextureView) displaySurface;
 		surface = textureView.getSurfaceTexture();
+
 		if (surface != null) {
 			correctOrientation(textureView.getWidth(), textureView.getHeight());
 			surfaceLatch.countDown();
 		}
 		textureView.setSurfaceTextureListener(new TextureListener(this));
+
+		sessionManager.setSurface(surface);
 	}
 
-	/**
-	 * @return the {@link SurfaceTexture} of the {@link TextureView} but only when it becomes
-	 * available.
-	 */
-	public SurfaceTexture getSurface() {
-		try {
-			surfaceLatch.await();
-		} catch (InterruptedException e) {
-			// Do nothing
-		}
-		return surface;
-	}
 
 	@Override
 	public void onSurfaceAvailable(SurfaceTexture surface) {
@@ -115,4 +112,6 @@ public class TextureManager implements TextureListener.Listener, OrientationMana
 			}
 		});
 	}
+
+
 }

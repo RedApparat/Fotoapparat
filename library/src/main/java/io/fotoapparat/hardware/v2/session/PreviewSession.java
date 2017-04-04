@@ -8,6 +8,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
+import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.v2.captor.SurfaceReader;
 
 /**

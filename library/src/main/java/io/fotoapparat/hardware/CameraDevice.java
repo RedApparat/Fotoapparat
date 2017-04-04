@@ -1,5 +1,12 @@
 package io.fotoapparat.hardware;
 
+import io.fotoapparat.hardware.operators.CapabilitiesOperator;
+import io.fotoapparat.hardware.operators.CaptureOperator;
+import io.fotoapparat.hardware.operators.ConnectionOperator;
+import io.fotoapparat.hardware.operators.OrientationOperator;
+import io.fotoapparat.hardware.operators.ParametersOperator;
+import io.fotoapparat.hardware.operators.PreviewOperator;
+import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.photo.Photo;
@@ -7,58 +14,34 @@ import io.fotoapparat.photo.Photo;
 /**
  * Abstraction for camera hardware.
  */
-public interface CameraDevice {
+public interface CameraDevice
+		extends CaptureOperator, PreviewOperator, CapabilitiesOperator, OrientationOperator, ParametersOperator, ConnectionOperator, SurfaceOperator {
 
-	/**
-	 * Opens a connection to a camera.
-	 *
-	 * @param lensPosition The camera position relatively to the screen of the device,
-	 *                     which will determine which camera to open.
-	 */
+	@Override
 	void open(LensPosition lensPosition);
 
-	/**
-	 * Closes the connection to a camera.
-	 */
+	@Override
 	void close();
 
-	/**
-	 * Starts the preview of the camera.
-	 */
+	@Override
 	void startPreview();
 
-	/**
-	 * Stops the preview of the camera.
-	 */
+	@Override
 	void stopPreview();
 
-	/**
-	 * Sets the desired surface on which the camera preview will be displayed.
-	 */
+	@Override
 	void setDisplaySurface(Object displaySurface);
 
-	/**
-	 * Sets the current orientation of the display.
-	 */
+	@Override
 	void setDisplayOrientation(int degrees);
 
-	/**
-	 * Updates the desired parameters for the preview and the photo capture actions.
-	 */
+	@Override
 	void updateParameters(Parameters parameters);
 
-	/**
-	 * Returns the {@link Capabilities} of the opened camera.
-	 *
-	 * @return The {@link Capabilities} of the camera.
-	 */
+	@Override
 	Capabilities getCapabilities();
 
-	/**
-	 * Invokes a still picture capture action.
-	 *
-	 * @return The captured photo.
-	 */
+	@Override
 	Photo takePicture();
 
 }

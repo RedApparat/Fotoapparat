@@ -15,7 +15,9 @@ import io.fotoapparat.hardware.v2.captor.SurfaceReader;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.hardware.v2.orientation.TextureManager;
+import io.fotoapparat.hardware.v2.parameters.ParametersManager;
 import io.fotoapparat.hardware.v2.selection.CameraSelector;
+import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.log.Logger;
 
 /**
@@ -34,29 +36,39 @@ public class V2Provider implements CameraProvider {
 	@Override
 	public CameraDevice get(Logger logger) {
 
+		ParametersManager parametersManager = new ParametersManager();
+
 		CameraSelector cameraSelector = new CameraSelector(manager);
 		Characteristics characteristics = new Characteristics(manager);
 
-		CapabilitiesFactory capabilitiesFactory = new CapabilitiesFactory(characteristics);
+		CameraConnection cameraConnection = new CameraConnection(manager,
+				cameraSelector,
+				characteristics
+		);
+
+
 		SizeCapability sizeCapability = new SizeCapability(characteristics);
 		OrientationManager orientationManager = new OrientationManager(characteristics);
-		CameraConnection cameraConnection = new CameraConnection(manager, characteristics);
+		CapabilitiesFactory capabilitiesFactory = new CapabilitiesFactory(characteristics);
 
 		SurfaceReader surfaceReader = new SurfaceReader(sizeCapability);
+
+		SessionManager sessionManager = new SessionManager(surfaceReader, cameraConnection);
+
+		TextureManager textureManager = new TextureManager(orientationManager, sessionManager);
 
 		PictureCaptor pictureCaptor = new PictureCaptor(
 				surfaceReader,
 				cameraConnection,
+				sessionManager,
 				orientationManager
 		);
 
-		TextureManager textureManager = new TextureManager(orientationManager);
-
 		return new Camera2(
-				cameraSelector,
 				capabilitiesFactory,
 				cameraConnection,
-				surfaceReader,
+				parametersManager,
+				sessionManager,
 				pictureCaptor,
 				orientationManager,
 				textureManager

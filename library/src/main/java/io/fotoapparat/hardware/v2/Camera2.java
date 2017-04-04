@@ -2,20 +2,17 @@ package io.fotoapparat.hardware.v2;
 
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.view.TextureView;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
-import io.fotoapparat.hardware.v2.captor.SurfaceReader;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.hardware.v2.orientation.TextureManager;
-import io.fotoapparat.hardware.v2.selection.CameraSelector;
-import io.fotoapparat.hardware.v2.session.PreviewOperator;
-import io.fotoapparat.hardware.v2.session.PreviewSession;
-import io.fotoapparat.hardware.v2.session.Session;
+import io.fotoapparat.hardware.v2.parameters.ParametersManager;
+import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.photo.Photo;
@@ -29,25 +26,23 @@ public class Camera2 implements CameraDevice, PreviewOperator {
 
 	private final OrientationManager orientationManager;
 	private final TextureManager textureManager;
-	private final CameraSelector cameraSelector;
 	private final CapabilitiesFactory capabilitiesFactory;
 	private final CameraConnection connection;
-	private final SurfaceReader surfaceReader;
+	private final ParametersManager parametersManager;
+	private final SessionManager sessionManager;
 	private final PictureCaptor pictureCaptor;
 
-	private Session session;
-
-	public Camera2(CameraSelector cameraSelector,
-				   CapabilitiesFactory capabilitiesFactory,
+	public Camera2(CapabilitiesFactory capabilitiesFactory,
 				   CameraConnection connection,
-				   SurfaceReader surfaceReader,
+				   ParametersManager parametersManager,
+				   SessionManager sessionManager,
 				   PictureCaptor pictureCaptor,
 				   OrientationManager orientationManager,
 				   TextureManager textureManager) {
-		this.cameraSelector = cameraSelector;
 		this.capabilitiesFactory = capabilitiesFactory;
 		this.connection = connection;
-		this.surfaceReader = surfaceReader;
+		this.parametersManager = parametersManager;
+		this.sessionManager = sessionManager;
 		this.pictureCaptor = pictureCaptor;
 		this.orientationManager = orientationManager;
 		this.textureManager = textureManager;
@@ -55,55 +50,38 @@ public class Camera2 implements CameraDevice, PreviewOperator {
 
 	@Override
 	public void open(LensPosition lensPosition) {
-		String cameraId = cameraSelector.findCameraId(lensPosition);
-		connection.openById(cameraId);
+		connection.open(lensPosition);
 	}
 
 	@Override
 	public void close() {
 		connection.close();
-		if (session != null) {
-			session.close();
-		}
+		sessionManager.close(); // todo move from here
 	}
 
 	@Override
 	public void startPreview() {
-		if (session instanceof PreviewSession) {
-			((PreviewSession) session).startPreview();
-		}
+		sessionManager.startPreview();
 	}
 
 	@Override
 	public void stopPreview() {
-		if (session instanceof PreviewSession) {
-			((PreviewSession) session).stopPreview();
-		}
+		sessionManager.stopPreview();
 	}
 
 	@Override
 	public void setDisplaySurface(Object displaySurface) {
-		if (displaySurface instanceof TextureView) {
-			textureManager.setTextureView((TextureView) displaySurface);
-
-			session = PreviewSession.create(
-					connection.getCamera(),
-					surfaceReader,
-					textureManager.getSurface()
-			);
-		} else {
-			throw new IllegalArgumentException("Unsupported display surface: " + displaySurface);
-		}
+		textureManager.setDisplaySurface(displaySurface);
 	}
 
 	@Override
 	public void setDisplayOrientation(int degrees) {
-		orientationManager.onDisplayOrientationChanged(degrees);
+		orientationManager.setDisplayOrientation(degrees);
 	}
 
 	@Override
 	public void updateParameters(Parameters parameters) {
-		// TODO actually do something
+		parametersManager.updateParameters(parameters);
 	}
 
 	@Override
@@ -113,9 +91,6 @@ public class Camera2 implements CameraDevice, PreviewOperator {
 
 	@Override
 	public Photo takePicture() {
-		if (session == null) {
-			session = new Session(connection.getCamera(), surfaceReader);
-		}
-		return pictureCaptor.takePhoto(session.getCaptureSession());
+		return pictureCaptor.takePicture();
 	}
 }

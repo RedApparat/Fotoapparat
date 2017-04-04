@@ -9,24 +9,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.hardware.operators.CapabilitiesOperator;
 import io.fotoapparat.parameter.FocusMode;
 
 /**
  * Creates the {@link Capabilities} of a {@link io.fotoapparat.hardware.v2.Camera2}.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class CapabilitiesFactory {
+public class CapabilitiesFactory implements CapabilitiesOperator {
 	private final Characteristics characteristics;
 
 	public CapabilitiesFactory(Characteristics characteristics) {
 		this.characteristics = characteristics;
 	}
 
-	/**
-	 * Returns the capabilities when a camera has been selected.
-	 *
-	 * @return The capabilities of a selected camera
-	 */
+	@Override
 	public Capabilities getCapabilities() {
 		CameraCharacteristics cameraCharacteristics = characteristics.getCameraCharacteristics();
 

@@ -1,4 +1,4 @@
-package io.fotoapparat.hardware.v2.session;
+package io.fotoapparat.hardware.operators;
 
 /**
  * An interface which indicates that the class can

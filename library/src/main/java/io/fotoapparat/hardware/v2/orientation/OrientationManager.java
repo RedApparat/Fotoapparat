@@ -3,13 +3,14 @@ package io.fotoapparat.hardware.v2.orientation;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
+import io.fotoapparat.hardware.operators.OrientationOperator;
 import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 
 /**
  * Object is which is aware of orientation related values.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class OrientationManager {
+public class OrientationManager implements OrientationOperator {
 
 	private final Characteristics characteristics;
 	private int orientation;
@@ -24,7 +25,8 @@ public class OrientationManager {
 	 *
 	 * @param orientation the display orientation in degrees. One of: 0, 90, 180 and 270
 	 */
-	public void onDisplayOrientationChanged(int orientation) {
+	@Override
+	public void setDisplayOrientation(int orientation) {
 		this.orientation = orientation;
 		if (listener != null) {
 			listener.onDisplayOrientationChanged();
@@ -63,6 +65,7 @@ public class OrientationManager {
 	public void setListener(Listener listener) {
 		this.listener = listener;
 	}
+
 
 	/**
 	 * Notifies that the display orientation has changed.

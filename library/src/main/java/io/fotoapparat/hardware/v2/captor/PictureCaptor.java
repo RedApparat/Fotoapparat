@@ -11,26 +11,31 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
 import io.fotoapparat.hardware.CameraException;
+import io.fotoapparat.hardware.operators.CaptureOperator;
 import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
+import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.photo.Photo;
 
 /**
  * Responsible to capture a picture.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
+public class PictureCaptor extends CameraCaptureSession.CaptureCallback implements CaptureOperator {
 
 	private final SurfaceReader surfaceReader;
 	private final CameraConnection cameraConnection;
+	private final SessionManager sessionManager;
 	private final OrientationManager orientationManager;
 
 	public PictureCaptor(SurfaceReader surfaceReader,
 						 CameraConnection cameraConnection,
+						 SessionManager sessionManager,
 						 OrientationManager orientationManager) {
 		this.surfaceReader = surfaceReader;
 		this.cameraConnection = cameraConnection;
+		this.sessionManager = sessionManager;
 		this.orientationManager = orientationManager;
 	}
 
@@ -52,10 +57,12 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 	/**
 	 * Captures photo synchronously.
 	 *
-	 * @param captureSession the currently opened capture session of the camera
 	 * @return a new Photo
 	 */
-	public Photo takePhoto(CameraCaptureSession captureSession) {
+
+	@Override
+	public Photo takePicture() {
+		CameraCaptureSession captureSession = sessionManager.getCaptureSession();
 		Integer sensorOrientation = orientationManager.getSensorOrientation();
 		try {
 			capture(captureSession, sensorOrientation);
@@ -73,7 +80,7 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 						 Integer sensorOrientation) throws CameraAccessException {
 		CaptureRequest captureRequest = createCaptureRequest(sensorOrientation);
 
-//		session.stopRepeating();
+		//		session.stopRepeating();
 		session.capture(captureRequest,
 				this,
 				CameraThread
@@ -95,4 +102,5 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback {
 
 		return requestBuilder.build();
 	}
+
 }
