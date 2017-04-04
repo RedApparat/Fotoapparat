@@ -32,13 +32,13 @@ public class Camera2 implements CameraDevice, PreviewOperator {
 	private final SessionManager sessionManager;
 	private final PictureCaptor pictureCaptor;
 
-	public Camera2(CapabilitiesFactory capabilitiesFactory,
-				   CameraConnection connection,
-				   ParametersManager parametersManager,
+	public Camera2(CameraConnection connection,
 				   SessionManager sessionManager,
-				   PictureCaptor pictureCaptor,
+				   TextureManager textureManager,
 				   OrientationManager orientationManager,
-				   TextureManager textureManager) {
+				   ParametersManager parametersManager,
+				   CapabilitiesFactory capabilitiesFactory,
+				   PictureCaptor pictureCaptor) {
 		this.capabilitiesFactory = capabilitiesFactory;
 		this.connection = connection;
 		this.parametersManager = parametersManager;

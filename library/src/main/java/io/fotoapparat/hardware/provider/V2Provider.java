@@ -65,13 +65,13 @@ public class V2Provider implements CameraProvider {
 		);
 
 		return new Camera2(
-				capabilitiesFactory,
 				cameraConnection,
-				parametersManager,
 				sessionManager,
-				pictureCaptor,
+				textureManager,
 				orientationManager,
-				textureManager
+				parametersManager,
+				capabilitiesFactory,
+				pictureCaptor
 		);
 	}
 }
