@@ -41,6 +41,9 @@ public class StartCameraRoutine implements Runnable {
         );
 
         cameraDevice.open(lensPosition);
+        cameraDevice.updateParameters(
+                initialParametersProvider.initialParameters()
+        );
         cameraRenderer.attachCamera(cameraDevice);
         cameraDevice.setDisplayOrientation(
                 screenOrientationProvider.getScreenRotation()
