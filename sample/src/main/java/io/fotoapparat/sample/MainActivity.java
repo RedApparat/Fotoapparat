@@ -7,10 +7,12 @@ import android.widget.ImageView;
 
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.log.LogcatLogger;
+import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.view.CameraView;
 
+import static io.fotoapparat.parameter.selector.FocusModeSelectors.focusMode;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.back;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.front;
 import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
@@ -34,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
                 .lensPosition(firstAvailable(
                         front(),
                         back()
+                ))
+                .focusMode(firstAvailable(
+                        focusMode(FocusMode.CONTINUOUS_FOCUS),
+                        focusMode(FocusMode.AUTO),
+                        focusMode(FocusMode.FIXED)
                 ))
                 .logger(new LogcatLogger())
                 .build();
