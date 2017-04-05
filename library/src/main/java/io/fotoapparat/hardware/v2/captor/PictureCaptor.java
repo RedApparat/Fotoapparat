@@ -92,10 +92,9 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback implemen
 
 	private void capture(CameraCaptureSession session,
 						 Integer sensorOrientation) throws CameraAccessException {
-		CaptureRequest captureRequest = createCaptureRequest(sensorOrientation);
-
 		//		session.stopRepeating(); // TODO: 05.04.17 need?
-		session.capture(captureRequest,
+		session.capture(
+				createCaptureRequest(sensorOrientation),
 				this,
 				CameraThread
 						.getInstance()
