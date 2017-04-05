@@ -61,6 +61,7 @@ public class V2Provider implements CameraProvider {
 				surfaceReader,
 				cameraConnection,
 				sessionManager,
+				parametersManager,
 				orientationManager
 		);
 

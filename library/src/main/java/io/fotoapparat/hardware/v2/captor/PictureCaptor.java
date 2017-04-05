@@ -15,8 +15,14 @@ import io.fotoapparat.hardware.operators.CaptureOperator;
 import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
+import io.fotoapparat.hardware.v2.parameters.ParametersManager;
 import io.fotoapparat.hardware.v2.session.SessionManager;
+import io.fotoapparat.parameter.FocusMode;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.photo.Photo;
+
+import static io.fotoapparat.hardware.v2.capabilities.FocusCapability.focusToAfMode;
+import static io.fotoapparat.parameter.Parameters.Type.FOCUS_MODE;
 
 /**
  * Responsible to capture a picture.
@@ -27,16 +33,24 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback implemen
 	private final SurfaceReader surfaceReader;
 	private final CameraConnection cameraConnection;
 	private final SessionManager sessionManager;
+	private final ParametersManager parametersManager;
 	private final OrientationManager orientationManager;
 
 	public PictureCaptor(SurfaceReader surfaceReader,
 						 CameraConnection cameraConnection,
 						 SessionManager sessionManager,
+						 ParametersManager parametersManager,
 						 OrientationManager orientationManager) {
 		this.surfaceReader = surfaceReader;
 		this.cameraConnection = cameraConnection;
 		this.sessionManager = sessionManager;
+		this.parametersManager = parametersManager;
 		this.orientationManager = orientationManager;
+	}
+
+	private static int getFocusMode(Parameters parameters) {
+		FocusMode focusMode = parameters.getValue(FOCUS_MODE);
+		return focusToAfMode(focusMode);
 	}
 
 	@Override
@@ -80,7 +94,7 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback implemen
 						 Integer sensorOrientation) throws CameraAccessException {
 		CaptureRequest captureRequest = createCaptureRequest(sensorOrientation);
 
-		//		session.stopRepeating();
+		//		session.stopRepeating(); // TODO: 05.04.17 need?
 		session.capture(captureRequest,
 				this,
 				CameraThread
@@ -89,16 +103,19 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback implemen
 		);
 	}
 
-	private CaptureRequest createCaptureRequest(Integer sensorOrientation) throws CameraAccessException {
+	private CaptureRequest createCaptureRequest(Integer sensorOrientation) throws
+			CameraAccessException {
 		CaptureRequest.Builder requestBuilder = cameraConnection
 				.getCamera()
 				.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
 
+
+		Parameters parameters = parametersManager.getParameters();
+
 		requestBuilder.addTarget(surfaceReader.getSurface());
 		requestBuilder.set(CaptureRequest.JPEG_ORIENTATION, sensorOrientation);
 
-		requestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
-				CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE); // TODO: 02/04/17 make it same with the preview
+		requestBuilder.set(CaptureRequest.CONTROL_AF_MODE, getFocusMode(parameters));
 
 		return requestBuilder.build();
 	}
