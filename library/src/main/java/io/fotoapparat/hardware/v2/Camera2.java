@@ -56,7 +56,6 @@ public class Camera2 implements CameraDevice, PreviewOperator {
 	@Override
 	public void close() {
 		connection.close();
-		sessionManager.close(); // todo move from here
 	}
 
 	@Override

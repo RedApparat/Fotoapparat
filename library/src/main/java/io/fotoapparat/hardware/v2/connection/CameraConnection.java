@@ -29,6 +29,7 @@ public class CameraConnection extends CameraDevice.StateCallback implements Conn
 	private final CameraSelector cameraSelector;
 	private final Characteristics capabilities;
 	private CameraDevice camera;
+	private Listener listener;
 
 	public CameraConnection(CameraManager manager,
 							CameraSelector cameraSelector,
@@ -59,6 +60,9 @@ public class CameraConnection extends CameraDevice.StateCallback implements Conn
 	public void close() {
 		if (camera != null) {
 			camera.close();
+		}
+		if (listener != null) {
+			listener.onConnectionClosed();
 		}
 	}
 
@@ -91,5 +95,26 @@ public class CameraConnection extends CameraDevice.StateCallback implements Conn
 			// do nothing
 		}
 		return camera;
+	}
+
+
+	/**
+	 * Sets the listener to be notified when the connection closes.
+	 *
+	 * @param listener The listener to receive the events.
+	 */
+	public void setListener(Listener listener) {
+		this.listener = listener;
+	}
+
+	/**
+	 * Notifies the connectivity of the camera.
+	 */
+	public interface Listener {
+
+		/**
+		 * Called when the connection to the camera has been closed.
+		 */
+		void onConnectionClosed();
 	}
 }

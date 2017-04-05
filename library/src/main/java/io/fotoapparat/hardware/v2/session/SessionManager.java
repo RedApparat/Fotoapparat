@@ -8,10 +8,11 @@ import io.fotoapparat.hardware.v2.captor.SurfaceReader;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 
 /**
- * Manages a {@link android.hardware.camera2.CameraCaptureSession} of a {@link io.fotoapparat.hardware.v2.Camera2}.
+ * Manages a {@link android.hardware.camera2.CameraCaptureSession} of a {@link
+ * io.fotoapparat.hardware.v2.Camera2}.
  */
 @SuppressWarnings("NewApi")
-public class SessionManager implements PreviewOperator {
+public class SessionManager implements PreviewOperator, CameraConnection.Listener {
 
 	private final SurfaceReader surfaceReader;
 	private final CameraConnection connection;
@@ -20,6 +21,14 @@ public class SessionManager implements PreviewOperator {
 	public SessionManager(SurfaceReader surfaceReader, CameraConnection connection) {
 		this.surfaceReader = surfaceReader;
 		this.connection = connection;
+		connection.setListener(this);
+	}
+
+	@Override
+	public void onConnectionClosed() {
+		if (session != null) {
+			session.close();
+		}
 	}
 
 	@Override
@@ -36,11 +45,6 @@ public class SessionManager implements PreviewOperator {
 		}
 	}
 
-	public void close() {
-		if (session != null) {
-			session.close();
-		}
-	}
 
 	public void setSurface(SurfaceTexture surface) {
 		session = PreviewSession.create(
@@ -59,4 +63,5 @@ public class SessionManager implements PreviewOperator {
 		}
 		return session.getCaptureSession();
 	}
+
 }
