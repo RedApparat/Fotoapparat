@@ -118,7 +118,7 @@ public class Camera2Test {
 	@Test
 	public void getCapabilities() throws Exception {
 		// Given
-		Capabilities capabilities = new Capabilities(singleton(FocusMode.MACRO));
+		Capabilities capabilities = new Capabilities(singleton(FocusMode.MACRO), null);
 		given(capabilitiesFactory.getCapabilities())
 				.willReturn(capabilities);
 

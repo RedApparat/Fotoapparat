@@ -73,7 +73,6 @@ public class PictureCaptor extends CameraCaptureSession.CaptureCallback implemen
 	 *
 	 * @return a new Photo
 	 */
-
 	@Override
 	public Photo takePicture() {
 		CameraCaptureSession captureSession = sessionManager.getCaptureSession();

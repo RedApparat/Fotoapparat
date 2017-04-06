@@ -8,6 +8,7 @@ import io.fotoapparat.hardware.provider.V1AvailableLensPositionProvider;
 import io.fotoapparat.hardware.provider.V1Provider;
 import io.fotoapparat.log.DummyLogger;
 import io.fotoapparat.log.Logger;
+import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Size;
@@ -27,6 +28,7 @@ public class FotoapparatBuilder {
     SelectorFunction<Size> photoSizeSelector;
     SelectorFunction<LensPosition> lensPositionSelector;
     SelectorFunction<FocusMode> focusModeSelector = Selectors.nothing();
+    SelectorFunction<Flash> flashSelector = Selectors.nothing();
     Logger logger = new DummyLogger();
 
     FotoapparatBuilder(Context context) {
@@ -45,6 +47,11 @@ public class FotoapparatBuilder {
 
     public FotoapparatBuilder focusMode(SelectorFunction<FocusMode> selector) {
         focusModeSelector = selector;
+        return this;
+    }
+
+    public FotoapparatBuilder flash(SelectorFunction<Flash> selector) {
+        flashSelector = selector;
         return this;
     }
 

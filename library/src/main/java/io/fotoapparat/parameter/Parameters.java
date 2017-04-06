@@ -64,7 +64,12 @@ public class Parameters {
         /**
          * Focus mode of the camera. Expected type: {@link FocusMode}.
          */
-        FOCUS_MODE(FocusMode.class);
+        FOCUS_MODE(FocusMode.class),
+
+        /**
+         * Flash firing mode of the camera. Expected type: {@link Flash}.
+         */
+        FLASH(Flash.class);
 
         private final Class<?> clazz;
 

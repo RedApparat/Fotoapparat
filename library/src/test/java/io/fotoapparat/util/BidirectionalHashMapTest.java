@@ -36,16 +36,16 @@ public class BidirectionalHashMapTest {
 	@Test
 	public void testReverse() throws Exception {
 		// Given
-		HashMap<String, Integer> stringIntegerHashMap = new HashMap<>(3);
-		for (Map.Entry<Integer, String> entry : integerStringMap.entrySet()) {
-			stringIntegerHashMap.put(entry.getValue(), entry.getKey());
-		}
+		HashMap<String, Integer> stringIntegerMap = new HashMap<>(3);
+		stringIntegerMap.put("Hello", 1);
+		stringIntegerMap.put("Hi", 3);
+		stringIntegerMap.put("Hey!", 6);
 
 		// When
 		BidirectionalHashMap<Integer, String> testee = new BidirectionalHashMap<>(integerStringMap);
 
 		// Then
-		assertEquals(stringIntegerHashMap, testee.reversed());
+		assertEquals(stringIntegerMap, testee.reversed());
 
 	}
 }

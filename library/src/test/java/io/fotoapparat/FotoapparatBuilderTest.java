@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.log.Logger;
+import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Size;
@@ -37,6 +38,8 @@ public class FotoapparatBuilderTest {
     SelectorFunction<LensPosition> lensPositionSelector;
     @Mock
     SelectorFunction<FocusMode> focusModeSelector;
+	@Mock
+	SelectorFunction<Flash> flashSelector;
     @Mock
     Logger logger;
 
@@ -121,6 +124,19 @@ public class FotoapparatBuilderTest {
         assertEquals(
                 focusModeSelector,
                 builder.focusModeSelector
+        );
+    }
+
+    @Test
+    public void flashMode_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .flash(flashSelector);
+
+        // Then
+        assertEquals(
+				flashSelector,
+                builder.flashSelector
         );
     }
 

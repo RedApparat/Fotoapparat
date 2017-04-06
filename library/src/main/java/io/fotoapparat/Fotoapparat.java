@@ -55,7 +55,8 @@ public class Fotoapparat {
         RotationListener rotationListener = new RotationListener(builder.context);
         InitialParametersProvider initialParametersProvider = new InitialParametersProvider(
                 cameraDevice,
-                builder.focusModeSelector
+                builder.focusModeSelector,
+                builder.flashSelector
         );
 
         StartCameraRoutine startCameraRoutine = new StartCameraRoutine(

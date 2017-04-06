@@ -16,7 +16,8 @@ public class CapabilitiesFactory {
 
     public Capabilities fromParameters(Camera.Parameters parameters) {
         return new Capabilities(
-                extractFocusModes(parameters)
+                extractFocusModes(parameters),
+                null
         );
     }
 

@@ -23,7 +23,8 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
 		CameraCharacteristics cameraCharacteristics = characteristics.getCameraCharacteristics();
 
 		return new Capabilities(
-				FocusCapability.availableFocusModes(cameraCharacteristics)
+				FocusCapability.availableFocusModes(cameraCharacteristics),
+				null
 		);
 	}
 

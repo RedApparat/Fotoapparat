@@ -20,7 +20,6 @@ import io.fotoapparat.photo.Photo;
 /**
  * Camera hardware driver for v2 {@link Camera2} API.
  */
-@SuppressWarnings("MissingPermission")
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Camera2 implements CameraDevice, PreviewOperator {
 
