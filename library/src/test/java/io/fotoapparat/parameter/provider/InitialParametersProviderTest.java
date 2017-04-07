@@ -3,7 +3,6 @@ package io.fotoapparat.parameter.provider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -33,11 +32,16 @@ public class InitialParametersProviderTest {
 	@Mock
 	SelectorFunction<Flash> flashModeSelector;
 
-	@InjectMocks
 	InitialParametersProvider testee;
 
 	@Before
 	public void setUp() throws Exception {
+		testee = new InitialParametersProvider(
+				cameraDevice,
+				focusModeSelector,
+				flashModeSelector
+		);
+
 		given(cameraDevice.getCapabilities())
 				.willReturn(new Capabilities(
 						FOCUS_MODES,
@@ -52,8 +56,6 @@ public class InitialParametersProviderTest {
 
 	@Test
 	public void selectFocusMode() throws Exception {
-		// Given
-
 		// When
 		Parameters parameters = testee.initialParameters();
 
@@ -66,8 +68,6 @@ public class InitialParametersProviderTest {
 
 	@Test
 	public void selectFlashMode() throws Exception {
-		// Given
-
 		// When
 		Parameters parameters = testee.initialParameters();
 
