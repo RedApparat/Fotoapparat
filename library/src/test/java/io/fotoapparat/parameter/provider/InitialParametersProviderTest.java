@@ -43,13 +43,16 @@ public class InitialParametersProviderTest {
 						FOCUS_MODES,
 						FLASH
 				));
+
+		given(focusModeSelector.select(FOCUS_MODES))
+				.willReturn(FocusMode.FIXED);
+		given(flashModeSelector.select(FLASH))
+				.willReturn(Flash.AUTO_RED_EYE);
 	}
 
 	@Test
 	public void selectFocusMode() throws Exception {
 		// Given
-		given(focusModeSelector.select(FOCUS_MODES))
-				.willReturn(FocusMode.FIXED);
 
 		// When
 		Parameters parameters = testee.initialParameters();
@@ -64,8 +67,6 @@ public class InitialParametersProviderTest {
 	@Test
 	public void selectFlashMode() throws Exception {
 		// Given
-		given(flashModeSelector.select(FLASH))
-				.willReturn(Flash.AUTO_RED_EYE);
 
 		// When
 		Parameters parameters = testee.initialParameters();

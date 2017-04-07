@@ -54,7 +54,6 @@ public class InitialParametersProvider {
 						capabilities.supportedFlashModes()
 				)
 		);
-
 	}
 
 }
