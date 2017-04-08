@@ -148,16 +148,11 @@ public class Camera1 implements CameraDevice {
 
 	private int computeDisplayOrientation(int screenRotationDegrees,
 										  Camera.CameraInfo info) {
-		int degrees = OrientationUtils.toClosestRightAngle(screenRotationDegrees);
-
-		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-			degrees = (info.orientation + degrees) % 360;
-			degrees = (360 - degrees) % 360;
-		} else {
-			degrees = (info.orientation - degrees + 360) % 360;
-		}
-
-		return degrees;
+		return OrientationUtils.computeDisplayOrientation(
+				screenRotationDegrees,
+				info.orientation,
+				info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT
+		);
 	}
 
 	private int computeImageOrientation(int screenRotationDegrees,
