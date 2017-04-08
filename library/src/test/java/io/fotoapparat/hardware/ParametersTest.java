@@ -83,6 +83,7 @@ public class ParametersTest {
 		// Given
 		testee.putValue(Parameters.Type.FOCUS_MODE, FocusMode.AUTO);
 		testee.putValue(Parameters.Type.PICTURE_SIZE, new Size(100, 100));
+		testee.putValue(Parameters.Type.FLASH, null);
 
 		// When
 		Set<Parameters.Type> result = testee.storedTypes();

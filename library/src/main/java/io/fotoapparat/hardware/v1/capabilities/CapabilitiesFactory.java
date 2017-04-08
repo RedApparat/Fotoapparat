@@ -16,6 +16,9 @@ import io.fotoapparat.parameter.FocusMode;
 @SuppressWarnings("deprecation")
 public class CapabilitiesFactory {
 
+	/**
+	 * @return {@link Capabilities} from given camera parameters.
+	 */
 	public Capabilities fromParameters(Camera.Parameters parameters) {
 		return new Capabilities(
 				extractFocusModes(parameters),

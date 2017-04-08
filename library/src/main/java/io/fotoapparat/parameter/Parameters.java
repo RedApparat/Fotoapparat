@@ -1,6 +1,7 @@
 package io.fotoapparat.parameter;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,7 +53,15 @@ public class Parameters {
 	 * return non-null value.
 	 */
 	public Set<Type> storedTypes() {
-		return values.keySet();
+		HashSet<Type> result = new HashSet<>();
+
+		for (Map.Entry<Type, Object> entry : values.entrySet()) {
+			if (entry.getValue() != null) {
+				result.add(entry.getKey());
+			}
+		}
+
+		return result;
 	}
 
 	/**
