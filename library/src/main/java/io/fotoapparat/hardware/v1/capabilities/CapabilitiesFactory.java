@@ -2,7 +2,6 @@ package io.fotoapparat.hardware.v1.capabilities;
 
 import android.hardware.Camera;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,8 +19,20 @@ public class CapabilitiesFactory {
 	public Capabilities fromParameters(Camera.Parameters parameters) {
 		return new Capabilities(
 				extractFocusModes(parameters),
-				Collections.<Flash>emptySet()
+				extractFlashModes(parameters)
 		);
+	}
+
+	private Set<Flash> extractFlashModes(Camera.Parameters parameters) {
+		HashSet<Flash> result = new HashSet<>();
+
+		for (String flashMode : parameters.getSupportedFlashModes()) {
+			result.add(
+					FlashCapability.toFlash(flashMode)
+			);
+		}
+
+		return result;
 	}
 
 	private Set<FocusMode> extractFocusModes(Camera.Parameters parameters) {
