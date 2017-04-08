@@ -31,6 +31,7 @@ public class Camera1 implements CameraDevice {
 
 	private Camera camera;
 	private int cameraId;
+	private PreviewStream1 previewStream;
 
 	private Throwable lastStacktrace;
 
@@ -47,6 +48,7 @@ public class Camera1 implements CameraDevice {
 		try {
 			cameraId = cameraIdForLensPosition(lensPosition);
 			camera = Camera.open(cameraId);
+			previewStream = new PreviewStream1(camera);
 		} catch (RuntimeException e) {
 			throw new CameraException(e);
 		}
@@ -207,8 +209,16 @@ public class Camera1 implements CameraDevice {
 
 	@Override
 	public PreviewStream getPreviewStream() {
-		// TODO implement
-		return null;
+		recordMethod();
+		ensurePreviewStreamAvailable();
+
+		return previewStream;
+	}
+
+	private void ensurePreviewStreamAvailable() {
+		if (previewStream == null) {
+			throw new IllegalStateException("Preview stream is null. Make sure camera is opened.");
+		}
 	}
 
 	@NonNull

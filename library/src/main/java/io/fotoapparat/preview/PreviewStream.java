@@ -22,4 +22,9 @@ public interface PreviewStream {
 	 */
 	void removeProcessor(@NonNull FrameProcessor processor);
 
+	/**
+	 * Starts preview stream. After preview is started frame processors will start receiving frames.
+	 */
+	void start();
+
 }
