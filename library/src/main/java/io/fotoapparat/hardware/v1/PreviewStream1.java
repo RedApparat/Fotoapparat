@@ -17,8 +17,6 @@ import io.fotoapparat.preview.PreviewStream;
 @SuppressWarnings("deprecation")
 public class PreviewStream1 implements PreviewStream {
 
-	private static final int BYTES_PER_PIXEL = ImageFormat.getBitsPerPixel(ImageFormat.NV21) / 8;
-
 	private final Camera camera;
 
 	private final Set<FrameProcessor> frameProcessors = new LinkedHashSet<>();
@@ -39,7 +37,11 @@ public class PreviewStream1 implements PreviewStream {
 
 		Camera.Size previewSize = parameters.getPreviewSize();
 
-		return new byte[previewSize.width * previewSize.height * BYTES_PER_PIXEL];
+		return new byte[bytesPerFrame(previewSize)];
+	}
+
+	private int bytesPerFrame(Camera.Size previewSize) {
+		return (previewSize.width * previewSize.height * ImageFormat.getBitsPerPixel(ImageFormat.NV21)) / 8;
 	}
 
 	private void ensureNv21Format(Camera.Parameters parameters) {
