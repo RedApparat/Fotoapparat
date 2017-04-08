@@ -11,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Collections;
 
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.hardware.v1.capabilities.CapabilitiesFactory;
 import io.fotoapparat.parameter.FocusMode;
 
 import static io.fotoapparat.test.TestUtils.asSet;

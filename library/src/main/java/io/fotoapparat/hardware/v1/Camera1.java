@@ -13,6 +13,7 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.orientation.OrientationUtils;
+import io.fotoapparat.hardware.v1.capabilities.CapabilitiesFactory;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
