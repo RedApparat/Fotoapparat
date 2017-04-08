@@ -12,6 +12,7 @@ import io.fotoapparat.hardware.orientation.RotationListener;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.result.PhotoResult;
+import io.fotoapparat.routine.ConfigurePreviewStreamRoutine;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
 import io.fotoapparat.routine.TakePictureRoutine;
@@ -22,133 +23,157 @@ import io.fotoapparat.routine.UpdateOrientationRoutine;
  */
 public class Fotoapparat {
 
-    private static final Executor SERIAL_EXECUTOR = Executors.newSingleThreadExecutor();
+	private static final Executor SERIAL_EXECUTOR = Executors.newSingleThreadExecutor();
 
-    private final StartCameraRoutine startCameraRoutine;
-    private final StopCameraRoutine stopCameraRoutine;
-    private final UpdateOrientationRoutine updateOrientationRoutine;
-    private final TakePictureRoutine takePictureRoutine;
-    private final Executor executor;
+	private final StartCameraRoutine startCameraRoutine;
+	private final StopCameraRoutine stopCameraRoutine;
+	private final UpdateOrientationRoutine updateOrientationRoutine;
+	private final ConfigurePreviewStreamRoutine configurePreviewStreamRoutine;
+	private final TakePictureRoutine takePictureRoutine;
+	private final Executor executor;
 
-    private boolean started = false;
+	private boolean started = false;
 
-    Fotoapparat(StartCameraRoutine startCameraRoutine,
-                StopCameraRoutine stopCameraRoutine,
-                UpdateOrientationRoutine updateOrientationRoutine,
-                TakePictureRoutine takePictureRoutine,
-                Executor executor) {
-        this.startCameraRoutine = startCameraRoutine;
-        this.stopCameraRoutine = stopCameraRoutine;
-        this.updateOrientationRoutine = updateOrientationRoutine;
-        this.takePictureRoutine = takePictureRoutine;
-        this.executor = executor;
-    }
+	Fotoapparat(StartCameraRoutine startCameraRoutine,
+				StopCameraRoutine stopCameraRoutine,
+				UpdateOrientationRoutine updateOrientationRoutine,
+				ConfigurePreviewStreamRoutine configurePreviewStreamRoutine,
+				TakePictureRoutine takePictureRoutine,
+				Executor executor) {
+		this.startCameraRoutine = startCameraRoutine;
+		this.stopCameraRoutine = stopCameraRoutine;
+		this.updateOrientationRoutine = updateOrientationRoutine;
+		this.configurePreviewStreamRoutine = configurePreviewStreamRoutine;
+		this.takePictureRoutine = takePictureRoutine;
+		this.executor = executor;
+	}
 
-    public static FotoapparatBuilder with(Context context) {
-        return new FotoapparatBuilder(context);
-    }
+	public static FotoapparatBuilder with(Context context) {
+		return new FotoapparatBuilder(context);
+	}
 
-    static Fotoapparat create(FotoapparatBuilder builder) {
+	static Fotoapparat create(FotoapparatBuilder builder) {
 
-        CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
-        ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
-        RotationListener rotationListener = new RotationListener(builder.context);
-        InitialParametersProvider initialParametersProvider = new InitialParametersProvider(
-                cameraDevice,
-                builder.focusModeSelector,
-                builder.flashSelector
-        );
+		CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
+		ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
+		RotationListener rotationListener = new RotationListener(builder.context);
+		InitialParametersProvider initialParametersProvider = new InitialParametersProvider(
+				cameraDevice,
+				builder.focusModeSelector,
+				builder.flashSelector
+		);
 
-        StartCameraRoutine startCameraRoutine = new StartCameraRoutine(
-                builder.availableLensPositionsProvider,
-                cameraDevice,
-                builder.renderer,
-                builder.lensPositionSelector,
-                screenOrientationProvider,
-                initialParametersProvider
-        );
+		StartCameraRoutine startCameraRoutine = new StartCameraRoutine(
+				builder.availableLensPositionsProvider,
+				cameraDevice,
+				builder.renderer,
+				builder.lensPositionSelector,
+				screenOrientationProvider,
+				initialParametersProvider
+		);
 
-        StopCameraRoutine stopCameraRoutine = new StopCameraRoutine(cameraDevice);
+		StopCameraRoutine stopCameraRoutine = new StopCameraRoutine(cameraDevice);
 
-        OrientationSensor orientationSensor = new OrientationSensor(
-                rotationListener,
-                screenOrientationProvider
-        );
+		OrientationSensor orientationSensor = new OrientationSensor(
+				rotationListener,
+				screenOrientationProvider
+		);
 
-        UpdateOrientationRoutine updateOrientationRoutine = new UpdateOrientationRoutine(
-                cameraDevice,
-                orientationSensor,
-                SERIAL_EXECUTOR
-        );
+		UpdateOrientationRoutine updateOrientationRoutine = new UpdateOrientationRoutine(
+				cameraDevice,
+				orientationSensor,
+				SERIAL_EXECUTOR
+		);
 
-        TakePictureRoutine takePictureRoutine = new TakePictureRoutine(
-                cameraDevice,
-                SERIAL_EXECUTOR
-        );
+		ConfigurePreviewStreamRoutine configurePreviewStreamRoutine = new ConfigurePreviewStreamRoutine(
+				cameraDevice,
+				builder.frameProcessor
+		);
 
-        return new Fotoapparat(
-                startCameraRoutine,
-                stopCameraRoutine,
-                updateOrientationRoutine,
-                takePictureRoutine,
-                SERIAL_EXECUTOR
-        );
-    }
+		TakePictureRoutine takePictureRoutine = new TakePictureRoutine(
+				cameraDevice,
+				SERIAL_EXECUTOR
+		);
 
-    public Capabilities getCapabilities() {
-        return null;
-    }
+		return new Fotoapparat(
+				startCameraRoutine,
+				stopCameraRoutine,
+				updateOrientationRoutine,
+				configurePreviewStreamRoutine,
+				takePictureRoutine,
+				SERIAL_EXECUTOR
+		);
+	}
 
-    /**
-     * Takes picture. Returns immediately.
-     *
-     * @return {@link PhotoResult} which will deliver result asynchronously.
-     */
-    public PhotoResult takePicture() {
-        ensureStarted();
+	public Capabilities getCapabilities() {
+		return null;
+	}
 
-        return takePictureRoutine.takePicture();
-    }
+	/**
+	 * Takes picture. Returns immediately.
+	 *
+	 * @return {@link PhotoResult} which will deliver result asynchronously.
+	 */
+	public PhotoResult takePicture() {
+		ensureStarted();
 
-    /**
-     * Starts camera.
-     *
-     * @throws IllegalStateException if camera was already started.
-     */
-    public void start() {
-        ensureNotStarted();
-        started = true;
+		return takePictureRoutine.takePicture();
+	}
 
-        executor.execute(
-                startCameraRoutine
-        );
-        updateOrientationRoutine.start();
-    }
+	/**
+	 * Starts camera.
+	 *
+	 * @throws IllegalStateException if camera was already started.
+	 */
+	public void start() {
+		ensureNotStarted();
+		started = true;
 
-    /**
-     * Stops camera.
-     *
-     * @throws IllegalStateException if camera is not started.
-     */
-    public void stop() {
-        ensureStarted();
-        started = false;
+		startCamera();
+		configurePreviewStream();
+		updateOrientationRoutine.start();
+	}
 
-        executor.execute(
-                stopCameraRoutine
-        );
-        updateOrientationRoutine.stop();
-    }
+	/**
+	 * Stops camera.
+	 *
+	 * @throws IllegalStateException if camera is not started.
+	 */
+	public void stop() {
+		ensureStarted();
+		started = false;
 
-    private void ensureStarted() {
-        if (!started) {
-            throw new IllegalStateException("Camera is not started!");
-        }
-    }
+		updateOrientationRoutine.stop();
+		stopCamera();
+	}
 
-    private void ensureNotStarted() {
-        if (started) {
-            throw new IllegalStateException("Camera is already started!");
-        }
-    }
+	private void startCamera() {
+		executor.execute(
+				startCameraRoutine
+		);
+	}
+
+	private void stopCamera() {
+		executor.execute(
+				stopCameraRoutine
+		);
+	}
+
+	private void configurePreviewStream() {
+		executor.execute(
+				configurePreviewStreamRoutine
+		);
+	}
+
+	private void ensureStarted() {
+		if (!started) {
+			throw new IllegalStateException("Camera is not started!");
+		}
+	}
+
+	private void ensureNotStarted() {
+		if (started) {
+			throw new IllegalStateException("Camera is already started!");
+		}
+	}
 }
