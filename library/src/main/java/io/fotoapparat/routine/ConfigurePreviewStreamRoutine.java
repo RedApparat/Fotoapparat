@@ -20,6 +20,10 @@ public class ConfigurePreviewStreamRoutine implements Runnable {
 
 	@Override
 	public void run() {
+		if (frameProcessor == null) {
+			return;
+		}
+
 		PreviewStream previewStream = cameraDevice.getPreviewStream();
 
 		previewStream.addProcessor(frameProcessor);

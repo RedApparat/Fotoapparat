@@ -14,6 +14,7 @@ import io.fotoapparat.preview.PreviewStream;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConfigurePreviewStreamRoutineTest {
@@ -45,4 +46,20 @@ public class ConfigurePreviewStreamRoutineTest {
 		inOrder.verify(previewStream).addProcessor(frameProcessor);
 		inOrder.verify(previewStream).start();
 	}
+
+	@Test
+	public void noFrameProcessor() throws Exception {
+		// Given
+		ConfigurePreviewStreamRoutine testee = new ConfigurePreviewStreamRoutine(
+				cameraDevice,
+				null
+		);
+
+		// When
+		testee.run();
+
+		// Then
+		verifyZeroInteractions(previewStream);
+	}
+
 }
