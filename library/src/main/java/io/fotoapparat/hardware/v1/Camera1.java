@@ -35,6 +35,7 @@ public class Camera1 implements CameraDevice {
 	private PreviewStream1 previewStream;
 
 	private Throwable lastStacktrace;
+	private int imageRotation;
 
 	public Camera1(Logger logger) {
 		this.capabilitiesFactory = new CapabilitiesFactory();
@@ -129,9 +130,26 @@ public class Camera1 implements CameraDevice {
 	public void setDisplayOrientation(int degrees) {
 		recordMethod();
 
-		degrees = OrientationUtils.toClosestRightAngle(degrees);
-
 		Camera.CameraInfo info = getCameraInfo(cameraId);
+
+		imageRotation = computeImageOrientation(degrees, info);
+
+		camera.setDisplayOrientation(
+				computeDisplayOrientation(degrees, info)
+		);
+		updateImageRotation(imageRotation);
+	}
+
+	private void updateImageRotation(int rotation) {
+		Camera.Parameters parameters = camera.getParameters();
+		parameters.setRotation(rotation);
+		camera.setParameters(parameters);
+	}
+
+	private int computeDisplayOrientation(int screenRotationDegrees,
+										  Camera.CameraInfo info) {
+		int degrees = OrientationUtils.toClosestRightAngle(screenRotationDegrees);
+
 		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
 			degrees = (info.orientation + degrees) % 360;
 			degrees = (360 - degrees) % 360;
@@ -139,7 +157,20 @@ public class Camera1 implements CameraDevice {
 			degrees = (info.orientation - degrees + 360) % 360;
 		}
 
-		camera.setDisplayOrientation(degrees);
+		return degrees;
+	}
+
+	private int computeImageOrientation(int screenRotationDegrees,
+										Camera.CameraInfo info) {
+		int rotation;
+
+		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+			rotation = -(screenRotationDegrees + info.orientation);
+		} else {
+			rotation = screenRotationDegrees - info.orientation;
+		}
+
+		return (rotation + 360 + 360) % 360;
 	}
 
 	@Override
@@ -188,10 +219,7 @@ public class Camera1 implements CameraDevice {
 					@Override
 					public void onPictureTaken(byte[] data, Camera camera) {
 						photoReference.set(
-								new Photo(
-										data,
-										0 // TODO check current screen orientation
-								)
+								new Photo(data, imageRotation)
 						);
 
 						latch.countDown();

@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 						ImageView imageView = (ImageView) findViewById(R.id.result);
 
 						imageView.setImageBitmap(result.bitmap);
+						imageView.setRotation(-result.rotationDegrees);
 					}
 				});
 	}

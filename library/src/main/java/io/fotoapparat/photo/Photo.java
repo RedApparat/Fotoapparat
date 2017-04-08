@@ -14,7 +14,9 @@ public class Photo {
 	public final byte[] encodedImage;
 
 	/**
-	 * Clockwise rotation relatively to screen orientation at the moment when photo was taken.
+	 * Clockwise rotation relatively to screen orientation at the moment when photo was taken. To
+	 * display the photo in a correct orientation it needs to be rotated counter clockwise by this
+	 * value.
 	 */
 	public final int rotationDegrees;
 
