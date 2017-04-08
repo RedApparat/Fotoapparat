@@ -5,7 +5,6 @@ import android.support.annotation.RequiresApi;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
-import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
@@ -16,12 +15,13 @@ import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.photo.Photo;
+import io.fotoapparat.preview.PreviewStream;
 
 /**
  * Camera hardware driver for v2 {@link Camera2} API.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class Camera2 implements CameraDevice, PreviewOperator {
+public class Camera2 implements CameraDevice {
 
 	private final OrientationManager orientationManager;
 	private final TextureManager textureManager;
@@ -90,5 +90,11 @@ public class Camera2 implements CameraDevice, PreviewOperator {
 	@Override
 	public Photo takePicture() {
 		return pictureCaptor.takePicture();
+	}
+
+	@Override
+	public PreviewStream getPreviewStream() {
+		// TODO implement
+		return null;
 	}
 }

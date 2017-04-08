@@ -6,16 +6,19 @@ import io.fotoapparat.hardware.operators.ConnectionOperator;
 import io.fotoapparat.hardware.operators.OrientationOperator;
 import io.fotoapparat.hardware.operators.ParametersOperator;
 import io.fotoapparat.hardware.operators.PreviewOperator;
+import io.fotoapparat.hardware.operators.PreviewStreamOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.photo.Photo;
+import io.fotoapparat.preview.PreviewStream;
 
 /**
  * Abstraction for camera hardware.
  */
-public interface CameraDevice
-		extends CaptureOperator, PreviewOperator, CapabilitiesOperator, OrientationOperator, ParametersOperator, ConnectionOperator, SurfaceOperator {
+public interface CameraDevice extends CaptureOperator,
+		PreviewOperator, CapabilitiesOperator, OrientationOperator, ParametersOperator,
+		ConnectionOperator, SurfaceOperator, PreviewStreamOperator {
 
 	@Override
 	void open(LensPosition lensPosition);
@@ -43,5 +46,8 @@ public interface CameraDevice
 
 	@Override
 	Photo takePicture();
+
+	@Override
+	PreviewStream getPreviewStream();
 
 }
