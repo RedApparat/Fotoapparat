@@ -45,10 +45,10 @@ public class FocusCapability {
 	}
 
 	/**
-	 * Converts a {@link FocusMode} to a Android native {@link android.hardware.camera2.CaptureRequest#CONTROL_AF_MODE}
+	 * Converts a {@link FocusMode} to a focus mdoe code as in {@link Camera.Parameters}.
 	 *
-	 * @param focusMode The {@link io.fotoapparat.Fotoapparat}'s camera {@link FocusMode}
-	 * @return The native Android {@link android.hardware.camera2.CaptureRequest#CONTROL_AF_MODE}
+	 * @param focusMode The {@link io.fotoapparat.Fotoapparat}'s camera {@link FocusMode}.
+	 * @return focus mode code as in {@link Camera.Parameters}.
 	 */
 	public static String toCode(FocusMode focusMode) {
 		return CODE_TO_FOCUS_MODE.reversed().get(focusMode);
