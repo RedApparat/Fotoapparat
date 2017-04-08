@@ -11,71 +11,75 @@ import io.fotoapparat.hardware.CameraDevice;
  */
 public class Parameters {
 
-    private final Map<Type, Object> values = new HashMap<>();
+	private final Map<Type, Object> values = new HashMap<>();
 
-    /**
-     * Puts value of given type, rewriting existing one (if any). Note that given value must be of
-     * the type specified by {@link Type}.
-     *
-     * @param type  type of the parameter to store.
-     * @param value value of the parameter.
-     */
-    public void putValue(Type type, Object value) {
-        ensureType(type, value);
+	/**
+	 * Puts value of given type, rewriting existing one (if any). Note that given value must be of
+	 * the type specified by {@link Type}.
+	 *
+	 * @param type  type of the parameter to store.
+	 * @param value value of the parameter.
+	 */
+	public void putValue(Type type, Object value) {
+		ensureType(type, value);
 
-        values.put(type, value);
-    }
+		values.put(type, value);
+	}
 
-    private void ensureType(Type type, Object value) {
-        if (!type.clazz.isInstance(value)) {
-            throw new IllegalArgumentException("Provided value must be of type " + type.clazz + ". Was " + value);
-        }
-    }
+	private void ensureType(Type type, Object value) {
+		if (value == null) {
+			return;
+		}
 
-    /**
-     * Reads stored parameter.
-     *
-     * @param type type of the stored parameter.
-     * @return stored parameter or {@code null} if there is none.
-     */
-    @SuppressWarnings("unchecked")
-    public <T> T getValue(Type type) {
-        return (T) values.get(type);
-    }
+		if (!type.clazz.isInstance(value)) {
+			throw new IllegalArgumentException("Provided value must be of type " + type.clazz + ". Was " + value);
+		}
+	}
 
-    /**
-     * @return set of all stored types. That is, all types for which {@link #getValue(Type)} will
-     * return non-null value.
-     */
-    public Set<Type> storedTypes() {
-        return values.keySet();
-    }
+	/**
+	 * Reads stored parameter.
+	 *
+	 * @param type type of the stored parameter.
+	 * @return stored parameter or {@code null} if there is none.
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T getValue(Type type) {
+		return (T) values.get(type);
+	}
 
-    /**
-     * Type of values which can be stored in {@link Parameters}.
-     */
-    public enum Type {
+	/**
+	 * @return set of all stored types. That is, all types for which {@link #getValue(Type)} will
+	 * return non-null value.
+	 */
+	public Set<Type> storedTypes() {
+		return values.keySet();
+	}
 
-        /**
-         * Size of the photo. Expected type: {@link Size}.
-         */
-        PICTURE_SIZE(Size.class),
+	/**
+	 * Type of values which can be stored in {@link Parameters}.
+	 */
+	public enum Type {
 
-        /**
-         * Focus mode of the camera. Expected type: {@link FocusMode}.
-         */
-        FOCUS_MODE(FocusMode.class),
+		/**
+		 * Size of the photo. Expected type: {@link Size}.
+		 */
+		PICTURE_SIZE(Size.class),
 
-        /**
-         * Flash firing mode of the camera. Expected type: {@link Flash}.
-         */
-        FLASH(Flash.class);
+		/**
+		 * Focus mode of the camera. Expected type: {@link FocusMode}.
+		 */
+		FOCUS_MODE(FocusMode.class),
 
-        private final Class<?> clazz;
+		/**
+		 * Flash firing mode of the camera. Expected type: {@link Flash}.
+		 */
+		FLASH(Flash.class);
 
-        Type(Class<?> clazz) {
-            this.clazz = clazz;
-        }
-    }
+		private final Class<?> clazz;
+
+		Type(Class<?> clazz) {
+			this.clazz = clazz;
+		}
+	}
 
 }

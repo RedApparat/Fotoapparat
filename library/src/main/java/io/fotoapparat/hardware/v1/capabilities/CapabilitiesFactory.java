@@ -2,11 +2,13 @@ package io.fotoapparat.hardware.v1.capabilities;
 
 import android.hardware.Camera;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.v1.Camera1;
+import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 
 /**
@@ -18,7 +20,7 @@ public class CapabilitiesFactory {
 	public Capabilities fromParameters(Camera.Parameters parameters) {
 		return new Capabilities(
 				extractFocusModes(parameters),
-				null
+				Collections.<Flash>emptySet()
 		);
 	}
 
