@@ -39,4 +39,26 @@ public class OrientationUtils {
 		return degrees;
 	}
 
+	/**
+	 * @param screenRotationDegrees rotation of the display (as provided by system) in degrees.
+	 * @param cameraRotationDegrees rotation of the camera sensor relatively to device natural
+	 *                              orientation.
+	 * @param cameraIsMirrored      {@code true} if camera is mirrored (typically that is the case
+	 *                              for front cameras). {@code false} if it is not mirrored.
+	 * @return clockwise rotation of the image relatively to current device orientation.
+	 */
+	public static int computeImageOrientation(int screenRotationDegrees,
+											  int cameraRotationDegrees,
+											  boolean cameraIsMirrored) {
+		int rotation;
+
+		if (cameraIsMirrored) {
+			rotation = -(screenRotationDegrees + cameraRotationDegrees);
+		} else {
+			rotation = screenRotationDegrees - cameraRotationDegrees;
+		}
+
+		return (rotation + 360 + 360) % 360;
+	}
+
 }

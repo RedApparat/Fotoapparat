@@ -157,15 +157,11 @@ public class Camera1 implements CameraDevice {
 
 	private int computeImageOrientation(int screenRotationDegrees,
 										Camera.CameraInfo info) {
-		int rotation;
-
-		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-			rotation = -(screenRotationDegrees + info.orientation);
-		} else {
-			rotation = screenRotationDegrees - info.orientation;
-		}
-
-		return (rotation + 360 + 360) % 360;
+		return OrientationUtils.computeImageOrientation(
+				screenRotationDegrees,
+				info.orientation,
+				info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT
+		);
 	}
 
 	@Override

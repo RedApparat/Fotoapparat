@@ -114,4 +114,72 @@ public class OrientationUtilsTest {
 		assertEquals(180, result);
 	}
 
+	@Test
+	public void computeImageOrientation_Phone_Portrait_FrontCamera() throws Exception {
+		// Given
+		int screenOrientation = 0;
+		int cameraOrientation = 270;
+
+		// When
+		int result = OrientationUtils.computeImageOrientation(
+				screenOrientation,
+				cameraOrientation,
+				true
+		);
+
+		// Then
+		assertEquals(90, result);
+	}
+
+	@Test
+	public void computeImageOrientation_Phone_Landscape_FrontCamera() throws Exception {
+		// Given
+		int screenOrientation = 270;
+		int cameraOrientation = 270;
+
+		// When
+		int result = OrientationUtils.computeImageOrientation(
+				screenOrientation,
+				cameraOrientation,
+				true
+		);
+
+		// Then
+		assertEquals(180, result);
+	}
+
+	@Test
+	public void computeImageOrientation_Phone_Portrait_BackCamera() throws Exception {
+		// Given
+		int screenOrientation = 0;
+		int cameraOrientation = 90;
+
+		// When
+		int result = OrientationUtils.computeImageOrientation(
+				screenOrientation,
+				cameraOrientation,
+				false
+		);
+
+		// Then
+		assertEquals(270, result);
+	}
+
+	@Test
+	public void computeImageOrientation_Phone_Landscape_BackCamera() throws Exception {
+		// Given
+		int screenOrientation = 270;
+		int cameraOrientation = 90;
+
+		// When
+		int result = OrientationUtils.computeImageOrientation(
+				screenOrientation,
+				cameraOrientation,
+				false
+		);
+
+		// Then
+		assertEquals(180, result);
+	}
+
 }
