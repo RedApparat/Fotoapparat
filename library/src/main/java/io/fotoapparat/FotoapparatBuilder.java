@@ -14,6 +14,7 @@ import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.selector.Selectors;
+import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.view.CameraRenderer;
 
 /**
@@ -21,68 +22,78 @@ import io.fotoapparat.view.CameraRenderer;
  */
 public class FotoapparatBuilder {
 
-    Context context;
-    AvailableLensPositionsProvider availableLensPositionsProvider = new V1AvailableLensPositionProvider();
-    CameraProvider cameraProvider = new V1Provider();
-    CameraRenderer renderer;
-    SelectorFunction<Size> photoSizeSelector;
-    SelectorFunction<LensPosition> lensPositionSelector;
-    SelectorFunction<FocusMode> focusModeSelector = Selectors.nothing();
-    SelectorFunction<Flash> flashSelector = Selectors.nothing();
-    Logger logger = new DummyLogger();
+	Context context;
+	AvailableLensPositionsProvider availableLensPositionsProvider = new V1AvailableLensPositionProvider();
+	CameraProvider cameraProvider = new V1Provider();
+	CameraRenderer renderer;
 
-    FotoapparatBuilder(Context context) {
-        this.context = context;
-    }
+	SelectorFunction<Size> photoSizeSelector;
+	SelectorFunction<LensPosition> lensPositionSelector;
+	SelectorFunction<FocusMode> focusModeSelector = Selectors.nothing();
+	SelectorFunction<Flash> flashSelector = Selectors.nothing();
 
-    FotoapparatBuilder cameraProvider(CameraProvider cameraProvider) {
-        this.cameraProvider = cameraProvider;
-        return this;
-    }
+	FrameProcessor frameProcessor = null;
 
-    public FotoapparatBuilder photoSize(SelectorFunction<Size> selector) {
-        photoSizeSelector = selector;
-        return this;
-    }
+	Logger logger = new DummyLogger();
 
-    public FotoapparatBuilder focusMode(SelectorFunction<FocusMode> selector) {
-        focusModeSelector = selector;
-        return this;
-    }
+	FotoapparatBuilder(Context context) {
+		this.context = context;
+	}
 
-    public FotoapparatBuilder flash(SelectorFunction<Flash> selector) {
-        flashSelector = selector;
-        return this;
-    }
+	FotoapparatBuilder cameraProvider(CameraProvider cameraProvider) {
+		this.cameraProvider = cameraProvider;
+		return this;
+	}
 
-    public FotoapparatBuilder lensPosition(SelectorFunction<LensPosition> selector) {
-        lensPositionSelector = selector;
-        return this;
-    }
+	public FotoapparatBuilder photoSize(SelectorFunction<Size> selector) {
+		photoSizeSelector = selector;
+		return this;
+	}
 
-    public FotoapparatBuilder logger(Logger logger) {
-        this.logger = logger;
-        return this;
-    }
+	public FotoapparatBuilder focusMode(SelectorFunction<FocusMode> selector) {
+		focusModeSelector = selector;
+		return this;
+	}
 
-    public FotoapparatBuilder into(CameraRenderer renderer) {
-        this.renderer = renderer;
-        return this;
-    }
+	public FotoapparatBuilder flash(SelectorFunction<Flash> selector) {
+		flashSelector = selector;
+		return this;
+	}
 
-    public Fotoapparat build() {
-        validate();
+	public FotoapparatBuilder lensPosition(SelectorFunction<LensPosition> selector) {
+		lensPositionSelector = selector;
+		return this;
+	}
 
-        return Fotoapparat.create(this);
-    }
+	public FotoapparatBuilder frameProcessor(FrameProcessor frameProcessor) {
+		this.frameProcessor = frameProcessor;
+		return this;
+	}
 
-    private void validate() {
-        if (renderer == null) {
-            throw new IllegalStateException("CameraRenderer is mandatory.");
-        }
+	public FotoapparatBuilder logger(Logger logger) {
+		this.logger = logger;
+		return this;
+	}
 
-        if (lensPositionSelector == null) {
-            throw new IllegalStateException("LensPosition selector is mandatory.");
-        }
-    }
+	public FotoapparatBuilder into(CameraRenderer renderer) {
+		this.renderer = renderer;
+		return this;
+	}
+
+	public Fotoapparat build() {
+		validate();
+
+		return Fotoapparat.create(this);
+	}
+
+	private void validate() {
+		if (renderer == null) {
+			throw new IllegalStateException("CameraRenderer is mandatory.");
+		}
+
+		if (lensPositionSelector == null) {
+			throw new IllegalStateException("LensPosition selector is mandatory.");
+		}
+	}
+
 }
