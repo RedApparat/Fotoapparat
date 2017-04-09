@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 				.flash(firstAvailable(
 						flash(Flash.AUTO_RED_EYE),
 						flash(Flash.AUTO),
-						flash(Flash.SINGLE)
+						flash(Flash.ON)
 				))
 				.frameProcessor(new SampleFrameProcessor())
 				.logger(new LogcatLogger())

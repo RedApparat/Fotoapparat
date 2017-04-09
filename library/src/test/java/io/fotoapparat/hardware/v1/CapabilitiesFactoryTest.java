@@ -87,7 +87,7 @@ public class CapabilitiesFactoryTest {
 		assertEquals(
 				asSet(
 						Flash.AUTO,
-						Flash.SINGLE,
+						Flash.ON,
 						Flash.AUTO_RED_EYE,
 						Flash.TORCH,
 						Flash.OFF
