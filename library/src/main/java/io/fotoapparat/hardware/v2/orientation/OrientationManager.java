@@ -54,7 +54,7 @@ public class OrientationManager implements OrientationOperator {
 		android.hardware.camera2.CameraCharacteristics cameraCharacteristics = this.characteristics.getCameraCharacteristics();
 		Integer sensorOrientation = cameraCharacteristics.get(android.hardware.camera2.CameraCharacteristics.SENSOR_ORIENTATION);
 
-		return (orientation + sensorOrientation + 360) % 360;
+		return (sensorOrientation - orientation + 360) % 360;
 	}
 
 	/**
@@ -65,7 +65,6 @@ public class OrientationManager implements OrientationOperator {
 	public void setListener(Listener listener) {
 		this.listener = listener;
 	}
-
 
 	/**
 	 * Notifies that the display orientation has changed.

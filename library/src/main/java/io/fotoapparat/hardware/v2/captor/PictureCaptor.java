@@ -49,9 +49,8 @@ public class PictureCaptor implements CaptureOperator {
 
 		return new Photo(
 				photoBytes,
-				sensorOrientation
+				0
 		);
 	}
-
 
 }
