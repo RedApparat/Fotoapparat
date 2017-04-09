@@ -16,7 +16,6 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.util.BidirectionalHashMap;
 
-
 /**
  * Facilitates interactions between Android native {@link android.hardware.camera2.CaptureRequest#CONTROL_AF_MODE}
  * focus modes and {@link io.fotoapparat.Fotoapparat}'s {@link FocusMode}.
@@ -27,7 +26,6 @@ public class FlashCapability {
 
 	private final static Map<Flash, Integer> FLASH_FLASH_MODE_MAP = new HashMap<>();
 	private static BidirectionalHashMap<Flash, Integer> FLASH_EXPOSURE_MAP;
-
 
 	static {
 		Map<Flash, Integer> flashExposureModeMap = new HashMap<>();
@@ -43,11 +41,17 @@ public class FlashCapability {
 		FLASH_FLASH_MODE_MAP.put(Flash.ON, null);
 		FLASH_FLASH_MODE_MAP.put(Flash.AUTO, null);
 		FLASH_FLASH_MODE_MAP.put(Flash.AUTO_RED_EYE, null);
-		FLASH_FLASH_MODE_MAP.put(Flash.TORCH, null);
+		FLASH_FLASH_MODE_MAP.put(Flash.TORCH, CameraMetadata.FLASH_MODE_TORCH);
 		FLASH_FLASH_MODE_MAP.put(Flash.OFF, CameraMetadata.FLASH_MODE_OFF);
 	}
 
-
+	/**
+	 * Returns the available Flash firing modes for the given {@link CameraCharacteristics}.
+	 *
+	 * @param cameraCharacteristics The {@link CameraCharacteristics} from which the set will be
+	 *                              generated.
+	 * @return A set of available Flash firing modes of a {@link android.hardware.camera2.CameraDevice}.
+	 */
 	@SuppressWarnings("ConstantConditions")
 	public static Set<Flash> availableFlashModes(CameraCharacteristics cameraCharacteristics) {
 		boolean flashAvailable = cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
@@ -79,10 +83,23 @@ public class FlashCapability {
 		return flashes;
 	}
 
+	/**
+	 * Converts a {@link Flash} to a Android native {@link android.hardware.camera2.CaptureRequest#FLASH_MODE}
+	 *
+	 * @param flash The {@link io.fotoapparat.Fotoapparat}'s camera {@link Flash} value.
+	 * @return The native Android {@link android.hardware.camera2.CaptureRequest#FLASH_MODE} value.
+	 */
 	public static Integer flashToFiringMode(Flash flash) {
 		return FLASH_FLASH_MODE_MAP.get(flash);
 	}
 
+	/**
+	 * Converts a {@link Flash} to a Android native {@link android.hardware.camera2.CaptureRequest#CONTROL_AE_MODE}
+	 *
+	 * @param flash The {@link io.fotoapparat.Fotoapparat}'s camera {@link Flash} value.
+	 * @return The native Android {@link android.hardware.camera2.CaptureRequest#CONTROL_AE_MODE}
+	 * value.
+	 */
 	public static int flashToAutoExposureMode(Flash flash) {
 		return FLASH_EXPOSURE_MAP.forward().get(flash);
 	}
