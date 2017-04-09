@@ -10,12 +10,11 @@ import io.fotoapparat.hardware.v2.Camera2;
 import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
-import io.fotoapparat.hardware.v2.captor.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
-import io.fotoapparat.hardware.v2.captor.parameters.CaptureParametersProvider;
 import io.fotoapparat.hardware.v2.captor.routine.CapturingRoutine;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
+import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.parameters.ParametersManager;
 import io.fotoapparat.hardware.v2.selection.CameraSelector;
 import io.fotoapparat.hardware.v2.session.SessionManager;
@@ -49,25 +48,27 @@ public class V2Provider implements CameraProvider {
 				characteristics
 		);
 
-
 		SizeCapability sizeCapability = new SizeCapability(characteristics);
 		OrientationManager orientationManager = new OrientationManager(characteristics);
 		CapabilitiesFactory capabilitiesFactory = new CapabilitiesFactory(characteristics);
 
 		SurfaceReader surfaceReader = new SurfaceReader(sizeCapability);
 
-		SessionManager sessionManager = new SessionManager(surfaceReader, cameraConnection);
-
-		TextureManager textureManager = new TextureManager(orientationManager, sessionManager);
-
-		CaptureParametersProvider captureParametersProvider = new CaptureParametersProvider(parametersManager);
+		TextureManager textureManager = new TextureManager(orientationManager);
 
 		CaptureRequestFactory captureRequestFactory = new CaptureRequestFactory(
 				cameraConnection,
 				surfaceReader,
 				textureManager,
-				captureParametersProvider,
+				parametersManager,
 				characteristics
+		);
+
+		SessionManager sessionManager = new SessionManager(
+				surfaceReader,
+				cameraConnection,
+				captureRequestFactory,
+				textureManager
 		);
 
 		CapturingRoutine capturingRoutine = new CapturingRoutine(

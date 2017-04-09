@@ -6,7 +6,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.captor.parameters.CaptureRequestFactory;
+import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.session.Session;
 import io.fotoapparat.hardware.v2.surface.SurfaceReader;
 
