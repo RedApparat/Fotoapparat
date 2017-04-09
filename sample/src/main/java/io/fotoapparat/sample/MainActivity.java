@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.io.File;
+
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.log.LogcatLogger;
 import io.fotoapparat.parameter.Flash;
@@ -13,6 +15,7 @@ import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.result.PendingResult;
+import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.view.CameraView;
 
 import static io.fotoapparat.parameter.selector.FlashSelectors.flash;
@@ -64,8 +67,14 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void takePicture() {
-		fotoapparat
-				.takePicture()
+		PhotoResult photoResult = fotoapparat.takePicture();
+
+		photoResult.saveToFile(new File(
+				getExternalFilesDir("photos"),
+				"photo.jpg"
+		));
+
+		photoResult
 				.toBitmap()
 				.whenAvailable(new PendingResult.Callback<BitmapPhoto>() {
 					@Override

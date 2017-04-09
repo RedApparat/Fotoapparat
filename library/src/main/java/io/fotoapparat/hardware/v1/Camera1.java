@@ -142,7 +142,7 @@ public class Camera1 implements CameraDevice {
 
 	private void updateImageRotation(int rotation) {
 		Camera.Parameters parameters = camera.getParameters();
-		parameters.setRotation(rotation);
+		parameters.setRotation((360 - rotation) % 360);
 		camera.setParameters(parameters);
 	}
 
