@@ -1,6 +1,5 @@
 package io.fotoapparat.hardware.v2.capabilities;
 
-import android.hardware.camera2.CameraCharacteristics;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
@@ -12,21 +11,20 @@ import io.fotoapparat.hardware.operators.CapabilitiesOperator;
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class CapabilitiesFactory implements CapabilitiesOperator {
-	private final Characteristics characteristics;
+	private final FocusCapability focusCapability;
+	private final FlashCapability flashCapability;
 
-	public CapabilitiesFactory(Characteristics characteristics) {
-		this.characteristics = characteristics;
+	public CapabilitiesFactory(FocusCapability focusCapability, FlashCapability flashCapability) {
+		this.focusCapability = focusCapability;
+		this.flashCapability = flashCapability;
 	}
 
 	@Override
 	public Capabilities getCapabilities() {
-		CameraCharacteristics cameraCharacteristics = characteristics.getCameraCharacteristics();
-
 		return new Capabilities(
-				FocusCapability.availableFocusModes(cameraCharacteristics),
-				FlashCapability.availableFlashModes(cameraCharacteristics)
+				focusCapability.availableFocusModes(),
+				flashCapability.availableFlashModes()
 		);
 	}
-
 
 }

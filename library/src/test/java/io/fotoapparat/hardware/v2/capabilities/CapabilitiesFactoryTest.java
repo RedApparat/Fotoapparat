@@ -1,18 +1,18 @@
 package io.fotoapparat.hardware.v2.capabilities;
 
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraMetadata;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Set;
+
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 
 import static io.fotoapparat.test.TestUtils.asSet;
@@ -23,48 +23,43 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class CapabilitiesFactoryTest {
 
+	private static final Set<Flash> FLASH_SET = asSet(
+			Flash.OFF,
+			Flash.TORCH,
+			Flash.ON,
+			Flash.AUTO,
+			Flash.AUTO_RED_EYE
+	);
+	private static final Set<FocusMode> FOCUS_MODE_SET = asSet(
+			FocusMode.FIXED,
+			FocusMode.AUTO,
+			FocusMode.MACRO,
+			FocusMode.CONTINUOUS_FOCUS,
+			FocusMode.EDOF
+	);
+
 	@Mock
-	Characteristics characteristics;
+	FlashCapability flashCapability;
 	@Mock
-	CameraCharacteristics cameraCharacteristics;
+	FocusCapability focusCapability;
 	@InjectMocks
 	CapabilitiesFactory testee;
 
-	@Before
-	public void setUp() throws Exception {
-		given(characteristics.getCameraCharacteristics())
-				.willReturn(cameraCharacteristics);
-	}
-
 	@Test
-	public void testFocusSet() throws Exception {
+	public void testSets() throws Exception {
 		// Given
-		given(cameraCharacteristics.get(CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES))
-				.willReturn(
-						new int[]{
-								CameraMetadata.CONTROL_AF_MODE_OFF,
-								CameraMetadata.CONTROL_AF_MODE_AUTO,
-								CameraMetadata.CONTROL_AF_MODE_MACRO,
-								CameraMetadata.CONTROL_AF_MODE_CONTINUOUS_VIDEO,
-								CameraMetadata.CONTROL_AF_MODE_CONTINUOUS_PICTURE,
-								CameraMetadata.CONTROL_AF_MODE_EDOF
-						}
-				);
+		given(flashCapability.availableFlashModes())
+				.willReturn(FLASH_SET);
+
+		given(focusCapability.availableFocusModes())
+				.willReturn(FOCUS_MODE_SET);
 
 		// When
 		Capabilities capabilities = testee.getCapabilities();
 
 		// Then
-		assertEquals(
-				asSet(
-						FocusMode.FIXED,
-						FocusMode.AUTO,
-						FocusMode.MACRO,
-						FocusMode.CONTINUOUS_FOCUS,
-						FocusMode.EDOF
-				),
-				capabilities.supportedFocusModes()
-		);
+		assertEquals(FOCUS_MODE_SET, capabilities.supportedFocusModes());
+		assertEquals(FLASH_SET, capabilities.supportedFlashModes());
 
 	}
 }

@@ -45,15 +45,20 @@ public class FlashCapability {
 		FLASH_FLASH_MODE_MAP.put(Flash.OFF, CameraMetadata.FLASH_MODE_OFF);
 	}
 
+	private final Characteristics characteristics;
+
+	public FlashCapability(Characteristics characteristics) {
+		this.characteristics = characteristics;
+	}
+
 	/**
 	 * Returns the available Flash firing modes for the given {@link CameraCharacteristics}.
 	 *
-	 * @param cameraCharacteristics The {@link CameraCharacteristics} from which the set will be
-	 *                              generated.
 	 * @return A set of available Flash firing modes of a {@link android.hardware.camera2.CameraDevice}.
 	 */
 	@SuppressWarnings("ConstantConditions")
-	public static Set<Flash> availableFlashModes(CameraCharacteristics cameraCharacteristics) {
+	public Set<Flash> availableFlashModes() {
+		CameraCharacteristics cameraCharacteristics = characteristics.getCameraCharacteristics();
 		boolean flashAvailable = cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
 
 		if (flashAvailable) {

@@ -36,6 +36,12 @@ public class FocusCapability {
 		AF_MODE_FOCUS_MAP = new BidirectionalHashMap<>(afModeFocusMap);
 	}
 
+	private final Characteristics characteristics;
+
+	public FocusCapability(Characteristics characteristics) {
+		this.characteristics = characteristics;
+	}
+
 	/**
 	 * Converts a Android native {@link android.hardware.camera2.CaptureRequest#CONTROL_AF_MODE} to
 	 * a {@link FocusMode}.
@@ -71,12 +77,12 @@ public class FocusCapability {
 	/**
 	 * Returns the available Focus Modes for the given {@link CameraCharacteristics}.
 	 *
-	 * @param cameraCharacteristics The {@link CameraCharacteristics} from which the set will be
-	 *                              generated.
 	 * @return A set of available Focus Modes of a {@link android.hardware.camera2.CameraDevice}.
 	 */
 	@SuppressWarnings("ConstantConditions")
-	static Set<FocusMode> availableFocusModes(CameraCharacteristics cameraCharacteristics) {
+	Set<FocusMode> availableFocusModes() {
+		CameraCharacteristics cameraCharacteristics = characteristics.getCameraCharacteristics();
+
 		int[] afModes = cameraCharacteristics.get(CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES);
 
 		Set<FocusMode> focusModes = new HashSet<>();

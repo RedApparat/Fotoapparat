@@ -26,8 +26,8 @@ public class ConfigurePreviewStreamRoutine implements Runnable {
 
 		PreviewStream previewStream = cameraDevice.getPreviewStream();
 
-//		previewStream.addProcessor(frameProcessor);
-//		previewStream.start();
+		previewStream.addProcessor(frameProcessor);
+		previewStream.start();
 	}
 
 }

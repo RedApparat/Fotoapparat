@@ -9,6 +9,8 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.v2.Camera2;
 import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.capabilities.Characteristics;
+import io.fotoapparat.hardware.v2.capabilities.FlashCapability;
+import io.fotoapparat.hardware.v2.capabilities.FocusCapability;
 import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 import io.fotoapparat.hardware.v2.captor.routine.CapturingRoutine;
@@ -48,9 +50,16 @@ public class V2Provider implements CameraProvider {
 				characteristics
 		);
 
-		SizeCapability sizeCapability = new SizeCapability(characteristics);
 		OrientationManager orientationManager = new OrientationManager(characteristics);
-		CapabilitiesFactory capabilitiesFactory = new CapabilitiesFactory(characteristics);
+
+		SizeCapability sizeCapability = new SizeCapability(characteristics);
+		FocusCapability focusCapability = new FocusCapability(characteristics);
+		FlashCapability flashCapability = new FlashCapability(characteristics);
+
+		CapabilitiesFactory capabilitiesFactory = new CapabilitiesFactory(
+				focusCapability,
+				flashCapability
+		);
 
 		SurfaceReader surfaceReader = new SurfaceReader(sizeCapability);
 
