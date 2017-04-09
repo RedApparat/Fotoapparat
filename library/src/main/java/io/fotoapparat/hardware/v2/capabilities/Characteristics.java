@@ -47,4 +47,29 @@ public class Characteristics {
 		}
 		return cameraCharacteristics;
 	}
+
+	/**
+	 * Informs whether or not the camera's lens has fixed focus.
+	 *
+	 * @return {@code true} if the camera's lens has fixed focus.
+	 */
+	public boolean isFixedFocusLens() {
+		Float minimumFocusDistance = getCameraCharacteristics()
+				.get(CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE);
+
+		return minimumFocusDistance != null && minimumFocusDistance != 0;
+	}
+
+	/**
+	 * Informs whether or not the camera has legacy hardware.
+	 *
+	 * @return {@code true} if the camera's lens has legacy hardware.
+	 */
+	@SuppressWarnings("ConstantConditions")
+	public boolean isLegacyDevice() {
+		int hardwareLevel = getCameraCharacteristics()
+				.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
+
+		return hardwareLevel == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY;
+	}
 }
