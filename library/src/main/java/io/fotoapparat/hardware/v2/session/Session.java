@@ -9,10 +9,11 @@ import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.surface.SurfaceReader;
 
 /**
  * Basic wrapper around the internal {@link CameraCaptureSession}
@@ -23,20 +24,20 @@ public class Session extends CameraCaptureSession.StateCallback {
 
 	private final CountDownLatch sessionLatch = new CountDownLatch(1);
 	private final CameraDevice camera;
-	private final SurfaceReader surfaceReader;
-	private final Surface surface;
+	private final List<Surface> outputSurfaces;
 	private CameraCaptureSession session;
 
-	public Session(CameraDevice camera, SurfaceReader surfaceReader) {
-		this(camera, surfaceReader, null);
+	Session(CameraDevice camera, Surface viewSurface, Surface captureSurface) {
+		this(camera, Arrays.asList(viewSurface, captureSurface));
 	}
 
-	Session(final CameraDevice camera,
-			final SurfaceReader surfaceReader,
-			final Surface surface) {
+	Session(CameraDevice camera, Surface captureSurface) {
+		this(camera, Collections.singletonList(captureSurface));
+	}
+
+	private Session(CameraDevice camera, List<Surface> outputSurfaces) {
 		this.camera = camera;
-		this.surfaceReader = surfaceReader;
-		this.surface = surface;
+		this.outputSurfaces = outputSurfaces;
 	}
 
 	/**
@@ -80,7 +81,7 @@ public class Session extends CameraCaptureSession.StateCallback {
 	private void createCaptureSession() {
 		try {
 			camera.createCaptureSession(
-					Arrays.asList(surface, surfaceReader.getSurface()),
+					outputSurfaces,
 					this,
 					CameraThread
 							.getInstance()

@@ -6,13 +6,13 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.RequiresApi;
+import android.view.Surface;
 import android.view.TextureView;
 
 import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
-import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.view.TextureListener;
 
 /**
@@ -24,14 +24,11 @@ public class TextureManager
 
 	private final CountDownLatch surfaceLatch = new CountDownLatch(1);
 	private final OrientationManager orientationManager;
-	private SurfaceTexture surface;
+	private Surface surface;
 	private TextureView textureView;
-	private SessionManager sessionManager;
 
-	public TextureManager(OrientationManager orientationManager,
-						  SessionManager sessionManager) {
+	public TextureManager(OrientationManager orientationManager) {
 		this.orientationManager = orientationManager;
-		this.sessionManager = sessionManager;
 		orientationManager.setListener(this);
 	}
 
@@ -67,21 +64,20 @@ public class TextureManager
 		}
 
 		textureView = (TextureView) displaySurface;
-		surface = textureView.getSurfaceTexture();
+		SurfaceTexture surfaceTexture = textureView.getSurfaceTexture();
 
-		if (surface != null) {
+		if (surfaceTexture != null) {
+			onSurfaceAvailable(surfaceTexture);
 			correctOrientation(textureView.getWidth(), textureView.getHeight());
 			surfaceLatch.countDown();
 		}
 		textureView.setSurfaceTextureListener(new TextureListener(this));
 
-		sessionManager.setSurface(surface);
 	}
 
-
 	@Override
-	public void onSurfaceAvailable(SurfaceTexture surface) {
-		this.surface = surface;
+	public void onSurfaceAvailable(SurfaceTexture surfaceTexture) {
+		this.surface = new Surface(surfaceTexture);
 		surfaceLatch.countDown();
 	}
 
@@ -91,11 +87,11 @@ public class TextureManager
 	}
 
 	/**
-	 * Returns the {@link SurfaceTexture} when it becomes available.
+	 * Returns the {@link Surface} when it becomes available.
 	 *
 	 * @return the surface of the view.
 	 */
-	public SurfaceTexture getSurfaceTexture() {
+	public Surface getSurface() {
 		try {
 			surfaceLatch.await();
 		} catch (InterruptedException e) {
@@ -127,6 +123,5 @@ public class TextureManager
 			}
 		});
 	}
-
 
 }

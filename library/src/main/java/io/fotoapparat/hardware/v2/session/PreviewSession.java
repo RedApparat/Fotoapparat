@@ -8,8 +8,8 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.operators.PreviewOperator;
-import io.fotoapparat.hardware.v2.surface.SurfaceReader;
 
 /**
  * Wrapper around the internal {@link android.hardware.camera2.CameraCaptureSession}
@@ -20,31 +20,27 @@ import io.fotoapparat.hardware.v2.surface.SurfaceReader;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class PreviewSession extends Session implements PreviewOperator {
 
-	private final CameraDevice camera;
-	private final Surface surface;
+	private final CaptureRequest captureRequest;
 
-	private PreviewSession(CameraDevice camera, SurfaceReader surfaceReader, Surface surface) {
-		super(camera, surfaceReader, surface);
-		this.camera = camera;
-		this.surface = surface;
-	}
-
-	/**
-	 * Creates a new instance of this session.
-	 */
-	public static PreviewSession create(CameraDevice camera, SurfaceReader surfaceReader, SurfaceTexture surfaceTexture) {
-		return new PreviewSession(camera, surfaceReader, new Surface(surfaceTexture));
+	PreviewSession(CameraDevice camera,
+				   Surface viewSurface,
+				   Surface captureSurface,
+				   CaptureRequest captureRequest) {
+		super(camera, viewSurface, captureSurface);
+		this.captureRequest = captureRequest;
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	@Override
 	public void startPreview() {
 		try {
-			CaptureRequest.Builder captureRequest = camera.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-			captureRequest.addTarget(surface);
-			getCaptureSession().setRepeatingRequest(captureRequest.build(), null, null);
+			getCaptureSession().setRepeatingRequest(
+					captureRequest,
+					null,
+					null
+			);
 		} catch (CameraAccessException e) {
-			e.printStackTrace();
+			throw new CameraException(e);
 		}
 	}
 

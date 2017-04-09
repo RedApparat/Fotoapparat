@@ -1,10 +1,15 @@
 package io.fotoapparat.hardware.v2.session;
 
-import android.graphics.SurfaceTexture;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CaptureRequest;
+import android.view.Surface;
 
 import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
+import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.surface.SurfaceReader;
+import io.fotoapparat.hardware.v2.surface.TextureManager;
 
 /**
  * Manages a {@link android.hardware.camera2.CameraCaptureSession} of a {@link
@@ -15,12 +20,18 @@ public class SessionManager implements PreviewOperator, CameraConnection.Listene
 
 	private final SurfaceReader surfaceReader;
 	private final CameraConnection connection;
+	private final CaptureRequestFactory captureRequestFactory;
+	private final TextureManager textureManager;
 	private Session session;
-	private SurfaceTexture surface;
 
-	public SessionManager(SurfaceReader surfaceReader, CameraConnection connection) {
+	public SessionManager(SurfaceReader surfaceReader,
+						  CameraConnection connection,
+						  CaptureRequestFactory captureRequestFactory,
+						  TextureManager textureManager) {
 		this.surfaceReader = surfaceReader;
 		this.connection = connection;
+		this.captureRequestFactory = captureRequestFactory;
+		this.textureManager = textureManager;
 		connection.setListener(this);
 	}
 
@@ -33,8 +44,24 @@ public class SessionManager implements PreviewOperator, CameraConnection.Listene
 
 	@Override
 	public void startPreview() {
-		if (session instanceof PreviewSession) {
-			((PreviewSession) session).startPreview();
+
+		try {
+			CameraDevice camera = connection.getCamera();
+			Surface viewSurface = textureManager.getSurface();
+			Surface captureSurface = surfaceReader.getSurface();
+			CaptureRequest previewRequest = captureRequestFactory.createPreviewRequest();
+
+			PreviewSession previewSession = new PreviewSession(
+					camera,
+					viewSurface,
+					captureSurface,
+					previewRequest
+			);
+
+			previewSession.startPreview();
+			session = previewSession;
+		} catch (CameraAccessException e) {
+			// TODO: 09.04.17
 		}
 	}
 
@@ -45,22 +72,15 @@ public class SessionManager implements PreviewOperator, CameraConnection.Listene
 		}
 	}
 
-
-	public void setSurface(SurfaceTexture surface) {
-		this.surface = surface;
-		session = PreviewSession.create(
-				connection.getCamera(),
-				surfaceReader,
-				surface
-		);
-	}
-
 	/**
 	 * @return the currently opened capture session of the camera
 	 */
 	public Session getCaptureSession() {
 		if (session == null) {
-			session = new Session(connection.getCamera(), surfaceReader);
+
+			CameraDevice camera = connection.getCamera();
+			Surface captureSurface = surfaceReader.getSurface();
+			session = new Session(camera, captureSurface);
 		}
 		return session;
 	}
