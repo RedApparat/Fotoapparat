@@ -24,7 +24,6 @@ public class FocusCapability {
 
 	private final static BidirectionalHashMap<Integer, FocusMode> AF_MODE_FOCUS_MAP;
 
-
 	static {
 		Map<Integer, FocusMode> afModeFocusMap = new HashMap<>();
 		afModeFocusMap.put(CameraMetadata.CONTROL_AF_MODE_AUTO, FocusMode.AUTO);
@@ -42,7 +41,8 @@ public class FocusCapability {
 	 * a {@link FocusMode}.
 	 *
 	 * @param afMode The native Android {@link android.hardware.camera2.CaptureRequest#CONTROL_AF_MODE}
-	 * @return The {@link io.fotoapparat.Fotoapparat}'s camera {@link FocusMode}
+	 *               value.
+	 * @return The {@link io.fotoapparat.Fotoapparat}'s camera {@link FocusMode} value.
 	 */
 	public static FocusMode afModeToFocus(int afMode) {
 		FocusMode focusMode = AF_MODE_FOCUS_MAP.forward().get(afMode);
@@ -52,12 +52,12 @@ public class FocusCapability {
 		return focusMode;
 	}
 
-
 	/**
 	 * Converts a {@link FocusMode} to a Android native {@link android.hardware.camera2.CaptureRequest#CONTROL_AF_MODE}
 	 *
-	 * @param focusMode The {@link io.fotoapparat.Fotoapparat}'s camera {@link FocusMode}
+	 * @param focusMode The {@link io.fotoapparat.Fotoapparat}'s camera {@link FocusMode} value.
 	 * @return The native Android {@link android.hardware.camera2.CaptureRequest#CONTROL_AF_MODE}
+	 * value.
 	 */
 	public static int focusToAfMode(FocusMode focusMode) {
 		Integer afMode = AF_MODE_FOCUS_MAP.reversed().get(focusMode);

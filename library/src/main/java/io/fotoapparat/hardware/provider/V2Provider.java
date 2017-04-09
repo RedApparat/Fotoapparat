@@ -10,14 +10,17 @@ import io.fotoapparat.hardware.v2.Camera2;
 import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
+import io.fotoapparat.hardware.v2.captor.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
-import io.fotoapparat.hardware.v2.captor.SurfaceReader;
+import io.fotoapparat.hardware.v2.captor.parameters.CaptureParametersProvider;
+import io.fotoapparat.hardware.v2.captor.routine.CapturingRoutine;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
-import io.fotoapparat.hardware.v2.orientation.TextureManager;
 import io.fotoapparat.hardware.v2.parameters.ParametersManager;
 import io.fotoapparat.hardware.v2.selection.CameraSelector;
 import io.fotoapparat.hardware.v2.session.SessionManager;
+import io.fotoapparat.hardware.v2.surface.SurfaceReader;
+import io.fotoapparat.hardware.v2.surface.TextureManager;
 import io.fotoapparat.log.Logger;
 
 /**
@@ -57,11 +60,24 @@ public class V2Provider implements CameraProvider {
 
 		TextureManager textureManager = new TextureManager(orientationManager, sessionManager);
 
-		PictureCaptor pictureCaptor = new PictureCaptor(
-				surfaceReader,
+		CaptureParametersProvider captureParametersProvider = new CaptureParametersProvider(parametersManager);
+
+		CaptureRequestFactory captureRequestFactory = new CaptureRequestFactory(
 				cameraConnection,
+				surfaceReader,
+				textureManager,
+				captureParametersProvider,
+				characteristics
+		);
+
+		CapturingRoutine capturingRoutine = new CapturingRoutine(
+				captureRequestFactory,
+				surfaceReader
+		);
+
+		PictureCaptor pictureCaptor = new PictureCaptor(
 				sessionManager,
-				parametersManager,
+				capturingRoutine,
 				orientationManager
 		);
 

@@ -11,6 +11,11 @@ public enum Flash {
 	OFF,
 
 	/**
+	 * Camera flash will always fire regardless light conditions.
+	 */
+	ON,
+
+	/**
 	 * Camera flash will fire only in low light conditions.
 	 */
 	AUTO,
@@ -20,11 +25,6 @@ public enum Flash {
 	 * precapture sequence in low light conditions.
 	 */
 	AUTO_RED_EYE,
-
-	/**
-	 * Camera flash will always fire regardless light conditions.
-	 */
-	SINGLE,
 
 	/**
 	 * Transition flash to continuously on.

@@ -1,11 +1,10 @@
 package io.fotoapparat.hardware.v2.session;
 
 import android.graphics.SurfaceTexture;
-import android.hardware.camera2.CameraCaptureSession;
 
 import io.fotoapparat.hardware.operators.PreviewOperator;
-import io.fotoapparat.hardware.v2.captor.SurfaceReader;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
+import io.fotoapparat.hardware.v2.surface.SurfaceReader;
 
 /**
  * Manages a {@link android.hardware.camera2.CameraCaptureSession} of a {@link
@@ -17,6 +16,7 @@ public class SessionManager implements PreviewOperator, CameraConnection.Listene
 	private final SurfaceReader surfaceReader;
 	private final CameraConnection connection;
 	private Session session;
+	private SurfaceTexture surface;
 
 	public SessionManager(SurfaceReader surfaceReader, CameraConnection connection) {
 		this.surfaceReader = surfaceReader;
@@ -47,6 +47,7 @@ public class SessionManager implements PreviewOperator, CameraConnection.Listene
 
 
 	public void setSurface(SurfaceTexture surface) {
+		this.surface = surface;
 		session = PreviewSession.create(
 				connection.getCamera(),
 				surfaceReader,
@@ -57,11 +58,11 @@ public class SessionManager implements PreviewOperator, CameraConnection.Listene
 	/**
 	 * @return the currently opened capture session of the camera
 	 */
-	public CameraCaptureSession getCaptureSession() {
+	public Session getCaptureSession() {
 		if (session == null) {
 			session = new Session(connection.getCamera(), surfaceReader);
 		}
-		return session.getCaptureSession();
+		return session;
 	}
 
 }

@@ -14,7 +14,7 @@ import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
-import io.fotoapparat.hardware.v2.orientation.TextureManager;
+import io.fotoapparat.hardware.v2.surface.TextureManager;
 import io.fotoapparat.hardware.v2.parameters.ParametersManager;
 import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.parameter.FocusMode;

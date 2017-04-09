@@ -1,4 +1,4 @@
-package io.fotoapparat.hardware.v2.orientation;
+package io.fotoapparat.hardware.v2.surface;
 
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
@@ -11,6 +11,7 @@ import android.view.TextureView;
 import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.operators.SurfaceOperator;
+import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.view.TextureListener;
 
@@ -87,6 +88,20 @@ public class TextureManager
 	@Override
 	public void onTextureSizeChanged(int width, int height) {
 		correctOrientation(width, height);
+	}
+
+	/**
+	 * Returns the {@link SurfaceTexture} when it becomes available.
+	 *
+	 * @return the surface of the view.
+	 */
+	public SurfaceTexture getSurfaceTexture() {
+		try {
+			surfaceLatch.await();
+		} catch (InterruptedException e) {
+			// Do nothing
+		}
+		return surface;
 	}
 
 	private void correctOrientation(int width, int height) {

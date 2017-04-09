@@ -9,7 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
 import io.fotoapparat.hardware.operators.PreviewOperator;
-import io.fotoapparat.hardware.v2.captor.SurfaceReader;
+import io.fotoapparat.hardware.v2.surface.SurfaceReader;
 
 /**
  * Wrapper around the internal {@link android.hardware.camera2.CameraCaptureSession}

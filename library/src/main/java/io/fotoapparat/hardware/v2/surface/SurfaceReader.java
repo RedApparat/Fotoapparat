@@ -1,4 +1,4 @@
-package io.fotoapparat.hardware.v2.captor;
+package io.fotoapparat.hardware.v2.surface;
 
 import android.graphics.ImageFormat;
 import android.media.Image;
@@ -38,6 +38,8 @@ public class SurfaceReader implements ImageReader.OnImageAvailableListener {
 			bytes = new byte[buffer.remaining()];
 			buffer.get(bytes);
 			countDownLatch.countDown();
+
+			createImageReader();
 		}
 	}
 
@@ -86,4 +88,5 @@ public class SurfaceReader implements ImageReader.OnImageAvailableListener {
 						.createHandler()
 		);
 	}
+
 }
