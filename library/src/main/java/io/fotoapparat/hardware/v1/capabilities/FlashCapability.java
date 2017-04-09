@@ -19,7 +19,7 @@ public class FlashCapability {
 		HashMap<String, Flash> map = new HashMap<>();
 		map.put(Camera.Parameters.FLASH_MODE_AUTO, Flash.AUTO);
 		map.put(Camera.Parameters.FLASH_MODE_RED_EYE, Flash.AUTO_RED_EYE);
-		map.put(Camera.Parameters.FLASH_MODE_ON, Flash.SINGLE);
+		map.put(Camera.Parameters.FLASH_MODE_ON, Flash.ON);
 		map.put(Camera.Parameters.FLASH_MODE_TORCH, Flash.TORCH);
 		map.put(Camera.Parameters.FLASH_MODE_OFF, Flash.OFF);
 

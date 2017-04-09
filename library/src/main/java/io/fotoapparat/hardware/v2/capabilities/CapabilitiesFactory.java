@@ -24,7 +24,7 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
 
 		return new Capabilities(
 				FocusCapability.availableFocusModes(cameraCharacteristics),
-				null
+				FlashCapability.availableFlashModes(cameraCharacteristics)
 		);
 	}
 

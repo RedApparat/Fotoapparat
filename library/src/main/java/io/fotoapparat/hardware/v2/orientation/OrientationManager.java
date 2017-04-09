@@ -70,7 +70,7 @@ public class OrientationManager implements OrientationOperator {
 	/**
 	 * Notifies that the display orientation has changed.
 	 **/
-	interface Listener {
+	public interface Listener {
 
 		/**
 		 * Called when the display orientation has changed.

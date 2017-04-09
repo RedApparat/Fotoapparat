@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.captor.SurfaceReader;
+import io.fotoapparat.hardware.v2.surface.SurfaceReader;
 
 /**
  * Basic wrapper around the internal {@link CameraCaptureSession}
