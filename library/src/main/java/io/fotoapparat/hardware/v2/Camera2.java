@@ -9,9 +9,10 @@ import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
-import io.fotoapparat.hardware.v2.surface.TextureManager;
 import io.fotoapparat.hardware.v2.parameters.ParametersManager;
 import io.fotoapparat.hardware.v2.session.SessionManager;
+import io.fotoapparat.hardware.v2.stream.PreviewStream2;
+import io.fotoapparat.hardware.v2.surface.TextureManager;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.photo.Photo;
@@ -25,6 +26,7 @@ public class Camera2 implements CameraDevice {
 
 	private final OrientationManager orientationManager;
 	private final TextureManager textureManager;
+	private final PreviewStream2 previewStream;
 	private final CapabilitiesFactory capabilitiesFactory;
 	private final CameraConnection connection;
 	private final ParametersManager parametersManager;
@@ -37,7 +39,8 @@ public class Camera2 implements CameraDevice {
 				   OrientationManager orientationManager,
 				   ParametersManager parametersManager,
 				   CapabilitiesFactory capabilitiesFactory,
-				   PictureCaptor pictureCaptor) {
+				   PictureCaptor pictureCaptor,
+				   PreviewStream2 previewStream) {
 		this.capabilitiesFactory = capabilitiesFactory;
 		this.connection = connection;
 		this.parametersManager = parametersManager;
@@ -45,6 +48,7 @@ public class Camera2 implements CameraDevice {
 		this.pictureCaptor = pictureCaptor;
 		this.orientationManager = orientationManager;
 		this.textureManager = textureManager;
+		this.previewStream = previewStream;
 	}
 
 	@Override
@@ -94,7 +98,6 @@ public class Camera2 implements CameraDevice {
 
 	@Override
 	public PreviewStream getPreviewStream() {
-		// TODO implement
-		return null;
+		return previewStream;
 	}
 }

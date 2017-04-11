@@ -9,7 +9,8 @@ import android.view.Surface;
 
 import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
-import io.fotoapparat.hardware.v2.surface.SurfaceReader;
+import io.fotoapparat.hardware.v2.surface.ContinuousSurfaceReader;
+import io.fotoapparat.hardware.v2.surface.StillSurfaceReader;
 import io.fotoapparat.hardware.v2.surface.TextureManager;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
@@ -24,33 +25,43 @@ import static io.fotoapparat.parameter.Parameters.Type.FOCUS_MODE;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class CaptureRequestFactory {
 
-	private final SurfaceReader surfaceReader;
+	private final StillSurfaceReader surfaceReader;
+	private final ContinuousSurfaceReader continuousSurfaceReader;
 	private final TextureManager textureManager;
 	private final ParametersManager parametersManager;
 	private final Characteristics characteristics;
 	private CameraConnection cameraConnection;
 
 	public CaptureRequestFactory(CameraConnection cameraConnection,
-								 SurfaceReader surfaceReader,
+								 StillSurfaceReader surfaceReader,
+								 ContinuousSurfaceReader continuousSurfaceReader,
 								 TextureManager textureManager,
 								 ParametersManager parametersManager,
 								 Characteristics characteristics) {
 		this.cameraConnection = cameraConnection;
 		this.surfaceReader = surfaceReader;
+		this.continuousSurfaceReader = continuousSurfaceReader;
 		this.textureManager = textureManager;
 		this.parametersManager = parametersManager;
 		this.characteristics = characteristics;
 	}
 
+	/**
+	 * Creates a request for a window preview.
+	 *
+	 * @return The camera request.
+	 * @throws CameraAccessException If the camera device has been disconnected.
+	 */
 	public CaptureRequest createPreviewRequest() throws CameraAccessException {
 
 		CameraDevice camera = cameraConnection.getCamera();
-		Surface surface = textureManager.getSurface();
+		Surface viewSurface = textureManager.getSurface();
+		Surface frameSurface = continuousSurfaceReader.getSurface();
 		Flash flash = parametersManager.getParameters().getValue(FLASH);
 
 		return CaptureRequestBuilder
 				.create(camera, CameraDevice.TEMPLATE_PREVIEW)
-				.into(surface)
+				.into(viewSurface, frameSurface)
 				.flash(flash)
 				.build();
 	}

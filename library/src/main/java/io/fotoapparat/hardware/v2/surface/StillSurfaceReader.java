@@ -18,29 +18,13 @@ import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
  * Creates a {@link Surface} which can capture single events.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class SurfaceReader implements ImageReader.OnImageAvailableListener {
+public class StillSurfaceReader {
 
-	private final CountDownLatch countDownLatch = new CountDownLatch(1);
 	private final SizeCapability sizeCapability;
 	private ImageReader imageReader;
-	private byte[] bytes;
 
-	public SurfaceReader(SizeCapability sizeCapability) {
+	public StillSurfaceReader(SizeCapability sizeCapability) {
 		this.sizeCapability = sizeCapability;
-	}
-
-	@Override
-	public void onImageAvailable(ImageReader reader) {
-		Image image = reader.acquireNextImage();
-		Image.Plane[] planes = image.getPlanes();
-		if (planes.length > 0) {
-			ByteBuffer buffer = planes[0].getBuffer();
-			bytes = new byte[buffer.remaining()];
-			buffer.get(bytes);
-			countDownLatch.countDown();
-
-			createImageReader();
-		}
 	}
 
 	/**
@@ -61,13 +45,9 @@ public class SurfaceReader implements ImageReader.OnImageAvailableListener {
 	 * @return the Image as byte array.
 	 */
 	public byte[] getPhotoBytes() {
-		try {
-			countDownLatch.await();
-		} catch (InterruptedException e) {
-			// Do nothing
-		}
+		ImageCaptureAction imageCaptureAction = new ImageCaptureAction(imageReader);
 
-		return bytes;
+		return imageCaptureAction.getPhoto();
 	}
 
 	private void createImageReader() {
@@ -81,12 +61,54 @@ public class SurfaceReader implements ImageReader.OnImageAvailableListener {
 						1
 				);
 
-		imageReader.setOnImageAvailableListener(
-				this,
-				CameraThread
-						.getInstance()
-						.createHandler()
-		);
+	}
+
+	private static class ImageCaptureAction implements ImageReader.OnImageAvailableListener {
+
+		private final CountDownLatch countDownLatch = new CountDownLatch(1);
+		private final ImageReader imageReader;
+		private byte[] bytes;
+
+		private ImageCaptureAction(ImageReader imageReader) {
+			this.imageReader = imageReader;
+			imageReader.setOnImageAvailableListener(
+					this,
+					CameraThread
+							.getInstance()
+							.createHandler()
+			);
+		}
+
+		private byte[] getPhoto() {
+			try {
+				countDownLatch.await();
+			} catch (InterruptedException e) {
+				// Do nothing
+			}
+
+			return bytes;
+		}
+
+		@Override
+		public void onImageAvailable(ImageReader reader) {
+			Image image = reader.acquireNextImage();
+			Image.Plane[] planes = image.getPlanes();
+			if (planes.length > 0) {
+				ByteBuffer buffer = planes[0].getBuffer();
+				bytes = new byte[buffer.remaining()];
+				buffer.get(bytes);
+
+			}
+			image.close();
+
+			removeListener();
+
+			countDownLatch.countDown();
+		}
+
+		private void removeListener() {
+			imageReader.setOnImageAvailableListener(null, null);
+		}
 	}
 
 }

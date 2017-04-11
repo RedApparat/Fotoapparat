@@ -8,6 +8,9 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
+import java.util.Collections;
+import java.util.List;
+
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.operators.PreviewOperator;
 
@@ -23,10 +26,9 @@ public class PreviewSession extends Session implements PreviewOperator {
 	private final CaptureRequest captureRequest;
 
 	PreviewSession(CameraDevice camera,
-				   Surface viewSurface,
-				   Surface captureSurface,
-				   CaptureRequest captureRequest) {
-		super(camera, viewSurface, captureSurface);
+				   CaptureRequest captureRequest,
+				   List<Surface> surfaces) {
+		super(camera, Collections.unmodifiableList(surfaces));
 		this.captureRequest = captureRequest;
 	}
 

@@ -7,6 +7,10 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 
@@ -18,7 +22,7 @@ class CaptureRequestBuilder {
 
 	final CameraDevice cameraDevice;
 	final int requestTemplate;
-	Surface surface;
+	List<Surface> surfaces;
 	Flash flash;
 	FocusMode focus;
 	boolean shouldTriggerAutoFocus;
@@ -42,7 +46,15 @@ class CaptureRequestBuilder {
 	 * @see CaptureRequest.Builder#addTarget(Surface)
 	 */
 	CaptureRequestBuilder into(Surface surface) {
-		this.surface = surface;
+		this.surfaces = Collections.singletonList(surface);
+		return this;
+	}
+
+	/**
+	 * @see CaptureRequest.Builder#addTarget(Surface)
+	 */
+	CaptureRequestBuilder into(Surface... surfaces) {
+		this.surfaces = Arrays.asList(surfaces);
 		return this;
 	}
 
@@ -94,7 +106,7 @@ class CaptureRequestBuilder {
 	}
 
 	private void validate() {
-		if (surface == null) {
+		if (surfaces == null) {
 			throw new IllegalStateException("Surface is mandatory.");
 		}
 		if (shouldSetExposureMode && flash == null) {

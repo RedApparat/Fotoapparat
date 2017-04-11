@@ -8,7 +8,7 @@ import android.support.annotation.RequiresApi;
 import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.session.Session;
-import io.fotoapparat.hardware.v2.surface.SurfaceReader;
+import io.fotoapparat.hardware.v2.surface.StillSurfaceReader;
 
 /**
  * Performs a picture capturing routing.
@@ -17,10 +17,10 @@ import io.fotoapparat.hardware.v2.surface.SurfaceReader;
 public class CapturingRoutine {
 
 	private final CaptureRequestFactory captureRequestFactory;
-	private final SurfaceReader surfaceReader;
+	private final StillSurfaceReader surfaceReader;
 
 	public CapturingRoutine(CaptureRequestFactory captureRequestFactory,
-							SurfaceReader surfaceReader) {
+							StillSurfaceReader surfaceReader) {
 		this.captureRequestFactory = captureRequestFactory;
 		this.surfaceReader = surfaceReader;
 	}

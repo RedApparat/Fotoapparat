@@ -8,6 +8,8 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
+import java.util.List;
+
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 
@@ -23,7 +25,7 @@ class Request {
 
 	private final CameraDevice cameraDevice;
 	private final int requestTemplate;
-	private final Surface surface;
+	private final List<Surface> surfaces;
 	private final boolean shouldTriggerAutoFocus;
 	private final boolean triggerPrecaptureExposure;
 	private final boolean cancelPrecaptureExposure;
@@ -35,7 +37,7 @@ class Request {
 
 	Request(CameraDevice cameraDevice,
 			int requestTemplate,
-			Surface surface,
+			List<Surface> surfaces,
 			boolean shouldTriggerAutoFocus,
 			boolean triggerPrecaptureExposure,
 			boolean cancelPrecaptureExposure,
@@ -44,7 +46,7 @@ class Request {
 			Integer sensorOrientation) {
 		this.cameraDevice = cameraDevice;
 		this.requestTemplate = requestTemplate;
-		this.surface = surface;
+		this.surfaces = surfaces;
 		this.shouldTriggerAutoFocus = shouldTriggerAutoFocus;
 		this.triggerPrecaptureExposure = triggerPrecaptureExposure;
 		this.cancelPrecaptureExposure = cancelPrecaptureExposure;
@@ -58,7 +60,7 @@ class Request {
 		return new Request(
 				builder.cameraDevice,
 				builder.requestTemplate,
-				builder.surface,
+				builder.surfaces,
 				builder.shouldTriggerAutoFocus,
 				builder.triggerPrecaptureExposure,
 				builder.cancelPrecaptureExposure,
@@ -112,7 +114,9 @@ class Request {
 	}
 
 	private void setTarget() {
-		captureRequest.addTarget(surface);
+		for (Surface surface : surfaces) {
+			captureRequest.addTarget(surface);
+		}
 	}
 
 	private void triggerAutoFocus() {

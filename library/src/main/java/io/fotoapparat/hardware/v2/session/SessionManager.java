@@ -5,10 +5,13 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CaptureRequest;
 import android.view.Surface;
 
+import java.util.Arrays;
+
 import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
-import io.fotoapparat.hardware.v2.surface.SurfaceReader;
+import io.fotoapparat.hardware.v2.surface.ContinuousSurfaceReader;
+import io.fotoapparat.hardware.v2.surface.StillSurfaceReader;
 import io.fotoapparat.hardware.v2.surface.TextureManager;
 
 /**
@@ -18,17 +21,20 @@ import io.fotoapparat.hardware.v2.surface.TextureManager;
 @SuppressWarnings("NewApi")
 public class SessionManager implements PreviewOperator, CameraConnection.Listener {
 
-	private final SurfaceReader surfaceReader;
+	private final StillSurfaceReader surfaceReader;
+	private final ContinuousSurfaceReader continuousSurfaceReader;
 	private final CameraConnection connection;
 	private final CaptureRequestFactory captureRequestFactory;
 	private final TextureManager textureManager;
 	private Session session;
 
-	public SessionManager(SurfaceReader surfaceReader,
+	public SessionManager(StillSurfaceReader surfaceReader,
+						  ContinuousSurfaceReader continuousSurfaceReader,
 						  CameraConnection connection,
 						  CaptureRequestFactory captureRequestFactory,
 						  TextureManager textureManager) {
 		this.surfaceReader = surfaceReader;
+		this.continuousSurfaceReader = continuousSurfaceReader;
 		this.connection = connection;
 		this.captureRequestFactory = captureRequestFactory;
 		this.textureManager = textureManager;
@@ -47,15 +53,15 @@ public class SessionManager implements PreviewOperator, CameraConnection.Listene
 
 		try {
 			CameraDevice camera = connection.getCamera();
-			Surface viewSurface = textureManager.getSurface();
+			Surface previewSurface = textureManager.getSurface();
 			Surface captureSurface = surfaceReader.getSurface();
+			Surface frameSurface = continuousSurfaceReader.getSurface();
 			CaptureRequest previewRequest = captureRequestFactory.createPreviewRequest();
 
 			PreviewSession previewSession = new PreviewSession(
 					camera,
-					viewSurface,
-					captureSurface,
-					previewRequest
+					previewRequest,
+					Arrays.asList(previewSurface, captureSurface, frameSurface)
 			);
 
 			previewSession.startPreview();

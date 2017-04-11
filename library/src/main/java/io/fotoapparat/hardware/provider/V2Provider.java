@@ -20,7 +20,9 @@ import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.parameters.ParametersManager;
 import io.fotoapparat.hardware.v2.selection.CameraSelector;
 import io.fotoapparat.hardware.v2.session.SessionManager;
-import io.fotoapparat.hardware.v2.surface.SurfaceReader;
+import io.fotoapparat.hardware.v2.stream.PreviewStream2;
+import io.fotoapparat.hardware.v2.surface.ContinuousSurfaceReader;
+import io.fotoapparat.hardware.v2.surface.StillSurfaceReader;
 import io.fotoapparat.hardware.v2.surface.TextureManager;
 import io.fotoapparat.log.Logger;
 
@@ -61,20 +63,24 @@ public class V2Provider implements CameraProvider {
 				flashCapability
 		);
 
-		SurfaceReader surfaceReader = new SurfaceReader(sizeCapability);
-
 		TextureManager textureManager = new TextureManager(orientationManager);
+
+		StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(sizeCapability);
+		ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(sizeCapability);
+		PreviewStream2 previewStream = new PreviewStream2(continuousSurfaceReader);
 
 		CaptureRequestFactory captureRequestFactory = new CaptureRequestFactory(
 				cameraConnection,
-				surfaceReader,
+				stillSurfaceReader,
+				continuousSurfaceReader,
 				textureManager,
 				parametersManager,
 				characteristics
 		);
 
 		SessionManager sessionManager = new SessionManager(
-				surfaceReader,
+				stillSurfaceReader,
+				continuousSurfaceReader,
 				cameraConnection,
 				captureRequestFactory,
 				textureManager
@@ -82,7 +88,7 @@ public class V2Provider implements CameraProvider {
 
 		CapturingRoutine capturingRoutine = new CapturingRoutine(
 				captureRequestFactory,
-				surfaceReader
+				stillSurfaceReader
 		);
 
 		PictureCaptor pictureCaptor = new PictureCaptor(
@@ -98,7 +104,8 @@ public class V2Provider implements CameraProvider {
 				orientationManager,
 				parametersManager,
 				capabilitiesFactory,
-				pictureCaptor
+				pictureCaptor,
+				previewStream
 		);
 	}
 }
