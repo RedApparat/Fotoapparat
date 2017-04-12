@@ -59,6 +59,7 @@ public class V2Provider implements CameraProvider {
 		FlashCapability flashCapability = new FlashCapability(characteristics);
 
 		CapabilitiesFactory capabilitiesFactory = new CapabilitiesFactory(
+				sizeCapability,
 				focusCapability,
 				flashCapability
 		);

@@ -3,11 +3,11 @@ package io.fotoapparat.parameter.selector;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import io.fotoapparat.parameter.AspectRatio;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.util.CompareSizesByArea;
 import io.fotoapparat.util.FloatUtils;
 
 /**
@@ -51,18 +51,6 @@ public class SizeSelectors {
 			}
 		}
 		return filteredSizes;
-	}
-
-	/**
-	 * Comparator based on area of the given {@link Size} objects.
-	 */
-	private static class CompareSizesByArea implements Comparator<Size> {
-
-		@Override
-		public int compare(Size lhs, Size rhs) {
-			return Long.signum((long) lhs.width * lhs.height -
-					(long) rhs.width * rhs.height);
-		}
 	}
 
 }

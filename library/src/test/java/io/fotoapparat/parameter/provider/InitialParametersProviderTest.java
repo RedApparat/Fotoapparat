@@ -13,6 +13,7 @@ import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 
 import static io.fotoapparat.test.TestUtils.asSet;
@@ -22,6 +23,7 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class InitialParametersProviderTest {
 
+	static final Set<Size> SIZES = asSet(new Size(4000, 3000));
 	static final Set<FocusMode> FOCUS_MODES = asSet(FocusMode.FIXED);
 	static final Set<Flash> FLASH = asSet(Flash.AUTO_RED_EYE);
 
@@ -44,6 +46,7 @@ public class InitialParametersProviderTest {
 
 		given(cameraDevice.getCapabilities())
 				.willReturn(new Capabilities(
+						SIZES,
 						FOCUS_MODES,
 						FLASH
 				));

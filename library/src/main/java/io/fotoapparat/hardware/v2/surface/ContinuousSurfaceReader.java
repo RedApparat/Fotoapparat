@@ -5,13 +5,13 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Size;
 import android.view.Surface;
 
 import java.nio.ByteBuffer;
 
 import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
+import io.fotoapparat.parameter.Size;
 
 /**
  * Creates a {@link Surface} which can capture continuous events (several frames).

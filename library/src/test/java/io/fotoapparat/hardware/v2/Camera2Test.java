@@ -14,9 +14,9 @@ import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
-import io.fotoapparat.hardware.v2.surface.TextureManager;
 import io.fotoapparat.hardware.v2.parameters.ParametersManager;
 import io.fotoapparat.hardware.v2.session.SessionManager;
+import io.fotoapparat.hardware.v2.surface.TextureManager;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
@@ -30,7 +30,6 @@ import static org.mockito.Mockito.verify;
 @SuppressWarnings("NewApi")
 @RunWith(MockitoJUnitRunner.class)
 public class Camera2Test {
-
 
 	@Mock
 	OrientationManager orientationManager;
@@ -118,7 +117,11 @@ public class Camera2Test {
 	@Test
 	public void getCapabilities() throws Exception {
 		// Given
-		Capabilities capabilities = new Capabilities(singleton(FocusMode.MACRO), null);
+		Capabilities capabilities = new Capabilities(
+				null,
+				singleton(FocusMode.MACRO),
+				null
+		);
 		given(capabilitiesFactory.getCapabilities())
 				.willReturn(capabilities);
 

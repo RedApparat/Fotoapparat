@@ -21,6 +21,7 @@ public class CapabilitiesFactory {
 	 */
 	public Capabilities fromParameters(Camera.Parameters parameters) {
 		return new Capabilities(
+				null, // TODO: 12.04.17
 				extractFocusModes(parameters),
 				extractFlashModes(parameters)
 		);

@@ -5,7 +5,6 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Size;
 import android.view.Surface;
 
 import java.nio.ByteBuffer;
@@ -51,12 +50,12 @@ public class StillSurfaceReader {
 	}
 
 	private void createImageReader() {
-		Size largestSize = sizeCapability.getLargestSize();
+		io.fotoapparat.parameter.Size largestSize = sizeCapability.getLargestSize();
 
 		imageReader = ImageReader
 				.newInstance(
-						largestSize.getWidth(),
-						largestSize.getHeight(),
+						largestSize.width,
+						largestSize.height,
 						ImageFormat.JPEG,
 						1
 				);

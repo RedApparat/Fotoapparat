@@ -9,10 +9,15 @@ import android.support.annotation.RequiresApi;
 import android.view.Surface;
 import android.view.TextureView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
+import io.fotoapparat.parameter.Size;
+import io.fotoapparat.util.CompareSizesByArea;
 import io.fotoapparat.view.TextureListener;
 
 /**
@@ -101,6 +106,7 @@ public class TextureManager
 	}
 
 	private void correctOrientation(int width, int height) {
+
 		final Matrix matrix = new Matrix();
 		int screenOrientation = orientationManager.getScreenOrientation();
 
@@ -123,5 +129,67 @@ public class TextureManager
 			}
 		});
 	}
+
+	private static Size choosePreviewSize(Size[] availableSizes,
+										  Size textureSize,
+										  Size size) {
+
+		int maxPreviewWidth = MAX_PREVIEW_WIDTH;
+		int maxPreviewHeight = MAX_PREVIEW_HEIGHT;
+
+		if (textureSize.width < maxPreviewWidth) {
+			maxPreviewWidth = textureSize.width;
+		}
+		if (textureSize.height < maxPreviewHeight) {
+			maxPreviewHeight = textureSize.height;
+		}
+
+		Size maxSize = new Size(maxPreviewWidth, maxPreviewHeight);
+
+		// Collect the supported resolutions that are at least as big as the preview Surface
+		List<Size> bigEnough = new ArrayList<>();
+		// Collect the supported resolutions that are smaller than the preview Surface
+		List<Size> notBigEnough = new ArrayList<>();
+
+		for (Size availableSize : availableSizes) {
+
+			if (isFirstSmaller(availableSize, maxSize) && sameRatio(availableSize, size)) {
+
+				if (isFirstSmaller(maxSize, availableSize)) {
+					bigEnough.add(availableSize);
+				} else {
+					notBigEnough.add(availableSize);
+				}
+			}
+		}
+
+		// Pick the smallest of those big enough. If there is no one big enough, pick the
+		// largest of those not big enough.
+		if (bigEnough.size() > 0) {
+			return Collections.min(bigEnough, new CompareSizesByArea());
+		} else if (notBigEnough.size() > 0) {
+			return Collections.max(notBigEnough, new CompareSizesByArea());
+		} else {
+			return availableSizes[0];
+		}
+	}
+
+	private static boolean isFirstSmaller(Size expectedSmallerSize, Size expectedBiggerSize) {
+		return expectedSmallerSize.width <= expectedBiggerSize.width && expectedSmallerSize.height <= expectedBiggerSize.height;
+	}
+
+	private static boolean sameRatio(Size size1, Size size2) {
+		return size2.height == size2.width * size1.height / size1.width;
+	}
+
+	/**
+	 * Max preview width that is guaranteed by Camera2 API
+	 */
+	private static final int MAX_PREVIEW_WIDTH = 1920;
+
+	/**
+	 * Max preview height that is guaranteed by Camera2 API
+	 */
+	private static final int MAX_PREVIEW_HEIGHT = 1080;
 
 }

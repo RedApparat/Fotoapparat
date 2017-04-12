@@ -14,6 +14,7 @@ import java.util.Set;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
+import io.fotoapparat.parameter.Size;
 
 import static io.fotoapparat.test.TestUtils.asSet;
 import static junit.framework.Assert.assertEquals;
@@ -22,7 +23,11 @@ import static org.mockito.BDDMockito.given;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 @RunWith(MockitoJUnitRunner.class)
 public class CapabilitiesFactoryTest {
-
+	private static final Set<Size> SIZE_SET = asSet(
+			new Size(4032, 3024),
+			new Size(7680, 4320),
+			new Size(1280, 720)
+	);
 	private static final Set<Flash> FLASH_SET = asSet(
 			Flash.OFF,
 			Flash.TORCH,
@@ -39,6 +44,8 @@ public class CapabilitiesFactoryTest {
 	);
 
 	@Mock
+	SizeCapability sizeCapability;
+	@Mock
 	FlashCapability flashCapability;
 	@Mock
 	FocusCapability focusCapability;
@@ -48,6 +55,9 @@ public class CapabilitiesFactoryTest {
 	@Test
 	public void testSets() throws Exception {
 		// Given
+		given(sizeCapability.availableJpegSizes())
+				.willReturn(SIZE_SET);
+
 		given(flashCapability.availableFlashModes())
 				.willReturn(FLASH_SET);
 

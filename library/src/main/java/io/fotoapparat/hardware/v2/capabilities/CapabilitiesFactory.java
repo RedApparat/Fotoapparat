@@ -11,10 +11,14 @@ import io.fotoapparat.hardware.operators.CapabilitiesOperator;
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class CapabilitiesFactory implements CapabilitiesOperator {
+	private final SizeCapability sizeCapability;
 	private final FocusCapability focusCapability;
 	private final FlashCapability flashCapability;
 
-	public CapabilitiesFactory(FocusCapability focusCapability, FlashCapability flashCapability) {
+	public CapabilitiesFactory(SizeCapability sizeCapability,
+							   FocusCapability focusCapability,
+							   FlashCapability flashCapability) {
+		this.sizeCapability = sizeCapability;
 		this.focusCapability = focusCapability;
 		this.flashCapability = flashCapability;
 	}
@@ -22,6 +26,7 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
 	@Override
 	public Capabilities getCapabilities() {
 		return new Capabilities(
+				sizeCapability.availableJpegSizes(),
 				focusCapability.availableFocusModes(),
 				flashCapability.availableFlashModes()
 		);
