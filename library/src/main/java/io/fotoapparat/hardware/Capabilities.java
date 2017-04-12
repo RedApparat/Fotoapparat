@@ -26,7 +26,7 @@ public class Capabilities {
 	/**
 	 * @return list of supported sizes.
 	 */
-	public Set<Size> supportedSize() {
+	public Set<Size> supportedSizes() {
 		return sizes;
 	}
 
