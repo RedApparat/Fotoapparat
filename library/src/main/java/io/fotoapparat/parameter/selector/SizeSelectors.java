@@ -8,6 +8,7 @@ import java.util.List;
 
 import io.fotoapparat.parameter.AspectRatio;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.util.FloatUtils;
 
 /**
  * Selector functions for {@link Size}.
@@ -43,16 +44,11 @@ public class SizeSelectors {
 	}
 
 	private static List<Size> filterByRatio(Collection<Size> sizes, AspectRatio aspectRatio) {
-
 		List<Size> filteredSizes = new ArrayList<>();
 		for (Size size : sizes) {
-
-			float sizeAspectRatio = Math.round((float) size.width / size.height * 10000f) / 10000f;
-
-			if (Float.compare(sizeAspectRatio, aspectRatio.ratioValue) == 0) {
+			if (FloatUtils.areEqual((float) size.width / size.height, aspectRatio.ratioValue)) {
 				filteredSizes.add(size);
 			}
-
 		}
 		return filteredSizes;
 	}
