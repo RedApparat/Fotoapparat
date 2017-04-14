@@ -10,8 +10,7 @@ import android.view.Surface;
 import java.nio.ByteBuffer;
 
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
-import io.fotoapparat.parameter.Size;
+import io.fotoapparat.hardware.v2.parameters.SizeProvider;
 
 /**
  * Creates a {@link Surface} which can capture continuous events (several frames).
@@ -20,12 +19,12 @@ import io.fotoapparat.parameter.Size;
 public class ContinuousSurfaceReader
 		implements OnImageAcquiredObserver, ImageReader.OnImageAvailableListener {
 
-	private final SizeCapability sizeCapability;
+	private final SizeProvider sizeProvider;
 	private ImageReader imageReader;
 	private OnFrameAcquiredListener listener;
 
-	public ContinuousSurfaceReader(SizeCapability sizeCapability) {
-		this.sizeCapability = sizeCapability;
+	public ContinuousSurfaceReader(SizeProvider sizeProvider) {
+		this.sizeProvider = sizeProvider;
 	}
 
 	private static byte[] YUV_420_888toNV21(Image image) {
@@ -76,12 +75,10 @@ public class ContinuousSurfaceReader
 	}
 
 	private void createImageReader() {
-		Size largestSize = sizeCapability.getLargestSize();
-
 		imageReader = ImageReader
 				.newInstance(
-						1280,
-						720,
+						1440,
+						1080,
 						ImageFormat.YUV_420_888,
 						1
 				);

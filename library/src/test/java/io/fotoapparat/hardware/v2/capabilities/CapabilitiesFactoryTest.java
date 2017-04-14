@@ -68,6 +68,7 @@ public class CapabilitiesFactoryTest {
 		Capabilities capabilities = testee.getCapabilities();
 
 		// Then
+		assertEquals(SIZE_SET, capabilities.supportedSizes());
 		assertEquals(FOCUS_MODE_SET, capabilities.supportedFocusModes());
 		assertEquals(FLASH_SET, capabilities.supportedFlashModes());
 

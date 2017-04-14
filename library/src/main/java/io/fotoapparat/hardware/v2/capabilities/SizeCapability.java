@@ -7,12 +7,10 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import io.fotoapparat.parameter.Size;
-import io.fotoapparat.util.CompareSizesByArea;
 
 /**
  * Provides infromation about the possible sizes the camera can take pictures of.
@@ -24,17 +22,6 @@ public class SizeCapability {
 
 	public SizeCapability(Characteristics characteristics) {
 		this.characteristics = characteristics;
-	}
-
-	/**
-	 * @return the largest size the camera can take a picture of
-	 */
-	@SuppressWarnings("ConstantConditions")
-	public Size getLargestSize() {
-		return Collections.max(
-				availableJpegSizes(),
-				new CompareSizesByArea()
-		);
 	}
 
 	@SuppressWarnings("ConstantConditions")

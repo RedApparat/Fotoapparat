@@ -18,6 +18,7 @@ import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.parameters.ParametersManager;
+import io.fotoapparat.hardware.v2.parameters.SizeProvider;
 import io.fotoapparat.hardware.v2.selection.CameraSelector;
 import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.hardware.v2.stream.PreviewStream2;
@@ -42,8 +43,6 @@ public class V2Provider implements CameraProvider {
 	@Override
 	public CameraDevice get(Logger logger) {
 
-		ParametersManager parametersManager = new ParametersManager();
-
 		CameraSelector cameraSelector = new CameraSelector(manager);
 		Characteristics characteristics = new Characteristics(manager);
 
@@ -54,21 +53,17 @@ public class V2Provider implements CameraProvider {
 
 		OrientationManager orientationManager = new OrientationManager(characteristics);
 
-		SizeCapability sizeCapability = new SizeCapability(characteristics);
-		FocusCapability focusCapability = new FocusCapability(characteristics);
-		FlashCapability flashCapability = new FlashCapability(characteristics);
+		ParametersManager parametersManager = new ParametersManager();
 
-		CapabilitiesFactory capabilitiesFactory = new CapabilitiesFactory(
-				sizeCapability,
-				focusCapability,
-				flashCapability
+		SizeProvider sizeProvider = new SizeProvider(parametersManager);
+
+		TextureManager textureManager = new TextureManager(
+				orientationManager,
+				sizeProvider
 		);
 
-		TextureManager textureManager = new TextureManager(orientationManager);
-
-		StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(sizeCapability);
-		ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(sizeCapability);
-		PreviewStream2 previewStream = new PreviewStream2(continuousSurfaceReader);
+		StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(sizeProvider);
+		ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(sizeProvider);
 
 		CaptureRequestFactory captureRequestFactory = new CaptureRequestFactory(
 				cameraConnection,
@@ -92,6 +87,16 @@ public class V2Provider implements CameraProvider {
 				stillSurfaceReader
 		);
 
+		SizeCapability sizeCapability = new SizeCapability(characteristics);
+		FocusCapability focusCapability = new FocusCapability(characteristics);
+		FlashCapability flashCapability = new FlashCapability(characteristics);
+
+		CapabilitiesFactory capabilitiesFactory = new CapabilitiesFactory(
+				sizeCapability,
+				focusCapability,
+				flashCapability
+		);
+
 		PictureCaptor pictureCaptor = new PictureCaptor(
 				sessionManager,
 				capturingRoutine,
@@ -106,7 +111,7 @@ public class V2Provider implements CameraProvider {
 				parametersManager,
 				capabilitiesFactory,
 				pictureCaptor,
-				previewStream
+				new PreviewStream2(continuousSurfaceReader)
 		);
 	}
 }

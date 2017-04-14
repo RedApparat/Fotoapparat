@@ -30,6 +30,8 @@ public class InitialParametersProviderTest {
 	@Mock
 	CameraDevice cameraDevice;
 	@Mock
+	SelectorFunction<Size> sizeSelector;
+	@Mock
 	SelectorFunction<FocusMode> focusModeSelector;
 	@Mock
 	SelectorFunction<Flash> flashModeSelector;
@@ -40,6 +42,7 @@ public class InitialParametersProviderTest {
 	public void setUp() throws Exception {
 		testee = new InitialParametersProvider(
 				cameraDevice,
+				sizeSelector,
 				focusModeSelector,
 				flashModeSelector
 		);
@@ -51,6 +54,8 @@ public class InitialParametersProviderTest {
 						FLASH
 				));
 
+		given(sizeSelector.select(SIZES))
+				.willReturn(new Size(4000, 3000));
 		given(focusModeSelector.select(FOCUS_MODES))
 				.willReturn(FocusMode.FIXED);
 		given(flashModeSelector.select(FLASH))

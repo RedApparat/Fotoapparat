@@ -11,7 +11,8 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
+import io.fotoapparat.hardware.v2.parameters.SizeProvider;
+import io.fotoapparat.parameter.Size;
 
 /**
  * Creates a {@link Surface} which can capture single events.
@@ -19,11 +20,11 @@ import io.fotoapparat.hardware.v2.capabilities.SizeCapability;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class StillSurfaceReader {
 
-	private final SizeCapability sizeCapability;
+	private final SizeProvider sizeProvider;
 	private ImageReader imageReader;
 
-	public StillSurfaceReader(SizeCapability sizeCapability) {
-		this.sizeCapability = sizeCapability;
+	public StillSurfaceReader(SizeProvider sizeProvider) {
+		this.sizeProvider = sizeProvider;
 	}
 
 	/**
@@ -50,7 +51,7 @@ public class StillSurfaceReader {
 	}
 
 	private void createImageReader() {
-		io.fotoapparat.parameter.Size largestSize = sizeCapability.getLargestSize();
+		Size largestSize = sizeProvider.getStillCaptureSize();
 
 		imageReader = ImageReader
 				.newInstance(

@@ -9,16 +9,14 @@ import android.support.annotation.RequiresApi;
 import android.view.Surface;
 import android.view.TextureView;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
-import io.fotoapparat.parameter.Size;
-import io.fotoapparat.util.CompareSizesByArea;
+import io.fotoapparat.hardware.v2.parameters.SizeProvider;
 import io.fotoapparat.view.TextureListener;
+
+import static java.lang.Math.round;
 
 /**
  * Manages the {@link SurfaceTexture} of a {@link TextureView}.
@@ -29,29 +27,39 @@ public class TextureManager
 
 	private final CountDownLatch surfaceLatch = new CountDownLatch(1);
 	private final OrientationManager orientationManager;
+	private final SizeProvider sizeProvider;
 	private Surface surface;
 	private TextureView textureView;
+	private SurfaceTexture surfaceTexture;
 
-	public TextureManager(OrientationManager orientationManager) {
+	public TextureManager(OrientationManager orientationManager,
+						  SizeProvider sizeProvider) {
 		this.orientationManager = orientationManager;
+		this.sizeProvider = sizeProvider;
 		orientationManager.setListener(this);
 	}
 
-	private static float[] getDst(int orientation, int width, int height) {
-		if (orientation == 90) {
-			return new float[]{
-					0.f, height, // top left
-					0.f, 0.f, // top right
-					width, height, // bottom left
-					width, 0.f, // bottom right
-			};
-		}
-		return new float[]{
-				width, 0.f, // top left
-				width, height, // top right
-				0.f, 0.f, // bottom left
-				0.f, height, // bottom right
-		};
+	private static void correctRotatedDimensions(Matrix matrix,
+												 float width,
+												 float height,
+												 float centerHorizontal,
+												 float centerVertical) {
+		float rotationCorrectionScaleHeight = height / width;
+		float rotationCorrectionScaleWidth = width / height;
+
+		matrix.postScale(
+				rotationCorrectionScaleHeight,
+				rotationCorrectionScaleWidth,
+				centerHorizontal,
+				centerVertical
+		);
+	}
+
+	private static void correctRotation(Matrix matrix,
+										int screenOrientation,
+										float centerHorizontal,
+										float centerVertical) {
+		matrix.postRotate(360 - screenOrientation, centerHorizontal, centerVertical);
 	}
 
 	/**
@@ -69,7 +77,7 @@ public class TextureManager
 		}
 
 		textureView = (TextureView) displaySurface;
-		SurfaceTexture surfaceTexture = textureView.getSurfaceTexture();
+		surfaceTexture = textureView.getSurfaceTexture();
 
 		if (surfaceTexture != null) {
 			onSurfaceAvailable(surfaceTexture);
@@ -105,91 +113,63 @@ public class TextureManager
 		return surface;
 	}
 
-	private void correctOrientation(int width, int height) {
+	private void correctOrientation(float width, float height) {
+		if (width == 0 || height == 0) {
+			return;
+		}
+		int screenOrientation = orientationManager.getScreenOrientation();
+		float aspectRatio = sizeProvider.getStillCaptureAspectRatio();
 
 		final Matrix matrix = new Matrix();
-		int screenOrientation = orientationManager.getScreenOrientation();
+
+		float centerHorizontal = width / 2;
+		float centerVertical = height / 2;
+
+		float previewAspectRatio = width / height;
 
 		if (screenOrientation % 180 == 90) {
-			float[] src = {
-					0.f, 0.f, // top left
-					width, 0.f, // top right
-					0.f, height, // bottom left
-					width, height, // bottom right
-			};
+			previewAspectRatio = height / width;
 
-			float[] dst = getDst(screenOrientation, width, height);
-
-			matrix.setPolyToPoly(src, 0, dst, 0, 4);
-		}
-		new Handler(Looper.getMainLooper()).post(new Runnable() {
-			@Override
-			public void run() {
-				textureView.setTransform(matrix);
-			}
-		});
-	}
-
-	private static Size choosePreviewSize(Size[] availableSizes,
-										  Size textureSize,
-										  Size size) {
-
-		int maxPreviewWidth = MAX_PREVIEW_WIDTH;
-		int maxPreviewHeight = MAX_PREVIEW_HEIGHT;
-
-		if (textureSize.width < maxPreviewWidth) {
-			maxPreviewWidth = textureSize.width;
-		}
-		if (textureSize.height < maxPreviewHeight) {
-			maxPreviewHeight = textureSize.height;
+			correctRotatedDimensions(matrix, width, height, centerHorizontal, centerVertical);
 		}
 
-		Size maxSize = new Size(maxPreviewWidth, maxPreviewHeight);
+		correctRotation(matrix, screenOrientation, centerHorizontal, centerVertical);
 
-		// Collect the supported resolutions that are at least as big as the preview Surface
-		List<Size> bigEnough = new ArrayList<>();
-		// Collect the supported resolutions that are smaller than the preview Surface
-		List<Size> notBigEnough = new ArrayList<>();
+		float horizontalScale = 1;
+		float verticalScale = 1;
 
-		for (Size availableSize : availableSizes) {
-
-			if (isFirstSmaller(availableSize, maxSize) && sameRatio(availableSize, size)) {
-
-				if (isFirstSmaller(maxSize, availableSize)) {
-					bigEnough.add(availableSize);
-				} else {
-					notBigEnough.add(availableSize);
-				}
-			}
-		}
-
-		// Pick the smallest of those big enough. If there is no one big enough, pick the
-		// largest of those not big enough.
-		if (bigEnough.size() > 0) {
-			return Collections.min(bigEnough, new CompareSizesByArea());
-		} else if (notBigEnough.size() > 0) {
-			return Collections.max(notBigEnough, new CompareSizesByArea());
+		if (width < height) {
+			verticalScale = 1 * aspectRatio * previewAspectRatio;
 		} else {
-			return availableSizes[0];
+			horizontalScale = 1 * aspectRatio * previewAspectRatio;
 		}
+
+		matrix.postScale(
+				horizontalScale,
+				verticalScale,
+				centerHorizontal,
+				centerVertical
+		);
+
+		correctBufferSize(width, height, horizontalScale, verticalScale);
+
+		new Handler(Looper.getMainLooper())
+				.post(new Runnable() {
+					@Override
+					public void run() {
+						textureView.setTransform(matrix);
+					}
+				});
 	}
 
-	private static boolean isFirstSmaller(Size expectedSmallerSize, Size expectedBiggerSize) {
-		return expectedSmallerSize.width <= expectedBiggerSize.width && expectedSmallerSize.height <= expectedBiggerSize.height;
+	private void correctBufferSize(float width,
+								   float height,
+								   float horizontalScale,
+								   float verticalScale) {
+		surfaceTexture.setDefaultBufferSize(
+				round(width * horizontalScale),
+				round(height * verticalScale)
+		);
 	}
-
-	private static boolean sameRatio(Size size1, Size size2) {
-		return size2.height == size2.width * size1.height / size1.width;
-	}
-
-	/**
-	 * Max preview width that is guaranteed by Camera2 API
-	 */
-	private static final int MAX_PREVIEW_WIDTH = 1920;
-
-	/**
-	 * Max preview height that is guaranteed by Camera2 API
-	 */
-	private static final int MAX_PREVIEW_HEIGHT = 1080;
 
 }
