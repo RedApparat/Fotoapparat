@@ -1,5 +1,7 @@
 package io.fotoapparat.parameter.selector;
 
+import java.util.Collection;
+
 import io.fotoapparat.parameter.LensPosition;
 
 /**
@@ -8,11 +10,38 @@ import io.fotoapparat.parameter.LensPosition;
 public class LensPositionSelectors {
 
 	/**
-	 * @return function which selects given {@link LensPosition} from the list if it is available.
-	 * If it is not available - provides {@code null}.
+	 * @return {@link SelectorFunction} which provides the front camera if it is available.
+	 * Otherwise provides {@code null}.
 	 */
-	public static SelectorFunction<LensPosition> lensPosition(final LensPosition position) {
-		return Selectors.single(position);
+	public static SelectorFunction<LensPosition> front() {
+		return lensPosition(LensPosition.FRONT);
+	}
+
+	/**
+	 * @return {@link SelectorFunction} which provides the back camera if it is available.
+	 * Otherwise provides {@code null}.
+	 */
+	public static SelectorFunction<LensPosition> back() {
+		return lensPosition(LensPosition.BACK);
+	}
+
+	/**
+	 * @return {@link SelectorFunction} which provides the external camera if it is available.
+	 * Otherwise provides {@code null}.
+	 */
+	public static SelectorFunction<LensPosition> external() {
+		return lensPosition(LensPosition.EXTERNAL);
+	}
+
+	private static SelectorFunction<LensPosition> lensPosition(final LensPosition position) {
+		return new SelectorFunction<LensPosition>() {
+			@Override
+			public LensPosition select(Collection<LensPosition> availablePositions) {
+				return availablePositions.contains(position)
+						? position
+						: null;
+			}
+		};
 	}
 
 }

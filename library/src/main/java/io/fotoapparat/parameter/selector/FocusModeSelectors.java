@@ -1,5 +1,7 @@
 package io.fotoapparat.parameter.selector;
 
+import java.util.Collection;
+
 import io.fotoapparat.parameter.FocusMode;
 
 /**
@@ -12,7 +14,14 @@ public class FocusModeSelectors {
      * it is not available - provides {@code null}.
      */
     public static SelectorFunction<FocusMode> focusMode(final FocusMode focusMode) {
-        return Selectors.single(focusMode);
+        return new SelectorFunction<FocusMode>() {
+            @Override
+            public FocusMode select(Collection<FocusMode> items) {
+                return items.contains(focusMode)
+                        ? focusMode
+                        : null;
+            }
+        };
     }
 
 }
