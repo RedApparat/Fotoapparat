@@ -17,7 +17,7 @@ public class AspectRatioSelectorsTest {
 	AspectRatioSelectors testee;
 
 	@Test
-	public void focusMode_Available() throws Exception {
+	public void standard_Available() throws Exception {
 		// Given
 		Set<AspectRatio> availableModes = asSet(
 				AspectRatio.STANDARD_4_3,
@@ -26,7 +26,7 @@ public class AspectRatioSelectorsTest {
 
 		// When
 		AspectRatio result = AspectRatioSelectors
-				.aspectRatio(AspectRatio.STANDARD_4_3)
+				.standard()
 				.select(availableModes);
 
 		// Then
@@ -37,7 +37,7 @@ public class AspectRatioSelectorsTest {
 	}
 
 	@Test
-	public void focusMode_NotAvailable() throws Exception {
+	public void standard_NotAvailable() throws Exception {
 		// Given
 		Set<AspectRatio> availableModes = asSet(
 				AspectRatio.WIDE_16_9
@@ -45,7 +45,43 @@ public class AspectRatioSelectorsTest {
 
 		// When
 		AspectRatio result = AspectRatioSelectors
-				.aspectRatio(AspectRatio.STANDARD_4_3)
+				.standard()
+				.select(availableModes);
+
+		// Then
+		assertNull(result);
+	}
+
+	@Test
+	public void wide_Available() throws Exception {
+		// Given
+		Set<AspectRatio> availableModes = asSet(
+				AspectRatio.STANDARD_4_3,
+				AspectRatio.WIDE_16_9
+		);
+
+		// When
+		AspectRatio result = AspectRatioSelectors
+				.wide()
+				.select(availableModes);
+
+		// Then
+		assertEquals(
+				AspectRatio.WIDE_16_9,
+				result
+		);
+	}
+
+	@Test
+	public void wide_NotAvailable() throws Exception {
+		// Given
+		Set<AspectRatio> availableModes = asSet(
+				AspectRatio.STANDARD_4_3
+		);
+
+		// When
+		AspectRatio result = AspectRatioSelectors
+				.wide()
 				.select(availableModes);
 
 		// Then

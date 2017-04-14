@@ -1,7 +1,5 @@
 package io.fotoapparat.parameter.selector;
 
-import java.util.Collection;
-
 import io.fotoapparat.parameter.Flash;
 
 /**
@@ -14,14 +12,7 @@ public class FlashSelectors {
 	 * not available or flash unit is not available - provides {@code null}.
 	 */
 	public static SelectorFunction<Flash> flash(final Flash flash) {
-		return new SelectorFunction<Flash>() {
-			@Override
-			public Flash select(Collection<Flash> items) {
-				return items.contains(flash)
-						? flash
-						: null;
-			}
-		};
+		return Selectors.single(flash);
 	}
 
 }

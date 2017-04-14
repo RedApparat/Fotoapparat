@@ -1,7 +1,5 @@
 package io.fotoapparat.parameter.selector;
 
-import java.util.Collection;
-
 import io.fotoapparat.parameter.LensPosition;
 
 /**
@@ -34,14 +32,7 @@ public class LensPositionSelectors {
 	}
 
 	private static SelectorFunction<LensPosition> lensPosition(final LensPosition position) {
-		return new SelectorFunction<LensPosition>() {
-			@Override
-			public LensPosition select(Collection<LensPosition> availablePositions) {
-				return availablePositions.contains(position)
-						? position
-						: null;
-			}
-		};
+		return Selectors.single(position);
 	}
 
 }
