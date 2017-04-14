@@ -9,7 +9,7 @@ import io.fotoapparat.parameter.FocusMode;
 import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("deprecation")
-public class FocusCapabilityTest {
+public class FocusConverterTest {
 
 	@Test
 	public void toFocusMode() throws Exception {

@@ -1,15 +1,12 @@
 package io.fotoapparat.hardware.v2.capabilities;
 
 import android.annotation.SuppressLint;
-import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraMetadata;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.util.BidirectionalHashMap;
@@ -20,7 +17,7 @@ import io.fotoapparat.util.BidirectionalHashMap;
  */
 @SuppressLint("UseSparseArrays")
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class FocusCapability {
+public class FocusConverter {
 
 	private final static BidirectionalHashMap<Integer, FocusMode> AF_MODE_FOCUS_MAP;
 
@@ -34,12 +31,6 @@ public class FocusCapability {
 				FocusMode.CONTINUOUS_FOCUS);
 
 		AF_MODE_FOCUS_MAP = new BidirectionalHashMap<>(afModeFocusMap);
-	}
-
-	private final Characteristics characteristics;
-
-	public FocusCapability(Characteristics characteristics) {
-		this.characteristics = characteristics;
 	}
 
 	/**
@@ -74,23 +65,5 @@ public class FocusCapability {
 		return afMode;
 	}
 
-	/**
-	 * Returns the available Focus Modes for the given {@link CameraCharacteristics}.
-	 *
-	 * @return A set of available Focus Modes of a {@link android.hardware.camera2.CameraDevice}.
-	 */
-	@SuppressWarnings("ConstantConditions")
-	Set<FocusMode> availableFocusModes() {
-		CameraCharacteristics cameraCharacteristics = characteristics.getCameraCharacteristics();
-
-		int[] afModes = cameraCharacteristics.get(CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES);
-
-		Set<FocusMode> focusModes = new HashSet<>();
-		for (int afMode : afModes) {
-			focusModes.add(FocusCapability.afModeToFocus(afMode));
-		}
-
-		return focusModes;
-	}
 
 }

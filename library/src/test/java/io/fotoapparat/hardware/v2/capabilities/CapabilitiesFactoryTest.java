@@ -1,5 +1,6 @@
 package io.fotoapparat.hardware.v2.capabilities;
 
+import android.hardware.camera2.CameraMetadata;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
@@ -14,7 +15,6 @@ import java.util.Set;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
-import io.fotoapparat.parameter.Size;
 
 import static io.fotoapparat.test.TestUtils.asSet;
 import static junit.framework.Assert.assertEquals;
@@ -23,11 +23,6 @@ import static org.mockito.BDDMockito.given;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 @RunWith(MockitoJUnitRunner.class)
 public class CapabilitiesFactoryTest {
-	private static final Set<Size> SIZE_SET = asSet(
-			new Size(4032, 3024),
-			new Size(7680, 4320),
-			new Size(1280, 720)
-	);
 	private static final Set<Flash> FLASH_SET = asSet(
 			Flash.OFF,
 			Flash.TORCH,
@@ -44,31 +39,41 @@ public class CapabilitiesFactoryTest {
 	);
 
 	@Mock
-	SizeCapability sizeCapability;
-	@Mock
-	FlashCapability flashCapability;
-	@Mock
-	FocusCapability focusCapability;
+	Characteristics characteristics;
 	@InjectMocks
 	CapabilitiesFactory testee;
 
 	@Test
 	public void testSets() throws Exception {
 		// Given
-		given(sizeCapability.availableJpegSizes())
-				.willReturn(SIZE_SET);
+		given(characteristics.getJpegOutputSizes())
+				.willReturn(new android.util.Size[]{});
 
-		given(flashCapability.availableFlashModes())
-				.willReturn(FLASH_SET);
+		given(characteristics.isFlashAvailable())
+				.willReturn(true);
+		given(characteristics.autoExposureModes())
+				.willReturn(new int[]{
+						CameraMetadata.CONTROL_AE_MODE_ON_ALWAYS_FLASH,
+						CameraMetadata.CONTROL_AE_MODE_ON_AUTO_FLASH,
+						CameraMetadata.CONTROL_AE_MODE_ON_AUTO_FLASH_REDEYE
+				});
 
-		given(focusCapability.availableFocusModes())
-				.willReturn(FOCUS_MODE_SET);
+		given(characteristics.autoFocusModes())
+				.willReturn(
+						new int[]{
+								CameraMetadata.CONTROL_AF_MODE_OFF,
+								CameraMetadata.CONTROL_AF_MODE_AUTO,
+								CameraMetadata.CONTROL_AF_MODE_MACRO,
+								CameraMetadata.CONTROL_AF_MODE_CONTINUOUS_VIDEO,
+								CameraMetadata.CONTROL_AF_MODE_CONTINUOUS_PICTURE,
+								CameraMetadata.CONTROL_AF_MODE_EDOF
+						}
+				);
 
 		// When
 		Capabilities capabilities = testee.getCapabilities();
 
 		// Then
-		assertEquals(SIZE_SET, capabilities.supportedSizes());
 		assertEquals(FOCUS_MODE_SET, capabilities.supportedFocusModes());
 		assertEquals(FLASH_SET, capabilities.supportedFlashModes());
 

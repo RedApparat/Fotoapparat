@@ -30,17 +30,37 @@ public class SizeSelectors {
 	}
 
 	/**
-	 * @param aspectRatio The aspect ratio to be taken into responsibility.
+	 * @param aspectRatioSelectorFunction The aspect ratio to be taken into responsibility.
 	 * @return {@link SelectorFunction} which always provides the biggest size of the requested
 	 * Aspect ratio.
 	 */
-	public static SelectorFunction<Size> biggestSize(final AspectRatio aspectRatio) {
+	public static SelectorFunction<Size> biggestSize(final SelectorFunction<AspectRatio> aspectRatioSelectorFunction) {
 		return new SelectorFunction<Size>() {
 			@Override
 			public Size select(Collection<Size> items) {
-				return Collections.max(filterByRatio(items, aspectRatio), COMPARATOR_BY_AREA);
+
+				AspectRatio aspectRatio = aspectRatioSelectorFunction.select(findAspectRatios(items));
+				if (aspectRatio == null) {
+					return null;
+				}
+				List<Size> filteredSizes = filterByRatio(items, aspectRatio);
+
+				return Collections.max(filteredSizes, COMPARATOR_BY_AREA);
 			}
 		};
+	}
+
+	private static Collection<AspectRatio> findAspectRatios(Collection<Size> sizes) {
+		List<AspectRatio> availableAspectRatios = new ArrayList<>();
+		for (AspectRatio aspectRatio : AspectRatio.values()) {
+			for (Size size : sizes) {
+				if (FloatUtils.areEqual((float) size.width / size.height, aspectRatio.ratioValue)) {
+					availableAspectRatios.add(aspectRatio);
+					break;
+				}
+			}
+		}
+		return availableAspectRatios;
 	}
 
 	private static List<Size> filterByRatio(Collection<Size> sizes, AspectRatio aspectRatio) {

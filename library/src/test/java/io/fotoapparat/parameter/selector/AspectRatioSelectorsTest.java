@@ -26,7 +26,7 @@ public class AspectRatioSelectorsTest {
 
 		// When
 		AspectRatio result = AspectRatioSelectors
-				.standard()
+				.standardRatio()
 				.select(availableModes);
 
 		// Then
@@ -45,7 +45,7 @@ public class AspectRatioSelectorsTest {
 
 		// When
 		AspectRatio result = AspectRatioSelectors
-				.standard()
+				.standardRatio()
 				.select(availableModes);
 
 		// Then
@@ -62,7 +62,7 @@ public class AspectRatioSelectorsTest {
 
 		// When
 		AspectRatio result = AspectRatioSelectors
-				.wide()
+				.wideRatio()
 				.select(availableModes);
 
 		// Then
@@ -81,7 +81,7 @@ public class AspectRatioSelectorsTest {
 
 		// When
 		AspectRatio result = AspectRatioSelectors
-				.wide()
+				.wideRatio()
 				.select(availableModes);
 
 		// Then

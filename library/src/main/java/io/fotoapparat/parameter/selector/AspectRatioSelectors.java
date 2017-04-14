@@ -12,7 +12,7 @@ public class AspectRatioSelectors {
 	 * available.
 	 * Otherwise provides {@code null}.
 	 */
-	public static SelectorFunction<AspectRatio> standard() {
+	public static SelectorFunction<AspectRatio> standardRatio() {
 		return Selectors.single(AspectRatio.STANDARD_4_3);
 	}
 
@@ -21,7 +21,7 @@ public class AspectRatioSelectors {
 	 * available.
 	 * Otherwise provides {@code null}.
 	 */
-	public static SelectorFunction<AspectRatio> wide() {
+	public static SelectorFunction<AspectRatio> wideRatio() {
 		return Selectors.single(AspectRatio.WIDE_16_9);
 	}
 

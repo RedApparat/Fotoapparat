@@ -51,10 +51,7 @@ public class OrientationManager implements OrientationOperator {
 	 */
 	@SuppressWarnings("ConstantConditions")
 	public Integer getSensorOrientation() {
-		android.hardware.camera2.CameraCharacteristics cameraCharacteristics = this.characteristics.getCameraCharacteristics();
-		Integer sensorOrientation = cameraCharacteristics.get(android.hardware.camera2.CameraCharacteristics.SENSOR_ORIENTATION);
-
-		return (sensorOrientation - orientation + 360) % 360;
+		return (characteristics.getSensorOrientation() - orientation + 360) % 360;
 	}
 
 	/**

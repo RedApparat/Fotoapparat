@@ -7,8 +7,10 @@ import java.util.List;
 import io.fotoapparat.parameter.AspectRatio;
 import io.fotoapparat.parameter.Size;
 
+import static io.fotoapparat.parameter.selector.AspectRatioSelectors.wideRatio;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 public class SizeSelectorsTest {
 
@@ -44,7 +46,7 @@ public class SizeSelectorsTest {
 
 		// When
 		Size result = SizeSelectors
-				.biggestSize(AspectRatio.WIDE_16_9)
+				.biggestSize(wideRatio())
 				.select(availableSizes);
 
 		// Then
@@ -54,4 +56,22 @@ public class SizeSelectorsTest {
 		);
 	}
 
+	@Test
+	public void getNothing() throws Exception {
+		// Given
+		List<Size> availableSizes = asList(
+				new Size(4032, 3024),
+				new Size(7680, 4320),
+				new Size(1280, 720)
+		);
+
+		// When
+		Size result = SizeSelectors
+				.biggestSize(Selectors.<AspectRatio>nothing())
+				.select(availableSizes);
+
+		// Then
+		assertNull(result);
+
+	}
 }

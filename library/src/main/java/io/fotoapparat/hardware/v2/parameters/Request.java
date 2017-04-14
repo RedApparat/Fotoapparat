@@ -13,9 +13,9 @@ import java.util.List;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 
-import static io.fotoapparat.hardware.v2.capabilities.FlashCapability.flashToAutoExposureMode;
-import static io.fotoapparat.hardware.v2.capabilities.FlashCapability.flashToFiringMode;
-import static io.fotoapparat.hardware.v2.capabilities.FocusCapability.focusToAfMode;
+import static io.fotoapparat.hardware.v2.capabilities.FlashConverter.flashToAutoExposureMode;
+import static io.fotoapparat.hardware.v2.capabilities.FlashConverter.flashToFiringMode;
+import static io.fotoapparat.hardware.v2.capabilities.FocusConverter.focusToAfMode;
 
 /**
  * A wrapper around {@link CaptureRequest}.
@@ -35,7 +35,7 @@ class Request {
 	private final Integer sensorOrientation;
 	private CaptureRequest.Builder captureRequest;
 
-	Request(CameraDevice cameraDevice,
+	private Request(CameraDevice cameraDevice,
 			int requestTemplate,
 			List<Surface> surfaces,
 			boolean shouldTriggerAutoFocus,

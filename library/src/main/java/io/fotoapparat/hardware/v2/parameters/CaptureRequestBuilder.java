@@ -106,7 +106,7 @@ class CaptureRequestBuilder {
 	}
 
 	private void validate() {
-		if (surfaces == null) {
+		if (surfaces == null || surfaces.isEmpty()) {
 			throw new IllegalStateException("Surface is mandatory.");
 		}
 		if (shouldSetExposureMode && flash == null) {

@@ -19,12 +19,10 @@ import io.fotoapparat.hardware.v2.parameters.SizeProvider;
 public class ContinuousSurfaceReader
 		implements OnImageAcquiredObserver, ImageReader.OnImageAvailableListener {
 
-	private final SizeProvider sizeProvider;
 	private ImageReader imageReader;
 	private OnFrameAcquiredListener listener;
 
 	public ContinuousSurfaceReader(SizeProvider sizeProvider) {
-		this.sizeProvider = sizeProvider;
 	}
 
 	private static byte[] YUV_420_888toNV21(Image image) {
