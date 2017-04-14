@@ -23,7 +23,7 @@ public class LensPositionSelectorsTest {
 
 		// When
 		LensPosition result = LensPositionSelectors
-				.lensPosition(LensPosition.FRONT)
+				.front()
 				.select(availablePositions);
 
 		// Then
@@ -43,7 +43,7 @@ public class LensPositionSelectorsTest {
 
 		// When
 		LensPosition result = LensPositionSelectors
-				.lensPosition(LensPosition.FRONT)
+				.front()
 				.select(availablePositions);
 
 		// Then
@@ -61,7 +61,7 @@ public class LensPositionSelectorsTest {
 
 		// When
 		LensPosition result = LensPositionSelectors
-				.lensPosition(LensPosition.BACK)
+				.back()
 				.select(availablePositions);
 
 		// Then
@@ -81,7 +81,7 @@ public class LensPositionSelectorsTest {
 
 		// When
 		LensPosition result = LensPositionSelectors
-				.lensPosition(LensPosition.BACK)
+				.back()
 				.select(availablePositions);
 
 		// Then
@@ -99,7 +99,7 @@ public class LensPositionSelectorsTest {
 
 		// When
 		LensPosition result = LensPositionSelectors
-				.lensPosition(LensPosition.EXTERNAL)
+				.external()
 				.select(availablePositions);
 
 		// Then
@@ -119,7 +119,7 @@ public class LensPositionSelectorsTest {
 
 		// When
 		LensPosition result = LensPositionSelectors
-				.lensPosition(LensPosition.EXTERNAL)
+				.external()
 				.select(availablePositions);
 
 		// Then
