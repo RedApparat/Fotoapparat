@@ -1,4 +1,4 @@
-package io.fotoapparat.hardware.v2.capabilities;
+package io.fotoapparat.hardware.v2.parameters.converters;
 
 import android.annotation.SuppressLint;
 import android.hardware.camera2.CameraMetadata;

@@ -4,6 +4,7 @@ import android.hardware.camera2.CameraMetadata;
 
 import org.junit.Test;
 
+import io.fotoapparat.hardware.v2.parameters.converters.FocusConverter;
 import io.fotoapparat.parameter.FocusMode;
 
 import static junit.framework.Assert.assertEquals;

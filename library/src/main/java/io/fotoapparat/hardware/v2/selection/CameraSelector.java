@@ -9,7 +9,7 @@ import android.support.annotation.RequiresApi;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.parameter.LensPosition;
 
-import static io.fotoapparat.hardware.v2.capabilities.LensPositionConverter.toLensFacingConstant;
+import static io.fotoapparat.hardware.v2.parameters.converters.LensPositionConverter.toLensFacingConstant;
 
 /**
  * Finds the device's camera from the {@link android.hardware.camera2.CameraManager}.

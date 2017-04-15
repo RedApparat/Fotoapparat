@@ -1,4 +1,4 @@
-package io.fotoapparat.hardware.v2.capabilities;
+package io.fotoapparat.hardware.v2.parameters.converters;
 
 import android.hardware.camera2.CameraCharacteristics;
 import android.os.Build;

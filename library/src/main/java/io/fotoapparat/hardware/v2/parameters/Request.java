@@ -13,9 +13,9 @@ import java.util.List;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 
-import static io.fotoapparat.hardware.v2.capabilities.FlashConverter.flashToAutoExposureMode;
-import static io.fotoapparat.hardware.v2.capabilities.FlashConverter.flashToFiringMode;
-import static io.fotoapparat.hardware.v2.capabilities.FocusConverter.focusToAfMode;
+import static io.fotoapparat.hardware.v2.parameters.converters.FlashConverter.flashToAutoExposureMode;
+import static io.fotoapparat.hardware.v2.parameters.converters.FlashConverter.flashToFiringMode;
+import static io.fotoapparat.hardware.v2.parameters.converters.FocusConverter.focusToAfMode;
 
 /**
  * A wrapper around {@link CaptureRequest}.

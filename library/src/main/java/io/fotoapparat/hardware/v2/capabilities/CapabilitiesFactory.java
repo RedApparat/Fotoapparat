@@ -10,11 +10,12 @@ import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
+import io.fotoapparat.hardware.v2.parameters.converters.FocusConverter;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
 
-import static io.fotoapparat.hardware.v2.capabilities.FlashConverter.exposureModeToFlash;
+import static io.fotoapparat.hardware.v2.parameters.converters.FlashConverter.exposureModeToFlash;
 
 /**
  * Creates the {@link Capabilities} of a {@link io.fotoapparat.hardware.v2.Camera2}.

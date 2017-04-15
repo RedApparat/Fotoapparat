@@ -15,7 +15,7 @@ import java.util.Set;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.parameter.LensPosition;
 
-import static io.fotoapparat.hardware.v2.capabilities.LensPositionConverter.toLensPosition;
+import static io.fotoapparat.hardware.v2.parameters.converters.LensPositionConverter.toLensPosition;
 
 /**
  * Provides available {@link LensPosition} using Camera v2 API.
