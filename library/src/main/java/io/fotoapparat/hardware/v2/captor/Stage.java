@@ -1,4 +1,4 @@
-package io.fotoapparat.hardware.v2.captor.routine;
+package io.fotoapparat.hardware.v2.captor;
 
 /**
  * The stage of a photo capturing routine.

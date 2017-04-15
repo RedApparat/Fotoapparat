@@ -9,7 +9,7 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.v2.Camera2;
 import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.capabilities.Characteristics;
-import io.fotoapparat.hardware.v2.captor.routine.CapturingRoutine;
+import io.fotoapparat.hardware.v2.captor.CapturingRoutine;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;

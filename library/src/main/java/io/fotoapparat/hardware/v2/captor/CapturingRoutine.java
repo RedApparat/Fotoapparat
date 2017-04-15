@@ -1,4 +1,4 @@
-package io.fotoapparat.hardware.v2.captor.routine;
+package io.fotoapparat.hardware.v2.captor;
 
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CaptureRequest;
