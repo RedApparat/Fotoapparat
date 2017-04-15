@@ -11,7 +11,8 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.util.BidirectionalHashMap;
 
 /**
- *
+ * Facilitates interactions between Android native {@link android.hardware.camera2.CaptureRequest#CONTROL_AE_MODE}
+ * flash firing modes and {@link io.fotoapparat.Fotoapparat}'s {@link Flash}.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class FlashConverter {
@@ -48,6 +49,14 @@ public class FlashConverter {
 		return FLASH_EXPOSURE_MAP.forward().get(flash);
 	}
 
+	/**
+	 * Converts a Android native {@link android.hardware.camera2.CaptureRequest#CONTROL_AE_MODE} to
+	 * a {@link Flash}.
+	 *
+	 * @param exposureMode The native Android {@link android.hardware.camera2.CaptureRequest#CONTROL_AE_MODE}
+	 *                     value.
+	 * @return The {@link io.fotoapparat.Fotoapparat}'s camera {@link Flash} value.
+	 */
 	public static Flash exposureModeToFlash(int exposureMode) {
 		return FLASH_EXPOSURE_MAP.reversed().get(exposureMode);
 	}
