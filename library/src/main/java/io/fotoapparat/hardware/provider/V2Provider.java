@@ -9,7 +9,6 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.v2.Camera2;
 import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.capabilities.Characteristics;
-import io.fotoapparat.hardware.v2.captor.PictureCaptor;
 import io.fotoapparat.hardware.v2.captor.routine.CapturingRoutine;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
@@ -81,13 +80,9 @@ public class V2Provider implements CameraProvider {
 
 		CapturingRoutine capturingRoutine = new CapturingRoutine(
 				captureRequestFactory,
-				stillSurfaceReader
-		);
-
-		PictureCaptor pictureCaptor = new PictureCaptor(
+				stillSurfaceReader,
 				sessionManager,
-				capturingRoutine,
-				orientationManager
+				characteristics
 		);
 
 		return new Camera2(
@@ -97,7 +92,7 @@ public class V2Provider implements CameraProvider {
 				orientationManager,
 				parametersManager,
 				new CapabilitiesFactory(characteristics),
-				pictureCaptor,
+				capturingRoutine,
 				new PreviewStream2(continuousSurfaceReader)
 		);
 	}

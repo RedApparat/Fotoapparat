@@ -10,17 +10,18 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.hardware.Capabilities;
-import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
-import io.fotoapparat.hardware.v2.captor.PictureCaptor;
-import io.fotoapparat.hardware.v2.connection.CameraConnection;
-import io.fotoapparat.hardware.v2.orientation.OrientationManager;
-import io.fotoapparat.hardware.v2.parameters.ParametersManager;
-import io.fotoapparat.hardware.v2.session.SessionManager;
-import io.fotoapparat.hardware.v2.surface.TextureManager;
+import io.fotoapparat.hardware.operators.CapabilitiesOperator;
+import io.fotoapparat.hardware.operators.CaptureOperator;
+import io.fotoapparat.hardware.operators.ConnectionOperator;
+import io.fotoapparat.hardware.operators.OrientationOperator;
+import io.fotoapparat.hardware.operators.ParametersOperator;
+import io.fotoapparat.hardware.operators.PreviewOperator;
+import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.photo.Photo;
+import io.fotoapparat.preview.PreviewStream;
 
 import static java.util.Collections.singleton;
 import static junit.framework.Assert.assertEquals;
@@ -32,19 +33,21 @@ import static org.mockito.Mockito.verify;
 public class Camera2Test {
 
 	@Mock
-	OrientationManager orientationManager;
+	ConnectionOperator connectionOperator;
 	@Mock
-	TextureManager textureManager;
+	PreviewOperator previewOperator;
 	@Mock
-	CapabilitiesFactory capabilitiesFactory;
+	SurfaceOperator surfaceOperator;
 	@Mock
-	CameraConnection connection;
+	OrientationOperator orientationOperator;
 	@Mock
-	ParametersManager parametersManager;
+	ParametersOperator parametersOperator;
 	@Mock
-	SessionManager sessionManager;
+	CapabilitiesOperator capabilitiesOperator;
 	@Mock
-	PictureCaptor pictureCaptor;
+	CaptureOperator captureOperator;
+	@Mock
+	PreviewStream previewStream;
 
 	@InjectMocks
 	Camera2 testee;
@@ -55,7 +58,7 @@ public class Camera2Test {
 		testee.open(LensPosition.FRONT);
 
 		// Then
-		verify(connection).open(LensPosition.FRONT);
+		verify(connectionOperator).open(LensPosition.FRONT);
 	}
 
 	@Test
@@ -64,7 +67,7 @@ public class Camera2Test {
 		testee.close();
 
 		// Then
-		verify(connection).close();
+		verify(connectionOperator).close();
 	}
 
 	@Test
@@ -73,7 +76,7 @@ public class Camera2Test {
 		testee.startPreview();
 
 		// Then
-		verify(sessionManager).startPreview();
+		verify(previewOperator).startPreview();
 	}
 
 	@Test
@@ -82,7 +85,7 @@ public class Camera2Test {
 		testee.stopPreview();
 
 		// Then
-		verify(sessionManager).stopPreview();
+		verify(previewOperator).stopPreview();
 	}
 
 	@Test
@@ -92,7 +95,7 @@ public class Camera2Test {
 		testee.setDisplaySurface(textureView);
 
 		// Then
-		verify(textureManager).setDisplaySurface(textureView);
+		verify(surfaceOperator).setDisplaySurface(textureView);
 	}
 
 	@Test
@@ -101,7 +104,7 @@ public class Camera2Test {
 		testee.setDisplayOrientation(90);
 
 		// Then
-		verify(orientationManager).setDisplayOrientation(90);
+		verify(orientationOperator).setDisplayOrientation(90);
 	}
 
 	@Test
@@ -111,7 +114,7 @@ public class Camera2Test {
 		testee.updateParameters(parameters);
 
 		// Then
-		verify(parametersManager).updateParameters(parameters);
+		verify(parametersOperator).updateParameters(parameters);
 	}
 
 	@Test
@@ -122,7 +125,7 @@ public class Camera2Test {
 				singleton(FocusMode.MACRO),
 				null
 		);
-		given(capabilitiesFactory.getCapabilities())
+		given(capabilitiesOperator.getCapabilities())
 				.willReturn(capabilities);
 
 		// When
@@ -136,7 +139,7 @@ public class Camera2Test {
 	public void takePicture() throws Exception {
 		// Given
 		Photo photo = new Photo(new byte[0], 0);
-		given(pictureCaptor.takePicture())
+		given(captureOperator.takePicture())
 				.willReturn(photo);
 
 		// When

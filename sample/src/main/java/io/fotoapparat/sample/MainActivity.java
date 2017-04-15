@@ -1,5 +1,6 @@
 package io.fotoapparat.sample;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import java.io.File;
 
 import io.fotoapparat.Fotoapparat;
+import io.fotoapparat.hardware.provider.V2Provider;
 import io.fotoapparat.log.LogcatLogger;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
@@ -18,10 +20,10 @@ import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.view.CameraView;
 
+import static io.fotoapparat.parameter.selector.AspectRatioSelectors.standardRatio;
 import static io.fotoapparat.parameter.selector.FlashSelectors.flash;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.focusMode;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.back;
-import static io.fotoapparat.parameter.selector.LensPositionSelectors.front;
 import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 
@@ -36,27 +38,27 @@ public class MainActivity extends AppCompatActivity {
 
 		CameraView cameraView = (CameraView) findViewById(R.id.camera_view);
 
-		fotoapparat = Fotoapparat
-				.with(this)
-				.into(cameraView)
-				.photoSize(biggestSize())
-				.lensPosition(firstAvailable(
-						front(),
-						back()
-				))
-				.focusMode(firstAvailable(
-						focusMode(FocusMode.CONTINUOUS_FOCUS),
-						focusMode(FocusMode.AUTO),
-						focusMode(FocusMode.FIXED)
-				))
-				.flash(firstAvailable(
-						flash(Flash.AUTO_RED_EYE),
-						flash(Flash.AUTO),
-						flash(Flash.ON)
-				))
-				.frameProcessor(new SampleFrameProcessor())
-				.logger(new LogcatLogger())
-				.build();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			fotoapparat = Fotoapparat
+					.with(this)
+					.into(cameraView)
+					.cameraProvider(new V2Provider(this))
+					.photoSize(biggestSize(standardRatio()))
+					.lensPosition(back())
+					.focusMode(firstAvailable(
+							focusMode(FocusMode.CONTINUOUS_FOCUS),
+							focusMode(FocusMode.AUTO),
+							focusMode(FocusMode.FIXED)
+					))
+					.flash(firstAvailable(
+							flash(Flash.AUTO_RED_EYE),
+							flash(Flash.AUTO),
+							flash(Flash.TORCH)
+					))
+					.frameProcessor(new SampleFrameProcessor())
+					.logger(new LogcatLogger())
+					.build();
+		}
 
 		cameraView.setOnClickListener(new View.OnClickListener() {
 			@Override

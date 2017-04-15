@@ -5,37 +5,59 @@ import android.hardware.camera2.CaptureRequest;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
+import io.fotoapparat.hardware.CameraException;
+import io.fotoapparat.hardware.operators.CaptureOperator;
 import io.fotoapparat.hardware.v2.CameraThread;
+import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.session.Session;
+import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.hardware.v2.surface.StillSurfaceReader;
+import io.fotoapparat.photo.Photo;
 
 /**
  * Performs a picture capturing routing.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class CapturingRoutine {
+public class CapturingRoutine implements CaptureOperator {
 
 	private final CaptureRequestFactory captureRequestFactory;
 	private final StillSurfaceReader surfaceReader;
+	private final SessionManager sessionManager;
+	private final Characteristics characteristics;
 
 	public CapturingRoutine(CaptureRequestFactory captureRequestFactory,
-							StillSurfaceReader surfaceReader) {
+							StillSurfaceReader surfaceReader,
+							SessionManager sessionManager,
+							Characteristics characteristics) {
 		this.captureRequestFactory = captureRequestFactory;
 		this.surfaceReader = surfaceReader;
+		this.sessionManager = sessionManager;
+		this.characteristics = characteristics;
 	}
 
 	/**
 	 * Will start a photo capturing routing which will block the current thread until the photo has
 	 * been captured.
 	 *
-	 * @param session           The current preview or normal {@link Session}.
-	 * @param sensorOrientation The orientation of the moment of the capture.
-	 * @return The Image as byte array.
-	 * @throws CameraAccessException If the camera device has been disconnected.
+	 * @return a new Photo
 	 */
-	public byte[] capturePicture(Session session,
-								 Integer sensorOrientation) throws CameraAccessException {
+	@Override
+	public Photo takePicture() {
+		byte[] photoBytes;
+
+		try {
+			photoBytes = capturePicture();
+		} catch (CameraAccessException e) {
+			throw new CameraException(e);
+		}
+
+		return new Photo(photoBytes, 0);
+	}
+
+	private byte[] capturePicture() throws CameraAccessException {
+		Session session = sessionManager.getCaptureSession();
+		Integer sensorOrientation = characteristics.getSensorOrientation();
 
 		Stage stage = Stage.UNFOCUSED;
 		while (stage != Stage.CAPTURE_COMPLETED) {
@@ -79,4 +101,5 @@ public class CapturingRoutine {
 
 		return stageCallback.getCaptureStage();
 	}
+
 }

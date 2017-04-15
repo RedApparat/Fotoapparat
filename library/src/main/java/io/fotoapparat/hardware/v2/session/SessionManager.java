@@ -7,6 +7,7 @@ import android.view.Surface;
 
 import java.util.Arrays;
 
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
@@ -67,7 +68,7 @@ public class SessionManager implements PreviewOperator, CameraConnection.Listene
 			previewSession.startPreview();
 			session = previewSession;
 		} catch (CameraAccessException e) {
-			// TODO: 09.04.17
+			throw new CameraException(e);
 		}
 	}
 
