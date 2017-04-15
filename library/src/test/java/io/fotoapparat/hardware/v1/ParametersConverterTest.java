@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("deprecation")
-public class ParametersProviderTest {
+public class ParametersConverterTest {
 
     @Mock
     Camera.Parameters outputParameters;

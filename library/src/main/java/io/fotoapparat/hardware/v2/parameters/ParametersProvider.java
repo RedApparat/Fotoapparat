@@ -17,13 +17,13 @@ import static io.fotoapparat.parameter.Parameters.Type.FOCUS_MODE;
 public class ParametersProvider implements ParametersOperator {
 
 	/**
-	 * Max preview width that is guaranteed by Camera2 API
-	 */
-	private static final int MAX_PREVIEW_WIDTH = 1920;
-	/**
 	 * Max preview height that is guaranteed by Camera2 API
 	 */
-	private static final int MAX_PREVIEW_HEIGHT = 1080;
+	static final int MAX_PREVIEW_HEIGHT = 1080;
+	/**
+	 * Max preview width that is guaranteed by Camera2 API
+	 */
+	static final int MAX_PREVIEW_WIDTH = 1920;
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
 	private Parameters parameters;
 
@@ -73,6 +73,26 @@ public class ParametersProvider implements ParametersOperator {
 	 */
 	public Size getStillCaptureSize() {
 		return getParameters().getValue(Parameters.Type.PICTURE_SIZE);
+	}
+
+	/**
+	 * Returns the preview stream size.
+	 *
+	 * @return The size.
+	 */
+	public Size getPreviewSize() {
+		float stillCaptureAspectRatio = getStillCaptureAspectRatio();
+
+		if ((int) (MAX_PREVIEW_HEIGHT * stillCaptureAspectRatio) <= MAX_PREVIEW_WIDTH) {
+			return new Size(
+					(int) (MAX_PREVIEW_HEIGHT * stillCaptureAspectRatio),
+					MAX_PREVIEW_HEIGHT
+			);
+		}
+		return new Size(
+				MAX_PREVIEW_WIDTH,
+				(int) (MAX_PREVIEW_WIDTH / stillCaptureAspectRatio)
+		);
 	}
 
 	/**

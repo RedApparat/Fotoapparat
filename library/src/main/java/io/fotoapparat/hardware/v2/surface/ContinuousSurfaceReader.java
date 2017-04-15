@@ -12,6 +12,7 @@ import java.nio.ByteBuffer;
 import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.hardware.v2.stream.OnImageAcquiredObserver;
+import io.fotoapparat.parameter.Size;
 
 /**
  * Creates a {@link Surface} which can capture continuous events (several frames).
@@ -20,10 +21,12 @@ import io.fotoapparat.hardware.v2.stream.OnImageAcquiredObserver;
 public class ContinuousSurfaceReader
 		implements OnImageAcquiredObserver, ImageReader.OnImageAvailableListener {
 
+	private final ParametersProvider parametersProvider;
 	private ImageReader imageReader;
 	private OnFrameAcquiredListener listener;
 
 	public ContinuousSurfaceReader(ParametersProvider parametersProvider) {
+		this.parametersProvider = parametersProvider;
 	}
 
 	private static byte[] YUV_420_888toNV21(Image image) {
@@ -74,10 +77,12 @@ public class ContinuousSurfaceReader
 	}
 
 	private void createImageReader() {
+		Size previewSize = parametersProvider.getPreviewSize();
+
 		imageReader = ImageReader
 				.newInstance(
-						1440,
-						1080,
+						previewSize.width,
+						previewSize.height,
 						ImageFormat.YUV_420_888,
 						1
 				);
