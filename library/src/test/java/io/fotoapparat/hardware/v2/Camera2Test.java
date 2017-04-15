@@ -148,4 +148,15 @@ public class Camera2Test {
 		// Then
 		assertEquals(photo, returnedPhoto);
 	}
+
+	@Test
+	public void previewStream() throws Exception {
+		// Given
+
+		// When
+		PreviewStream previewStream = testee.getPreviewStream();
+
+		// Then
+		assertEquals(this.previewStream, previewStream);
+	}
 }
