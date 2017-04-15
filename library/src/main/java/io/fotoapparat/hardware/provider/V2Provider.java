@@ -30,7 +30,6 @@ public class V2Provider implements CameraProvider {
 
 	private final CameraManager manager;
 
-	// TODO: 31/03/17 try remove context?
 	public V2Provider(Context context) {
 		manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
 	}
@@ -56,7 +55,8 @@ public class V2Provider implements CameraProvider {
 		);
 
 		StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(parametersProvider);
-		ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(parametersProvider);
+		ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(
+				parametersProvider);
 
 		CaptureRequestFactory captureRequestFactory = new CaptureRequestFactory(
 				cameraConnection,

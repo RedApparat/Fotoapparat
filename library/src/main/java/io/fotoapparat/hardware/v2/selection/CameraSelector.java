@@ -9,6 +9,8 @@ import android.support.annotation.RequiresApi;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.parameter.LensPosition;
 
+import static io.fotoapparat.hardware.v2.capabilities.LensPositionConverter.toLensFacingConstant;
+
 /**
  * Finds the device's camera from the {@link android.hardware.camera2.CameraManager}.
  */
@@ -35,50 +37,21 @@ public class CameraSelector {
 		}
 	}
 
-	@NonNull
 	@SuppressWarnings("ConstantConditions")
 	private String getCameraIdUnsafe(LensPosition lensPosition) throws CameraAccessException {
-		final String[] cameraIdList = manager.getCameraIdList();
+		String[] cameraIdList = manager.getCameraIdList();
+		Integer desiredLensPosition = toLensFacingConstant(lensPosition);
 
 		for (String cameraId : cameraIdList) {
 
 			CameraCharacteristics cameraCharacteristics = manager.getCameraCharacteristics(cameraId);
 			Integer lensFacingConstant = cameraCharacteristics.get(CameraCharacteristics.LENS_FACING);
 
-			if (lensFacingConstant == getCameraCharacteristicPosition(lensPosition)) {
+			if (lensFacingConstant.equals(desiredLensPosition)) {
 				return cameraId;
 			}
 		}
 		throw new CameraException("No camera found with position: " + lensPosition);
 	}
 
-	private int getCameraCharacteristicPosition(LensPosition lensPosition) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			return getCameraCharacteristicPositionM(lensPosition);
-		}
-		return getCameraCharacteristicPositionLollipop(lensPosition);
-	}
-
-	@RequiresApi(api = Build.VERSION_CODES.M)
-	private int getCameraCharacteristicPositionM(LensPosition lensPosition) {
-		switch (lensPosition) {
-			case FRONT:
-				return CameraCharacteristics.LENS_FACING_FRONT;
-			case BACK:
-				return CameraCharacteristics.LENS_FACING_BACK;
-			case EXTERNAL:
-				return CameraCharacteristics.LENS_FACING_EXTERNAL;
-		}
-		throw new IllegalStateException("Cannot return CameraCharacteristic for LensPosition: " + lensPosition);
-	}
-
-	private int getCameraCharacteristicPositionLollipop(LensPosition lensPosition) {
-		switch (lensPosition) {
-			case FRONT:
-				return CameraCharacteristics.LENS_FACING_FRONT;
-			case BACK:
-				return CameraCharacteristics.LENS_FACING_BACK;
-		}
-		throw new IllegalStateException("Cannot return CameraCharacteristic for LensPosition: " + lensPosition);
-	}
 }
