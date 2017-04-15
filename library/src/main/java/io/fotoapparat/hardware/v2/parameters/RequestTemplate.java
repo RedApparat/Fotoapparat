@@ -8,9 +8,6 @@ import android.support.annotation.RequiresApi;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- *
- */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 @Retention(RetentionPolicy.SOURCE)
 @IntDef({CameraDevice.TEMPLATE_PREVIEW,

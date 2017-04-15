@@ -10,7 +10,7 @@ import android.view.Surface;
 import java.nio.ByteBuffer;
 
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.parameters.SizeProvider;
+import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.hardware.v2.stream.OnImageAcquiredObserver;
 
 /**
@@ -23,7 +23,7 @@ public class ContinuousSurfaceReader
 	private ImageReader imageReader;
 	private OnFrameAcquiredListener listener;
 
-	public ContinuousSurfaceReader(SizeProvider sizeProvider) {
+	public ContinuousSurfaceReader(ParametersProvider parametersProvider) {
 	}
 
 	private static byte[] YUV_420_888toNV21(Image image) {

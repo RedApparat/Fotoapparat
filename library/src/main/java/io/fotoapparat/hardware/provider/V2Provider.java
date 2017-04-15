@@ -13,8 +13,7 @@ import io.fotoapparat.hardware.v2.captor.CapturingRoutine;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
-import io.fotoapparat.hardware.v2.parameters.ParametersManager;
-import io.fotoapparat.hardware.v2.parameters.SizeProvider;
+import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.hardware.v2.selection.CameraSelector;
 import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.hardware.v2.stream.PreviewStream2;
@@ -49,24 +48,22 @@ public class V2Provider implements CameraProvider {
 
 		OrientationManager orientationManager = new OrientationManager(characteristics);
 
-		ParametersManager parametersManager = new ParametersManager();
-
-		SizeProvider sizeProvider = new SizeProvider(parametersManager);
+		ParametersProvider parametersProvider = new ParametersProvider();
 
 		TextureManager textureManager = new TextureManager(
 				orientationManager,
-				sizeProvider
+				parametersProvider
 		);
 
-		StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(sizeProvider);
-		ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(sizeProvider);
+		StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(parametersProvider);
+		ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(parametersProvider);
 
 		CaptureRequestFactory captureRequestFactory = new CaptureRequestFactory(
 				cameraConnection,
 				stillSurfaceReader,
 				continuousSurfaceReader,
 				textureManager,
-				parametersManager,
+				parametersProvider,
 				characteristics
 		);
 
@@ -90,7 +87,7 @@ public class V2Provider implements CameraProvider {
 				sessionManager,
 				textureManager,
 				orientationManager,
-				parametersManager,
+				parametersProvider,
 				new CapabilitiesFactory(characteristics),
 				capturingRoutine,
 				new PreviewStream2(continuousSurfaceReader)

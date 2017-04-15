@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.parameters.SizeProvider;
+import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.parameter.Size;
 
 /**
@@ -20,11 +20,11 @@ import io.fotoapparat.parameter.Size;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class StillSurfaceReader {
 
-	private final SizeProvider sizeProvider;
+	private final ParametersProvider parametersProvider;
 	private ImageReader imageReader;
 
-	public StillSurfaceReader(SizeProvider sizeProvider) {
-		this.sizeProvider = sizeProvider;
+	public StillSurfaceReader(ParametersProvider parametersProvider) {
+		this.parametersProvider = parametersProvider;
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class StillSurfaceReader {
 	}
 
 	private void createImageReader() {
-		Size largestSize = sizeProvider.getStillCaptureSize();
+		Size largestSize = parametersProvider.getStillCaptureSize();
 
 		imageReader = ImageReader
 				.newInstance(

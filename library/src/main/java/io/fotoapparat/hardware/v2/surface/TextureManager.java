@@ -13,7 +13,7 @@ import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
-import io.fotoapparat.hardware.v2.parameters.SizeProvider;
+import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.view.TextureListener;
 
 import static java.lang.Math.round;
@@ -27,15 +27,15 @@ public class TextureManager
 
 	private final CountDownLatch surfaceLatch = new CountDownLatch(1);
 	private final OrientationManager orientationManager;
-	private final SizeProvider sizeProvider;
+	private final ParametersProvider parametersProvider;
 	private Surface surface;
 	private TextureView textureView;
 	private SurfaceTexture surfaceTexture;
 
 	public TextureManager(OrientationManager orientationManager,
-						  SizeProvider sizeProvider) {
+						  ParametersProvider parametersProvider) {
 		this.orientationManager = orientationManager;
-		this.sizeProvider = sizeProvider;
+		this.parametersProvider = parametersProvider;
 		orientationManager.setListener(this);
 	}
 
@@ -118,7 +118,7 @@ public class TextureManager
 			return;
 		}
 		int screenOrientation = orientationManager.getScreenOrientation();
-		float aspectRatio = sizeProvider.getStillCaptureAspectRatio();
+		float aspectRatio = parametersProvider.getStillCaptureAspectRatio();
 
 		final Matrix matrix = new Matrix();
 
