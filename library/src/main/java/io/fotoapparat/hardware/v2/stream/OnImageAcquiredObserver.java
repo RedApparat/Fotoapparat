@@ -1,4 +1,4 @@
-package io.fotoapparat.hardware.v2.surface;
+package io.fotoapparat.hardware.v2.stream;
 
 /**
  * Observer which accepts a {@link OnFrameAcquiredListener}.

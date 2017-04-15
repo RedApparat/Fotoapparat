@@ -1,5 +1,7 @@
 package io.fotoapparat.preview;
 
+import java.util.Arrays;
+
 /**
  * Frame of the preview stream.
  */
@@ -20,4 +22,21 @@ public class Frame {
 		this.rotation = rotation;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Frame frame = (Frame) o;
+
+		return rotation == frame.rotation && Arrays.equals(image, frame.image);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Arrays.hashCode(image);
+		result = 31 * result + rotation;
+		return result;
+	}
 }

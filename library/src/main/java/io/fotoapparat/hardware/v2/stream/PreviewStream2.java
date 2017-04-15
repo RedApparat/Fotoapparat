@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import io.fotoapparat.hardware.v2.surface.OnImageAcquiredObserver;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.preview.PreviewStream;

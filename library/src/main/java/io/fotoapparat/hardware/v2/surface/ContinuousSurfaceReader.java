@@ -11,6 +11,7 @@ import java.nio.ByteBuffer;
 
 import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.parameters.SizeProvider;
+import io.fotoapparat.hardware.v2.stream.OnImageAcquiredObserver;
 
 /**
  * Creates a {@link Surface} which can capture continuous events (several frames).
