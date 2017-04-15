@@ -23,7 +23,7 @@ public class FocusModeSelectorsTest {
 
         // When
         FocusMode result = FocusModeSelectors
-                .focusMode(FocusMode.CONTINUOUS_FOCUS)
+                .continuousFocus()
                 .select(availableModes);
 
         // Then
@@ -43,7 +43,7 @@ public class FocusModeSelectorsTest {
 
         // When
         FocusMode result = FocusModeSelectors
-                .focusMode(FocusMode.CONTINUOUS_FOCUS)
+                .continuousFocus()
                 .select(availableModes);
 
         // Then

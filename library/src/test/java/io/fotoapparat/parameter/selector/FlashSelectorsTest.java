@@ -23,7 +23,7 @@ public class FlashSelectorsTest {
 
 		// When
 		Flash result = FlashSelectors
-				.flash(Flash.AUTO_RED_EYE)
+				.autoRedEye()
 				.select(availableModes);
 
 		// Then
@@ -43,12 +43,11 @@ public class FlashSelectorsTest {
 
 		// When
 		Flash result = FlashSelectors
-				.flash(Flash.AUTO_RED_EYE)
+				.autoRedEye()
 				.select(availableModes);
 
 		// Then
 		assertNull(result);
 	}
-
 
 }

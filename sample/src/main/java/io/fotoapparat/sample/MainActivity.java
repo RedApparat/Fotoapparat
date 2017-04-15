@@ -9,8 +9,6 @@ import java.io.File;
 
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.log.LogcatLogger;
-import io.fotoapparat.parameter.Flash;
-import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
@@ -19,8 +17,11 @@ import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.view.CameraView;
 
 import static io.fotoapparat.parameter.selector.AspectRatioSelectors.standardRatio;
-import static io.fotoapparat.parameter.selector.FlashSelectors.flash;
-import static io.fotoapparat.parameter.selector.FocusModeSelectors.focusMode;
+import static io.fotoapparat.parameter.selector.FlashSelectors.autoRedEye;
+import static io.fotoapparat.parameter.selector.FlashSelectors.torch;
+import static io.fotoapparat.parameter.selector.FocusModeSelectors.auto;
+import static io.fotoapparat.parameter.selector.FocusModeSelectors.continuousFocus;
+import static io.fotoapparat.parameter.selector.FocusModeSelectors.fixed;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.back;
 import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
@@ -42,14 +43,14 @@ public class MainActivity extends AppCompatActivity {
 				.photoSize(biggestSize(standardRatio()))
 				.lensPosition(back())
 				.focusMode(firstAvailable(
-						focusMode(FocusMode.CONTINUOUS_FOCUS),
-						focusMode(FocusMode.AUTO),
-						focusMode(FocusMode.FIXED)
+						continuousFocus(),
+						auto(),
+						fixed()
 				))
 				.flash(firstAvailable(
-						flash(Flash.AUTO_RED_EYE),
-						flash(Flash.AUTO),
-						flash(Flash.TORCH)
+						autoRedEye(),
+						auto(),
+						torch()
 				))
 				.frameProcessor(new SampleFrameProcessor())
 				.logger(new LogcatLogger())
