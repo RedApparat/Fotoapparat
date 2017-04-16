@@ -12,8 +12,9 @@ public class Selectors {
 	 * @return function which returns first non-null result from given selectors.
 	 * If there are no non-null results, returns {@code null}.
 	 */
+	@SafeVarargs
 	public static <T> SelectorFunction<T> firstAvailable(final SelectorFunction<T> function,
-														 final SelectorFunction... functions) {
+														 final SelectorFunction<T>... functions) {
 		return new SelectorFunction<T>() {
 
 			@SuppressWarnings("unchecked")
