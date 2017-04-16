@@ -101,8 +101,7 @@ public class ParametersProvider implements ParametersOperator {
 	 * @return The aspect ratio (width/height).
 	 */
 	public float getStillCaptureAspectRatio() {
-		Size captureSize = getStillCaptureSize();
-		return (float) captureSize.width / captureSize.height;
+		return getStillCaptureSize().getAspectRatio();
 	}
 
 }

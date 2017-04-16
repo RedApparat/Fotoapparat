@@ -54,7 +54,7 @@ public class SizeSelectors {
 		List<AspectRatio> availableAspectRatios = new ArrayList<>();
 		for (AspectRatio aspectRatio : AspectRatio.values()) {
 			for (Size size : sizes) {
-				if (FloatUtils.areEqual((float) size.width / size.height, aspectRatio.ratioValue)) {
+				if (FloatUtils.areEqual(size.getAspectRatio(), aspectRatio.ratioValue)) {
 					availableAspectRatios.add(aspectRatio);
 					break;
 				}
@@ -66,7 +66,7 @@ public class SizeSelectors {
 	private static List<Size> filterByRatio(Collection<Size> sizes, AspectRatio aspectRatio) {
 		List<Size> filteredSizes = new ArrayList<>();
 		for (Size size : sizes) {
-			if (FloatUtils.areEqual((float) size.width / size.height, aspectRatio.ratioValue)) {
+			if (FloatUtils.areEqual(size.getAspectRatio(), aspectRatio.ratioValue)) {
 				filteredSizes.add(size);
 			}
 		}

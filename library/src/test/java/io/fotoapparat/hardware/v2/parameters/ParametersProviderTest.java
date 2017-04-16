@@ -85,7 +85,7 @@ public class ParametersProviderTest {
 		// Then
 		assertTrue(previewSize.width <= ParametersProvider.MAX_PREVIEW_WIDTH);
 		assertTrue(previewSize.height <= ParametersProvider.MAX_PREVIEW_HEIGHT);
-		assertEquals(3240f / 1080, (float) previewSize.width / previewSize.height);
+		assertEquals(3240f / 1080, previewSize.getAspectRatio());
 	}
 
 	@Test
@@ -102,6 +102,6 @@ public class ParametersProviderTest {
 		// Then
 		assertTrue(previewSize.width <= ParametersProvider.MAX_PREVIEW_WIDTH);
 		assertTrue(previewSize.height <= ParametersProvider.MAX_PREVIEW_HEIGHT);
-		assertEquals(1080f / 3240f, (float) previewSize.width / previewSize.height);
+		assertEquals(1080f / 3240f, previewSize.getAspectRatio());
 	}
 }
