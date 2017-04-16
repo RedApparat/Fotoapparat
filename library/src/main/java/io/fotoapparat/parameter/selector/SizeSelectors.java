@@ -8,7 +8,6 @@ import java.util.List;
 import io.fotoapparat.parameter.AspectRatio;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.util.CompareSizesByArea;
-import io.fotoapparat.util.FloatUtils;
 
 /**
  * Selector functions for {@link Size}.
@@ -16,6 +15,7 @@ import io.fotoapparat.util.FloatUtils;
 public class SizeSelectors {
 
 	private static final CompareSizesByArea COMPARATOR_BY_AREA = new CompareSizesByArea();
+	private static final double ASPECT_RATIO_EPSILON = 1e-4;
 
 	/**
 	 * @return {@link SelectorFunction} which always provides the biggest size.
@@ -54,7 +54,7 @@ public class SizeSelectors {
 		List<AspectRatio> availableAspectRatios = new ArrayList<>();
 		for (AspectRatio aspectRatio : AspectRatio.values()) {
 			for (Size size : sizes) {
-				if (FloatUtils.areEqual(size.getAspectRatio(), aspectRatio.ratioValue)) {
+				if (aspectRatiosAreClose(size.getAspectRatio(), aspectRatio.ratioValue)) {
 					availableAspectRatios.add(aspectRatio);
 					break;
 				}
@@ -66,11 +66,15 @@ public class SizeSelectors {
 	private static List<Size> filterByRatio(Collection<Size> sizes, AspectRatio aspectRatio) {
 		List<Size> filteredSizes = new ArrayList<>();
 		for (Size size : sizes) {
-			if (FloatUtils.areEqual(size.getAspectRatio(), aspectRatio.ratioValue)) {
+			if (aspectRatiosAreClose(size.getAspectRatio(), aspectRatio.ratioValue)) {
 				filteredSizes.add(size);
 			}
 		}
 		return filteredSizes;
+	}
+
+	private static boolean aspectRatiosAreClose(float a, float b) {
+		return Math.abs(a - b) < ASPECT_RATIO_EPSILON;
 	}
 
 }
