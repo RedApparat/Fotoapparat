@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 		fotoapparat = Fotoapparat
 				.with(this)
 				.into(cameraView)
-				.photoSize(biggestSize(standardRatio()))
+				.photoSize(standardRatio(biggestSize()))
 				.lensPosition(back())
 				.focusMode(firstAvailable(
 						continuousFocus(),
