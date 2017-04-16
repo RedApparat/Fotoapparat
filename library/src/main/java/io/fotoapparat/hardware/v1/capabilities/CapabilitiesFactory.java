@@ -9,6 +9,7 @@ import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.v1.Camera1;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
+import io.fotoapparat.parameter.Size;
 
 /**
  * {@link Capabilities} of {@link Camera1}.
@@ -21,10 +22,23 @@ public class CapabilitiesFactory {
 	 */
 	public Capabilities fromParameters(Camera.Parameters parameters) {
 		return new Capabilities(
-				null, // TODO: 12.04.17
+				extractPictureSizes(parameters),
 				extractFocusModes(parameters),
 				extractFlashModes(parameters)
 		);
+	}
+
+	private Set<Size> extractPictureSizes(Camera.Parameters parameters) {
+		HashSet<Size> result = new HashSet<>();
+
+		for (Camera.Size size : parameters.getSupportedPictureSizes()) {
+			result.add(new Size(
+					size.width,
+					size.height
+			));
+		}
+
+		return result;
 	}
 
 	private Set<Flash> extractFlashModes(Camera.Parameters parameters) {
