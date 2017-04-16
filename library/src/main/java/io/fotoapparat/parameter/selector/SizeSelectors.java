@@ -25,4 +25,16 @@ public class SizeSelectors {
 		};
 	}
 
+	/**
+	 * @return {@link SelectorFunction} which always provides the smallest size.
+	 */
+	public static SelectorFunction<Size> smallestSize() {
+		return new SelectorFunction<Size>() {
+			@Override
+			public Size select(Collection<Size> items) {
+				return Collections.min(items, COMPARATOR_BY_AREA);
+			}
+		};
+	}
+
 }

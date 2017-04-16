@@ -12,7 +12,7 @@ import static junit.framework.Assert.assertEquals;
 public class SizeSelectorsTest {
 
 	@Test
-	public void getLargestSize() throws Exception {
+	public void biggestSize() throws Exception {
 		// Given
 		List<Size> availableSizes = asList(
 				new Size(4032, 3024),
@@ -28,6 +28,27 @@ public class SizeSelectorsTest {
 		// Then
 		assertEquals(
 				new Size(7680, 4320),
+				result
+		);
+	}
+
+	@Test
+	public void smallestSize() throws Exception {
+		// Given
+		List<Size> availableSizes = asList(
+				new Size(4032, 3024),
+				new Size(7680, 4320),
+				new Size(1280, 720)
+		);
+
+		// When
+		Size result = SizeSelectors
+				.smallestSize()
+				.select(availableSizes);
+
+		// Then
+		assertEquals(
+				new Size(1280, 720),
 				result
 		);
 	}
