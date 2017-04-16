@@ -8,8 +8,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
+import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.parameter.Size;
 
 import static junit.framework.Assert.assertSame;
 import static org.mockito.Mockito.verify;
@@ -18,51 +20,88 @@ import static org.mockito.Mockito.verify;
 @SuppressWarnings("deprecation")
 public class ParametersConverterTest {
 
-    @Mock
-    Camera.Parameters outputParameters;
+	@Mock
+	Camera.Parameters outputParameters;
 
-    ParametersConverter testee;
+	ParametersConverter testee;
 
-    @Before
-    public void setUp() throws Exception {
-        testee = new ParametersConverter();
-    }
+	@Before
+	public void setUp() throws Exception {
+		testee = new ParametersConverter();
+	}
 
-    @Test
-    public void returnSameValue() throws Exception {
-        // Given
-        Parameters input = new Parameters();
+	@Test
+	public void returnSameValue() throws Exception {
+		// Given
+		Parameters input = new Parameters();
 
-        // When
-        Camera.Parameters result = testee.convert(
-                input,
-                outputParameters
-        );
+		// When
+		Camera.Parameters result = testee.convert(
+				input,
+				outputParameters
+		);
 
-        // Then
-        assertSame(
-                result,
-                outputParameters
-        );
-    }
+		// Then
+		assertSame(
+				result,
+				outputParameters
+		);
+	}
 
-    @Test
-    public void setFocusMode() throws Exception {
-        // Given
-        Parameters input = new Parameters();
-        input.putValue(
-                Parameters.Type.FOCUS_MODE,
-                FocusMode.AUTO
-        );
+	@Test
+	public void setFocusMode() throws Exception {
+		// Given
+		Parameters input = new Parameters();
+		input.putValue(
+				Parameters.Type.FOCUS_MODE,
+				FocusMode.AUTO
+		);
 
-        // When
-        testee.convert(
-                input,
-                outputParameters
-        );
+		// When
+		testee.convert(
+				input,
+				outputParameters
+		);
 
-        // Then
-        verify(outputParameters).setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-    }
+		// Then
+		verify(outputParameters).setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+	}
 
+	@Test
+	public void setFlash() throws Exception {
+		// Given
+		Parameters input = new Parameters();
+		input.putValue(
+				Parameters.Type.FLASH,
+				Flash.TORCH
+		);
+
+		// When
+		testee.convert(
+				input,
+				outputParameters
+		);
+
+		// Then
+		verify(outputParameters).setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+	}
+
+	@Test
+	public void setPictureSize() throws Exception {
+		// Given
+		Parameters input = new Parameters();
+		input.putValue(
+				Parameters.Type.PICTURE_SIZE,
+				new Size(10, 20)
+		);
+
+		// When
+		testee.convert(
+				input,
+				outputParameters
+		);
+
+		// Then
+		verify(outputParameters).setPictureSize(10, 20);
+	}
 }
