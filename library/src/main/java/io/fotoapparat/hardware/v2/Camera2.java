@@ -14,6 +14,7 @@ import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.parameter.RendererParameters;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
 
@@ -99,4 +100,10 @@ public class Camera2 implements CameraDevice {
 	public PreviewStream getPreviewStream() {
 		return previewStream;
 	}
+
+	@Override
+	public RendererParameters getRendererParameters() {
+		return null;
+	}
+
 }

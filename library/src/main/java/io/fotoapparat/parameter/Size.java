@@ -1,7 +1,7 @@
 package io.fotoapparat.parameter;
 
 /**
- * Size in arbitrary units.
+ * Size in arbitrary units. Immutable.
  */
 public class Size {
 
@@ -49,5 +49,13 @@ public class Size {
 				"width=" + width +
 				", height=" + height +
 				'}';
+	}
+
+	/**
+	 * @return new instance of {@link Size} with width and height being swapped.
+	 */
+	@SuppressWarnings("SuspiciousNameCombination")
+	public Size flip() {
+		return new Size(height, width);
 	}
 }
