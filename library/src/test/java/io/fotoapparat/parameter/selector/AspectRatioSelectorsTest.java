@@ -1,91 +1,76 @@
 package io.fotoapparat.parameter.selector;
 
 import org.junit.Test;
-import org.mockito.InjectMocks;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Set;
+import io.fotoapparat.parameter.Size;
 
-import io.fotoapparat.parameter.AspectRatio;
-
-import static io.fotoapparat.test.TestUtils.asSet;
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AspectRatioSelectorsTest {
 
-	@InjectMocks
-	AspectRatioSelectors testee;
+	@Mock
+	SelectorFunction<Size> sizeSelector;
 
 	@Test
-	public void standard_Available() throws Exception {
+	public void standardRatio() throws Exception {
 		// Given
-		Set<AspectRatio> availableModes = asSet(
-				AspectRatio.STANDARD_4_3,
-				AspectRatio.WIDE_16_9
-		);
+		given(sizeSelector.select(ArgumentMatchers.<Size>anyCollection()))
+				.willReturn(new Size(4, 3));
 
 		// When
-		AspectRatio result = AspectRatioSelectors
-				.standardRatio()
-				.select(availableModes);
+		Size result = AspectRatioSelectors
+				.standardRatio(sizeSelector)
+				.select(asList(
+						new Size(4, 3),
+						new Size(8, 6),
+						new Size(10, 10)
+				));
 
 		// Then
 		assertEquals(
-				AspectRatio.STANDARD_4_3,
+				new Size(4, 3),
 				result
 		);
+
+		verify(sizeSelector).select(asList(
+				new Size(4, 3),
+				new Size(8, 6)
+		));
 	}
 
 	@Test
-	public void standard_NotAvailable() throws Exception {
+	public void wideRatio() throws Exception {
 		// Given
-		Set<AspectRatio> availableModes = asSet(
-				AspectRatio.WIDE_16_9
-		);
+		given(sizeSelector.select(ArgumentMatchers.<Size>anyCollection()))
+				.willReturn(new Size(16, 9));
 
 		// When
-		AspectRatio result = AspectRatioSelectors
-				.standardRatio()
-				.select(availableModes);
-
-		// Then
-		assertNull(result);
-	}
-
-	@Test
-	public void wide_Available() throws Exception {
-		// Given
-		Set<AspectRatio> availableModes = asSet(
-				AspectRatio.STANDARD_4_3,
-				AspectRatio.WIDE_16_9
-		);
-
-		// When
-		AspectRatio result = AspectRatioSelectors
-				.wideRatio()
-				.select(availableModes);
+		Size result = AspectRatioSelectors
+				.wideRatio(sizeSelector)
+				.select(asList(
+						new Size(16, 9),
+						new Size(32, 18),
+						new Size(10, 10)
+				));
 
 		// Then
 		assertEquals(
-				AspectRatio.WIDE_16_9,
+				new Size(16, 9),
 				result
 		);
-	}
 
-	@Test
-	public void wide_NotAvailable() throws Exception {
-		// Given
-		Set<AspectRatio> availableModes = asSet(
-				AspectRatio.STANDARD_4_3
-		);
-
-		// When
-		AspectRatio result = AspectRatioSelectors
-				.wideRatio()
-				.select(availableModes);
-
-		// Then
-		assertNull(result);
+		verify(sizeSelector).select(asList(
+				new Size(16, 9),
+				new Size(32, 18)
+		));
 	}
 
 }

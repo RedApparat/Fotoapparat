@@ -20,7 +20,7 @@ public class Size {
 	 */
 	public float getAspectRatio() {
 		if (width == 0 || height == 0) {
-			return -1;
+			return Float.NaN;
 		}
 		return (float) width / height;
 	}
