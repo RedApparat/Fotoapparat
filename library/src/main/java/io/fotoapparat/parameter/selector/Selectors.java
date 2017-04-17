@@ -1,5 +1,8 @@
 package io.fotoapparat.parameter.selector;
 
+import android.support.annotation.NonNull;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -12,8 +15,9 @@ public class Selectors {
 	 * @return function which returns first non-null result from given selectors.
 	 * If there are no non-null results, returns {@code null}.
 	 */
-	public static <T> SelectorFunction<T> firstAvailable(final SelectorFunction<T> function,
-														 final SelectorFunction... functions) {
+	@SafeVarargs
+	public static <T> SelectorFunction<T> firstAvailable(@NonNull final SelectorFunction<T> function,
+														 final SelectorFunction<T>... functions) {
 		return new SelectorFunction<T>() {
 
 			@SuppressWarnings("unchecked")
@@ -35,6 +39,37 @@ public class Selectors {
 				return null;
 			}
 		};
+	}
+
+	/**
+	 * @param selector  original {@link SelectorFunction}.
+	 * @param predicate condition which is checked for each value before it is passed to original
+	 *                  selector.
+	 * @return {@link SelectorFunction} which is called with values which are matching given
+	 * condition.
+	 */
+	public static <T> SelectorFunction<T> filtered(@NonNull final SelectorFunction<T> selector,
+												   @NonNull final Predicate<T> predicate) {
+		return new SelectorFunction<T>() {
+			@Override
+			public T select(Collection<T> items) {
+				return selector.select(
+						filteredItems(items, predicate)
+				);
+			}
+		};
+	}
+
+	private static <T> Collection<T> filteredItems(Collection<T> items, Predicate<T> predicate) {
+		ArrayList<T> result = new ArrayList<>();
+
+		for (T item : items) {
+			if (predicate.condition(item)) {
+				result.add(item);
+			}
+		}
+
+		return result;
 	}
 
 	/**

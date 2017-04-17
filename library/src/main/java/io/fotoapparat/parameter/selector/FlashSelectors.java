@@ -27,7 +27,7 @@ public class FlashSelectors {
 	 * @return {@link SelectorFunction} which provides an auto flash firing mode if available.
 	 * Otherwise provides {@code null}.
 	 */
-	public static SelectorFunction<Flash> auto() {
+	public static SelectorFunction<Flash> autoFlash() {
 		return flash(Flash.AUTO);
 	}
 

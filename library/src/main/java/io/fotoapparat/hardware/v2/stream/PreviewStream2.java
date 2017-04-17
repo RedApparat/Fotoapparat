@@ -13,8 +13,8 @@ import io.fotoapparat.preview.PreviewStream;
  * {@link PreviewStream} of Camera v2.
  */
 @SuppressWarnings("NewApi")
-public class PreviewStream2
-		implements PreviewStream, OnImageAcquiredObserver.OnFrameAcquiredListener {
+public class PreviewStream2 implements PreviewStream,
+		OnImageAcquiredObserver.OnFrameAcquiredListener {
 
 	private final Set<FrameProcessor> frameProcessors = new LinkedHashSet<>();
 	private final OnImageAcquiredObserver surfaceReader;

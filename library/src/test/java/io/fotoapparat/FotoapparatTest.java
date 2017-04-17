@@ -9,6 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.result.PhotoResult;
+import io.fotoapparat.routine.AutoFocusRoutine;
 import io.fotoapparat.routine.ConfigurePreviewStreamRoutine;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
@@ -20,6 +21,7 @@ import static io.fotoapparat.test.TestUtils.immediateFuture;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FotoapparatTest {
@@ -40,6 +42,8 @@ public class FotoapparatTest {
 	ConfigurePreviewStreamRoutine configurePreviewStreamRoutine;
 	@Mock
 	TakePictureRoutine takePictureRoutine;
+	@Mock
+	AutoFocusRoutine autoFocusRoutine;
 
 	Fotoapparat testee;
 
@@ -51,6 +55,7 @@ public class FotoapparatTest {
 				updateOrientationRoutine,
 				configurePreviewStreamRoutine,
 				takePictureRoutine,
+				autoFocusRoutine,
 				new ImmediateExecutor()
 		);
 	}
@@ -133,6 +138,27 @@ public class FotoapparatTest {
 	public void takePicture_NotStartedYet() throws Exception {
 		// When
 		testee.takePicture();
+
+		// Then
+		// Expect exception
+	}
+
+	@Test
+	public void autoFocus() throws Exception {
+		// Given
+		testee.start();
+
+		// When
+		testee.autoFocus();
+
+		// Then
+		verify(autoFocusRoutine).run();
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void autoFocus_NotStartedYet() throws Exception {
+		// When
+		testee.autoFocus();
 
 		// Then
 		// Expect exception

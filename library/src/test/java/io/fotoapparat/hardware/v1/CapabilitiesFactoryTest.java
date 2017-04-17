@@ -1,6 +1,7 @@
 package io.fotoapparat.hardware.v1;
 
 import android.hardware.Camera;
+import android.support.annotation.NonNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.v1.capabilities.CapabilitiesFactory;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
+import io.fotoapparat.parameter.Size;
 
 import static io.fotoapparat.test.TestUtils.asSet;
 import static java.util.Arrays.asList;
@@ -25,6 +27,8 @@ import static org.mockito.BDDMockito.given;
 public class CapabilitiesFactoryTest {
 
 	@Mock
+	Camera camera;
+	@Mock
 	Camera.Parameters parameters;
 
 	CapabilitiesFactory testee;
@@ -35,6 +39,8 @@ public class CapabilitiesFactoryTest {
 				.willReturn(Collections.<String>emptyList());
 		given(parameters.getSupportedFlashModes())
 				.willReturn(Collections.<String>emptyList());
+		given(parameters.getSupportedPictureSizes())
+				.willReturn(Collections.<Camera.Size>emptyList());
 
 		testee = new CapabilitiesFactory();
 	}
@@ -94,5 +100,36 @@ public class CapabilitiesFactoryTest {
 				),
 				capabilities.supportedFlashModes()
 		);
+	}
+
+	@Test
+	public void mapPictureSizes() throws Exception {
+		// Given
+		given(parameters.getSupportedPictureSizes())
+				.willReturn(asList(
+						makeSize(10, 10),
+						makeSize(20, 20)
+				));
+
+		// When
+		Capabilities capabilities = testee.fromParameters(parameters);
+
+		// Then
+		assertEquals(
+				asSet(
+						new Size(10, 10),
+						new Size(20, 20)
+				),
+				capabilities.supportedSizes()
+		);
+	}
+
+	@NonNull
+	private Camera.Size makeSize(int width, int height) {
+		Camera.Size size = camera.new Size(0, 0);
+		size.width = width;
+		size.height = height;
+
+		return size;
 	}
 }

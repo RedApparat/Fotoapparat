@@ -1,6 +1,7 @@
 package io.fotoapparat.view;
 
 import io.fotoapparat.hardware.CameraDevice;
+import io.fotoapparat.parameter.Size;
 
 /**
  * Renders the stream from {@link io.fotoapparat.Fotoapparat}.

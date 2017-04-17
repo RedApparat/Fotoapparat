@@ -19,9 +19,10 @@ import io.fotoapparat.view.CameraView;
 import rx.functions.Action1;
 
 import static io.fotoapparat.parameter.selector.AspectRatioSelectors.standardRatio;
+import static io.fotoapparat.parameter.selector.FlashSelectors.autoFlash;
 import static io.fotoapparat.parameter.selector.FlashSelectors.autoRedEye;
 import static io.fotoapparat.parameter.selector.FlashSelectors.torch;
-import static io.fotoapparat.parameter.selector.FocusModeSelectors.auto;
+import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.continuousFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.fixed;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.back;
@@ -42,16 +43,16 @@ public class MainActivity extends AppCompatActivity {
 		fotoapparat = Fotoapparat
 				.with(this)
 				.into(cameraView)
-				.photoSize(biggestSize(standardRatio()))
+				.photoSize(standardRatio(biggestSize()))
 				.lensPosition(back())
 				.focusMode(firstAvailable(
 						continuousFocus(),
-						auto(),
+						autoFocus(),
 						fixed()
 				))
 				.flash(firstAvailable(
 						autoRedEye(),
-						auto(),
+						autoFlash(),
 						torch()
 				))
 				.frameProcessor(new SampleFrameProcessor())

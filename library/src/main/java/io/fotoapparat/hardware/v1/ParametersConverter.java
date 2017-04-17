@@ -7,6 +7,7 @@ import io.fotoapparat.hardware.v1.capabilities.FocusCapability;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.parameter.Size;
 
 /**
  * Converts {@link Parameters} to {@link Camera.Parameters}.
@@ -49,7 +50,18 @@ public class ParametersConverter {
 						output
 				);
 				break;
+			case PICTURE_SIZE:
+				applyPictureSize(
+						(Size) input.getValue(type),
+						output
+				);
+				break;
 		}
+	}
+
+	private void applyPictureSize(Size size,
+								  Camera.Parameters output) {
+		output.setPictureSize(size.width, size.height);
 	}
 
 	private void applyFlash(Flash flash,

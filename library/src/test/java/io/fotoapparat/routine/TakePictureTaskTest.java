@@ -36,4 +36,5 @@ public class TakePictureTaskTest {
 		// Then
 		assertEquals(result, PHOTO);
 	}
+
 }

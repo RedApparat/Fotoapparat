@@ -17,6 +17,8 @@ import io.fotoapparat.hardware.v1.capabilities.CapabilitiesFactory;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.parameter.RendererParameters;
+import io.fotoapparat.parameter.Size;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
 
@@ -239,6 +241,44 @@ public class Camera1 implements CameraDevice {
 		if (previewStream == null) {
 			throw new IllegalStateException("Preview stream is null. Make sure camera is opened.");
 		}
+	}
+
+	@Override
+	public RendererParameters getRendererParameters() {
+		recordMethod();
+
+		return new RendererParameters(
+				previewSize(),
+				imageRotation
+		);
+	}
+
+	@Override
+	public void autoFocus() {
+		recordMethod();
+
+		final CountDownLatch latch = new CountDownLatch(1);
+		camera.autoFocus(new Camera.AutoFocusCallback() {
+			@Override
+			public void onAutoFocus(boolean success, Camera camera) {
+				latch.countDown();
+			}
+		});
+
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			// Do nothing
+		}
+	}
+
+	private Size previewSize() {
+		Camera.Size previewSize = camera.getParameters().getPreviewSize();
+
+		return new Size(
+				previewSize.width,
+				previewSize.height
+		);
 	}
 
 	@NonNull

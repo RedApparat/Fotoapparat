@@ -35,7 +35,7 @@ public class FocusModeSelectors {
 	 * @return {@link SelectorFunction} which provides an auto focus mode if available.
 	 * Otherwise provides {@code null}.
 	 */
-	public static SelectorFunction<FocusMode> auto() {
+	public static SelectorFunction<FocusMode> autoFocus() {
 		return focusMode(FocusMode.AUTO);
 	}
 
