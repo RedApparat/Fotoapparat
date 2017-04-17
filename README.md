@@ -8,7 +8,7 @@ Making Camera for Android more friendly.
 ## License
 
 ```
-Copyright 2017 FotoApparat
+Copyright 2017 Fotoapparat
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
