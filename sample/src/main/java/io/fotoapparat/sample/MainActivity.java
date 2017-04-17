@@ -66,7 +66,9 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void takePicture() {
-		PhotoResult photoResult = fotoapparat.takePicture();
+		PhotoResult photoResult = fotoapparat
+				.autoFocus()
+				.takePicture();
 
 		photoResult.saveToFile(new File(
 				getExternalFilesDir("photos"),

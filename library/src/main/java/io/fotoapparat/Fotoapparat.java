@@ -12,6 +12,7 @@ import io.fotoapparat.hardware.orientation.RotationListener;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.result.PhotoResult;
+import io.fotoapparat.routine.AutoFocusRoutine;
 import io.fotoapparat.routine.ConfigurePreviewStreamRoutine;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
@@ -30,6 +31,7 @@ public class Fotoapparat {
 	private final UpdateOrientationRoutine updateOrientationRoutine;
 	private final ConfigurePreviewStreamRoutine configurePreviewStreamRoutine;
 	private final TakePictureRoutine takePictureRoutine;
+	private final AutoFocusRoutine autoFocusRoutine;
 	private final Executor executor;
 
 	private boolean started = false;
@@ -39,12 +41,14 @@ public class Fotoapparat {
 				UpdateOrientationRoutine updateOrientationRoutine,
 				ConfigurePreviewStreamRoutine configurePreviewStreamRoutine,
 				TakePictureRoutine takePictureRoutine,
+				AutoFocusRoutine autoFocusRoutine,
 				Executor executor) {
 		this.startCameraRoutine = startCameraRoutine;
 		this.stopCameraRoutine = stopCameraRoutine;
 		this.updateOrientationRoutine = updateOrientationRoutine;
 		this.configurePreviewStreamRoutine = configurePreviewStreamRoutine;
 		this.takePictureRoutine = takePictureRoutine;
+		this.autoFocusRoutine = autoFocusRoutine;
 		this.executor = executor;
 	}
 
@@ -96,12 +100,15 @@ public class Fotoapparat {
 				SERIAL_EXECUTOR
 		);
 
+		AutoFocusRoutine autoFocusRoutine = new AutoFocusRoutine(cameraDevice);
+
 		return new Fotoapparat(
 				startCameraRoutine,
 				stopCameraRoutine,
 				updateOrientationRoutine,
 				configurePreviewStreamRoutine,
 				takePictureRoutine,
+				autoFocusRoutine,
 				SERIAL_EXECUTOR
 		);
 	}
@@ -119,6 +126,19 @@ public class Fotoapparat {
 		ensureStarted();
 
 		return takePictureRoutine.takePicture();
+	}
+
+	/**
+	 * Performs auto focus. If it is not available or not enabled, does nothing.
+	 */
+	public Fotoapparat autoFocus() {
+		ensureStarted();
+
+		executor.execute(
+				autoFocusRoutine
+		);
+
+		return this;
 	}
 
 	/**
