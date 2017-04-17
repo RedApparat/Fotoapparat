@@ -1,0 +1,18 @@
+# Fotoapparat Extenders
+
+Fotoapparat ships with a default callback mechanism for executing object acquisition tasks, such as photos or capabilities. 
+The child modules contained herein are additional extenders for other popular execution mechanisms.
+
+To use, supply an instance of your desired extender when performing a task of a PendingResult.
+
+```java
+fotoapparat.takePicture()
+				.toBitmap()
+				.extend(ObservableExtender.<BitmapPhoto>observableExtender())
+				.subscribe(new Action1<BitmapPhoto>() {
+					@Override
+					public void call(BitmapPhoto bitmapPhoto) {
+						// Do something with the photo
+					}
+				});
+```
