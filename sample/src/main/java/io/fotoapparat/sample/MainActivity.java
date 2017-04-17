@@ -14,7 +14,9 @@ import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
+import io.fotoapparat.result.extender.ObservableExtender;
 import io.fotoapparat.view.CameraView;
+import rx.functions.Action1;
 
 import static io.fotoapparat.parameter.selector.AspectRatioSelectors.standardRatio;
 import static io.fotoapparat.parameter.selector.FlashSelectors.autoRedEye;
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void takePicture() {
+
 		PhotoResult photoResult = fotoapparat.takePicture();
 
 		photoResult.saveToFile(new File(
@@ -83,6 +86,16 @@ public class MainActivity extends AppCompatActivity {
 						imageView.setRotation(-result.rotationDegrees);
 					}
 				});
+		photoResult
+				.toBitmap()
+				.extend(ObservableExtender.<BitmapPhoto>observableExtender())
+				.subscribe(new Action1<BitmapPhoto>() {
+					@Override
+					public void call(BitmapPhoto bitmapPhoto) {
+
+					}
+				});
+
 	}
 
 	@Override

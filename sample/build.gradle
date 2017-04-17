@@ -21,6 +21,7 @@ android {
 
 dependencies {
     compile project(':library')
+    compile project(':fotoapparat-extenders:rxjava')
 
     compile 'com.android.support:appcompat-v7:25.1.0'
 }
