@@ -1,20 +1,18 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion project.buildToolsVersion
+    compileSdkVersion Integer.parseInt(project.compileSdkVersion)
 
     defaultConfig {
-        targetSdkVersion 25
-        minSdkVersion 15
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion Integer.parseInt(project.minSdkVersion)
+        targetSdkVersion Integer.parseInt(project.targetSdkVersion)
     }
 }
 
 dependencies {
     compile project(':library')
-    provided 'io.reactivex.rxjava2:rxjava:2.0.8'
+    provided "io.reactivex.rxjava2:rxjava:${project.rxjava2Version}"
 
-    testCompile 'junit:junit:4.12'
+    testCompile "junit:junit:${project.junitVersion}"
 }

@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion project.buildToolsVersion
+    compileSdkVersion Integer.parseInt(project.compileSdkVersion)
+
     defaultConfig {
         applicationId "io.fotoapparat.sample"
-        minSdkVersion 15
-        targetSdkVersion 25
+        minSdkVersion Integer.parseInt(project.minSdkVersion)
+        targetSdkVersion Integer.parseInt(project.targetSdkVersion)
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -23,5 +24,5 @@ dependencies {
     compile project(':library')
     compile project(':fotoapparat-extenders:rxjava')
 
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile "com.android.support:appcompat-v7:${project.appCompatVersion}"
 }

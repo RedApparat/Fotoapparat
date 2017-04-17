@@ -1,14 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion project.buildToolsVersion
+    compileSdkVersion Integer.parseInt(project.compileSdkVersion)
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion Integer.parseInt(project.minSdkVersion)
+        targetSdkVersion Integer.parseInt(project.targetSdkVersion)
     }
 
     buildTypes {
@@ -19,8 +17,8 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile "com.android.support:appcompat-v7:${project.appCompatVersion}"
 
-    testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:2.2.28"
+    testCompile "junit:junit:${project.junitVersion}"
+    testCompile "org.mockito:mockito-core:${project.mockitoVersion}"
 }
