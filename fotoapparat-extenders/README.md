@@ -7,12 +7,12 @@ To use, supply an instance of your desired extender when performing a task of a 
 
 ```java
 fotoapparat.takePicture()
-				.toBitmap()
-				.extend(ObservableExtender.<BitmapPhoto>observableExtender())
-				.subscribe(new Action1<BitmapPhoto>() {
-					@Override
-					public void call(BitmapPhoto bitmapPhoto) {
-						// Do something with the photo
-					}
-				});
+	.toBitmap()
+	.extend(ObservableExtender.<BitmapPhoto>observableExtender())
+	.subscribe(new Action1<BitmapPhoto>() {
+		@Override
+		public void call(BitmapPhoto bitmapPhoto) {
+			// Do something with the photo
+		}
+	});
 ```
