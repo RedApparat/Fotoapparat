@@ -5,6 +5,7 @@ import android.support.annotation.RequiresApi;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.hardware.operators.AutoFocusOperator;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
 import io.fotoapparat.hardware.operators.CaptureOperator;
 import io.fotoapparat.hardware.operators.ConnectionOperator;
@@ -32,6 +33,7 @@ public class Camera2 implements CameraDevice {
 	private final PreviewOperator previewOperator;
 	private final CaptureOperator captureOperator;
 	private final PreviewStream previewStream;
+	private final AutoFocusOperator autoFocusOperator;
 
 	public Camera2(ConnectionOperator connectionOperator,
 				   PreviewOperator previewOperator,
@@ -40,7 +42,8 @@ public class Camera2 implements CameraDevice {
 				   ParametersOperator parametersOperator,
 				   CapabilitiesOperator capabilitiesOperator,
 				   CaptureOperator captureOperator,
-				   PreviewStream previewStream) {
+				   PreviewStream previewStream,
+				   AutoFocusOperator autoFocusOperator) {
 		this.connectionOperator = connectionOperator;
 		this.parametersOperator = parametersOperator;
 		this.previewOperator = previewOperator;
@@ -49,6 +52,7 @@ public class Camera2 implements CameraDevice {
 		this.capabilitiesOperator = capabilitiesOperator;
 		this.captureOperator = captureOperator;
 		this.previewStream = previewStream;
+		this.autoFocusOperator = autoFocusOperator;
 	}
 
 	@Override
@@ -108,7 +112,7 @@ public class Camera2 implements CameraDevice {
 
 	@Override
 	public void autoFocus() {
-		// TODO
+		autoFocusOperator.autoFocus();
 	}
 
 }

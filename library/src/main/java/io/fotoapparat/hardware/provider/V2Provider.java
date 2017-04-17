@@ -10,6 +10,7 @@ import io.fotoapparat.hardware.v2.Camera2;
 import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 import io.fotoapparat.hardware.v2.captor.CapturingRoutine;
+import io.fotoapparat.hardware.v2.captor.FocusRoutine;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
@@ -56,7 +57,8 @@ public class V2Provider implements CameraProvider {
 
 		StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(parametersProvider);
 		ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(
-				parametersProvider);
+				parametersProvider
+		);
 
 		CaptureRequestFactory captureRequestFactory = new CaptureRequestFactory(
 				cameraConnection,
@@ -82,6 +84,11 @@ public class V2Provider implements CameraProvider {
 				characteristics
 		);
 
+		FocusRoutine focusRoutine = new FocusRoutine(
+				captureRequestFactory,
+				sessionManager
+		);
+
 		return new Camera2(
 				cameraConnection,
 				sessionManager,
@@ -90,7 +97,8 @@ public class V2Provider implements CameraProvider {
 				parametersProvider,
 				new CapabilitiesFactory(characteristics),
 				capturingRoutine,
-				new PreviewStream2(continuousSurfaceReader)
+				new PreviewStream2(continuousSurfaceReader),
+				focusRoutine
 		);
 	}
 }

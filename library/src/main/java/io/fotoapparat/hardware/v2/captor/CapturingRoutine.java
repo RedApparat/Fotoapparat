@@ -16,7 +16,7 @@ import io.fotoapparat.hardware.v2.surface.StillSurfaceReader;
 import io.fotoapparat.photo.Photo;
 
 /**
- * Performs a picture capturing routing.
+ * Performs a picture capturing routine.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class CapturingRoutine implements CaptureOperator {
@@ -36,12 +36,6 @@ public class CapturingRoutine implements CaptureOperator {
 		this.characteristics = characteristics;
 	}
 
-	/**
-	 * Will start a photo capturing routing which will block the current thread until the photo has
-	 * been captured.
-	 *
-	 * @return a new Photo
-	 */
 	@Override
 	public Photo takePicture() {
 		byte[] photoBytes;
