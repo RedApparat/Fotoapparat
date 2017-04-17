@@ -1,5 +1,6 @@
 package io.fotoapparat.hardware;
 
+import io.fotoapparat.hardware.operators.AutoFocusOperator;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
 import io.fotoapparat.hardware.operators.CaptureOperator;
 import io.fotoapparat.hardware.operators.ConnectionOperator;
@@ -20,7 +21,8 @@ import io.fotoapparat.preview.PreviewStream;
  */
 public interface CameraDevice extends CaptureOperator,
 		PreviewOperator, CapabilitiesOperator, OrientationOperator, ParametersOperator,
-		ConnectionOperator, SurfaceOperator, PreviewStreamOperator, RendererParametersOperator {
+		ConnectionOperator, SurfaceOperator, PreviewStreamOperator, RendererParametersOperator,
+		AutoFocusOperator {
 
 	@Override
 	void open(LensPosition lensPosition);
@@ -54,5 +56,8 @@ public interface CameraDevice extends CaptureOperator,
 
 	@Override
 	RendererParameters getRendererParameters();
+
+	@Override
+	void autoFocus();
 
 }

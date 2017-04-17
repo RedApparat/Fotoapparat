@@ -253,6 +253,25 @@ public class Camera1 implements CameraDevice {
 		);
 	}
 
+	@Override
+	public void autoFocus() {
+		recordMethod();
+
+		final CountDownLatch latch = new CountDownLatch(1);
+		camera.autoFocus(new Camera.AutoFocusCallback() {
+			@Override
+			public void onAutoFocus(boolean success, Camera camera) {
+				latch.countDown();
+			}
+		});
+
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			// Do nothing
+		}
+	}
+
 	private Size previewSize() {
 		Camera.Size previewSize = camera.getParameters().getPreviewSize();
 

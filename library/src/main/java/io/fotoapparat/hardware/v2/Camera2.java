@@ -106,4 +106,9 @@ public class Camera2 implements CameraDevice {
 		return null;
 	}
 
+	@Override
+	public void autoFocus() {
+		// TODO
+	}
+
 }

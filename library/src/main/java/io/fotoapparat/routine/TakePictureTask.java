@@ -15,6 +15,7 @@ public class TakePictureTask extends FutureTask<Photo> {
 		super(new Callable<Photo>() {
 			@Override
 			public Photo call() throws Exception {
+				cameraDevice.autoFocus();
 				return cameraDevice.takePicture();
 			}
 		});
