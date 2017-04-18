@@ -10,12 +10,25 @@
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp"/>
+        tools:layout_editor_absoluteY="8dp"
+        tools:visibility="visible"/>
 
     <ImageView
         android:id="@+id/result"
         android:layout_width="200dp"
         android:layout_height="200dp"/>
+
+    <TextView
+        android:id="@+id/no_permission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="50dp"
+        android:text="No Camera permission granted."
+        android:textSize="20sp"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </FrameLayout>

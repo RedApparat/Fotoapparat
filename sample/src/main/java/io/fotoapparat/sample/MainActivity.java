@@ -1,6 +1,7 @@
 package io.fotoapparat.sample;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,6 +31,8 @@ import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 public class MainActivity extends AppCompatActivity {
 
 	private Fotoapparat fotoapparat;
+	private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
+	private boolean hasCameraPermission;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,14 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 
 		CameraView cameraView = (CameraView) findViewById(R.id.camera_view);
+
+		hasCameraPermission = permissionsDelegate.hasCameraPermission();
+
+		if (!hasCameraPermission) {
+			permissionsDelegate.requestCameraPermission();
+		} else {
+			cameraView.setVisibility(View.VISIBLE);
+		}
 
 		fotoapparat = Fotoapparat
 				.with(this)
@@ -89,15 +100,25 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		fotoapparat.start();
+		if (hasCameraPermission) {
+			fotoapparat.start();
+		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		if (hasCameraPermission) {
+			fotoapparat.stop();
+		}
+	}
 
-		fotoapparat.stop();
+	@Override
+	public void onRequestPermissionsResult(int requestCode,
+										   @NonNull String[] permissions,
+										   @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		permissionsDelegate.onRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
 
 	private class SampleFrameProcessor implements FrameProcessor {
