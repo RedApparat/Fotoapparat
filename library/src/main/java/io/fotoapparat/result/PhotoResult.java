@@ -17,10 +17,16 @@ public class PhotoResult {
 
 	private final PendingResult<Photo> pendingResult;
 
-	public PhotoResult(PendingResult<Photo> pendingResult) {
+	PhotoResult(PendingResult<Photo> pendingResult) {
 		this.pendingResult = pendingResult;
 	}
 
+	/**
+	 * Creates a new instance of advanced result from a Future result.
+	 *
+	 * @param photoFuture The future result of a {@link Photo}.
+	 * @return The result.
+	 */
 	public static PhotoResult fromFuture(Future<Photo> photoFuture) {
 		return new PhotoResult(
 				PendingResult.fromFuture(photoFuture)

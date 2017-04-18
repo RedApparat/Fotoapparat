@@ -7,7 +7,10 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.parameter.provider.CapabilitiesProvider;
 import io.fotoapparat.photo.Photo;
+import io.fotoapparat.result.CapabilitiesResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.routine.AutoFocusRoutine;
 import io.fotoapparat.routine.ConfigurePreviewStreamRoutine;
@@ -31,6 +34,11 @@ public class FotoapparatTest {
 					Photo.empty()
 			)
 	);
+	static final CapabilitiesResult CAPABILITIES_RESULT = CapabilitiesResult.fromFuture(
+			immediateFuture(
+					Capabilities.empty()
+			)
+	);
 
 	@Mock
 	StartCameraRoutine startCameraRoutine;
@@ -40,6 +48,8 @@ public class FotoapparatTest {
 	UpdateOrientationRoutine updateOrientationRoutine;
 	@Mock
 	ConfigurePreviewStreamRoutine configurePreviewStreamRoutine;
+	@Mock
+	CapabilitiesProvider capabilitiesProvider;
 	@Mock
 	TakePictureRoutine takePictureRoutine;
 	@Mock
@@ -54,6 +64,7 @@ public class FotoapparatTest {
 				stopCameraRoutine,
 				updateOrientationRoutine,
 				configurePreviewStreamRoutine,
+				capabilitiesProvider,
 				takePictureRoutine,
 				autoFocusRoutine,
 				new ImmediateExecutor()
@@ -117,6 +128,24 @@ public class FotoapparatTest {
 	}
 
 	@Test
+	public void getCapabilities() throws Exception {
+		// Given
+		given(capabilitiesProvider.getCapabilities())
+				.willReturn(CAPABILITIES_RESULT);
+
+		testee.start();
+
+		// When
+		CapabilitiesResult result = testee.getCapabilities();
+
+		// Then
+		assertEquals(
+				CAPABILITIES_RESULT,
+				result
+		);
+	}
+
+	@Test
 	public void takePicture() throws Exception {
 		// Given
 		given(takePictureRoutine.takePicture())
@@ -138,6 +167,15 @@ public class FotoapparatTest {
 	public void takePicture_NotStartedYet() throws Exception {
 		// When
 		testee.takePicture();
+
+		// Then
+		// Expect exception
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void getCapabilities_NotStartedYet() throws Exception {
+		// When
+		testee.getCapabilities();
 
 		// Then
 		// Expect exception

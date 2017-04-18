@@ -6,11 +6,12 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import io.fotoapparat.hardware.CameraDevice;
-import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.orientation.OrientationSensor;
 import io.fotoapparat.hardware.orientation.RotationListener;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
+import io.fotoapparat.parameter.provider.CapabilitiesProvider;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
+import io.fotoapparat.result.CapabilitiesResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.routine.AutoFocusRoutine;
 import io.fotoapparat.routine.ConfigurePreviewStreamRoutine;
@@ -30,6 +31,7 @@ public class Fotoapparat {
 	private final StopCameraRoutine stopCameraRoutine;
 	private final UpdateOrientationRoutine updateOrientationRoutine;
 	private final ConfigurePreviewStreamRoutine configurePreviewStreamRoutine;
+	private final CapabilitiesProvider capabilitiesProvider;
 	private final TakePictureRoutine takePictureRoutine;
 	private final AutoFocusRoutine autoFocusRoutine;
 	private final Executor executor;
@@ -40,6 +42,7 @@ public class Fotoapparat {
 				StopCameraRoutine stopCameraRoutine,
 				UpdateOrientationRoutine updateOrientationRoutine,
 				ConfigurePreviewStreamRoutine configurePreviewStreamRoutine,
+				CapabilitiesProvider capabilitiesProvider,
 				TakePictureRoutine takePictureRoutine,
 				AutoFocusRoutine autoFocusRoutine,
 				Executor executor) {
@@ -47,6 +50,7 @@ public class Fotoapparat {
 		this.stopCameraRoutine = stopCameraRoutine;
 		this.updateOrientationRoutine = updateOrientationRoutine;
 		this.configurePreviewStreamRoutine = configurePreviewStreamRoutine;
+		this.capabilitiesProvider = capabilitiesProvider;
 		this.takePictureRoutine = takePictureRoutine;
 		this.autoFocusRoutine = autoFocusRoutine;
 		this.executor = executor;
@@ -95,6 +99,11 @@ public class Fotoapparat {
 				builder.frameProcessor
 		);
 
+		CapabilitiesProvider capabilitiesProvider = new CapabilitiesProvider(
+				cameraDevice,
+				SERIAL_EXECUTOR
+		);
+
 		TakePictureRoutine takePictureRoutine = new TakePictureRoutine(
 				cameraDevice,
 				SERIAL_EXECUTOR
@@ -107,14 +116,22 @@ public class Fotoapparat {
 				stopCameraRoutine,
 				updateOrientationRoutine,
 				configurePreviewStreamRoutine,
+				capabilitiesProvider,
 				takePictureRoutine,
 				autoFocusRoutine,
 				SERIAL_EXECUTOR
 		);
 	}
 
-	public Capabilities getCapabilities() {
-		return null;
+	/**
+	 * Provides camera capabilities asynchronously, returns immediately.
+	 *
+	 * @return {@link CapabilitiesResult} which will deliver result asynchronously.
+	 */
+	public CapabilitiesResult getCapabilities() {
+		ensureStarted();
+
+		return capabilitiesProvider.getCapabilities();
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package io.fotoapparat.routine;
+package io.fotoapparat.task;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

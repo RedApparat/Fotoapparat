@@ -11,6 +11,7 @@ import java.util.concurrent.Executor;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.result.PhotoResult;
+import io.fotoapparat.task.TakePictureTask;
 import io.fotoapparat.test.ImmediateExecutor;
 
 import static org.junit.Assert.assertNotNull;

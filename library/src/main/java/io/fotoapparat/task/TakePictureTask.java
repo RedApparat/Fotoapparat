@@ -1,4 +1,4 @@
-package io.fotoapparat.routine;
+package io.fotoapparat.task;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
