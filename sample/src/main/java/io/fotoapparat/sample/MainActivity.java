@@ -33,20 +33,20 @@ public class MainActivity extends AppCompatActivity {
 	private Fotoapparat fotoapparat;
 	private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
 	private boolean hasCameraPermission;
+	private CameraView cameraView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		CameraView cameraView = (CameraView) findViewById(R.id.camera_view);
-
+		cameraView = (CameraView) findViewById(R.id.camera_view);
 		hasCameraPermission = permissionsDelegate.hasCameraPermission();
 
-		if (!hasCameraPermission) {
-			permissionsDelegate.requestCameraPermission();
-		} else {
+		if (hasCameraPermission) {
 			cameraView.setVisibility(View.VISIBLE);
+		} else {
+			permissionsDelegate.requestCameraPermission();
 		}
 
 		fotoapparat = Fotoapparat
@@ -118,7 +118,10 @@ public class MainActivity extends AppCompatActivity {
 										   @NonNull String[] permissions,
 										   @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		permissionsDelegate.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		if (permissionsDelegate.resultGranted(requestCode, permissions, grantResults)) {
+			fotoapparat.start();
+			cameraView.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private class SampleFrameProcessor implements FrameProcessor {

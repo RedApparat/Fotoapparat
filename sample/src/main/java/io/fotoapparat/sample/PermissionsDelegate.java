@@ -32,29 +32,30 @@ class PermissionsDelegate {
 		);
 	}
 
-	void onRequestPermissionsResult(int requestCode,
-									String[] permissions,
-									int[] grantResults) {
+	boolean resultGranted(int requestCode,
+						  String[] permissions,
+						  int[] grantResults) {
 
 		if (requestCode != REQUEST_CODE) {
-			return;
+			return false;
 		}
 
 		if (grantResults.length < 1) {
-			return;
+			return false;
 		}
 		if (!(permissions[0].equals(Manifest.permission.CAMERA))) {
-			return;
+			return false;
 		}
 
 		View noPermissionView = activity.findViewById(R.id.no_permission);
 
 		if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 			noPermissionView.setVisibility(View.GONE);
-			return;
+			return false;
 		}
 
 		requestCameraPermission();
 		noPermissionView.setVisibility(View.VISIBLE);
+		return true;
 	}
 }
