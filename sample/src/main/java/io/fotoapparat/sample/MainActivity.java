@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void takePicture() {
-
 		PhotoResult photoResult = fotoapparat.takePicture();
 
 		photoResult.saveToFile(new File(

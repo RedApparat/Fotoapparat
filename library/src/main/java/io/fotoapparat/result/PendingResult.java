@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
-import io.fotoapparat.result.extender.Extender;
+import io.fotoapparat.result.adapter.Adapter;
 import io.fotoapparat.result.transformer.Transformer;
 
 /**
@@ -76,14 +76,14 @@ public class PendingResult<T> {
 	}
 
 	/**
-	 * Extends the resulting object to a different type.
+	 * Adapts the resulting object to a different type.
 	 *
-	 * @param extender function which performs transforms the current result callback to a new
-	 *                 type.
-	 * @return Result object.
+	 * @param adapter function which performs transforms the current result callback to a new
+	 *                type.
+	 * @return result adapted to a new type.
 	 */
-	public <R> R extend(@NonNull Extender<T, R> extender) {
-		return extender.extend(future);
+	public <R> R adapt(@NonNull Adapter<T, R> adapter) {
+		return adapter.adapt(future);
 	}
 
 	/**
