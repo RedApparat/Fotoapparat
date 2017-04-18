@@ -15,7 +15,7 @@ class LockFocusCallback extends StageCallback {
 	public Stage processResult(CaptureResult result) {
 		Integer autoFocusState = result.get(CaptureResult.CONTROL_AF_STATE);
 
-		if (autoFocusState != null && autoFocusState == CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED) {
+		if (autoFocusState != null && isFocusLocked(autoFocusState)) {
 
 			Integer autoExposure = result.get(CaptureResult.CONTROL_AE_STATE);
 			if (autoExposure != null && autoExposure == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
@@ -27,5 +27,10 @@ class LockFocusCallback extends StageCallback {
 		} else {
 			return Stage.UNFOCUSED;
 		}
+	}
+
+	private boolean isFocusLocked(Integer autoFocusState) {
+		return autoFocusState == CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED
+				|| autoFocusState == CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED;
 	}
 }
