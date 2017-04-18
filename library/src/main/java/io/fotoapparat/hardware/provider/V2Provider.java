@@ -83,7 +83,7 @@ public class V2Provider implements CameraProvider {
 				captureRequestFactory,
 				stillSurfaceReader,
 				sessionManager,
-				characteristics
+				orientationManager
 		);
 
 		PreviewStream2 previewStream = new PreviewStream2(continuousSurfaceReader);

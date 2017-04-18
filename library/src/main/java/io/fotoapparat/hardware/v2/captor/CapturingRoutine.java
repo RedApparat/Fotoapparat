@@ -8,7 +8,7 @@ import android.support.annotation.RequiresApi;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.operators.CaptureOperator;
 import io.fotoapparat.hardware.v2.CameraThread;
-import io.fotoapparat.hardware.v2.capabilities.Characteristics;
+import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.session.Session;
 import io.fotoapparat.hardware.v2.session.SessionManager;
@@ -24,16 +24,16 @@ public class CapturingRoutine implements CaptureOperator {
 	private final CaptureRequestFactory captureRequestFactory;
 	private final StillSurfaceReader surfaceReader;
 	private final SessionManager sessionManager;
-	private final Characteristics characteristics;
+	private final OrientationManager orientationManager;
 
 	public CapturingRoutine(CaptureRequestFactory captureRequestFactory,
 							StillSurfaceReader surfaceReader,
 							SessionManager sessionManager,
-							Characteristics characteristics) {
+							OrientationManager orientationManager) {
 		this.captureRequestFactory = captureRequestFactory;
 		this.surfaceReader = surfaceReader;
 		this.sessionManager = sessionManager;
-		this.characteristics = characteristics;
+		this.orientationManager = orientationManager;
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class CapturingRoutine implements CaptureOperator {
 
 	private byte[] capturePicture() throws CameraAccessException {
 		Session session = sessionManager.getCaptureSession();
-		Integer sensorOrientation = characteristics.getSensorOrientation();
+		Integer sensorOrientation = orientationManager.getSensorOrientation();
 
 		Stage stage = Stage.UNFOCUSED;
 		while (stage != Stage.CAPTURE_COMPLETED) {
@@ -77,7 +77,7 @@ public class CapturingRoutine implements CaptureOperator {
 				stageCallback = new PrecaptureCallback();
 				break;
 			case CAPTURE:
-				captureRequest = captureRequestFactory.createCaptureRequest(0);
+				captureRequest = captureRequestFactory.createCaptureRequest(sensorOrientation);
 				stageCallback = new CaptureCallback(session);
 				break;
 			default:

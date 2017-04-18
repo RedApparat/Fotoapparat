@@ -38,7 +38,7 @@ public class FocusRoutine implements AutoFocusOperator {
 		Session session = sessionManager.getCaptureSession();
 
 		Stage stage = Stage.UNFOCUSED;
-		while (stage != Stage.PRECAPTURE) {
+		while (stage == Stage.UNFOCUSED) {
 			stage = triggerAutoFocus(session);
 		}
 	}
