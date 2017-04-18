@@ -14,7 +14,8 @@ public class RendererParameters {
 	public final Size previewSize;
 
 	/**
-	 * Clockwise rotation of preview frames in degrees.
+	 * The clockwise rotation angle in degrees, relative to the orientation to the camera,
+	 * that the preview needs to be rotated by, to be viewed right.
 	 */
 	public final int frameRotation;
 

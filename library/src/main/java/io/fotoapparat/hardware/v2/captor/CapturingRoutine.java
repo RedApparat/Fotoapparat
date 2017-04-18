@@ -77,7 +77,7 @@ public class CapturingRoutine implements CaptureOperator {
 				stageCallback = new PrecaptureCallback();
 				break;
 			case CAPTURE:
-				captureRequest = captureRequestFactory.createCaptureRequest(sensorOrientation);
+				captureRequest = captureRequestFactory.createCaptureRequest(0);
 				stageCallback = new CaptureCallback(session);
 				break;
 			default:

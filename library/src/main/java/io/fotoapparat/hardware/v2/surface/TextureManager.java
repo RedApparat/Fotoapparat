@@ -13,10 +13,7 @@ import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
-import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.view.TextureListener;
-
-import static java.lang.Math.round;
 
 /**
  * Manages the {@link SurfaceTexture} of a {@link TextureView}.
@@ -26,17 +23,12 @@ public class TextureManager
 		implements TextureListener.Listener, OrientationManager.Listener, SurfaceOperator {
 
 	private final CountDownLatch surfaceLatch = new CountDownLatch(1);
-	private final OrientationManager orientationManager;
-	private final ParametersProvider parametersProvider;
 	private Surface surface;
 	private TextureView textureView;
-	private SurfaceTexture surfaceTexture;
+	private int screenOrientation;
 
-	public TextureManager(OrientationManager orientationManager,
-						  ParametersProvider parametersProvider) {
-		this.orientationManager = orientationManager;
-		this.parametersProvider = parametersProvider;
-		orientationManager.setListener(this);
+	public TextureManager(OrientationManager orientationManager) {
+		orientationManager.addListener(this);
 	}
 
 	private static void correctRotatedDimensions(Matrix matrix,
@@ -62,11 +54,12 @@ public class TextureManager
 		matrix.postRotate(360 - screenOrientation, centerHorizontal, centerVertical);
 	}
 
-	/**
-	 * Notifies that the display orientation has changed.
-	 */
 	@Override
-	public void onDisplayOrientationChanged() {
+	public void onDisplayOrientationChanged(int orientation) {
+		screenOrientation = orientation;
+		if (textureView == null) {
+			return;
+		}
 		correctOrientation(textureView.getWidth(), textureView.getHeight());
 	}
 
@@ -77,7 +70,7 @@ public class TextureManager
 		}
 
 		textureView = (TextureView) displaySurface;
-		surfaceTexture = textureView.getSurfaceTexture();
+		SurfaceTexture surfaceTexture = textureView.getSurfaceTexture();
 
 		if (surfaceTexture != null) {
 			onSurfaceAvailable(surfaceTexture);
@@ -117,41 +110,17 @@ public class TextureManager
 		if (width == 0 || height == 0) {
 			return;
 		}
-		int screenOrientation = orientationManager.getScreenOrientation();
-		float aspectRatio = parametersProvider.getStillCaptureAspectRatio();
 
 		final Matrix matrix = new Matrix();
 
 		float centerHorizontal = width / 2;
 		float centerVertical = height / 2;
 
-		float previewAspectRatio = width / height;
-
 		if (screenOrientation % 180 == 90) {
-			previewAspectRatio = height / width;
-
 			correctRotatedDimensions(matrix, width, height, centerHorizontal, centerVertical);
 		}
 
 		correctRotation(matrix, screenOrientation, centerHorizontal, centerVertical);
-
-		float horizontalScale = 1;
-		float verticalScale = 1;
-
-		if (width < height) {
-			verticalScale = 1 * aspectRatio * previewAspectRatio;
-		} else {
-			horizontalScale = 1 * aspectRatio * previewAspectRatio;
-		}
-
-		matrix.postScale(
-				horizontalScale,
-				verticalScale,
-				centerHorizontal,
-				centerVertical
-		);
-
-		correctBufferSize(width, height, horizontalScale, verticalScale);
 
 		new Handler(Looper.getMainLooper())
 				.post(new Runnable() {
@@ -160,16 +129,7 @@ public class TextureManager
 						textureView.setTransform(matrix);
 					}
 				});
-	}
 
-	private void correctBufferSize(float width,
-								   float height,
-								   float horizontalScale,
-								   float verticalScale) {
-		surfaceTexture.setDefaultBufferSize(
-				round(width * horizontalScale),
-				round(height * verticalScale)
-		);
 	}
 
 }

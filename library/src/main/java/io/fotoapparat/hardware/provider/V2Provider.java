@@ -15,6 +15,7 @@ import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
+import io.fotoapparat.hardware.v2.parameters.RendererParametersProvider;
 import io.fotoapparat.hardware.v2.selection.CameraSelector;
 import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.hardware.v2.stream.PreviewStream2;
@@ -51,8 +52,7 @@ public class V2Provider implements CameraProvider {
 		ParametersProvider parametersProvider = new ParametersProvider();
 
 		TextureManager textureManager = new TextureManager(
-				orientationManager,
-				parametersProvider
+				orientationManager
 		);
 
 		StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(parametersProvider);
@@ -77,11 +77,20 @@ public class V2Provider implements CameraProvider {
 				textureManager
 		);
 
+		CapabilitiesFactory capabilitiesOperator = new CapabilitiesFactory(characteristics);
+
 		CapturingRoutine capturingRoutine = new CapturingRoutine(
 				captureRequestFactory,
 				stillSurfaceReader,
 				sessionManager,
 				characteristics
+		);
+
+		PreviewStream2 previewStream = new PreviewStream2(continuousSurfaceReader);
+
+		RendererParametersProvider rendererParametersOperator = new RendererParametersProvider(
+				parametersProvider,
+				orientationManager
 		);
 
 		FocusRoutine focusRoutine = new FocusRoutine(
@@ -95,9 +104,10 @@ public class V2Provider implements CameraProvider {
 				textureManager,
 				orientationManager,
 				parametersProvider,
-				new CapabilitiesFactory(characteristics),
+				capabilitiesOperator,
 				capturingRoutine,
-				new PreviewStream2(continuousSurfaceReader),
+				previewStream,
+				rendererParametersOperator,
 				focusRoutine
 		);
 	}

@@ -3,6 +3,9 @@ package io.fotoapparat.hardware.v2.orientation;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.fotoapparat.hardware.operators.OrientationOperator;
 import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 
@@ -13,8 +16,8 @@ import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 public class OrientationManager implements OrientationOperator {
 
 	private final Characteristics characteristics;
+	private final List<Listener> listeners = new ArrayList<>();
 	private int orientation;
-	private Listener listener;
 
 	public OrientationManager(Characteristics characteristics) {
 		this.characteristics = characteristics;
@@ -28,8 +31,8 @@ public class OrientationManager implements OrientationOperator {
 	@Override
 	public void setDisplayOrientation(int orientation) {
 		this.orientation = orientation;
-		if (listener != null) {
-			listener.onDisplayOrientationChanged();
+		for (Listener listener : listeners) {
+			listener.onDisplayOrientationChanged(orientation);
 		}
 	}
 
@@ -55,12 +58,15 @@ public class OrientationManager implements OrientationOperator {
 	}
 
 	/**
-	 * Sets a listener to be notified when the orientation has changed.
+	 * Adds a listener to be notified when the orientation has changed.
 	 *
 	 * @param listener the listener to be notified
 	 */
-	public void setListener(Listener listener) {
-		this.listener = listener;
+	public synchronized void addListener(Listener listener) {
+		if (listeners.contains(listener)) {
+			return;
+		}
+		listeners.add(listener);
 	}
 
 	/**
@@ -70,7 +76,9 @@ public class OrientationManager implements OrientationOperator {
 
 		/**
 		 * Called when the display orientation has changed.
+		 *
+		 * @param orientation the display orientation in degrees. One of: 0, 90, 180 and 270
 		 */
-		void onDisplayOrientationChanged();
+		void onDisplayOrientationChanged(int orientation);
 	}
 }

@@ -12,6 +12,7 @@ import io.fotoapparat.hardware.operators.ConnectionOperator;
 import io.fotoapparat.hardware.operators.OrientationOperator;
 import io.fotoapparat.hardware.operators.ParametersOperator;
 import io.fotoapparat.hardware.operators.PreviewOperator;
+import io.fotoapparat.hardware.operators.RendererParametersOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
@@ -33,6 +34,7 @@ public class Camera2 implements CameraDevice {
 	private final PreviewOperator previewOperator;
 	private final CaptureOperator captureOperator;
 	private final PreviewStream previewStream;
+	private final RendererParametersOperator rendererParametersOperator;
 	private final AutoFocusOperator autoFocusOperator;
 
 	public Camera2(ConnectionOperator connectionOperator,
@@ -43,6 +45,7 @@ public class Camera2 implements CameraDevice {
 				   CapabilitiesOperator capabilitiesOperator,
 				   CaptureOperator captureOperator,
 				   PreviewStream previewStream,
+				   RendererParametersOperator rendererParametersOperator,
 				   AutoFocusOperator autoFocusOperator) {
 		this.connectionOperator = connectionOperator;
 		this.parametersOperator = parametersOperator;
@@ -52,6 +55,7 @@ public class Camera2 implements CameraDevice {
 		this.capabilitiesOperator = capabilitiesOperator;
 		this.captureOperator = captureOperator;
 		this.previewStream = previewStream;
+		this.rendererParametersOperator = rendererParametersOperator;
 		this.autoFocusOperator = autoFocusOperator;
 	}
 
@@ -107,7 +111,7 @@ public class Camera2 implements CameraDevice {
 
 	@Override
 	public RendererParameters getRendererParameters() {
-		return null;
+		return rendererParametersOperator.getRendererParameters();
 	}
 
 	@Override
