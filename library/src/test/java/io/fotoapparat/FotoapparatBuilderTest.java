@@ -38,6 +38,8 @@ public class FotoapparatBuilderTest {
 	@Mock
 	SelectorFunction<Size> photoSizeSelector;
 	@Mock
+	SelectorFunction<Size> previewSizeSelector;
+	@Mock
 	SelectorFunction<LensPosition> lensPositionSelector;
 	@Mock
 	SelectorFunction<FocusMode> focusModeSelector;
@@ -194,6 +196,50 @@ public class FotoapparatBuilderTest {
 		assertEquals(
 				frameProcessor,
 				builder.frameProcessor
+		);
+	}
+
+	@Test
+	public void photoSize_HasDefault() throws Exception {
+		// When
+		FotoapparatBuilder builder = builderWithMandatoryArguments();
+
+		// Then
+		assertNotNull(builder.photoSizeSelector);
+	}
+
+	@Test
+	public void photoSize_IsConfigurable() throws Exception {
+		// When
+		FotoapparatBuilder builder = builderWithMandatoryArguments()
+				.photoSize(photoSizeSelector);
+
+		// Then
+		assertEquals(
+				photoSizeSelector,
+				builder.photoSizeSelector
+		);
+	}
+
+	@Test
+	public void previewSize_HasDefault() throws Exception {
+		// When
+		FotoapparatBuilder builder = builderWithMandatoryArguments();
+
+		// Then
+		assertNotNull(builder.previewSizeSelector);
+	}
+
+	@Test
+	public void previewSize_IsConfigurable() throws Exception {
+		// When
+		FotoapparatBuilder builder = builderWithMandatoryArguments()
+				.previewSizeSelector(previewSizeSelector);
+
+		// Then
+		assertEquals(
+				previewSizeSelector,
+				builder.previewSizeSelector
 		);
 	}
 
