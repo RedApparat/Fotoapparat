@@ -1,4 +1,4 @@
-package io.fotoapparat.task;
+package io.fotoapparat.parameter.provider;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;

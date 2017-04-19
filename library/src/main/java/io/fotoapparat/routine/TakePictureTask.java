@@ -1,4 +1,4 @@
-package io.fotoapparat.task;
+package io.fotoapparat.routine;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
@@ -9,7 +9,7 @@ import io.fotoapparat.photo.Photo;
 /**
  * Takes photo and returns result as {@link Photo}.
  */
-public class TakePictureTask extends FutureTask<Photo> {
+class TakePictureTask extends FutureTask<Photo> {
 
 	public TakePictureTask(final CameraDevice cameraDevice) {
 		super(new Callable<Photo>() {

@@ -4,7 +4,6 @@ import java.util.concurrent.Executor;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.result.CapabilitiesResult;
-import io.fotoapparat.task.GetCapabilitiesTask;
 
 /**
  * Provides camera capabilities.

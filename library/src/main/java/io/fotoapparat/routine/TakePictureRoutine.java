@@ -4,7 +4,6 @@ import java.util.concurrent.Executor;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.result.PhotoResult;
-import io.fotoapparat.task.TakePictureTask;
 
 /**
  * Takes picture.

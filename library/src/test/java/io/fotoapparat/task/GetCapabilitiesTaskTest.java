@@ -14,6 +14,7 @@ import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.provider.GetCapabilitiesTask;
 
 import static io.fotoapparat.test.TestUtils.resultOf;
 import static junit.framework.Assert.assertEquals;
