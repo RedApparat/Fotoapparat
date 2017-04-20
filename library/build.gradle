@@ -21,4 +21,6 @@ dependencies {
 
     testCompile "junit:junit:${project.junitVersion}"
     testCompile "org.mockito:mockito-core:${project.mockitoVersion}"
+    testCompile 'commons-io:commons-io:2.5'
+
 }
