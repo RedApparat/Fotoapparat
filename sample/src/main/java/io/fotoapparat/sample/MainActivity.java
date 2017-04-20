@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import java.io.File;
 
 import io.fotoapparat.Fotoapparat;
-import io.fotoapparat.log.LogcatLogger;
+import io.fotoapparat.log.Loggers;
 import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 						torch()
 				))
 				.frameProcessor(new SampleFrameProcessor())
-				.logger(new LogcatLogger())
+				.logger(Loggers.logcat())
 				.build();
 
 		cameraView.setOnClickListener(new View.OnClickListener() {
