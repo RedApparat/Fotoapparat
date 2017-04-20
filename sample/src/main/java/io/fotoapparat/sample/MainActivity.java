@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import java.io.File;
 
 import io.fotoapparat.Fotoapparat;
-import io.fotoapparat.log.Loggers;
 import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
@@ -17,6 +16,7 @@ import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.view.CameraView;
 
+import static io.fotoapparat.log.Loggers.fileLogger;
 import static io.fotoapparat.parameter.selector.AspectRatioSelectors.standardRatio;
 import static io.fotoapparat.parameter.selector.FlashSelectors.autoFlash;
 import static io.fotoapparat.parameter.selector.FlashSelectors.autoRedEye;
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 						torch()
 				))
 				.frameProcessor(new SampleFrameProcessor())
-				.logger(Loggers.logcat())
+				.logger(fileLogger(this))
 				.build();
 
 		cameraView.setOnClickListener(new View.OnClickListener() {
