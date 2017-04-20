@@ -7,9 +7,8 @@ import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.hardware.provider.V1AvailableLensPositionProvider;
 import io.fotoapparat.hardware.provider.V1Provider;
-import io.fotoapparat.log.DummyLogger;
-import io.fotoapparat.log.LogcatLogger;
 import io.fotoapparat.log.Logger;
+import io.fotoapparat.log.Loggers;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
@@ -38,7 +37,7 @@ public class FotoapparatBuilder {
 
 	FrameProcessor frameProcessor = null;
 
-	Logger logger = new DummyLogger();
+	Logger logger = Loggers.none();
 
 	FotoapparatBuilder(Context context) {
 		this.context = context;
@@ -103,7 +102,7 @@ public class FotoapparatBuilder {
 
 	/**
 	 * @param logger logger which will print logs. No logger is set by default.
-	 * @see LogcatLogger
+	 * @see Loggers
 	 */
 	public FotoapparatBuilder logger(Logger logger) {
 		this.logger = logger;

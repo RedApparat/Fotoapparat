@@ -5,7 +5,7 @@ import android.util.Log;
 /**
  * Uses Logcat to log messages.
  */
-public class LogcatLogger implements Logger {
+class LogcatLogger implements Logger {
 
 	@Override
 	public void log(String message) {
