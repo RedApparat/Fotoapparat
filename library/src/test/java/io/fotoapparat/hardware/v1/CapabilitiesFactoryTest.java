@@ -41,6 +41,8 @@ public class CapabilitiesFactoryTest {
 				.willReturn(Collections.<String>emptyList());
 		given(parameters.getSupportedPictureSizes())
 				.willReturn(Collections.<Camera.Size>emptyList());
+		given(parameters.getSupportedPreviewSizes())
+				.willReturn(Collections.<Camera.Size>emptyList());
 
 		testee = new CapabilitiesFactory();
 	}
@@ -120,7 +122,29 @@ public class CapabilitiesFactoryTest {
 						new Size(10, 10),
 						new Size(20, 20)
 				),
-				capabilities.supportedSizes()
+				capabilities.supportedPictureSizes()
+		);
+	}
+
+	@Test
+	public void mapPreviewSizes() throws Exception {
+		// Given
+		given(parameters.getSupportedPreviewSizes())
+				.willReturn(asList(
+						makeSize(10, 10),
+						makeSize(20, 20)
+				));
+
+		// When
+		Capabilities capabilities = testee.fromParameters(parameters);
+
+		// Then
+		assertEquals(
+				asSet(
+						new Size(10, 10),
+						new Size(20, 20)
+				),
+				capabilities.supportedPreviewSizes()
 		);
 	}
 

@@ -30,8 +30,8 @@ import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 
 public class MainActivity extends AppCompatActivity {
 
-	private Fotoapparat fotoapparat;
 	private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
+	private Fotoapparat fotoapparat;
 	private boolean hasCameraPermission;
 	private CameraView cameraView;
 

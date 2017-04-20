@@ -23,14 +23,20 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class InitialParametersProviderTest {
 
-	static final Set<Size> SIZES = asSet(new Size(4000, 3000));
+	static final Size PHOTO_SIZE = new Size(4000, 3000);
+	static final Size PREVIEW_SIZE = new Size(1000, 1000);
 	static final Set<FocusMode> FOCUS_MODES = asSet(FocusMode.FIXED);
 	static final Set<Flash> FLASH = asSet(Flash.AUTO_RED_EYE);
+
+	static final Set<Size> PHOTO_SIZES = asSet(PHOTO_SIZE);
+	static final Set<Size> PREVIEW_SIZES = asSet(PREVIEW_SIZE);
 
 	@Mock
 	CameraDevice cameraDevice;
 	@Mock
-	SelectorFunction<Size> sizeSelector;
+	SelectorFunction<Size> photoSizeSelector;
+	@Mock
+	SelectorFunction<Size> previewSizeSelector;
 	@Mock
 	SelectorFunction<FocusMode> focusModeSelector;
 	@Mock
@@ -42,20 +48,24 @@ public class InitialParametersProviderTest {
 	public void setUp() throws Exception {
 		testee = new InitialParametersProvider(
 				cameraDevice,
-				sizeSelector,
+				photoSizeSelector,
+				previewSizeSelector,
 				focusModeSelector,
 				flashModeSelector
 		);
 
 		given(cameraDevice.getCapabilities())
 				.willReturn(new Capabilities(
-						SIZES,
+						PHOTO_SIZES,
+						PREVIEW_SIZES,
 						FOCUS_MODES,
 						FLASH
 				));
 
-		given(sizeSelector.select(SIZES))
-				.willReturn(new Size(4000, 3000));
+		given(photoSizeSelector.select(PHOTO_SIZES))
+				.willReturn(PHOTO_SIZE);
+		given(previewSizeSelector.select(PREVIEW_SIZES))
+				.willReturn(PREVIEW_SIZE);
 		given(focusModeSelector.select(FOCUS_MODES))
 				.willReturn(FocusMode.FIXED);
 		given(flashModeSelector.select(FLASH))
@@ -85,4 +95,29 @@ public class InitialParametersProviderTest {
 				parameters.getValue(Parameters.Type.FLASH)
 		);
 	}
+
+	@Test
+	public void selectPhotoSize() throws Exception {
+		// When
+		Parameters parameters = testee.initialParameters();
+
+		// Then
+		assertEquals(
+				PHOTO_SIZE,
+				parameters.getValue(Parameters.Type.PICTURE_SIZE)
+		);
+	}
+
+	@Test
+	public void selectPreviewSize() throws Exception {
+		// When
+		Parameters parameters = testee.initialParameters();
+
+		// Then
+		assertEquals(
+				PREVIEW_SIZE,
+				parameters.getValue(Parameters.Type.PREVIEW_SIZE)
+		);
+	}
+
 }

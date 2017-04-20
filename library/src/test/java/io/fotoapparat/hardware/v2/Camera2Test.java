@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collections;
+
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
 import io.fotoapparat.hardware.operators.CaptureOperator;
@@ -17,9 +19,11 @@ import io.fotoapparat.hardware.operators.OrientationOperator;
 import io.fotoapparat.hardware.operators.ParametersOperator;
 import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
+import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.parameter.Size;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
 
@@ -121,9 +125,10 @@ public class Camera2Test {
 	public void getCapabilities() throws Exception {
 		// Given
 		Capabilities capabilities = new Capabilities(
-				null,
+				Collections.<Size>emptySet(),
+				Collections.<Size>emptySet(),
 				singleton(FocusMode.MACRO),
-				null
+				Collections.<Flash>emptySet()
 		);
 		given(capabilitiesOperator.getCapabilities())
 				.willReturn(capabilities);

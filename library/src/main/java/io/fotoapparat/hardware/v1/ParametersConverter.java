@@ -56,7 +56,18 @@ public class ParametersConverter {
 						output
 				);
 				break;
+			case PREVIEW_SIZE:
+				applyPreviewSize(
+						(Size) input.getValue(type),
+						output
+				);
+				break;
 		}
+	}
+
+	private void applyPreviewSize(Size size,
+								  Camera.Parameters output) {
+		output.setPreviewSize(size.width, size.height);
 	}
 
 	private void applyPictureSize(Size size,

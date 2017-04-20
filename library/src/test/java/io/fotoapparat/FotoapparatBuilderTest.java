@@ -234,7 +234,7 @@ public class FotoapparatBuilderTest {
 	public void previewSize_IsConfigurable() throws Exception {
 		// When
 		FotoapparatBuilder builder = builderWithMandatoryArguments()
-				.previewSizeSelector(previewSizeSelector);
+				.previewSize(previewSizeSelector);
 
 		// Then
 		assertEquals(

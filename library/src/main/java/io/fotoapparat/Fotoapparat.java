@@ -68,6 +68,7 @@ public class Fotoapparat {
 		InitialParametersProvider initialParametersProvider = new InitialParametersProvider(
 				cameraDevice,
 				builder.photoSizeSelector,
+				builder.previewSizeSelector,
 				builder.focusModeSelector,
 				builder.flashSelector
 		);

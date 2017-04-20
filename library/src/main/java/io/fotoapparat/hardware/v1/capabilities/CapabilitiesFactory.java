@@ -2,6 +2,7 @@ package io.fotoapparat.hardware.v1.capabilities;
 
 import android.hardware.Camera;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,15 +24,24 @@ public class CapabilitiesFactory {
 	public Capabilities fromParameters(Camera.Parameters parameters) {
 		return new Capabilities(
 				extractPictureSizes(parameters),
+				extractPreviewSizes(parameters),
 				extractFocusModes(parameters),
 				extractFlashModes(parameters)
 		);
 	}
 
+	private Set<Size> extractPreviewSizes(Camera.Parameters parameters) {
+		return mapSizes(parameters.getSupportedPreviewSizes());
+	}
+
 	private Set<Size> extractPictureSizes(Camera.Parameters parameters) {
+		return mapSizes(parameters.getSupportedPictureSizes());
+	}
+
+	private Set<Size> mapSizes(Collection<Camera.Size> sizes) {
 		HashSet<Size> result = new HashSet<>();
 
-		for (Camera.Size size : parameters.getSupportedPictureSizes()) {
+		for (Camera.Size size : sizes) {
 			result.add(new Size(
 					size.width,
 					size.height

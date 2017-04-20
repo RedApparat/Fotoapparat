@@ -1,5 +1,7 @@
 package io.fotoapparat.hardware;
 
+import android.support.annotation.NonNull;
+
 import java.util.Collections;
 import java.util.Set;
 
@@ -12,14 +14,21 @@ import io.fotoapparat.parameter.Size;
  */
 public class Capabilities {
 
-	private final Set<Size> sizes;
+	@NonNull
+	private final Set<Size> photoSizes;
+	@NonNull
+	private final Set<Size> previewSizes;
+	@NonNull
 	private final Set<FocusMode> focusModes;
+	@NonNull
 	private final Set<Flash> flashModes;
 
-	public Capabilities(Set<Size> sizes,
-						Set<FocusMode> focusModes,
-						Set<Flash> flashModes) {
-		this.sizes = sizes;
+	public Capabilities(@NonNull Set<Size> photoSizes,
+						@NonNull Set<Size> previewSizes,
+						@NonNull Set<FocusMode> focusModes,
+						@NonNull Set<Flash> flashModes) {
+		this.photoSizes = photoSizes;
+		this.previewSizes = previewSizes;
 		this.focusModes = focusModes;
 		this.flashModes = flashModes;
 	}
@@ -30,46 +39,24 @@ public class Capabilities {
 	public static Capabilities empty() {
 		return new Capabilities(
 				Collections.<Size>emptySet(),
+				Collections.<Size>emptySet(),
 				Collections.<FocusMode>emptySet(),
 				Collections.<Flash>emptySet()
 		);
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		Capabilities that = (Capabilities) o;
-
-		return sizes != null ? sizes.equals(that.sizes) : that.sizes == null
-				&& (focusModes != null ? focusModes.equals(that.focusModes) : that.focusModes == null
-				&& (flashModes != null ? flashModes.equals(that.flashModes) : that.flashModes == null));
-
-	}
-
-	@Override
-	public int hashCode() {
-		int result = sizes != null ? sizes.hashCode() : 0;
-		result = 31 * result + (focusModes != null ? focusModes.hashCode() : 0);
-		result = 31 * result + (flashModes != null ? flashModes.hashCode() : 0);
-		return result;
-	}
-
-	@Override
-	public String toString() {
-		return "Capabilities{" +
-				"sizes=" + sizes +
-				", focusModes=" + focusModes +
-				", flashModes=" + flashModes +
-				'}';
+	/**
+	 * @return list of supported picture sizes.
+	 */
+	public Set<Size> supportedPictureSizes() {
+		return photoSizes;
 	}
 
 	/**
-	 * @return list of supported sizes.
+	 * @return list of supported preview sizes;
 	 */
-	public Set<Size> supportedSizes() {
-		return sizes;
+	public Set<Size> supportedPreviewSizes() {
+		return previewSizes;
 	}
 
 	/**
@@ -84,6 +71,39 @@ public class Capabilities {
 	 */
 	public Set<Flash> supportedFlashModes() {
 		return flashModes;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Capabilities that = (Capabilities) o;
+
+		return photoSizes.equals(that.photoSizes)
+				&& previewSizes.equals(that.previewSizes)
+				&& focusModes.equals(that.focusModes)
+				&& flashModes.equals(that.flashModes);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = photoSizes.hashCode();
+		result = 31 * result + previewSizes.hashCode();
+		result = 31 * result + focusModes.hashCode();
+		result = 31 * result + flashModes.hashCode();
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Capabilities{" +
+				"photoSizes=" + photoSizes +
+				", previewSizes=" + previewSizes +
+				", focusModes=" + focusModes +
+				", flashModes=" + flashModes +
+				'}';
 	}
 
 }

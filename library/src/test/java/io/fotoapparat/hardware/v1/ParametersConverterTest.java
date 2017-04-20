@@ -104,4 +104,24 @@ public class ParametersConverterTest {
 		// Then
 		verify(outputParameters).setPictureSize(10, 20);
 	}
+
+	@Test
+	public void setPreviewSize() throws Exception {
+		// Given
+		Parameters input = new Parameters();
+		input.putValue(
+				Parameters.Type.PREVIEW_SIZE,
+				new Size(10, 20)
+		);
+
+		// When
+		testee.convert(
+				input,
+				outputParameters
+		);
+
+		// Then
+		verify(outputParameters).setPreviewSize(10, 20);
+	}
+
 }

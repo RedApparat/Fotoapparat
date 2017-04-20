@@ -26,6 +26,7 @@ public class GetCapabilitiesTaskTest {
 
 	private static final Capabilities CAPABILITIES = new Capabilities(
 			Collections.singleton(new Size(1400, 1080)),
+			Collections.singleton(new Size(1400, 1080)),
 			Collections.singleton(FocusMode.CONTINUOUS_FOCUS),
 			Collections.singleton(Flash.OFF)
 	);

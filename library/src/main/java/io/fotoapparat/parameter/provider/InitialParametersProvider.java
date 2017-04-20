@@ -15,16 +15,19 @@ import io.fotoapparat.parameter.selector.SelectorFunction;
 public class InitialParametersProvider {
 
 	private final CapabilitiesOperator capabilitiesOperator;
-	private final SelectorFunction<Size> sizeSelector;
+	private final SelectorFunction<Size> photoSizeSelector;
+	private final SelectorFunction<Size> previewSizeSelector;
 	private final SelectorFunction<FocusMode> focusModeSelector;
 	private final SelectorFunction<Flash> flashSelector;
 
 	public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
-									 SelectorFunction<Size> sizeSelector,
+									 SelectorFunction<Size> photoSizeSelector,
+									 SelectorFunction<Size> previewSizeSelector,
 									 SelectorFunction<FocusMode> focusModeSelector,
 									 SelectorFunction<Flash> flashSelector) {
 		this.capabilitiesOperator = capabilitiesOperator;
-		this.sizeSelector = sizeSelector;
+		this.photoSizeSelector = photoSizeSelector;
+		this.previewSizeSelector = previewSizeSelector;
 		this.focusModeSelector = focusModeSelector;
 		this.flashSelector = flashSelector;
 	}
@@ -37,18 +40,28 @@ public class InitialParametersProvider {
 
 		Parameters parameters = new Parameters();
 
-		putSize(capabilities, parameters);
+		putPictureSize(capabilities, parameters);
+		putPreviewSize(capabilities, parameters);
 		putFocusMode(capabilities, parameters);
 		putFlash(capabilities, parameters);
 
 		return parameters;
 	}
 
-	private void putSize(Capabilities capabilities, Parameters parameters) {
+	private void putPreviewSize(Capabilities capabilities, Parameters parameters) {
+		parameters.putValue(
+				Parameters.Type.PREVIEW_SIZE,
+				previewSizeSelector.select(
+						capabilities.supportedPreviewSizes()
+				)
+		);
+	}
+
+	private void putPictureSize(Capabilities capabilities, Parameters parameters) {
 		parameters.putValue(
 				Parameters.Type.PICTURE_SIZE,
-				sizeSelector.select(
-						capabilities.supportedSizes()
+				photoSizeSelector.select(
+						capabilities.supportedPictureSizes()
 				)
 		);
 	}

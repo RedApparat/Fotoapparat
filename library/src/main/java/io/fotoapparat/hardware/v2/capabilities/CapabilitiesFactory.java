@@ -32,6 +32,7 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
 	public Capabilities getCapabilities() {
 		return new Capabilities(
 				availableJpegSizes(),
+				Collections.<Size>emptySet(),
 				availableFocusModes(),
 				availableFlashModes()
 		);

@@ -75,6 +75,11 @@ public class Parameters {
 		PICTURE_SIZE(Size.class),
 
 		/**
+		 * Size of the preview stream frames. Expected type: {@link Size}.
+		 */
+		PREVIEW_SIZE(Size.class),
+
+		/**
 		 * Focus mode of the camera. Expected type: {@link FocusMode}.
 		 */
 		FOCUS_MODE(FocusMode.class),

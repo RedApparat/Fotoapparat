@@ -63,7 +63,7 @@ public class FotoapparatBuilder {
 	/**
 	 * @param selector selects size of preview stream (in pixels) from list of available sizes.
 	 */
-	public FotoapparatBuilder previewSizeSelector(SelectorFunction<Size> selector) {
+	public FotoapparatBuilder previewSize(SelectorFunction<Size> selector) {
 		previewSizeSelector = selector;
 		return this;
 	}
