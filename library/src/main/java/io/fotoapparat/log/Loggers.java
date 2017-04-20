@@ -3,6 +3,9 @@ package io.fotoapparat.log;
 import android.content.Context;
 
 import java.io.File;
+import java.util.ArrayList;
+
+import static java.util.Arrays.asList;
 
 /**
  * Built-in implementations of {@link Logger}.
@@ -41,6 +44,19 @@ public class Loggers {
 						logFile
 				)
 		);
+	}
+
+	/**
+	 * @return logger which combine multiple other loggers together.
+	 */
+	public static Logger loggers(Logger... loggers) {
+		ArrayList<Logger> result = new ArrayList<>();
+
+		if (loggers != null) {
+			result.addAll(asList(loggers));
+		}
+
+		return new CompositeLogger(result);
 	}
 
 	/**

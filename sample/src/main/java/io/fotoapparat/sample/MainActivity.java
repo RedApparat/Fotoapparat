@@ -17,6 +17,8 @@ import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.view.CameraView;
 
 import static io.fotoapparat.log.Loggers.fileLogger;
+import static io.fotoapparat.log.Loggers.logcat;
+import static io.fotoapparat.log.Loggers.loggers;
 import static io.fotoapparat.parameter.selector.AspectRatioSelectors.standardRatio;
 import static io.fotoapparat.parameter.selector.FlashSelectors.autoFlash;
 import static io.fotoapparat.parameter.selector.FlashSelectors.autoRedEye;
@@ -65,7 +67,10 @@ public class MainActivity extends AppCompatActivity {
 						torch()
 				))
 				.frameProcessor(new SampleFrameProcessor())
-				.logger(fileLogger(this))
+				.logger(loggers(
+						logcat(),
+						fileLogger(this)
+				))
 				.build();
 
 		cameraView.setOnClickListener(new View.OnClickListener() {
