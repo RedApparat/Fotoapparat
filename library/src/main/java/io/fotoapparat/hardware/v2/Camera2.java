@@ -14,6 +14,7 @@ import io.fotoapparat.hardware.operators.ParametersOperator;
 import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.operators.RendererParametersOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
+import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.RendererParameters;
@@ -26,6 +27,7 @@ import io.fotoapparat.preview.PreviewStream;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Camera2 implements CameraDevice {
 
+	private final Logger logger;
 	private final OrientationOperator orientationOperator;
 	private final SurfaceOperator surfaceOperator;
 	private final CapabilitiesOperator capabilitiesOperator;
@@ -37,7 +39,8 @@ public class Camera2 implements CameraDevice {
 	private final RendererParametersOperator rendererParametersOperator;
 	private final AutoFocusOperator autoFocusOperator;
 
-	public Camera2(ConnectionOperator connectionOperator,
+	public Camera2(Logger logger,
+				   ConnectionOperator connectionOperator,
 				   PreviewOperator previewOperator,
 				   SurfaceOperator surfaceOperator,
 				   OrientationOperator orientationOperator,
@@ -47,6 +50,7 @@ public class Camera2 implements CameraDevice {
 				   PreviewStream previewStream,
 				   RendererParametersOperator rendererParametersOperator,
 				   AutoFocusOperator autoFocusOperator) {
+		this.logger = logger;
 		this.connectionOperator = connectionOperator;
 		this.parametersOperator = parametersOperator;
 		this.previewOperator = previewOperator;
@@ -61,62 +65,93 @@ public class Camera2 implements CameraDevice {
 
 	@Override
 	public void open(LensPosition lensPosition) {
+		recordMethod();
+
 		connectionOperator.open(lensPosition);
 	}
 
 	@Override
 	public void close() {
+		recordMethod();
+
 		connectionOperator.close();
 	}
 
 	@Override
 	public void startPreview() {
+		recordMethod();
+
 		previewOperator.startPreview();
 	}
 
 	@Override
 	public void stopPreview() {
+		recordMethod();
+
 		previewOperator.stopPreview();
 	}
 
 	@Override
 	public void setDisplaySurface(Object displaySurface) {
+		recordMethod();
+
 		surfaceOperator.setDisplaySurface(displaySurface);
 	}
 
 	@Override
 	public void setDisplayOrientation(int degrees) {
+		recordMethod();
+
 		orientationOperator.setDisplayOrientation(degrees);
 	}
 
 	@Override
 	public void updateParameters(Parameters parameters) {
+		recordMethod();
+
 		parametersOperator.updateParameters(parameters);
 	}
 
 	@Override
 	public Capabilities getCapabilities() {
+		recordMethod();
+
 		return capabilitiesOperator.getCapabilities();
 	}
 
 	@Override
 	public Photo takePicture() {
+		recordMethod();
+
 		return captureOperator.takePicture();
 	}
 
 	@Override
 	public PreviewStream getPreviewStream() {
+		recordMethod();
+
 		return previewStream;
 	}
 
 	@Override
 	public RendererParameters getRendererParameters() {
+		recordMethod();
+
 		return rendererParametersOperator.getRendererParameters();
 	}
 
 	@Override
 	public void autoFocus() {
+		recordMethod();
+
 		autoFocusOperator.autoFocus();
 	}
 
+	private void recordMethod() {
+		Exception lastStacktrace = new Exception();
+
+		logger.log(
+				lastStacktrace.getStackTrace()[1].getMethodName()
+		);
+	}
 }
