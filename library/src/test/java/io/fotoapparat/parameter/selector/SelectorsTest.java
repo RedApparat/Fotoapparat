@@ -10,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
+import static io.fotoapparat.test.TestUtils.asSet;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -69,7 +70,7 @@ public class SelectorsTest {
 		// Then
 		assertEquals("A", result);
 
-		verify(functionA).select(asList("A", "AB"));
+		verify(functionA).select(asSet("A", "AB"));
 	}
 
 	@Test

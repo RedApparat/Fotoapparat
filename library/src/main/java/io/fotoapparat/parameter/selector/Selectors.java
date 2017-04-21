@@ -2,8 +2,8 @@ package io.fotoapparat.parameter.selector;
 
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * General selector functions.
@@ -61,7 +61,7 @@ public class Selectors {
 	}
 
 	private static <T> Collection<T> filteredItems(Collection<T> items, Predicate<T> predicate) {
-		ArrayList<T> result = new ArrayList<>();
+		HashSet<T> result = new HashSet<>();
 
 		for (T item : items) {
 			if (predicate.condition(item)) {

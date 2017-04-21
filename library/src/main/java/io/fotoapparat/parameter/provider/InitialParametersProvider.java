@@ -7,6 +7,7 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.selector.AspectRatioSelectors;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 
 /**
@@ -49,20 +50,29 @@ public class InitialParametersProvider {
 	}
 
 	private void putPreviewSize(Capabilities capabilities, Parameters parameters) {
+		Size photoSize = photoSize(capabilities);
+
 		parameters.putValue(
 				Parameters.Type.PREVIEW_SIZE,
-				previewSizeSelector.select(
-						capabilities.supportedPreviewSizes()
-				)
+				AspectRatioSelectors
+						.aspectRatio(
+								photoSize.getAspectRatio(),
+								previewSizeSelector
+						)
+						.select(capabilities.supportedPreviewSizes())
 		);
 	}
 
 	private void putPictureSize(Capabilities capabilities, Parameters parameters) {
 		parameters.putValue(
 				Parameters.Type.PICTURE_SIZE,
-				photoSizeSelector.select(
-						capabilities.supportedPictureSizes()
-				)
+				photoSize(capabilities)
+		);
+	}
+
+	private Size photoSize(Capabilities capabilities) {
+		return photoSizeSelector.select(
+				capabilities.supportedPictureSizes()
 		);
 	}
 

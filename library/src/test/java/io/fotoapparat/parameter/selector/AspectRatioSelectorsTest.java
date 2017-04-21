@@ -8,6 +8,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.parameter.Size;
 
+import static io.fotoapparat.test.TestUtils.asSet;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -40,7 +41,7 @@ public class AspectRatioSelectorsTest {
 				result
 		);
 
-		verify(sizeSelector).select(asList(
+		verify(sizeSelector).select(asSet(
 				new Size(4, 3),
 				new Size(8, 6)
 		));
@@ -67,7 +68,7 @@ public class AspectRatioSelectorsTest {
 				result
 		);
 
-		verify(sizeSelector).select(asList(
+		verify(sizeSelector).select(asSet(
 				new Size(16, 9),
 				new Size(32, 18)
 		));
