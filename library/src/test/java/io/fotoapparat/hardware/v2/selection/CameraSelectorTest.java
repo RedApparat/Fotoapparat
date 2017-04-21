@@ -1,5 +1,6 @@
 package io.fotoapparat.hardware.v2.selection;
 
+import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
@@ -15,6 +16,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.parameter.LensPosition;
 
+import static android.hardware.camera2.CameraAccessException.CAMERA_ERROR;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 
@@ -34,6 +36,19 @@ public class CameraSelectorTest {
 
 		given(manager.getCameraCharacteristics("1").get(CameraCharacteristics.LENS_FACING))
 				.willReturn(CameraMetadata.LENS_FACING_FRONT);
+	}
+
+	@Test(expected = CameraException.class)
+	public void cameraNotAvailable() throws Exception {
+		// Given
+		given(manager.getCameraIdList())
+				.willThrow(new CameraAccessException(CAMERA_ERROR));
+
+		// When
+		testee.findCameraId(LensPosition.EXTERNAL);
+
+		// Then
+		// exception
 	}
 
 	@Test(expected = CameraException.class)
