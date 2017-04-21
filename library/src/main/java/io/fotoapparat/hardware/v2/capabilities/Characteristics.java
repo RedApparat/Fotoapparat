@@ -56,18 +56,6 @@ public class Characteristics {
 	}
 
 	/**
-	 * Informs whether or not the camera's lens has fixed focus.
-	 *
-	 * @return {@code true} if the camera's lens has fixed focus.
-	 */
-	public boolean isFixedFocusLens() {
-		Float minimumFocusDistance = getCameraCharacteristics()
-				.get(CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE);
-
-		return minimumFocusDistance != null && minimumFocusDistance != 0;
-	}
-
-	/**
 	 * Whether this camera device has a flash unit.
 	 *
 	 * @return {@code true} if the camera's lens has a flash unit.
