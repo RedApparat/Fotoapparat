@@ -51,7 +51,7 @@ class CaptureCallback extends StageCallback {
 
 	private void stopPreviewSession() {
 		try {
-			this.session.getCaptureSession().stopRepeating(); // TODO: 05.04.17 need?
+			this.session.getCaptureSession().stopRepeating();
 		} catch (CameraAccessException e) {
 			// Do nothing
 		}
