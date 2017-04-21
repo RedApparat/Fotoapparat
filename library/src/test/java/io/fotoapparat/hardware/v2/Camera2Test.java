@@ -19,6 +19,7 @@ import io.fotoapparat.hardware.operators.OrientationOperator;
 import io.fotoapparat.hardware.operators.ParametersOperator;
 import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
+import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
@@ -29,6 +30,7 @@ import io.fotoapparat.preview.PreviewStream;
 
 import static java.util.Collections.singleton;
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -36,6 +38,8 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class Camera2Test {
 
+	@Mock
+	Logger logger;
 	@Mock
 	ConnectionOperator connectionOperator;
 	@Mock
@@ -62,6 +66,7 @@ public class Camera2Test {
 		testee.open(LensPosition.FRONT);
 
 		// Then
+		verify(logger).log(anyString());
 		verify(connectionOperator).open(LensPosition.FRONT);
 	}
 
@@ -71,6 +76,7 @@ public class Camera2Test {
 		testee.close();
 
 		// Then
+		verify(logger).log(anyString());
 		verify(connectionOperator).close();
 	}
 
@@ -80,6 +86,7 @@ public class Camera2Test {
 		testee.startPreview();
 
 		// Then
+		verify(logger).log(anyString());
 		verify(previewOperator).startPreview();
 	}
 
@@ -89,6 +96,7 @@ public class Camera2Test {
 		testee.stopPreview();
 
 		// Then
+		verify(logger).log(anyString());
 		verify(previewOperator).stopPreview();
 	}
 
@@ -99,6 +107,7 @@ public class Camera2Test {
 		testee.setDisplaySurface(textureView);
 
 		// Then
+		verify(logger).log(anyString());
 		verify(surfaceOperator).setDisplaySurface(textureView);
 	}
 
@@ -108,6 +117,7 @@ public class Camera2Test {
 		testee.setDisplayOrientation(90);
 
 		// Then
+		verify(logger).log(anyString());
 		verify(orientationOperator).setDisplayOrientation(90);
 	}
 
@@ -118,6 +128,7 @@ public class Camera2Test {
 		testee.updateParameters(parameters);
 
 		// Then
+		verify(logger).log(anyString());
 		verify(parametersOperator).updateParameters(parameters);
 	}
 
@@ -137,6 +148,7 @@ public class Camera2Test {
 		Capabilities returnedCapabilities = testee.getCapabilities();
 
 		// Then
+		verify(logger).log(anyString());
 		assertEquals(capabilities, returnedCapabilities);
 	}
 
@@ -151,6 +163,7 @@ public class Camera2Test {
 		Photo returnedPhoto = testee.takePicture();
 
 		// Then
+		verify(logger).log(anyString());
 		assertEquals(photo, returnedPhoto);
 	}
 
@@ -162,6 +175,7 @@ public class Camera2Test {
 		PreviewStream previewStream = testee.getPreviewStream();
 
 		// Then
+		verify(logger).log(anyString());
 		assertEquals(this.previewStream, previewStream);
 	}
 }
