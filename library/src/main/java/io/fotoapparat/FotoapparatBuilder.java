@@ -30,7 +30,7 @@ public class FotoapparatBuilder {
 	CameraRenderer renderer;
 
 	SelectorFunction<LensPosition> lensPositionSelector;
-	SelectorFunction<Size> photoSizeSelector = Selectors.nothing();
+	SelectorFunction<Size> photoSizeSelector;
 	SelectorFunction<Size> previewSizeSelector = Selectors.nothing();
 	SelectorFunction<FocusMode> focusModeSelector = Selectors.nothing();
 	SelectorFunction<Flash> flashSelector = Selectors.nothing();
@@ -135,6 +135,10 @@ public class FotoapparatBuilder {
 
 		if (lensPositionSelector == null) {
 			throw new IllegalStateException("LensPosition selector is mandatory.");
+		}
+
+		if (photoSizeSelector == null) {
+			throw new IllegalStateException("Photo size selector is mandatory.");
 		}
 	}
 

@@ -109,7 +109,10 @@ public class InitialParametersProviderTest {
 	}
 
 	@Test
-	public void selectPreviewSize() throws Exception {
+	public void selectPreviewSize_SameAspectRatioAsPhoto() throws Exception {
+		// Given
+
+
 		// When
 		Parameters parameters = testee.initialParameters();
 

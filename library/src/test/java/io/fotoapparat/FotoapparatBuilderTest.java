@@ -149,34 +149,6 @@ public class FotoapparatBuilderTest {
 		);
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void rendererIsMandatory() throws Exception {
-		// Given
-		FotoapparatBuilder builder = new FotoapparatBuilder(context)
-				.photoSize(photoSizeSelector)
-				.lensPosition(lensPositionSelector);
-
-		// When
-		builder.build();
-
-		// Then
-		// Expect exception
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public void lensPositionIsMandatory() throws Exception {
-		// Given
-		FotoapparatBuilder builder = new FotoapparatBuilder(context)
-				.photoSize(photoSizeSelector)
-				.into(cameraRenderer);
-
-		// When
-		builder.build();
-
-		// Then
-		// Expect exception
-	}
-
 	@Test
 	public void frameProcessor_NullByDefault() throws Exception {
 		// When
@@ -197,15 +169,6 @@ public class FotoapparatBuilderTest {
 				frameProcessor,
 				builder.frameProcessor
 		);
-	}
-
-	@Test
-	public void photoSize_HasDefault() throws Exception {
-		// When
-		FotoapparatBuilder builder = builderWithMandatoryArguments();
-
-		// Then
-		assertNotNull(builder.photoSizeSelector);
 	}
 
 	@Test
@@ -243,9 +206,52 @@ public class FotoapparatBuilderTest {
 		);
 	}
 
+	@Test(expected = IllegalStateException.class)
+	public void rendererIsMandatory() throws Exception {
+		// Given
+		FotoapparatBuilder builder = new FotoapparatBuilder(context)
+				.photoSize(photoSizeSelector)
+				.lensPosition(lensPositionSelector);
+
+		// When
+		builder.build();
+
+		// Then
+		// Expect exception
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void lensPositionIsMandatory() throws Exception {
+		// Given
+		FotoapparatBuilder builder = new FotoapparatBuilder(context)
+				.photoSize(photoSizeSelector)
+				.into(cameraRenderer);
+
+		// When
+		builder.build();
+
+		// Then
+		// Expect exception
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void photoSizeIsMandatory() throws Exception {
+		// Given
+		FotoapparatBuilder builder = new FotoapparatBuilder(context)
+				.lensPosition(lensPositionSelector)
+				.into(cameraRenderer);
+
+		// When
+		builder.build();
+
+		// Then
+		// Expect exception
+	}
+
 	private FotoapparatBuilder builderWithMandatoryArguments() {
 		return new FotoapparatBuilder(context)
 				.lensPosition(lensPositionSelector)
+				.photoSize(photoSizeSelector)
 				.into(cameraRenderer);
 	}
 }
