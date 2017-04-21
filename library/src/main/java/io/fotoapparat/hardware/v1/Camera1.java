@@ -139,6 +139,8 @@ public class Camera1 implements CameraDevice {
 		camera.setDisplayOrientation(
 				computeDisplayOrientation(degrees, info)
 		);
+		previewStream.setFrameOrientation(imageRotation);
+
 		updateImageRotation(imageRotation);
 	}
 

@@ -21,10 +21,19 @@ public class PreviewStream1 implements PreviewStream {
 	private final Camera camera;
 
 	private final Set<FrameProcessor> frameProcessors = new LinkedHashSet<>();
+
 	private Size previewSize = null;
+	private int frameOrientation = 0;
 
 	public PreviewStream1(Camera camera) {
 		this.camera = camera;
+	}
+
+	/**
+	 * @param frameOrientation CW rotation of frames in degrees.
+	 */
+	public void setFrameOrientation(int frameOrientation) {
+		this.frameOrientation = frameOrientation;
 	}
 
 	@Override
@@ -87,7 +96,7 @@ public class PreviewStream1 implements PreviewStream {
 	private void dispatchFrame(byte[] image) {
 		ensurePreviewSizeAvailable();
 
-		final Frame frame = new Frame(previewSize, image, 0); // TODO provide rotation
+		final Frame frame = new Frame(previewSize, image, frameOrientation);
 
 		for (final FrameProcessor frameProcessor : frameProcessors) {
 			frameProcessor.processFrame(frame);
