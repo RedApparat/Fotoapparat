@@ -9,6 +9,14 @@ What it provides:
 - Support of Camera1 as well as Camera2.
 - Last, but not least, non 0% test coverage. 
 
+Taking picture becomes as simple as
+
+```java
+fotoapparat
+    .takePicture()
+    .saveToFile(someFile)
+```
+
 ## How it works
 
 ### Step One
@@ -108,6 +116,11 @@ compile 'io.fotoapparat:library:x.y.z'
 ```
 
 Camera permission will be automatically added to your `AndroidManifest.xml`. Do not forget to request this permission on Marshmallow and higher.
+
+## Credits
+
+We want to say thanks to [Mark Murphy](https://github.com/commonsguy) for the awesome job he did with [CWAC-Camera](https://github.com/commonsguy/cwac-camera). We were using his library for a couple of years and now we feel that Fotoapparat is a next step in the right direction.
+
 
 ## License
 
