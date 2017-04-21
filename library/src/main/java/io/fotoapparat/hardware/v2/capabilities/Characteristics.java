@@ -20,14 +20,6 @@ import java.util.concurrent.CountDownLatch;
 @SuppressWarnings("ConstantConditions")
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Characteristics {
-	/**
-	 * Max preview height that is guaranteed by Camera2 API
-	 */
-	static final int MAX_PREVIEW_HEIGHT = 1080;
-	/**
-	 * Max preview width that is guaranteed by Camera2 API
-	 */
-	static final int MAX_PREVIEW_WIDTH = 1920;
 
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
 	private final CameraManager manager;
@@ -152,7 +144,7 @@ public class Characteristics {
 
 		List<Size> filteredOutputSizes = new ArrayList<>();
 		for (Size outputSize : outputSizes) {
-			if (outputSize.getWidth() <= MAX_PREVIEW_WIDTH && outputSize.getHeight() <= MAX_PREVIEW_HEIGHT) {
+			if (outputSize.getWidth() <= PreviewSizeInfo.MAX_PREVIEW_WIDTH && outputSize.getHeight() <= PreviewSizeInfo.MAX_PREVIEW_HEIGHT) {
 				filteredOutputSizes.add(outputSize);
 			}
 		}

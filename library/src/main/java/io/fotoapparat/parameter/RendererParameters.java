@@ -25,4 +25,21 @@ public class RendererParameters {
 		this.frameRotation = frameRotation;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		RendererParameters that = (RendererParameters) o;
+
+		return frameRotation == that.frameRotation && (previewSize != null ? previewSize.equals(that.previewSize) : that.previewSize == null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = previewSize != null ? previewSize.hashCode() : 0;
+		result = 31 * result + frameRotation;
+		return result;
+	}
 }

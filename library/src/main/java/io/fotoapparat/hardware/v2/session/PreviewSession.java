@@ -48,6 +48,6 @@ public class PreviewSession extends Session implements PreviewOperator {
 
 	@Override
 	public void stopPreview() {
-		// TODO: 25/03/17
+		getCaptureSession().close();
 	}
 }

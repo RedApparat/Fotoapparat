@@ -37,15 +37,6 @@ public class OrientationManager implements OrientationOperator {
 	}
 
 	/**
-	 * Returns the screen orientation in degrees.
-	 *
-	 * @return the display orientation in degrees. One of: 0, 90, 180 and 270
-	 */
-	public int getScreenOrientation() {
-		return orientation;
-	}
-
-	/**
 	 * Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
 	 * We have to take that into account and rotate JPEG properly.
 	 *

@@ -18,14 +18,6 @@ import static io.fotoapparat.parameter.Parameters.Type.PREVIEW_SIZE;
  */
 public class ParametersProvider implements ParametersOperator {
 
-	/**
-	 * Max preview height that is guaranteed by Camera2 API
-	 */
-	static final int MAX_PREVIEW_HEIGHT = 1080;
-	/**
-	 * Max preview width that is guaranteed by Camera2 API
-	 */
-	static final int MAX_PREVIEW_WIDTH = 1920;
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
 	private Parameters selectedParameters;
 
