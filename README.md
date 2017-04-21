@@ -9,12 +9,20 @@ What it provides:
 - Support of Camera1 as well as Camera2.
 - Last, but not least, non 0% test coverage. 
 
-Taking picture becomes as simple as
+
+Taking picture becomes as simple as:
 
 ```java
+Fotoapparat fotoapparat = Fotoapparat
+    .with(context)  
+    .into(cameraView)
+    .build();
+
+fotoapparat.start();
+    
 fotoapparat
     .takePicture()
-    .saveToFile(someFile)
+    .saveToFile(someFile);
 ```
 
 ## How it works
