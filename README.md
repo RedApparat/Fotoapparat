@@ -2,8 +2,112 @@
 
 ![Build status](https://travis-ci.org/Fotoapparat/Fotoapparat.svg?branch=master)
 
-Making Camera for Android more friendly.
+Camera API in Android is hard. Having 2 different API for new and old Camera does not make things any easier. But fret not, that is your lucky day! After several years of working with Camera we came up with Fotoapparat.
 
+What it provides:
+- Simple, yet powerful API for working with Camera.
+- Support of Camera1 as well as Camera2.
+- Last, but not least, non 0% test coverage. 
+
+## How it works
+
+### Step One
+
+Add `CameraView` to your layout
+
+```xml
+<io.fotoapparat.view.CameraView
+    android:id="@+id/camera_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+```
+
+### Step Two
+
+Configure `Fotoapparat` instance
+
+```java
+Fotoapparat
+    .with(context)  
+    .into(cameraView)           // the view from step one
+    .photoSize(biggestSize())   // we want to have the biggest photo possible
+    .lensPosition(back())       // we want back camera
+    .focusMode(firstAvailable(  // (optional) user the first focus mode which is supported by device
+            continuousFocus(),
+            autoFocus(),        // in case if continuous focus is not available on device, auto focus will be used
+            fixed()             // if even auto focus is not available - fixed focus mode will be used
+    ))
+    .flash(firstAvailable(      // (optional) similar to how it is done for focus mode, this time for flash
+            autoRedEye(),
+            autoFlash(),
+            torch()
+    ))
+    .frameProcessor(myFrameProcessor)   // (optional) receives each frame from preview stream
+    .logger(loggers(            // (optional) we want to log camera events in 2 places at once
+            logcat(),           // ... in logcat
+            fileLogger(this)    // ... and to file
+    ))
+    .build();
+```
+
+### Step Three
+
+Call `start()` and `stop()`. No rocket science here.
+
+```java
+@Override
+protected void onResume() {
+    super.onResume();
+    fotoapparat.start();
+}
+ 
+@Override
+protected void onPause() {
+    super.onPause();
+    fotoapparat.stop();
+}
+```
+
+### Take picture
+
+Finally we are ready to take picture. You have various options.
+
+```java
+PhotoResult photoResult = fotoapparat.takePicture();
+ 
+// Asynchronously saves photo to file
+photoResult.saveToFile(someFile);
+ 
+// Asynchronously converts photo to bitmap and returns result on main thread
+photoResult
+    .toBitmap()
+    .whenAvailable(new PendingResult.Callback<BitmapPhoto>() {
+        @Override
+        public void onResult(BitmapPhoto result) {
+            ImageView imageView = (ImageView) findViewById(R.id.result);
+
+            imageView.setImageBitmap(result.bitmap);
+            imageView.setRotation(-result.rotationDegrees);
+        }
+    });
+    
+// Of course you can also get a photo in a blocking way. Do not do it on main thread though.
+BitmapPhoto result = photoResult.toBitmap().await()
+```
+
+## Set up
+
+Add dependency to your `build.gradle`
+
+```groovy
+repositories {
+  maven { url 'https://jitpack.io' }
+}
+ 
+compile 'io.fotoapparat:library:x.y.z'
+```
+
+Camera permission will be automatically added to your `AndroidManifest.xml`. Do not forget to request this permission on Marshmallow and higher.
 
 ## License
 
