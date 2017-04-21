@@ -19,6 +19,13 @@ import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.view.CameraRenderer;
 import io.fotoapparat.view.CameraView;
 
+import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
+import static io.fotoapparat.parameter.selector.FocusModeSelectors.continuousFocus;
+import static io.fotoapparat.parameter.selector.FocusModeSelectors.fixed;
+import static io.fotoapparat.parameter.selector.LensPositionSelectors.back;
+import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
+import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
+
 /**
  * Builder for {@link Fotoapparat}.
  */
@@ -29,10 +36,14 @@ public class FotoapparatBuilder {
 	CameraProvider cameraProvider = new V1Provider();
 	CameraRenderer renderer;
 
-	SelectorFunction<LensPosition> lensPositionSelector;
-	SelectorFunction<Size> photoSizeSelector;
-	SelectorFunction<Size> previewSizeSelector = Selectors.nothing();
-	SelectorFunction<FocusMode> focusModeSelector = Selectors.nothing();
+	SelectorFunction<LensPosition> lensPositionSelector = back();
+	SelectorFunction<Size> photoSizeSelector = biggestSize();
+	SelectorFunction<Size> previewSizeSelector = biggestSize();
+	SelectorFunction<FocusMode> focusModeSelector = firstAvailable(
+			continuousFocus(),
+			autoFocus(),
+			fixed()
+	);
 	SelectorFunction<Flash> flashSelector = Selectors.nothing();
 
 	FrameProcessor frameProcessor = null;

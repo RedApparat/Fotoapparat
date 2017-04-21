@@ -209,9 +209,8 @@ public class FotoapparatBuilderTest {
 	@Test(expected = IllegalStateException.class)
 	public void rendererIsMandatory() throws Exception {
 		// Given
-		FotoapparatBuilder builder = new FotoapparatBuilder(context)
-				.photoSize(photoSizeSelector)
-				.lensPosition(lensPositionSelector);
+		FotoapparatBuilder builder = builderWithMandatoryArguments()
+				.into(null);
 
 		// When
 		builder.build();
@@ -223,9 +222,8 @@ public class FotoapparatBuilderTest {
 	@Test(expected = IllegalStateException.class)
 	public void lensPositionIsMandatory() throws Exception {
 		// Given
-		FotoapparatBuilder builder = new FotoapparatBuilder(context)
-				.photoSize(photoSizeSelector)
-				.into(cameraRenderer);
+		FotoapparatBuilder builder = builderWithMandatoryArguments()
+				.lensPosition(null);
 
 		// When
 		builder.build();
@@ -237,9 +235,8 @@ public class FotoapparatBuilderTest {
 	@Test(expected = IllegalStateException.class)
 	public void photoSizeIsMandatory() throws Exception {
 		// Given
-		FotoapparatBuilder builder = new FotoapparatBuilder(context)
-				.lensPosition(lensPositionSelector)
-				.into(cameraRenderer);
+		FotoapparatBuilder builder = builderWithMandatoryArguments()
+				.photoSize(null);
 
 		// When
 		builder.build();
