@@ -20,92 +20,92 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class SelectorsTest {
 
-	@Mock
-	SelectorFunction<String> functionA;
-	@Mock
-	SelectorFunction<String> functionB;
+    @Mock
+    SelectorFunction<String> functionA;
+    @Mock
+    SelectorFunction<String> functionB;
 
-	@Test
-	public void firstAvailable() throws Exception {
-		// Given
-		List<String> options = asList("B", "C");
+    @Test
+    public void firstAvailable() throws Exception {
+        // Given
+        List<String> options = asList("B", "C");
 
-		given(functionA.select(options))
-				.willReturn(null);
+        given(functionA.select(options))
+                .willReturn(null);
 
-		given(functionB.select(options))
-				.willReturn("B");
+        given(functionB.select(options))
+                .willReturn("B");
 
-		// When
-		String result = Selectors
-				.firstAvailable(
-						functionA,
-						functionB
-				)
-				.select(options);
+        // When
+        String result = Selectors
+                .firstAvailable(
+                        functionA,
+                        functionB
+                )
+                .select(options);
 
-		// Then
-		assertEquals("B", result);
-	}
+        // Then
+        assertEquals("B", result);
+    }
 
-	@Test
-	public void filtered() throws Exception {
-		// Given
-		SelectorFunction<String> function = Selectors.filtered(
-				functionA,
-				new Predicate<String>() {
-					@Override
-					public boolean condition(@Nullable String value) {
-						return value != null && value.startsWith("A");
-					}
-				}
-		);
+    @Test
+    public void filtered() throws Exception {
+        // Given
+        SelectorFunction<String> function = Selectors.filtered(
+                functionA,
+                new Predicate<String>() {
+                    @Override
+                    public boolean condition(@Nullable String value) {
+                        return value != null && value.startsWith("A");
+                    }
+                }
+        );
 
-		given(functionA.select(ArgumentMatchers.<String>anyCollection()))
-				.willReturn("A");
+        given(functionA.select(ArgumentMatchers.<String>anyCollection()))
+                .willReturn("A");
 
-		// When
-		String result = function.select(asList("A", "B", "AB"));
+        // When
+        String result = function.select(asList("A", "B", "AB"));
 
-		// Then
-		assertEquals("A", result);
+        // Then
+        assertEquals("A", result);
 
-		verify(functionA).select(asSet("A", "AB"));
-	}
+        verify(functionA).select(asSet("A", "AB"));
+    }
 
-	@Test
-	public void single() throws Exception {
-		// When
-		String result = Selectors
-				.single("b")
-				.select(asList(
-						"a", "b", "c"
-				));
+    @Test
+    public void single() throws Exception {
+        // When
+        String result = Selectors
+                .single("b")
+                .select(asList(
+                        "a", "b", "c"
+                ));
 
-		// Then
-		assertEquals("b", result);
-	}
+        // Then
+        assertEquals("b", result);
+    }
 
-	@Test
-	public void single_NotFound() throws Exception {
-		// When
-		String result = Selectors
-				.single("b")
-				.select(asList(
-						"a", "c"
-				));
+    @Test
+    public void single_NotFound() throws Exception {
+        // When
+        String result = Selectors
+                .single("b")
+                .select(asList(
+                        "a", "c"
+                ));
 
-		// Then
-		assertEquals(null, result);
-	}
+        // Then
+        assertEquals(null, result);
+    }
 
-	@Test
-	public void nothing() throws Exception {
-		// When
-		String result = Selectors.<String>nothing()
-				.select(asList("A", "B", "C"));
+    @Test
+    public void nothing() throws Exception {
+        // When
+        String result = Selectors.<String>nothing()
+                .select(asList("A", "B", "C"));
 
-		// Then
-		assertNull(result);
-	}
+        // Then
+        assertNull(result);
+    }
 }

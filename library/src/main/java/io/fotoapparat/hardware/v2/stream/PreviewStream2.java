@@ -15,55 +15,55 @@ import io.fotoapparat.preview.PreviewStream;
  */
 @SuppressWarnings("NewApi")
 public class PreviewStream2 implements PreviewStream,
-		OnImageAcquiredObserver.OnFrameAcquiredListener {
+        OnImageAcquiredObserver.OnFrameAcquiredListener {
 
-	private final OnImageAcquiredObserver surfaceReader;
-	private final ParametersProvider parametersProvider;
+    private final OnImageAcquiredObserver surfaceReader;
+    private final ParametersProvider parametersProvider;
 
-	private final Set<FrameProcessor> frameProcessors = new LinkedHashSet<>();
+    private final Set<FrameProcessor> frameProcessors = new LinkedHashSet<>();
 
-	public PreviewStream2(OnImageAcquiredObserver surfaceReader,
-						  ParametersProvider parametersProvider) {
-		this.surfaceReader = surfaceReader;
-		this.parametersProvider = parametersProvider;
-	}
+    public PreviewStream2(OnImageAcquiredObserver surfaceReader,
+                          ParametersProvider parametersProvider) {
+        this.surfaceReader = surfaceReader;
+        this.parametersProvider = parametersProvider;
+    }
 
-	@Override
-	public void addFrameToBuffer() {
-		// Does nothing
-	}
+    @Override
+    public void addFrameToBuffer() {
+        // Does nothing
+    }
 
-	@Override
-	public void addProcessor(@NonNull FrameProcessor processor) {
-		synchronized (frameProcessors) {
-			frameProcessors.add(processor);
-		}
-	}
+    @Override
+    public void addProcessor(@NonNull FrameProcessor processor) {
+        synchronized (frameProcessors) {
+            frameProcessors.add(processor);
+        }
+    }
 
-	@Override
-	public void removeProcessor(@NonNull FrameProcessor processor) {
-		synchronized (frameProcessors) {
-			frameProcessors.remove(processor);
-		}
-	}
+    @Override
+    public void removeProcessor(@NonNull FrameProcessor processor) {
+        synchronized (frameProcessors) {
+            frameProcessors.remove(processor);
+        }
+    }
 
-	@Override
-	public void start() {
-		surfaceReader.setListener(this);
-	}
+    @Override
+    public void start() {
+        surfaceReader.setListener(this);
+    }
 
-	@Override
-	public void onFrameAcquired(byte[] bytes) {
-		synchronized (frameProcessors) {
-			dispatchFrame(bytes);
-		}
-	}
+    @Override
+    public void onFrameAcquired(byte[] bytes) {
+        synchronized (frameProcessors) {
+            dispatchFrame(bytes);
+        }
+    }
 
-	private void dispatchFrame(byte[] image) {
-		final Frame frame = new Frame(parametersProvider.getPreviewSize(), image, 0);
+    private void dispatchFrame(byte[] image) {
+        final Frame frame = new Frame(parametersProvider.getPreviewSize(), image, 0);
 
-		for (FrameProcessor frameProcessor : frameProcessors) {
-			frameProcessor.processFrame(frame);
-		}
-	}
+        for (FrameProcessor frameProcessor : frameProcessors) {
+            frameProcessor.processFrame(frame);
+        }
+    }
 }

@@ -7,9 +7,9 @@ import android.support.annotation.Nullable;
  */
 public interface Predicate<T> {
 
-	/**
-	 * @return {@code true} if value meets the condition. {@code false} if it doesn't.
-	 */
-	boolean condition(@Nullable T value);
+    /**
+     * @return {@code true} if value meets the condition. {@code false} if it doesn't.
+     */
+    boolean condition(@Nullable T value);
 
 }

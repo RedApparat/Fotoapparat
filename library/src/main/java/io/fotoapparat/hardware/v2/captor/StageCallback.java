@@ -17,37 +17,37 @@ import java.util.concurrent.CountDownLatch;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 abstract class StageCallback extends CameraCaptureSession.CaptureCallback {
 
-	private CountDownLatch countDownLatch = new CountDownLatch(1);
-	private Stage stage;
+    private CountDownLatch countDownLatch = new CountDownLatch(1);
+    private Stage stage;
 
-	@Override
-	public void onCaptureCompleted(@NonNull CameraCaptureSession session,
-								   @NonNull CaptureRequest request,
-								   @NonNull TotalCaptureResult result) {
-		super.onCaptureCompleted(session, request, result);
-		this.stage = processResult(result);
-		countDownLatch.countDown();
-	}
+    @Override
+    public void onCaptureCompleted(@NonNull CameraCaptureSession session,
+                                   @NonNull CaptureRequest request,
+                                   @NonNull TotalCaptureResult result) {
+        super.onCaptureCompleted(session, request, result);
+        this.stage = processResult(result);
+        countDownLatch.countDown();
+    }
 
-	/**
-	 * Provides the capturing routine Stage when it has been processed.
-	 *
-	 * @return The current capturing stage.
-	 */
-	Stage getCaptureStage() {
-		try {
-			countDownLatch.await();
-		} catch (InterruptedException e) {
-			// do nothing
-		}
-		return stage;
-	}
+    /**
+     * Provides the capturing routine Stage when it has been processed.
+     *
+     * @return The current capturing stage.
+     */
+    Stage getCaptureStage() {
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            // do nothing
+        }
+        return stage;
+    }
 
-	/**
-	 * Provides the capturing routine Stage upon processing the result of a capturing request.
-	 *
-	 * @param result The subset of the results of a single image capture from the image sensor.
-	 * @return The current capturing stage.
-	 */
-	abstract Stage processResult(CaptureResult result);
+    /**
+     * Provides the capturing routine Stage upon processing the result of a capturing request.
+     *
+     * @param result The subset of the results of a single image capture from the image sensor.
+     * @return The current capturing stage.
+     */
+    abstract Stage processResult(CaptureResult result);
 }

@@ -18,29 +18,29 @@ import static org.mockito.Mockito.inOrder;
 @RunWith(MockitoJUnitRunner.class)
 public class TakePictureTaskTest {
 
-	static final Photo PHOTO = Photo.empty();
+    static final Photo PHOTO = Photo.empty();
 
-	@Mock
-	CameraDevice cameraDevice;
+    @Mock
+    CameraDevice cameraDevice;
 
-	@InjectMocks
-	TakePictureTask testee;
+    @InjectMocks
+    TakePictureTask testee;
 
-	@Test
-	public void takePhoto() throws Exception {
-		// Given
-		given(cameraDevice.takePicture())
-				.willReturn(PHOTO);
+    @Test
+    public void takePhoto() throws Exception {
+        // Given
+        given(cameraDevice.takePicture())
+                .willReturn(PHOTO);
 
-		// When
-		Photo result = resultOf(testee);
+        // When
+        Photo result = resultOf(testee);
 
-		// Then
-		InOrder inOrder = inOrder(cameraDevice);
-		inOrder.verify(cameraDevice).autoFocus();
-		inOrder.verify(cameraDevice).takePicture();
+        // Then
+        InOrder inOrder = inOrder(cameraDevice);
+        inOrder.verify(cameraDevice).autoFocus();
+        inOrder.verify(cameraDevice).takePicture();
 
-		assertEquals(result, PHOTO);
-	}
+        assertEquals(result, PHOTO);
+    }
 
 }

@@ -21,117 +21,117 @@ import io.fotoapparat.parameter.FocusMode;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class CaptureRequestFactory {
 
-	private final StillSurfaceReader surfaceReader;
-	private final ContinuousSurfaceReader continuousSurfaceReader;
-	private final TextureManager textureManager;
-	private final ParametersProvider parametersProvider;
-	private final Characteristics characteristics;
-	private CameraConnection cameraConnection;
+    private final StillSurfaceReader surfaceReader;
+    private final ContinuousSurfaceReader continuousSurfaceReader;
+    private final TextureManager textureManager;
+    private final ParametersProvider parametersProvider;
+    private final Characteristics characteristics;
+    private CameraConnection cameraConnection;
 
-	public CaptureRequestFactory(CameraConnection cameraConnection,
-								 StillSurfaceReader surfaceReader,
-								 ContinuousSurfaceReader continuousSurfaceReader,
-								 TextureManager textureManager,
-								 ParametersProvider parametersProvider,
-								 Characteristics characteristics) {
-		this.cameraConnection = cameraConnection;
-		this.surfaceReader = surfaceReader;
-		this.continuousSurfaceReader = continuousSurfaceReader;
-		this.textureManager = textureManager;
-		this.parametersProvider = parametersProvider;
-		this.characteristics = characteristics;
-	}
+    public CaptureRequestFactory(CameraConnection cameraConnection,
+                                 StillSurfaceReader surfaceReader,
+                                 ContinuousSurfaceReader continuousSurfaceReader,
+                                 TextureManager textureManager,
+                                 ParametersProvider parametersProvider,
+                                 Characteristics characteristics) {
+        this.cameraConnection = cameraConnection;
+        this.surfaceReader = surfaceReader;
+        this.continuousSurfaceReader = continuousSurfaceReader;
+        this.textureManager = textureManager;
+        this.parametersProvider = parametersProvider;
+        this.characteristics = characteristics;
+    }
 
-	/**
-	 * Creates a request for a window preview.
-	 *
-	 * @return The camera request.
-	 * @throws CameraAccessException If the camera device has been disconnected.
-	 */
-	public CaptureRequest createPreviewRequest() throws CameraAccessException {
+    /**
+     * Creates a request for a window preview.
+     *
+     * @return The camera request.
+     * @throws CameraAccessException If the camera device has been disconnected.
+     */
+    public CaptureRequest createPreviewRequest() throws CameraAccessException {
 
-		CameraDevice camera = cameraConnection.getCamera();
-		Surface viewSurface = textureManager.getSurface();
-		Surface frameSurface = continuousSurfaceReader.getSurface();
-		Flash flash = parametersProvider.getFlash();
+        CameraDevice camera = cameraConnection.getCamera();
+        Surface viewSurface = textureManager.getSurface();
+        Surface frameSurface = continuousSurfaceReader.getSurface();
+        Flash flash = parametersProvider.getFlash();
 
-		return CaptureRequestBuilder
-				.create(camera, CameraDevice.TEMPLATE_PREVIEW)
-				.into(viewSurface, frameSurface)
-				.flash(flash)
-				.build();
-	}
+        return CaptureRequestBuilder
+                .create(camera, CameraDevice.TEMPLATE_PREVIEW)
+                .into(viewSurface, frameSurface)
+                .flash(flash)
+                .build();
+    }
 
-	/**
-	 * Creates a request responsible to trigger an auto focus request.
-	 *
-	 * @return The camera request.
-	 * @throws CameraAccessException If the camera device has been disconnected.
-	 */
-	public CaptureRequest createLockRequest() throws CameraAccessException {
+    /**
+     * Creates a request responsible to trigger an auto focus request.
+     *
+     * @return The camera request.
+     * @throws CameraAccessException If the camera device has been disconnected.
+     */
+    public CaptureRequest createLockRequest() throws CameraAccessException {
 
-		CameraDevice camera = cameraConnection.getCamera();
-		Surface surface = textureManager.getSurface();
-		Flash flash = parametersProvider.getFlash();
-		boolean triggerAutoExposure = !characteristics.isLegacyDevice();
+        CameraDevice camera = cameraConnection.getCamera();
+        Surface surface = textureManager.getSurface();
+        Flash flash = parametersProvider.getFlash();
+        boolean triggerAutoExposure = !characteristics.isLegacyDevice();
 
-		return CaptureRequestBuilder
-				.create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
-				.into(surface)
-				.flash(flash)
-				.triggerAutoFocus(true)
-				.triggerPrecaptureExposure(triggerAutoExposure)
-				.build();
+        return CaptureRequestBuilder
+                .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
+                .into(surface)
+                .flash(flash)
+                .triggerAutoFocus(true)
+                .triggerPrecaptureExposure(triggerAutoExposure)
+                .build();
 
-	}
+    }
 
-	/**
-	 * Creates a request responsible to trigger a precapturing (auto-exposure) request.
-	 *
-	 * @return The camera request.
-	 * @throws CameraAccessException If the camera device has been disconnected.
-	 */
-	public CaptureRequest createPrecaptureRequest() throws CameraAccessException {
+    /**
+     * Creates a request responsible to trigger a precapturing (auto-exposure) request.
+     *
+     * @return The camera request.
+     * @throws CameraAccessException If the camera device has been disconnected.
+     */
+    public CaptureRequest createPrecaptureRequest() throws CameraAccessException {
 
-		CameraDevice camera = cameraConnection.getCamera();
-		Surface surface = textureManager.getSurface();
-		Flash flash = parametersProvider.getFlash();
-		FocusMode focus = parametersProvider.getFocus();
+        CameraDevice camera = cameraConnection.getCamera();
+        Surface surface = textureManager.getSurface();
+        Flash flash = parametersProvider.getFlash();
+        FocusMode focus = parametersProvider.getFocus();
 
-		boolean triggerPrecaptureExposure = !characteristics.isLegacyDevice();
+        boolean triggerPrecaptureExposure = !characteristics.isLegacyDevice();
 
-		return CaptureRequestBuilder
-				.create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
-				.into(surface)
-				.triggerPrecaptureExposure(triggerPrecaptureExposure)
-				.flash(flash)
-				.focus(focus)
-				.setExposureMode(true)
-				.build();
-	}
+        return CaptureRequestBuilder
+                .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
+                .into(surface)
+                .triggerPrecaptureExposure(triggerPrecaptureExposure)
+                .flash(flash)
+                .focus(focus)
+                .setExposureMode(true)
+                .build();
+    }
 
-	/**
-	 * Creates a request responsible to take a still image.
-	 *
-	 * @return The camera request.
-	 * @throws CameraAccessException If the camera device has been disconnected.
-	 */
-	public CaptureRequest createCaptureRequest(Integer sensorOrientation) throws CameraAccessException {
+    /**
+     * Creates a request responsible to take a still image.
+     *
+     * @return The camera request.
+     * @throws CameraAccessException If the camera device has been disconnected.
+     */
+    public CaptureRequest createCaptureRequest(Integer sensorOrientation) throws CameraAccessException {
 
-		CameraDevice camera = cameraConnection.getCamera();
-		Surface surface = surfaceReader.getSurface();
-		Flash flash = parametersProvider.getFlash();
-		FocusMode focus = parametersProvider.getFocus();
+        CameraDevice camera = cameraConnection.getCamera();
+        Surface surface = surfaceReader.getSurface();
+        Flash flash = parametersProvider.getFlash();
+        FocusMode focus = parametersProvider.getFocus();
 
-		return CaptureRequestBuilder
-				.create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
-				.into(surface)
-				.cancelPrecaptureExposure(true)
-				.flash(flash)
-				.focus(focus)
-				.setExposureMode(true)
-				.sensorOrientation(sensorOrientation)
-				.build();
-	}
+        return CaptureRequestBuilder
+                .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
+                .into(surface)
+                .cancelPrecaptureExposure(true)
+                .flash(flash)
+                .focus(focus)
+                .setExposureMode(true)
+                .sensorOrientation(sensorOrientation)
+                .build();
+    }
 
 }

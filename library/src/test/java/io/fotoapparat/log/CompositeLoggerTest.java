@@ -13,30 +13,30 @@ import static org.mockito.Mockito.inOrder;
 @RunWith(MockitoJUnitRunner.class)
 public class CompositeLoggerTest {
 
-	@Mock
-	Logger loggerA;
-	@Mock
-	Logger loggerB;
+    @Mock
+    Logger loggerA;
+    @Mock
+    Logger loggerB;
 
-	CompositeLogger testee;
+    CompositeLogger testee;
 
-	@Before
-	public void setUp() throws Exception {
-		testee = new CompositeLogger(asList(
-				loggerA,
-				loggerB
-		));
-	}
+    @Before
+    public void setUp() throws Exception {
+        testee = new CompositeLogger(asList(
+                loggerA,
+                loggerB
+        ));
+    }
 
-	@Test
-	public void log() throws Exception {
-		// When
-		testee.log("message");
+    @Test
+    public void log() throws Exception {
+        // When
+        testee.log("message");
 
-		// Then
-		InOrder inOrder = inOrder(loggerA, loggerB);
+        // Then
+        InOrder inOrder = inOrder(loggerA, loggerB);
 
-		inOrder.verify(loggerA).log("message");
-		inOrder.verify(loggerB).log("message");
-	}
+        inOrder.verify(loggerA).log("message");
+        inOrder.verify(loggerB).log("message");
+    }
 }

@@ -8,29 +8,29 @@ import android.os.HandlerThread;
  */
 public class CameraThread extends HandlerThread {
 
-	private static CameraThread INSTANCE;
+    private static CameraThread INSTANCE;
 
-	/**
-	 * @return the instance of this class.
-	 */
-	public static CameraThread getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new CameraThread();
-		}
-		return INSTANCE;
-	}
+    /**
+     * @return the instance of this class.
+     */
+    public static CameraThread getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new CameraThread();
+        }
+        return INSTANCE;
+    }
 
-	private CameraThread() {
-		super("CameraThread");
-		start();
-	}
+    private CameraThread() {
+        super("CameraThread");
+        start();
+    }
 
-	/**
-	 * Creates a new handler for the this thread.
-	 *
-	 * @return the new handler for this thread.
-	 */
-	public Handler createHandler() {
-		return new Handler(getLooper());
-	}
+    /**
+     * Creates a new handler for the this thread.
+     *
+     * @return the new handler for this thread.
+     */
+    public Handler createHandler() {
+        return new Handler(getLooper());
+    }
 }

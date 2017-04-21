@@ -11,18 +11,18 @@ import io.fotoapparat.photo.Photo;
  */
 public class BitmapPhotoTransformer implements Transformer<Photo, BitmapPhoto> {
 
-	@Override
-	public BitmapPhoto transform(Photo input) {
-		Bitmap bitmap = BitmapFactory.decodeByteArray(
-				input.encodedImage,
-				0,
-				input.encodedImage.length
-		);
+    @Override
+    public BitmapPhoto transform(Photo input) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(
+                input.encodedImage,
+                0,
+                input.encodedImage.length
+        );
 
-		return new BitmapPhoto(
-				bitmap,
-				input.rotationDegrees
-		);
-	}
+        return new BitmapPhoto(
+                bitmap,
+                input.rotationDegrees
+        );
+    }
 
 }

@@ -19,42 +19,42 @@ import io.fotoapparat.hardware.v2.session.Session;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 class CaptureCallback extends StageCallback {
 
-	private final Session session;
+    private final Session session;
 
-	CaptureCallback(Session session) {
-		this.session = session;
-	}
+    CaptureCallback(Session session) {
+        this.session = session;
+    }
 
-	@Override
-	public void onCaptureStarted(@NonNull CameraCaptureSession session,
-								 @NonNull CaptureRequest request,
-								 long timestamp,
-								 long frameNumber) {
-		super.onCaptureStarted(session, request, timestamp, frameNumber);
-		stopPreviewSession();
-	}
+    @Override
+    public void onCaptureStarted(@NonNull CameraCaptureSession session,
+                                 @NonNull CaptureRequest request,
+                                 long timestamp,
+                                 long frameNumber) {
+        super.onCaptureStarted(session, request, timestamp, frameNumber);
+        stopPreviewSession();
+    }
 
-	@Override
-	public void onCaptureCompleted(@NonNull CameraCaptureSession session,
-								   @NonNull CaptureRequest request,
-								   @NonNull TotalCaptureResult result) {
-		super.onCaptureCompleted(session, request, result);
-		if (this.session instanceof PreviewSession) {
-			((PreviewSession) this.session).startPreview();
-		}
-	}
+    @Override
+    public void onCaptureCompleted(@NonNull CameraCaptureSession session,
+                                   @NonNull CaptureRequest request,
+                                   @NonNull TotalCaptureResult result) {
+        super.onCaptureCompleted(session, request, result);
+        if (this.session instanceof PreviewSession) {
+            ((PreviewSession) this.session).startPreview();
+        }
+    }
 
-	@Override
-	Stage processResult(CaptureResult result) {
-		return Stage.CAPTURE_COMPLETED;
-	}
+    @Override
+    Stage processResult(CaptureResult result) {
+        return Stage.CAPTURE_COMPLETED;
+    }
 
-	private void stopPreviewSession() {
-		try {
-			this.session.getCaptureSession().stopRepeating();
-		} catch (CameraAccessException e) {
-			// Do nothing
-		}
-	}
+    private void stopPreviewSession() {
+        try {
+            this.session.getCaptureSession().stopRepeating();
+        } catch (CameraAccessException e) {
+            // Do nothing
+        }
+    }
 
 }

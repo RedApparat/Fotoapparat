@@ -13,56 +13,56 @@ import io.fotoapparat.photo.Photo;
  */
 public class SaveToFileTransformer implements Transformer<Photo, Void> {
 
-	private final File file;
+    private final File file;
 
-	/**
-	 * @param file output file.
-	 */
-	public SaveToFileTransformer(File file) {
-		this.file = file;
-	}
+    /**
+     * @param file output file.
+     */
+    public SaveToFileTransformer(File file) {
+        this.file = file;
+    }
 
-	@Override
-	public Void transform(Photo input) {
-		BufferedOutputStream outputStream = outputStream();
+    @Override
+    public Void transform(Photo input) {
+        BufferedOutputStream outputStream = outputStream();
 
-		try {
-			saveImage(input, outputStream);
-		} catch (IOException e) {
-			throw new FileSaveException(e);
-		}
+        try {
+            saveImage(input, outputStream);
+        } catch (IOException e) {
+            throw new FileSaveException(e);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private void saveImage(Photo input, BufferedOutputStream outputStream) throws IOException {
-		try {
-			outputStream.write(input.encodedImage);
-			outputStream.flush();
-		} finally {
-			outputStream.close();
-		}
-	}
+    private void saveImage(Photo input, BufferedOutputStream outputStream) throws IOException {
+        try {
+            outputStream.write(input.encodedImage);
+            outputStream.flush();
+        } finally {
+            outputStream.close();
+        }
+    }
 
-	private BufferedOutputStream outputStream() {
-		try {
-			return new BufferedOutputStream(
-					new FileOutputStream(file)
-			);
-		} catch (FileNotFoundException e) {
-			throw new FileSaveException(e);
-		}
-	}
+    private BufferedOutputStream outputStream() {
+        try {
+            return new BufferedOutputStream(
+                    new FileOutputStream(file)
+            );
+        } catch (FileNotFoundException e) {
+            throw new FileSaveException(e);
+        }
+    }
 
-	/**
-	 * Thrown when there is a problem while saving the file.
-	 */
-	public static class FileSaveException extends RuntimeException {
+    /**
+     * Thrown when there is a problem while saving the file.
+     */
+    public static class FileSaveException extends RuntimeException {
 
-		public FileSaveException(Throwable cause) {
-			super(cause);
-		}
+        public FileSaveException(Throwable cause) {
+            super(cause);
+        }
 
-	}
+    }
 
 }

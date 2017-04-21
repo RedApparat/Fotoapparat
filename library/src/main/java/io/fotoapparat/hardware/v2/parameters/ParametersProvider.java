@@ -18,73 +18,73 @@ import static io.fotoapparat.parameter.Parameters.Type.PREVIEW_SIZE;
  */
 public class ParametersProvider implements ParametersOperator {
 
-	private final CountDownLatch countDownLatch = new CountDownLatch(1);
-	private Parameters selectedParameters;
+    private final CountDownLatch countDownLatch = new CountDownLatch(1);
+    private Parameters selectedParameters;
 
-	@Override
-	public void updateParameters(Parameters selectedParameters) {
-		this.selectedParameters = selectedParameters;
-		countDownLatch.countDown();
-	}
+    @Override
+    public void updateParameters(Parameters selectedParameters) {
+        this.selectedParameters = selectedParameters;
+        countDownLatch.countDown();
+    }
 
-	/**
-	 * Returns the last updated parameters. This will block the calling thread until the parameters
-	 * have been obtained.
-	 *
-	 * @return the last updated parameters.
-	 */
-	private Parameters getSelectedParameters() {
-		try {
-			countDownLatch.await();
-		} catch (InterruptedException e) {
-			// Do nothing
-		}
-		return selectedParameters;
-	}
+    /**
+     * Returns the last updated parameters. This will block the calling thread until the parameters
+     * have been obtained.
+     *
+     * @return the last updated parameters.
+     */
+    private Parameters getSelectedParameters() {
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            // Do nothing
+        }
+        return selectedParameters;
+    }
 
-	/**
-	 * Returns the flash firing mode of the camera.
-	 *
-	 * @return The flash firing mode.
-	 */
-	public Flash getFlash() {
-		return getSelectedParameters().getValue(FLASH);
-	}
+    /**
+     * Returns the flash firing mode of the camera.
+     *
+     * @return The flash firing mode.
+     */
+    public Flash getFlash() {
+        return getSelectedParameters().getValue(FLASH);
+    }
 
-	/**
-	 * Returns the focus mode of the camera.
-	 *
-	 * @return The focus mode.
-	 */
-	public FocusMode getFocus() {
-		return getSelectedParameters().getValue(FOCUS_MODE);
-	}
+    /**
+     * Returns the focus mode of the camera.
+     *
+     * @return The focus mode.
+     */
+    public FocusMode getFocus() {
+        return getSelectedParameters().getValue(FOCUS_MODE);
+    }
 
-	/**
-	 * Returns the still picture capture size.
-	 *
-	 * @return The size.
-	 */
-	public Size getStillCaptureSize() {
-		return getSelectedParameters().getValue(PICTURE_SIZE);
-	}
+    /**
+     * Returns the still picture capture size.
+     *
+     * @return The size.
+     */
+    public Size getStillCaptureSize() {
+        return getSelectedParameters().getValue(PICTURE_SIZE);
+    }
 
-	/**
-	 * Returns the preview stream size.
-	 *
-	 * @return The size.
-	 */
-	public Size getPreviewSize() {
-		return getSelectedParameters().getValue(PREVIEW_SIZE);
-	}
+    /**
+     * Returns the preview stream size.
+     *
+     * @return The size.
+     */
+    public Size getPreviewSize() {
+        return getSelectedParameters().getValue(PREVIEW_SIZE);
+    }
 
-	/**
-	 * The aspect ratio (width/height) based on the still picture capture size.
-	 *
-	 * @return The aspect ratio (width/height).
-	 */
-	public float getStillCaptureAspectRatio() {
-		return getStillCaptureSize().getAspectRatio();
-	}
+    /**
+     * The aspect ratio (width/height) based on the still picture capture size.
+     *
+     * @return The aspect ratio (width/height).
+     */
+    public float getStillCaptureAspectRatio() {
+        return getStillCaptureSize().getAspectRatio();
+    }
 
 }

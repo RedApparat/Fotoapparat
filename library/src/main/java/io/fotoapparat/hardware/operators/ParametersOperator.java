@@ -8,8 +8,8 @@ import io.fotoapparat.parameter.Parameters;
  */
 public interface ParametersOperator {
 
-	/**
-	 * Updates the desired parameters for the preview and the photo capture actions.
-	 */
-	void updateParameters(Parameters parameters);
+    /**
+     * Updates the desired parameters for the preview and the photo capture actions.
+     */
+    void updateParameters(Parameters parameters);
 }

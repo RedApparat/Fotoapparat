@@ -10,19 +10,18 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class ImmediateExecutorTest {
 
-	@Mock
-	Runnable runnable;
+    @Mock
+    Runnable runnable;
 
-	ImmediateExecutor testee = new ImmediateExecutor();
+    ImmediateExecutor testee = new ImmediateExecutor();
 
-	@Test
-	public void execute() throws Exception {
-		// When
-		testee.execute(runnable);
+    @Test
+    public void execute() throws Exception {
+        // When
+        testee.execute(runnable);
 
-		// Then
-		verify(runnable).run();
-	}
-
+        // Then
+        verify(runnable).run();
+    }
 
 }

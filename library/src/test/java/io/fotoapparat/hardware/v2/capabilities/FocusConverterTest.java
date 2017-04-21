@@ -12,43 +12,43 @@ import static junit.framework.Assert.assertEquals;
 @SuppressWarnings("NewApi")
 public class FocusConverterTest {
 
-	@Test
-	public void invalidToFocusConversion_fixedDefault() throws Exception {
-		// When
-		FocusMode focusMode = FocusConverter.afModeToFocus(-1);
+    @Test
+    public void invalidToFocusConversion_fixedDefault() throws Exception {
+        // When
+        FocusMode focusMode = FocusConverter.afModeToFocus(-1);
 
-		// Then
-		assertEquals(FocusMode.FIXED, focusMode);
-	}
+        // Then
+        assertEquals(FocusMode.FIXED, focusMode);
+    }
 
-	@Test
-	public void afAutoMode_FocusAutoMode() throws Exception {
-		// When
-		FocusMode focusMode = FocusConverter.afModeToFocus(CameraMetadata.CONTROL_AF_MODE_AUTO);
+    @Test
+    public void afAutoMode_FocusAutoMode() throws Exception {
+        // When
+        FocusMode focusMode = FocusConverter.afModeToFocus(CameraMetadata.CONTROL_AF_MODE_AUTO);
 
-		// Then
-		assertEquals(FocusMode.AUTO, focusMode);
-	}
+        // Then
+        assertEquals(FocusMode.AUTO, focusMode);
+    }
 
-	@Test
-	public void invalidToAfModeConversion_fixedDefault() throws Exception {
+    @Test
+    public void invalidToAfModeConversion_fixedDefault() throws Exception {
 
-		// When
-		int focusMode = FocusConverter.focusToAfMode(null);
+        // When
+        int focusMode = FocusConverter.focusToAfMode(null);
 
-		// Then
-		assertEquals(CameraMetadata.CONTROL_AF_MODE_OFF, focusMode);
-	}
+        // Then
+        assertEquals(CameraMetadata.CONTROL_AF_MODE_OFF, focusMode);
+    }
 
-	@Test
-	public void edofFocusMode_edofAutoMode() throws Exception {
-		// Given
+    @Test
+    public void edofFocusMode_edofAutoMode() throws Exception {
+        // Given
 
-		// When
-		FocusMode focusMode = FocusConverter.afModeToFocus(CameraMetadata.CONTROL_AF_MODE_EDOF);
+        // When
+        FocusMode focusMode = FocusConverter.afModeToFocus(CameraMetadata.CONTROL_AF_MODE_EDOF);
 
-		// Then
-		assertEquals(FocusMode.EDOF, focusMode);
-	}
+        // Then
+        assertEquals(FocusMode.EDOF, focusMode);
+    }
 
 }

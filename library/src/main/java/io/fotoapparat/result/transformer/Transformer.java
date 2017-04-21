@@ -5,11 +5,11 @@ package io.fotoapparat.result.transformer;
  */
 public interface Transformer<T, R> {
 
-	/**
-	 * Transforms input type to some other type.
-	 *
-	 * @return new type.
-	 */
-	R transform(T input);
+    /**
+     * Transforms input type to some other type.
+     *
+     * @return new type.
+     */
+    R transform(T input);
 
 }

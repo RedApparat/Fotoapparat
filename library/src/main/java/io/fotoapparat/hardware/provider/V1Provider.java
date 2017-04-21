@@ -9,8 +9,8 @@ import io.fotoapparat.log.Logger;
  */
 public class V1Provider implements CameraProvider {
 
-	@Override
-	public CameraDevice get(Logger logger) {
-		return new Camera1(logger);
-	}
+    @Override
+    public CameraDevice get(Logger logger) {
+        return new Camera1(logger);
+    }
 }

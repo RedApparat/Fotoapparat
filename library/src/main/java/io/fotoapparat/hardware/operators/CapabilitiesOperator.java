@@ -8,10 +8,10 @@ import io.fotoapparat.hardware.Capabilities;
  */
 public interface CapabilitiesOperator {
 
-	/**
-	 * Returns the {@link Capabilities} of the opened camera.
-	 *
-	 * @return The {@link Capabilities} of the camera.
-	 */
-	Capabilities getCapabilities();
+    /**
+     * Returns the {@link Capabilities} of the opened camera.
+     *
+     * @return The {@link Capabilities} of the camera.
+     */
+    Capabilities getCapabilities();
 }

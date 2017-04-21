@@ -8,8 +8,8 @@ import io.fotoapparat.log.Logger;
  */
 public interface CameraProvider {
 
-	/**
-	 * @return a {@link CameraDevice}.
-	 */
-	CameraDevice get(Logger logger);
+    /**
+     * @return a {@link CameraDevice}.
+     */
+    CameraDevice get(Logger logger);
 }

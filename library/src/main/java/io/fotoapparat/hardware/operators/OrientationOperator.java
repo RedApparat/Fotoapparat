@@ -6,8 +6,8 @@ package io.fotoapparat.hardware.operators;
  */
 public interface OrientationOperator {
 
-	/**
-	 * Sets the current orientation of the display.
-	 */
-	void setDisplayOrientation(int degrees);
+    /**
+     * Sets the current orientation of the display.
+     */
+    void setDisplayOrientation(int degrees);
 }

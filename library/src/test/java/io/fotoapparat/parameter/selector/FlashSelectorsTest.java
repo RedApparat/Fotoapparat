@@ -12,42 +12,42 @@ import static junit.framework.Assert.assertNull;
 
 public class FlashSelectorsTest {
 
-	@Test
-	public void focusMode_Available() throws Exception {
-		// Given
-		Set<Flash> availableModes = asSet(
-				Flash.AUTO,
-				Flash.AUTO_RED_EYE,
-				Flash.OFF
-		);
+    @Test
+    public void focusMode_Available() throws Exception {
+        // Given
+        Set<Flash> availableModes = asSet(
+                Flash.AUTO,
+                Flash.AUTO_RED_EYE,
+                Flash.OFF
+        );
 
-		// When
-		Flash result = FlashSelectors
-				.autoRedEye()
-				.select(availableModes);
+        // When
+        Flash result = FlashSelectors
+                .autoRedEye()
+                .select(availableModes);
 
-		// Then
-		assertEquals(
-				Flash.AUTO_RED_EYE,
-				result
-		);
-	}
+        // Then
+        assertEquals(
+                Flash.AUTO_RED_EYE,
+                result
+        );
+    }
 
-	@Test
-	public void focusMode_NotAvailable() throws Exception {
-		// Given
-		Set<Flash> availableModes = asSet(
-				Flash.AUTO,
-				Flash.OFF
-		);
+    @Test
+    public void focusMode_NotAvailable() throws Exception {
+        // Given
+        Set<Flash> availableModes = asSet(
+                Flash.AUTO,
+                Flash.OFF
+        );
 
-		// When
-		Flash result = FlashSelectors
-				.autoRedEye()
-				.select(availableModes);
+        // When
+        Flash result = FlashSelectors
+                .autoRedEye()
+                .select(availableModes);
 
-		// Then
-		assertNull(result);
-	}
+        // Then
+        assertNull(result);
+    }
 
 }

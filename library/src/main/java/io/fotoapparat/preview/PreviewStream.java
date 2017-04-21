@@ -7,24 +7,24 @@ import android.support.annotation.NonNull;
  */
 public interface PreviewStream {
 
-	/**
-	 * Adds new frame to buffer.
-	 */
-	void addFrameToBuffer();
+    /**
+     * Adds new frame to buffer.
+     */
+    void addFrameToBuffer();
 
-	/**
-	 * Registers new processor. If processor was already added before, does nothing.
-	 */
-	void addProcessor(@NonNull FrameProcessor processor);
+    /**
+     * Registers new processor. If processor was already added before, does nothing.
+     */
+    void addProcessor(@NonNull FrameProcessor processor);
 
-	/**
-	 * Unregisters the processor. If processor was not registered before, does nothing.
-	 */
-	void removeProcessor(@NonNull FrameProcessor processor);
+    /**
+     * Unregisters the processor. If processor was not registered before, does nothing.
+     */
+    void removeProcessor(@NonNull FrameProcessor processor);
 
-	/**
-	 * Starts preview stream. After preview is started frame processors will start receiving frames.
-	 */
-	void start();
+    /**
+     * Starts preview stream. After preview is started frame processors will start receiving frames.
+     */
+    void start();
 
 }

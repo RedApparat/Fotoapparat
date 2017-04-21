@@ -17,71 +17,71 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class ParametersProviderTest {
 
-	@Mock
-	Parameters parameters;
+    @Mock
+    Parameters parameters;
 
-	@InjectMocks
-	ParametersProvider testee;
+    @InjectMocks
+    ParametersProvider testee;
 
-	@Test
-	public void getFlash() throws Exception {
-		// Given
-		given(parameters.getValue(Parameters.Type.FLASH))
-				.willReturn(Flash.OFF);
+    @Test
+    public void getFlash() throws Exception {
+        // Given
+        given(parameters.getValue(Parameters.Type.FLASH))
+                .willReturn(Flash.OFF);
 
-		testee.updateParameters(parameters);
+        testee.updateParameters(parameters);
 
-		// When
-		Flash flash = testee.getFlash();
+        // When
+        Flash flash = testee.getFlash();
 
-		// Then
-		assertEquals(Flash.OFF, flash);
-	}
+        // Then
+        assertEquals(Flash.OFF, flash);
+    }
 
-	@Test
-	public void getFocus() throws Exception {
-		// Given
-		given(parameters.getValue(Parameters.Type.FOCUS_MODE))
-				.willReturn(FocusMode.CONTINUOUS_FOCUS);
+    @Test
+    public void getFocus() throws Exception {
+        // Given
+        given(parameters.getValue(Parameters.Type.FOCUS_MODE))
+                .willReturn(FocusMode.CONTINUOUS_FOCUS);
 
-		testee.updateParameters(parameters);
+        testee.updateParameters(parameters);
 
-		// When
-		FocusMode focusMode = testee.getFocus();
+        // When
+        FocusMode focusMode = testee.getFocus();
 
-		// Then
-		assertEquals(FocusMode.CONTINUOUS_FOCUS, focusMode);
-	}
+        // Then
+        assertEquals(FocusMode.CONTINUOUS_FOCUS, focusMode);
+    }
 
-	@Test
-	public void getCaptureSize() throws Exception {
-		// Given
-		given(parameters.getValue(Parameters.Type.PICTURE_SIZE))
-				.willReturn(new Size(4000, 3000));
+    @Test
+    public void getCaptureSize() throws Exception {
+        // Given
+        given(parameters.getValue(Parameters.Type.PICTURE_SIZE))
+                .willReturn(new Size(4000, 3000));
 
-		testee.updateParameters(parameters);
+        testee.updateParameters(parameters);
 
-		// When
-		Size captureSize = testee.getStillCaptureSize();
-		float stillCaptureAspectRatio = testee.getStillCaptureAspectRatio();
+        // When
+        Size captureSize = testee.getStillCaptureSize();
+        float stillCaptureAspectRatio = testee.getStillCaptureAspectRatio();
 
-		// Then
-		assertEquals(new Size(4000, 3000), captureSize);
-		assertEquals(4000f / 3000, stillCaptureAspectRatio);
-	}
+        // Then
+        assertEquals(new Size(4000, 3000), captureSize);
+        assertEquals(4000f / 3000, stillCaptureAspectRatio);
+    }
 
-	@Test
-	public void getPreviewSize() throws Exception {
-		// Given
-		given(parameters.getValue(Parameters.Type.PREVIEW_SIZE))
-				.willReturn(new Size(1920, 1080));
+    @Test
+    public void getPreviewSize() throws Exception {
+        // Given
+        given(parameters.getValue(Parameters.Type.PREVIEW_SIZE))
+                .willReturn(new Size(1920, 1080));
 
-		testee.updateParameters(parameters);
+        testee.updateParameters(parameters);
 
-		// When
-		Size previewSize = testee.getPreviewSize();
+        // When
+        Size previewSize = testee.getPreviewSize();
 
-		// Then
-		assertEquals(new Size(1920, 1080), previewSize);
-	}
+        // Then
+        assertEquals(new Size(1920, 1080), previewSize);
+    }
 }

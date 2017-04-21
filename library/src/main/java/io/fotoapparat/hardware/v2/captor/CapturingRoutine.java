@@ -21,79 +21,79 @@ import io.fotoapparat.photo.Photo;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class CapturingRoutine implements CaptureOperator {
 
-	private final CaptureRequestFactory captureRequestFactory;
-	private final StillSurfaceReader surfaceReader;
-	private final SessionManager sessionManager;
-	private final OrientationManager orientationManager;
+    private final CaptureRequestFactory captureRequestFactory;
+    private final StillSurfaceReader surfaceReader;
+    private final SessionManager sessionManager;
+    private final OrientationManager orientationManager;
 
-	public CapturingRoutine(CaptureRequestFactory captureRequestFactory,
-							StillSurfaceReader surfaceReader,
-							SessionManager sessionManager,
-							OrientationManager orientationManager) {
-		this.captureRequestFactory = captureRequestFactory;
-		this.surfaceReader = surfaceReader;
-		this.sessionManager = sessionManager;
-		this.orientationManager = orientationManager;
-	}
+    public CapturingRoutine(CaptureRequestFactory captureRequestFactory,
+                            StillSurfaceReader surfaceReader,
+                            SessionManager sessionManager,
+                            OrientationManager orientationManager) {
+        this.captureRequestFactory = captureRequestFactory;
+        this.surfaceReader = surfaceReader;
+        this.sessionManager = sessionManager;
+        this.orientationManager = orientationManager;
+    }
 
-	@Override
-	public Photo takePicture() {
-		byte[] photoBytes;
+    @Override
+    public Photo takePicture() {
+        byte[] photoBytes;
 
-		try {
-			photoBytes = capturePicture();
-		} catch (CameraAccessException e) {
-			throw new CameraException(e);
-		}
+        try {
+            photoBytes = capturePicture();
+        } catch (CameraAccessException e) {
+            throw new CameraException(e);
+        }
 
-		return new Photo(photoBytes, 0);
-	}
+        return new Photo(photoBytes, 0);
+    }
 
-	private byte[] capturePicture() throws CameraAccessException {
-		Session session = sessionManager.getCaptureSession();
-		Integer sensorOrientation = orientationManager.getSensorOrientation();
+    private byte[] capturePicture() throws CameraAccessException {
+        Session session = sessionManager.getCaptureSession();
+        Integer sensorOrientation = orientationManager.getSensorOrientation();
 
-		Stage stage = Stage.UNFOCUSED;
-		while (stage != Stage.CAPTURE_COMPLETED) {
-			stage = triggerStagedCaptureSession(session, stage, sensorOrientation);
-		}
-		return surfaceReader.getPhotoBytes();
-	}
+        Stage stage = Stage.UNFOCUSED;
+        while (stage != Stage.CAPTURE_COMPLETED) {
+            stage = triggerStagedCaptureSession(session, stage, sensorOrientation);
+        }
+        return surfaceReader.getPhotoBytes();
+    }
 
-	private Stage triggerStagedCaptureSession(Session session,
-											  Stage stage,
-											  Integer sensorOrientation) throws CameraAccessException {
+    private Stage triggerStagedCaptureSession(Session session,
+                                              Stage stage,
+                                              Integer sensorOrientation) throws CameraAccessException {
 
-		StageCallback stageCallback;
-		CaptureRequest captureRequest;
+        StageCallback stageCallback;
+        CaptureRequest captureRequest;
 
-		switch (stage) {
-			case UNFOCUSED:
-				captureRequest = captureRequestFactory.createLockRequest();
-				stageCallback = new LockFocusCallback();
-				break;
-			case PRECAPTURE:
-				captureRequest = captureRequestFactory.createPrecaptureRequest();
-				stageCallback = new PrecaptureCallback();
-				break;
-			case CAPTURE:
-				captureRequest = captureRequestFactory.createCaptureRequest(sensorOrientation);
-				stageCallback = new CaptureCallback(session);
-				break;
-			default:
-				throw new IllegalStateException("Unsupported stage: " + stage);
-		}
+        switch (stage) {
+            case UNFOCUSED:
+                captureRequest = captureRequestFactory.createLockRequest();
+                stageCallback = new LockFocusCallback();
+                break;
+            case PRECAPTURE:
+                captureRequest = captureRequestFactory.createPrecaptureRequest();
+                stageCallback = new PrecaptureCallback();
+                break;
+            case CAPTURE:
+                captureRequest = captureRequestFactory.createCaptureRequest(sensorOrientation);
+                stageCallback = new CaptureCallback(session);
+                break;
+            default:
+                throw new IllegalStateException("Unsupported stage: " + stage);
+        }
 
-		session.getCaptureSession()
-				.capture(
-						captureRequest,
-						stageCallback,
-						CameraThread
-								.getInstance()
-								.createHandler()
-				);
+        session.getCaptureSession()
+                .capture(
+                        captureRequest,
+                        stageCallback,
+                        CameraThread
+                                .getInstance()
+                                .createHandler()
+                );
 
-		return stageCallback.getCaptureStage();
-	}
+        return stageCallback.getCaptureStage();
+    }
 
 }

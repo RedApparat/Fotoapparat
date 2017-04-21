@@ -7,8 +7,8 @@ import java.util.concurrent.Future;
  */
 public interface Adapter<T, R> {
 
-	/**
-	 * @return a new object type from given {@link Future} of result.
-	 */
-	R adapt(Future<T> future);
+    /**
+     * @return a new object type from given {@link Future} of result.
+     */
+    R adapt(Future<T> future);
 }

@@ -11,9 +11,9 @@ import android.support.annotation.RequiresApi;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 class PrecaptureCallback extends StageCallback {
 
-	@Override
-	Stage processResult(CaptureResult result) {
-		return Stage.CAPTURE;
-	}
+    @Override
+    Stage processResult(CaptureResult result) {
+        return Stage.CAPTURE;
+    }
 
 }

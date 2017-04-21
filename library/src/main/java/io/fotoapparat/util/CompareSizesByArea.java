@@ -9,9 +9,9 @@ import io.fotoapparat.parameter.Size;
  */
 public class CompareSizesByArea implements Comparator<Size> {
 
-	@Override
-	public int compare(Size lhs, Size rhs) {
-		return Long.signum((long) lhs.width * lhs.height -
-				(long) rhs.width * rhs.height);
-	}
+    @Override
+    public int compare(Size lhs, Size rhs) {
+        return Long.signum((long) lhs.width * lhs.height -
+                (long) rhs.width * rhs.height);
+    }
 }

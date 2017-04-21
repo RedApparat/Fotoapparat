@@ -32,110 +32,110 @@ import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 
 public class MainActivity extends AppCompatActivity {
 
-	private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
-	private Fotoapparat fotoapparat;
-	private boolean hasCameraPermission;
-	private CameraView cameraView;
+    private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
+    private Fotoapparat fotoapparat;
+    private boolean hasCameraPermission;
+    private CameraView cameraView;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-		cameraView = (CameraView) findViewById(R.id.camera_view);
-		hasCameraPermission = permissionsDelegate.hasCameraPermission();
+        cameraView = (CameraView) findViewById(R.id.camera_view);
+        hasCameraPermission = permissionsDelegate.hasCameraPermission();
 
-		if (hasCameraPermission) {
-			cameraView.setVisibility(View.VISIBLE);
-		} else {
-			permissionsDelegate.requestCameraPermission();
-		}
+        if (hasCameraPermission) {
+            cameraView.setVisibility(View.VISIBLE);
+        } else {
+            permissionsDelegate.requestCameraPermission();
+        }
 
-		fotoapparat = Fotoapparat
-				.with(this)
-				.into(cameraView)
-				.photoSize(standardRatio(biggestSize()))
-				.lensPosition(back())
-				.focusMode(firstAvailable(
-						continuousFocus(),
-						autoFocus(),
-						fixed()
-				))
-				.flash(firstAvailable(
-						autoRedEye(),
-						autoFlash(),
-						torch()
-				))
-				.frameProcessor(new SampleFrameProcessor())
-				.logger(loggers(
-						logcat(),
-						fileLogger(this)
-				))
-				.build();
+        fotoapparat = Fotoapparat
+                .with(this)
+                .into(cameraView)
+                .photoSize(standardRatio(biggestSize()))
+                .lensPosition(back())
+                .focusMode(firstAvailable(
+                        continuousFocus(),
+                        autoFocus(),
+                        fixed()
+                ))
+                .flash(firstAvailable(
+                        autoRedEye(),
+                        autoFlash(),
+                        torch()
+                ))
+                .frameProcessor(new SampleFrameProcessor())
+                .logger(loggers(
+                        logcat(),
+                        fileLogger(this)
+                ))
+                .build();
 
-		cameraView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				takePicture();
-			}
-		});
-	}
+        cameraView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePicture();
+            }
+        });
+    }
 
-	private void takePicture() {
-		PhotoResult photoResult = fotoapparat.takePicture();
+    private void takePicture() {
+        PhotoResult photoResult = fotoapparat.takePicture();
 
-		photoResult.saveToFile(new File(
-				getExternalFilesDir("photos"),
-				"photo.jpg"
-		));
+        photoResult.saveToFile(new File(
+                getExternalFilesDir("photos"),
+                "photo.jpg"
+        ));
 
-		photoResult
-				.toBitmap()
-				.whenAvailable(new PendingResult.Callback<BitmapPhoto>() {
-					@Override
-					public void onResult(BitmapPhoto result) {
-						ImageView imageView = (ImageView) findViewById(R.id.result);
+        photoResult
+                .toBitmap()
+                .whenAvailable(new PendingResult.Callback<BitmapPhoto>() {
+                    @Override
+                    public void onResult(BitmapPhoto result) {
+                        ImageView imageView = (ImageView) findViewById(R.id.result);
 
-						imageView.setImageBitmap(result.bitmap);
-						imageView.setRotation(-result.rotationDegrees);
-					}
-				});
-	}
+                        imageView.setImageBitmap(result.bitmap);
+                        imageView.setRotation(-result.rotationDegrees);
+                    }
+                });
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (hasCameraPermission) {
-			fotoapparat.start();
-		}
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (hasCameraPermission) {
+            fotoapparat.start();
+        }
+    }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		if (hasCameraPermission) {
-			fotoapparat.stop();
-		}
-	}
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (hasCameraPermission) {
+            fotoapparat.stop();
+        }
+    }
 
-	@Override
-	public void onRequestPermissionsResult(int requestCode,
-										   @NonNull String[] permissions,
-										   @NonNull int[] grantResults) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (permissionsDelegate.resultGranted(requestCode, permissions, grantResults)) {
-			fotoapparat.start();
-			cameraView.setVisibility(View.VISIBLE);
-		}
-	}
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (permissionsDelegate.resultGranted(requestCode, permissions, grantResults)) {
+            fotoapparat.start();
+            cameraView.setVisibility(View.VISIBLE);
+        }
+    }
 
-	private class SampleFrameProcessor implements FrameProcessor {
+    private class SampleFrameProcessor implements FrameProcessor {
 
-		@Override
-		public void processFrame(Frame frame) {
-			// Do nothing
-		}
+        @Override
+        public void processFrame(Frame frame) {
+            // Do nothing
+        }
 
-	}
+    }
 
 }

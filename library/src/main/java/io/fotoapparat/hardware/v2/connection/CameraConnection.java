@@ -24,97 +24,96 @@ import io.fotoapparat.parameter.LensPosition;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class CameraConnection extends CameraDevice.StateCallback implements ConnectionOperator {
 
-	private final CountDownLatch countDownLatch = new CountDownLatch(1);
-	private final CameraManager manager;
-	private final CameraSelector cameraSelector;
-	private final Characteristics capabilities;
-	private CameraDevice camera;
-	private Listener listener;
+    private final CountDownLatch countDownLatch = new CountDownLatch(1);
+    private final CameraManager manager;
+    private final CameraSelector cameraSelector;
+    private final Characteristics capabilities;
+    private CameraDevice camera;
+    private Listener listener;
 
-	public CameraConnection(CameraManager manager,
-							CameraSelector cameraSelector,
-							Characteristics capabilities) {
-		this.manager = manager;
-		this.cameraSelector = cameraSelector;
-		this.capabilities = capabilities;
-	}
+    public CameraConnection(CameraManager manager,
+                            CameraSelector cameraSelector,
+                            Characteristics capabilities) {
+        this.manager = manager;
+        this.cameraSelector = cameraSelector;
+        this.capabilities = capabilities;
+    }
 
-	@Override
-	public void open(LensPosition lensPosition) {
-		String cameraId = cameraSelector.findCameraId(lensPosition);
+    @Override
+    public void open(LensPosition lensPosition) {
+        String cameraId = cameraSelector.findCameraId(lensPosition);
 
-		try {
-			capabilities.setCameraId(cameraId);
-			manager.openCamera(cameraId,
-					this,
-					CameraThread
-							.getInstance()
-							.createHandler()
-			);
-		} catch (CameraAccessException e) {
-			throw new CameraException(e);
-		}
-	}
+        try {
+            capabilities.setCameraId(cameraId);
+            manager.openCamera(cameraId,
+                    this,
+                    CameraThread
+                            .getInstance()
+                            .createHandler()
+            );
+        } catch (CameraAccessException e) {
+            throw new CameraException(e);
+        }
+    }
 
-	@Override
-	public void close() {
-		if (camera != null) {
-			camera.close();
-		}
-		if (listener != null) {
-			listener.onConnectionClosed();
-		}
-	}
+    @Override
+    public void close() {
+        if (camera != null) {
+            camera.close();
+        }
+        if (listener != null) {
+            listener.onConnectionClosed();
+        }
+    }
 
-	@Override
-	public void onOpened(@NonNull CameraDevice camera) {
-		this.camera = camera;
-		countDownLatch.countDown();
-	}
+    @Override
+    public void onOpened(@NonNull CameraDevice camera) {
+        this.camera = camera;
+        countDownLatch.countDown();
+    }
 
-	@Override
-	public void onDisconnected(@NonNull CameraDevice camera) {
-		camera.close();
-	}
+    @Override
+    public void onDisconnected(@NonNull CameraDevice camera) {
+        camera.close();
+    }
 
-	@Override
-	public void onError(@NonNull CameraDevice camera, int error) {
-		camera.close();
-	}
+    @Override
+    public void onError(@NonNull CameraDevice camera, int error) {
+        camera.close();
+    }
 
-	/**
-	 * Waits and returns the {@link CameraDevice} synchronously after it has been
-	 * obtained.
-	 *
-	 * @return the requested {@link CameraDevice} to open
-	 */
-	public CameraDevice getCamera() {
-		try {
-			countDownLatch.await();
-		} catch (InterruptedException e) {
-			// do nothing
-		}
-		return camera;
-	}
+    /**
+     * Waits and returns the {@link CameraDevice} synchronously after it has been
+     * obtained.
+     *
+     * @return the requested {@link CameraDevice} to open
+     */
+    public CameraDevice getCamera() {
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            // do nothing
+        }
+        return camera;
+    }
 
+    /**
+     * Sets the listener to be notified when the connection closes.
+     *
+     * @param listener The listener to receive the events.
+     */
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
 
-	/**
-	 * Sets the listener to be notified when the connection closes.
-	 *
-	 * @param listener The listener to receive the events.
-	 */
-	public void setListener(Listener listener) {
-		this.listener = listener;
-	}
+    /**
+     * Notifies the connectivity of the camera.
+     */
+    public interface Listener {
 
-	/**
-	 * Notifies the connectivity of the camera.
-	 */
-	public interface Listener {
-
-		/**
-		 * Called when the connection to the camera has been closed.
-		 */
-		void onConnectionClosed();
-	}
+        /**
+         * Called when the connection to the camera has been closed.
+         */
+        void onConnectionClosed();
+    }
 }

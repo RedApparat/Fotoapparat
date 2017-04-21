@@ -13,41 +13,41 @@ import io.fotoapparat.view.CameraRenderer;
  */
 public class StartCameraRoutine implements Runnable {
 
-	private final AvailableLensPositionsProvider availableLensPositionsProvider;
-	private final CameraDevice cameraDevice;
-	private final CameraRenderer cameraRenderer;
-	private final SelectorFunction<LensPosition> lensPositionSelector;
-	private final ScreenOrientationProvider screenOrientationProvider;
-	private final InitialParametersProvider initialParametersProvider;
+    private final AvailableLensPositionsProvider availableLensPositionsProvider;
+    private final CameraDevice cameraDevice;
+    private final CameraRenderer cameraRenderer;
+    private final SelectorFunction<LensPosition> lensPositionSelector;
+    private final ScreenOrientationProvider screenOrientationProvider;
+    private final InitialParametersProvider initialParametersProvider;
 
-	public StartCameraRoutine(AvailableLensPositionsProvider availableLensPositionsProvider,
-							  CameraDevice cameraDevice,
-							  CameraRenderer cameraRenderer,
-							  SelectorFunction<LensPosition> lensPositionSelector,
-							  ScreenOrientationProvider screenOrientationProvider,
-							  InitialParametersProvider initialParametersProvider) {
-		this.availableLensPositionsProvider = availableLensPositionsProvider;
-		this.cameraDevice = cameraDevice;
-		this.cameraRenderer = cameraRenderer;
-		this.lensPositionSelector = lensPositionSelector;
-		this.screenOrientationProvider = screenOrientationProvider;
-		this.initialParametersProvider = initialParametersProvider;
-	}
+    public StartCameraRoutine(AvailableLensPositionsProvider availableLensPositionsProvider,
+                              CameraDevice cameraDevice,
+                              CameraRenderer cameraRenderer,
+                              SelectorFunction<LensPosition> lensPositionSelector,
+                              ScreenOrientationProvider screenOrientationProvider,
+                              InitialParametersProvider initialParametersProvider) {
+        this.availableLensPositionsProvider = availableLensPositionsProvider;
+        this.cameraDevice = cameraDevice;
+        this.cameraRenderer = cameraRenderer;
+        this.lensPositionSelector = lensPositionSelector;
+        this.screenOrientationProvider = screenOrientationProvider;
+        this.initialParametersProvider = initialParametersProvider;
+    }
 
-	@Override
-	public void run() {
-		LensPosition lensPosition = lensPositionSelector.select(
-				availableLensPositionsProvider.getAvailableLensPositions()
-		);
+    @Override
+    public void run() {
+        LensPosition lensPosition = lensPositionSelector.select(
+                availableLensPositionsProvider.getAvailableLensPositions()
+        );
 
-		cameraDevice.open(lensPosition);
-		cameraDevice.updateParameters(
-				initialParametersProvider.initialParameters()
-		);
-		cameraDevice.setDisplayOrientation(
-				screenOrientationProvider.getScreenRotation()
-		);
-		cameraRenderer.attachCamera(cameraDevice);
-		cameraDevice.startPreview();
-	}
+        cameraDevice.open(lensPosition);
+        cameraDevice.updateParameters(
+                initialParametersProvider.initialParameters()
+        );
+        cameraDevice.setDisplayOrientation(
+                screenOrientationProvider.getScreenRotation()
+        );
+        cameraRenderer.attachCamera(cameraDevice);
+        cameraDevice.startPreview();
+    }
 }

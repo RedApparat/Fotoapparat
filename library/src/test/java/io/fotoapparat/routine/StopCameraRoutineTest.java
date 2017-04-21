@@ -14,21 +14,21 @@ import static org.mockito.Mockito.inOrder;
 @RunWith(MockitoJUnitRunner.class)
 public class StopCameraRoutineTest {
 
-	@Mock
-	CameraDevice cameraDevice;
+    @Mock
+    CameraDevice cameraDevice;
 
-	@InjectMocks
-	StopCameraRoutine testee;
+    @InjectMocks
+    StopCameraRoutine testee;
 
-	@Test
-	public void stop() throws Exception {
-		// When
-		testee.run();
+    @Test
+    public void stop() throws Exception {
+        // When
+        testee.run();
 
-		// Then
-		InOrder inOrder = inOrder(cameraDevice);
+        // Then
+        InOrder inOrder = inOrder(cameraDevice);
 
-		inOrder.verify(cameraDevice).stopPreview();
-		inOrder.verify(cameraDevice).close();
-	}
+        inOrder.verify(cameraDevice).stopPreview();
+        inOrder.verify(cameraDevice).close();
+    }
 }

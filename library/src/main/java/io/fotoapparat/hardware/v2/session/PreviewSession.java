@@ -23,31 +23,31 @@ import io.fotoapparat.hardware.operators.PreviewOperator;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class PreviewSession extends Session implements PreviewOperator {
 
-	private final CaptureRequest captureRequest;
+    private final CaptureRequest captureRequest;
 
-	PreviewSession(CameraDevice camera,
-				   CaptureRequest captureRequest,
-				   List<Surface> surfaces) {
-		super(camera, Collections.unmodifiableList(surfaces));
-		this.captureRequest = captureRequest;
-	}
+    PreviewSession(CameraDevice camera,
+                   CaptureRequest captureRequest,
+                   List<Surface> surfaces) {
+        super(camera, Collections.unmodifiableList(surfaces));
+        this.captureRequest = captureRequest;
+    }
 
-	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-	@Override
-	public void startPreview() {
-		try {
-			getCaptureSession().setRepeatingRequest(
-					captureRequest,
-					null,
-					null
-			);
-		} catch (CameraAccessException e) {
-			throw new CameraException(e);
-		}
-	}
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void startPreview() {
+        try {
+            getCaptureSession().setRepeatingRequest(
+                    captureRequest,
+                    null,
+                    null
+            );
+        } catch (CameraAccessException e) {
+            throw new CameraException(e);
+        }
+    }
 
-	@Override
-	public void stopPreview() {
-		getCaptureSession().close();
-	}
+    @Override
+    public void stopPreview() {
+        getCaptureSession().close();
+    }
 }

@@ -7,15 +7,15 @@ import io.fotoapparat.hardware.CameraDevice;
  */
 public class AutoFocusRoutine implements Runnable {
 
-	private final CameraDevice cameraDevice;
+    private final CameraDevice cameraDevice;
 
-	public AutoFocusRoutine(CameraDevice cameraDevice) {
-		this.cameraDevice = cameraDevice;
-	}
+    public AutoFocusRoutine(CameraDevice cameraDevice) {
+        this.cameraDevice = cameraDevice;
+    }
 
-	@Override
-	public void run() {
-		cameraDevice.autoFocus();
-	}
+    @Override
+    public void run() {
+        cameraDevice.autoFocus();
+    }
 
 }

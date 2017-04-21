@@ -8,22 +8,22 @@ import java.util.concurrent.Executors;
  */
 class BackgroundThreadLogger implements Logger {
 
-	private static final Executor LOGGER_EXECUTOR = Executors.newSingleThreadExecutor();
+    private static final Executor LOGGER_EXECUTOR = Executors.newSingleThreadExecutor();
 
-	private final Logger logger;
+    private final Logger logger;
 
-	public BackgroundThreadLogger(Logger logger) {
-		this.logger = logger;
-	}
+    public BackgroundThreadLogger(Logger logger) {
+        this.logger = logger;
+    }
 
-	@Override
-	public void log(final String message) {
-		LOGGER_EXECUTOR.execute(new Runnable() {
-			@Override
-			public void run() {
-				logger.log(message);
-			}
-		});
-	}
+    @Override
+    public void log(final String message) {
+        LOGGER_EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
+                logger.log(message);
+            }
+        });
+    }
 
 }

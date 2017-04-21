@@ -7,11 +7,11 @@ package io.fotoapparat.log;
  */
 public interface Logger {
 
-	/**
-	 * Logs given message.
-	 *
-	 * @param message message to log.
-	 */
-	void log(String message);
+    /**
+     * Logs given message.
+     *
+     * @param message message to log.
+     */
+    void log(String message);
 
 }

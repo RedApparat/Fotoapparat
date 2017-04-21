@@ -10,18 +10,18 @@ import io.reactivex.Completable;
  */
 public class CompletableAdapter<T> implements Adapter<T, Completable> {
 
-	private CompletableAdapter() {
-	}
+    private CompletableAdapter() {
+    }
 
-	/**
-	 * @return {@link Adapter} which adapts result to {@link Completable}.
-	 */
-	public static <R> CompletableAdapter<R> toCompletable() {
-		return new CompletableAdapter<>();
-	}
+    /**
+     * @return {@link Adapter} which adapts result to {@link Completable}.
+     */
+    public static <R> CompletableAdapter<R> toCompletable() {
+        return new CompletableAdapter<>();
+    }
 
-	@Override
-	public Completable adapt(Future<T> future) {
-		return Completable.fromFuture(future);
-	}
+    @Override
+    public Completable adapt(Future<T> future) {
+        return Completable.fromFuture(future);
+    }
 }

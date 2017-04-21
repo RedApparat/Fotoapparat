@@ -11,13 +11,13 @@ import io.fotoapparat.hardware.Capabilities;
  */
 public class GetCapabilitiesTask extends FutureTask<Capabilities> {
 
-	public GetCapabilitiesTask(final CameraDevice cameraDevice) {
-		super(new Callable<Capabilities>() {
-			@Override
-			public Capabilities call() throws Exception {
-				return cameraDevice.getCapabilities();
-			}
-		});
-	}
+    public GetCapabilitiesTask(final CameraDevice cameraDevice) {
+        super(new Callable<Capabilities>() {
+            @Override
+            public Capabilities call() throws Exception {
+                return cameraDevice.getCapabilities();
+            }
+        });
+    }
 
 }

@@ -19,35 +19,35 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class RendererParametersProviderTest {
 
-	@Mock
-	ParametersProvider parametersProvider;
-	@Mock
-	OrientationManager orientationManager;
-	@InjectMocks
-	RendererParametersProvider testee;
+    @Mock
+    ParametersProvider parametersProvider;
+    @Mock
+    OrientationManager orientationManager;
+    @InjectMocks
+    RendererParametersProvider testee;
 
-	@Test
-	public void getParameters() throws Exception {
-		// Given
-		Size size = new Size(MAX_PREVIEW_WIDTH, MAX_PREVIEW_HEIGHT);
-		int sensorOrientation = 90;
+    @Test
+    public void getParameters() throws Exception {
+        // Given
+        Size size = new Size(MAX_PREVIEW_WIDTH, MAX_PREVIEW_HEIGHT);
+        int sensorOrientation = 90;
 
-		given(parametersProvider.getPreviewSize())
-				.willReturn(size);
-		given(orientationManager.getSensorOrientation())
-				.willReturn(sensorOrientation);
+        given(parametersProvider.getPreviewSize())
+                .willReturn(size);
+        given(orientationManager.getSensorOrientation())
+                .willReturn(sensorOrientation);
 
-		// When
-		RendererParameters rendererParameters = testee.getRendererParameters();
+        // When
+        RendererParameters rendererParameters = testee.getRendererParameters();
 
-		// Then
-		assertEquals(
-				new RendererParameters(
-						size,
-						sensorOrientation
-				),
-				rendererParameters
-		);
+        // Then
+        assertEquals(
+                new RendererParameters(
+                        size,
+                        sensorOrientation
+                ),
+                rendererParameters
+        );
 
-	}
+    }
 }

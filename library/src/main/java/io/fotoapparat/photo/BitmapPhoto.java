@@ -7,19 +7,19 @@ import android.graphics.Bitmap;
  */
 public class BitmapPhoto {
 
-	/**
-	 * {@link Bitmap} of the photo.
-	 */
-	public final Bitmap bitmap;
+    /**
+     * {@link Bitmap} of the photo.
+     */
+    public final Bitmap bitmap;
 
-	/**
-	 * Clockwise rotation relatively to screen orientation at the moment when photo was taken.
-	 */
-	public final int rotationDegrees;
+    /**
+     * Clockwise rotation relatively to screen orientation at the moment when photo was taken.
+     */
+    public final int rotationDegrees;
 
-	public BitmapPhoto(Bitmap bitmap,
-					   int rotationDegrees) {
-		this.bitmap = bitmap;
-		this.rotationDegrees = rotationDegrees;
-	}
+    public BitmapPhoto(Bitmap bitmap,
+                       int rotationDegrees) {
+        this.bitmap = bitmap;
+        this.rotationDegrees = rotationDegrees;
+    }
 }

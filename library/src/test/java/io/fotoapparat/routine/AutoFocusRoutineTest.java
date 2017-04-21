@@ -13,18 +13,18 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class AutoFocusRoutineTest {
 
-	@Mock
-	CameraDevice cameraDevice;
+    @Mock
+    CameraDevice cameraDevice;
 
-	@InjectMocks
-	AutoFocusRoutine testee;
+    @InjectMocks
+    AutoFocusRoutine testee;
 
-	@Test
-	public void autoFocus() throws Exception {
-		// When
-		testee.run();
+    @Test
+    public void autoFocus() throws Exception {
+        // When
+        testee.run();
 
-		// Then
-		verify(cameraDevice).autoFocus();
-	}
+        // Then
+        verify(cameraDevice).autoFocus();
+    }
 }

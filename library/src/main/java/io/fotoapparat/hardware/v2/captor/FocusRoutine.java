@@ -16,47 +16,47 @@ import io.fotoapparat.hardware.v2.session.SessionManager;
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class FocusRoutine implements AutoFocusOperator {
-	private final SessionManager sessionManager;
-	private final CaptureRequestFactory captureRequestFactory;
+    private final SessionManager sessionManager;
+    private final CaptureRequestFactory captureRequestFactory;
 
-	public FocusRoutine(CaptureRequestFactory captureRequestFactory,
-						SessionManager sessionManager) {
-		this.captureRequestFactory = captureRequestFactory;
-		this.sessionManager = sessionManager;
-	}
+    public FocusRoutine(CaptureRequestFactory captureRequestFactory,
+                        SessionManager sessionManager) {
+        this.captureRequestFactory = captureRequestFactory;
+        this.sessionManager = sessionManager;
+    }
 
-	@Override
-	public void autoFocus() {
-		try {
-			focusLens();
-		} catch (CameraAccessException e) {
-			throw new CameraException(e);
-		}
-	}
+    @Override
+    public void autoFocus() {
+        try {
+            focusLens();
+        } catch (CameraAccessException e) {
+            throw new CameraException(e);
+        }
+    }
 
-	private void focusLens() throws CameraAccessException {
-		Session session = sessionManager.getCaptureSession();
+    private void focusLens() throws CameraAccessException {
+        Session session = sessionManager.getCaptureSession();
 
-		Stage stage = Stage.UNFOCUSED;
-		while (stage == Stage.UNFOCUSED) {
-			stage = triggerAutoFocus(session);
-		}
-	}
+        Stage stage = Stage.UNFOCUSED;
+        while (stage == Stage.UNFOCUSED) {
+            stage = triggerAutoFocus(session);
+        }
+    }
 
-	private Stage triggerAutoFocus(Session session) throws CameraAccessException {
+    private Stage triggerAutoFocus(Session session) throws CameraAccessException {
 
-		StageCallback stageCallback = new LockFocusCallback();
+        StageCallback stageCallback = new LockFocusCallback();
 
-		session.getCaptureSession()
-				.capture(
-						captureRequestFactory.createLockRequest(),
-						stageCallback,
-						CameraThread
-								.getInstance()
-								.createHandler()
-				);
+        session.getCaptureSession()
+                .capture(
+                        captureRequestFactory.createLockRequest(),
+                        stageCallback,
+                        CameraThread
+                                .getInstance()
+                                .createHandler()
+                );
 
-		return stageCallback.getCaptureStage();
-	}
+        return stageCallback.getCaptureStage();
+    }
 
 }

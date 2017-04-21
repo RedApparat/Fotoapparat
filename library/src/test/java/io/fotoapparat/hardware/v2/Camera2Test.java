@@ -38,144 +38,144 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class Camera2Test {
 
-	@Mock
-	Logger logger;
-	@Mock
-	ConnectionOperator connectionOperator;
-	@Mock
-	PreviewOperator previewOperator;
-	@Mock
-	SurfaceOperator surfaceOperator;
-	@Mock
-	OrientationOperator orientationOperator;
-	@Mock
-	ParametersOperator parametersOperator;
-	@Mock
-	CapabilitiesOperator capabilitiesOperator;
-	@Mock
-	CaptureOperator captureOperator;
-	@Mock
-	PreviewStream previewStream;
+    @Mock
+    Logger logger;
+    @Mock
+    ConnectionOperator connectionOperator;
+    @Mock
+    PreviewOperator previewOperator;
+    @Mock
+    SurfaceOperator surfaceOperator;
+    @Mock
+    OrientationOperator orientationOperator;
+    @Mock
+    ParametersOperator parametersOperator;
+    @Mock
+    CapabilitiesOperator capabilitiesOperator;
+    @Mock
+    CaptureOperator captureOperator;
+    @Mock
+    PreviewStream previewStream;
 
-	@InjectMocks
-	Camera2 testee;
+    @InjectMocks
+    Camera2 testee;
 
-	@Test
-	public void open() throws Exception {
-		// When
-		testee.open(LensPosition.FRONT);
+    @Test
+    public void open() throws Exception {
+        // When
+        testee.open(LensPosition.FRONT);
 
-		// Then
-		verify(logger).log(anyString());
-		verify(connectionOperator).open(LensPosition.FRONT);
-	}
+        // Then
+        verify(logger).log(anyString());
+        verify(connectionOperator).open(LensPosition.FRONT);
+    }
 
-	@Test
-	public void close() throws Exception {
-		// When
-		testee.close();
+    @Test
+    public void close() throws Exception {
+        // When
+        testee.close();
 
-		// Then
-		verify(logger).log(anyString());
-		verify(connectionOperator).close();
-	}
+        // Then
+        verify(logger).log(anyString());
+        verify(connectionOperator).close();
+    }
 
-	@Test
-	public void startPreview() throws Exception {
-		// When
-		testee.startPreview();
+    @Test
+    public void startPreview() throws Exception {
+        // When
+        testee.startPreview();
 
-		// Then
-		verify(logger).log(anyString());
-		verify(previewOperator).startPreview();
-	}
+        // Then
+        verify(logger).log(anyString());
+        verify(previewOperator).startPreview();
+    }
 
-	@Test
-	public void stopPreview() throws Exception {
-		// When
-		testee.stopPreview();
+    @Test
+    public void stopPreview() throws Exception {
+        // When
+        testee.stopPreview();
 
-		// Then
-		verify(logger).log(anyString());
-		verify(previewOperator).stopPreview();
-	}
+        // Then
+        verify(logger).log(anyString());
+        verify(previewOperator).stopPreview();
+    }
 
-	@Test
-	public void setDisplaySurface() throws Exception {
-		// When
-		TextureView textureView = Mockito.mock(TextureView.class);
-		testee.setDisplaySurface(textureView);
+    @Test
+    public void setDisplaySurface() throws Exception {
+        // When
+        TextureView textureView = Mockito.mock(TextureView.class);
+        testee.setDisplaySurface(textureView);
 
-		// Then
-		verify(logger).log(anyString());
-		verify(surfaceOperator).setDisplaySurface(textureView);
-	}
+        // Then
+        verify(logger).log(anyString());
+        verify(surfaceOperator).setDisplaySurface(textureView);
+    }
 
-	@Test
-	public void setDisplayOrientation() throws Exception {
-		// When
-		testee.setDisplayOrientation(90);
+    @Test
+    public void setDisplayOrientation() throws Exception {
+        // When
+        testee.setDisplayOrientation(90);
 
-		// Then
-		verify(logger).log(anyString());
-		verify(orientationOperator).setDisplayOrientation(90);
-	}
+        // Then
+        verify(logger).log(anyString());
+        verify(orientationOperator).setDisplayOrientation(90);
+    }
 
-	@Test
-	public void updateParameters() throws Exception {
-		// When
-		Parameters parameters = new Parameters();
-		testee.updateParameters(parameters);
+    @Test
+    public void updateParameters() throws Exception {
+        // When
+        Parameters parameters = new Parameters();
+        testee.updateParameters(parameters);
 
-		// Then
-		verify(logger).log(anyString());
-		verify(parametersOperator).updateParameters(parameters);
-	}
+        // Then
+        verify(logger).log(anyString());
+        verify(parametersOperator).updateParameters(parameters);
+    }
 
-	@Test
-	public void getCapabilities() throws Exception {
-		// Given
-		Capabilities capabilities = new Capabilities(
-				Collections.<Size>emptySet(),
-				Collections.<Size>emptySet(),
-				singleton(FocusMode.MACRO),
-				Collections.<Flash>emptySet()
-		);
-		given(capabilitiesOperator.getCapabilities())
-				.willReturn(capabilities);
+    @Test
+    public void getCapabilities() throws Exception {
+        // Given
+        Capabilities capabilities = new Capabilities(
+                Collections.<Size>emptySet(),
+                Collections.<Size>emptySet(),
+                singleton(FocusMode.MACRO),
+                Collections.<Flash>emptySet()
+        );
+        given(capabilitiesOperator.getCapabilities())
+                .willReturn(capabilities);
 
-		// When
-		Capabilities returnedCapabilities = testee.getCapabilities();
+        // When
+        Capabilities returnedCapabilities = testee.getCapabilities();
 
-		// Then
-		verify(logger).log(anyString());
-		assertEquals(capabilities, returnedCapabilities);
-	}
+        // Then
+        verify(logger).log(anyString());
+        assertEquals(capabilities, returnedCapabilities);
+    }
 
-	@Test
-	public void takePicture() throws Exception {
-		// Given
-		Photo photo = new Photo(new byte[0], 0);
-		given(captureOperator.takePicture())
-				.willReturn(photo);
+    @Test
+    public void takePicture() throws Exception {
+        // Given
+        Photo photo = new Photo(new byte[0], 0);
+        given(captureOperator.takePicture())
+                .willReturn(photo);
 
-		// When
-		Photo returnedPhoto = testee.takePicture();
+        // When
+        Photo returnedPhoto = testee.takePicture();
 
-		// Then
-		verify(logger).log(anyString());
-		assertEquals(photo, returnedPhoto);
-	}
+        // Then
+        verify(logger).log(anyString());
+        assertEquals(photo, returnedPhoto);
+    }
 
-	@Test
-	public void previewStream() throws Exception {
-		// Given
+    @Test
+    public void previewStream() throws Exception {
+        // Given
 
-		// When
-		PreviewStream previewStream = testee.getPreviewStream();
+        // When
+        PreviewStream previewStream = testee.getPreviewStream();
 
-		// Then
-		verify(logger).log(anyString());
-		assertEquals(this.previewStream, previewStream);
-	}
+        // Then
+        verify(logger).log(anyString());
+        assertEquals(this.previewStream, previewStream);
+    }
 }

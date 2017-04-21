@@ -24,33 +24,33 @@ import static org.mockito.Mockito.inOrder;
 @RunWith(MockitoJUnitRunner.class)
 public class GetCapabilitiesTaskTest {
 
-	private static final Capabilities CAPABILITIES = new Capabilities(
-			Collections.singleton(new Size(1400, 1080)),
-			Collections.singleton(new Size(1400, 1080)),
-			Collections.singleton(FocusMode.CONTINUOUS_FOCUS),
-			Collections.singleton(Flash.OFF)
-	);
+    private static final Capabilities CAPABILITIES = new Capabilities(
+            Collections.singleton(new Size(1400, 1080)),
+            Collections.singleton(new Size(1400, 1080)),
+            Collections.singleton(FocusMode.CONTINUOUS_FOCUS),
+            Collections.singleton(Flash.OFF)
+    );
 
-	@Mock
-	CameraDevice cameraDevice;
+    @Mock
+    CameraDevice cameraDevice;
 
-	@InjectMocks
-	GetCapabilitiesTask testee;
+    @InjectMocks
+    GetCapabilitiesTask testee;
 
-	@Test
-	public void takePhoto() throws Exception {
-		// Given
-		given(cameraDevice.getCapabilities())
-				.willReturn(CAPABILITIES);
+    @Test
+    public void takePhoto() throws Exception {
+        // Given
+        given(cameraDevice.getCapabilities())
+                .willReturn(CAPABILITIES);
 
-		// When
-		Capabilities result = resultOf(testee);
+        // When
+        Capabilities result = resultOf(testee);
 
-		// Then
-		InOrder inOrder = inOrder(cameraDevice);
-		inOrder.verify(cameraDevice).getCapabilities();
+        // Then
+        InOrder inOrder = inOrder(cameraDevice);
+        inOrder.verify(cameraDevice).getCapabilities();
 
-		assertEquals(result, CAPABILITIES);
-	}
+        assertEquals(result, CAPABILITIES);
+    }
 
 }

@@ -13,44 +13,44 @@ import static junit.framework.Assert.assertTrue;
 
 public class SaveToFileTransformerTest {
 
-	static final File FILE = new File("test");
+    static final File FILE = new File("test");
 
-	SaveToFileTransformer testee;
+    SaveToFileTransformer testee;
 
-	@Before
-	public void setUp() throws Exception {
-		ensureFileDeleted();
+    @Before
+    public void setUp() throws Exception {
+        ensureFileDeleted();
 
-		testee = new SaveToFileTransformer(FILE);
-	}
+        testee = new SaveToFileTransformer(FILE);
+    }
 
-	@Test
-	public void savePhoto() throws Exception {
-		// Given
-		Photo photo = new Photo(
-				new byte[]{1, 2, 3},
-				0
-		);
+    @Test
+    public void savePhoto() throws Exception {
+        // Given
+        Photo photo = new Photo(
+                new byte[]{1, 2, 3},
+                0
+        );
 
-		// When
-		testee.transform(photo);
+        // When
+        testee.transform(photo);
 
-		// Then
-		assertTrue(FILE.exists());
-		assertEquals(
-				photo.encodedImage.length,
-				FILE.length()
-		);
-	}
+        // Then
+        assertTrue(FILE.exists());
+        assertEquals(
+                photo.encodedImage.length,
+                FILE.length()
+        );
+    }
 
-	@After
-	public void tearDown() throws Exception {
-		ensureFileDeleted();
-	}
+    @After
+    public void tearDown() throws Exception {
+        ensureFileDeleted();
+    }
 
-	private void ensureFileDeleted() {
-		if (FILE.exists() && !FILE.delete()) {
-			throw new IllegalStateException("Can't delete test file");
-		}
-	}
+    private void ensureFileDeleted() {
+        if (FILE.exists() && !FILE.delete()) {
+            throw new IllegalStateException("Can't delete test file");
+        }
+    }
 }

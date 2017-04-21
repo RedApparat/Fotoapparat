@@ -30,90 +30,90 @@ import io.fotoapparat.log.Logger;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class V2Provider implements CameraProvider {
 
-	private final CameraManager manager;
+    private final CameraManager manager;
 
-	public V2Provider(Context context) {
-		manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
-	}
+    public V2Provider(Context context) {
+        manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+    }
 
-	@Override
-	public CameraDevice get(Logger logger) {
+    @Override
+    public CameraDevice get(Logger logger) {
 
-		CameraSelector cameraSelector = new CameraSelector(manager);
-		Characteristics characteristics = new Characteristics(manager);
+        CameraSelector cameraSelector = new CameraSelector(manager);
+        Characteristics characteristics = new Characteristics(manager);
 
-		CameraConnection cameraConnection = new CameraConnection(manager,
-				cameraSelector,
-				characteristics
-		);
+        CameraConnection cameraConnection = new CameraConnection(manager,
+                cameraSelector,
+                characteristics
+        );
 
-		OrientationManager orientationManager = new OrientationManager(characteristics);
+        OrientationManager orientationManager = new OrientationManager(characteristics);
 
-		ParametersProvider parametersProvider = new ParametersProvider();
+        ParametersProvider parametersProvider = new ParametersProvider();
 
-		TextureManager textureManager = new TextureManager(
-				orientationManager,
-				parametersProvider
-		);
+        TextureManager textureManager = new TextureManager(
+                orientationManager,
+                parametersProvider
+        );
 
-		StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(parametersProvider);
-		ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(
-				parametersProvider
-		);
+        StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(parametersProvider);
+        ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(
+                parametersProvider
+        );
 
-		CaptureRequestFactory captureRequestFactory = new CaptureRequestFactory(
-				cameraConnection,
-				stillSurfaceReader,
-				continuousSurfaceReader,
-				textureManager,
-				parametersProvider,
-				characteristics
-		);
+        CaptureRequestFactory captureRequestFactory = new CaptureRequestFactory(
+                cameraConnection,
+                stillSurfaceReader,
+                continuousSurfaceReader,
+                textureManager,
+                parametersProvider,
+                characteristics
+        );
 
-		SessionManager sessionManager = new SessionManager(
-				stillSurfaceReader,
-				continuousSurfaceReader,
-				cameraConnection,
-				captureRequestFactory,
-				textureManager
-		);
+        SessionManager sessionManager = new SessionManager(
+                stillSurfaceReader,
+                continuousSurfaceReader,
+                cameraConnection,
+                captureRequestFactory,
+                textureManager
+        );
 
-		CapabilitiesFactory capabilitiesOperator = new CapabilitiesFactory(characteristics);
+        CapabilitiesFactory capabilitiesOperator = new CapabilitiesFactory(characteristics);
 
-		CapturingRoutine capturingRoutine = new CapturingRoutine(
-				captureRequestFactory,
-				stillSurfaceReader,
-				sessionManager,
-				orientationManager
-		);
+        CapturingRoutine capturingRoutine = new CapturingRoutine(
+                captureRequestFactory,
+                stillSurfaceReader,
+                sessionManager,
+                orientationManager
+        );
 
-		PreviewStream2 previewStream = new PreviewStream2(
-				continuousSurfaceReader,
-				parametersProvider
-		);
+        PreviewStream2 previewStream = new PreviewStream2(
+                continuousSurfaceReader,
+                parametersProvider
+        );
 
-		RendererParametersProvider rendererParametersOperator = new RendererParametersProvider(
-				parametersProvider,
-				orientationManager
-		);
+        RendererParametersProvider rendererParametersOperator = new RendererParametersProvider(
+                parametersProvider,
+                orientationManager
+        );
 
-		FocusRoutine focusRoutine = new FocusRoutine(
-				captureRequestFactory,
-				sessionManager
-		);
+        FocusRoutine focusRoutine = new FocusRoutine(
+                captureRequestFactory,
+                sessionManager
+        );
 
-		return new Camera2(
-				logger,
-				cameraConnection,
-				sessionManager,
-				textureManager,
-				orientationManager,
-				parametersProvider,
-				capabilitiesOperator,
-				capturingRoutine,
-				previewStream,
-				rendererParametersOperator,
-				focusRoutine
-		);
-	}
+        return new Camera2(
+                logger,
+                cameraConnection,
+                sessionManager,
+                textureManager,
+                orientationManager,
+                parametersProvider,
+                capabilitiesOperator,
+                capturingRoutine,
+                previewStream,
+                rendererParametersOperator,
+                focusRoutine
+        );
+    }
 }

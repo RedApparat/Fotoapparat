@@ -15,83 +15,83 @@ import io.fotoapparat.parameter.selector.SelectorFunction;
  */
 public class InitialParametersProvider {
 
-	private final CapabilitiesOperator capabilitiesOperator;
-	private final SelectorFunction<Size> photoSizeSelector;
-	private final SelectorFunction<Size> previewSizeSelector;
-	private final SelectorFunction<FocusMode> focusModeSelector;
-	private final SelectorFunction<Flash> flashSelector;
+    private final CapabilitiesOperator capabilitiesOperator;
+    private final SelectorFunction<Size> photoSizeSelector;
+    private final SelectorFunction<Size> previewSizeSelector;
+    private final SelectorFunction<FocusMode> focusModeSelector;
+    private final SelectorFunction<Flash> flashSelector;
 
-	public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
-									 SelectorFunction<Size> photoSizeSelector,
-									 SelectorFunction<Size> previewSizeSelector,
-									 SelectorFunction<FocusMode> focusModeSelector,
-									 SelectorFunction<Flash> flashSelector) {
-		this.capabilitiesOperator = capabilitiesOperator;
-		this.photoSizeSelector = photoSizeSelector;
-		this.previewSizeSelector = previewSizeSelector;
-		this.focusModeSelector = focusModeSelector;
-		this.flashSelector = flashSelector;
-	}
+    public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
+                                     SelectorFunction<Size> photoSizeSelector,
+                                     SelectorFunction<Size> previewSizeSelector,
+                                     SelectorFunction<FocusMode> focusModeSelector,
+                                     SelectorFunction<Flash> flashSelector) {
+        this.capabilitiesOperator = capabilitiesOperator;
+        this.photoSizeSelector = photoSizeSelector;
+        this.previewSizeSelector = previewSizeSelector;
+        this.focusModeSelector = focusModeSelector;
+        this.flashSelector = flashSelector;
+    }
 
-	/**
-	 * @return {@link Parameters} which will be used by {@link CameraDevice} on start-up.
-	 */
-	public Parameters initialParameters() {
-		Capabilities capabilities = capabilitiesOperator.getCapabilities();
+    /**
+     * @return {@link Parameters} which will be used by {@link CameraDevice} on start-up.
+     */
+    public Parameters initialParameters() {
+        Capabilities capabilities = capabilitiesOperator.getCapabilities();
 
-		Parameters parameters = new Parameters();
+        Parameters parameters = new Parameters();
 
-		putPictureSize(capabilities, parameters);
-		putPreviewSize(capabilities, parameters);
-		putFocusMode(capabilities, parameters);
-		putFlash(capabilities, parameters);
+        putPictureSize(capabilities, parameters);
+        putPreviewSize(capabilities, parameters);
+        putFocusMode(capabilities, parameters);
+        putFlash(capabilities, parameters);
 
-		return parameters;
-	}
+        return parameters;
+    }
 
-	private void putPreviewSize(Capabilities capabilities, Parameters parameters) {
-		Size photoSize = photoSize(capabilities);
+    private void putPreviewSize(Capabilities capabilities, Parameters parameters) {
+        Size photoSize = photoSize(capabilities);
 
-		parameters.putValue(
-				Parameters.Type.PREVIEW_SIZE,
-				AspectRatioSelectors
-						.aspectRatio(
-								photoSize.getAspectRatio(),
-								previewSizeSelector
-						)
-						.select(capabilities.supportedPreviewSizes())
-		);
-	}
+        parameters.putValue(
+                Parameters.Type.PREVIEW_SIZE,
+                AspectRatioSelectors
+                        .aspectRatio(
+                                photoSize.getAspectRatio(),
+                                previewSizeSelector
+                        )
+                        .select(capabilities.supportedPreviewSizes())
+        );
+    }
 
-	private void putPictureSize(Capabilities capabilities, Parameters parameters) {
-		parameters.putValue(
-				Parameters.Type.PICTURE_SIZE,
-				photoSize(capabilities)
-		);
-	}
+    private void putPictureSize(Capabilities capabilities, Parameters parameters) {
+        parameters.putValue(
+                Parameters.Type.PICTURE_SIZE,
+                photoSize(capabilities)
+        );
+    }
 
-	private Size photoSize(Capabilities capabilities) {
-		return photoSizeSelector.select(
-				capabilities.supportedPictureSizes()
-		);
-	}
+    private Size photoSize(Capabilities capabilities) {
+        return photoSizeSelector.select(
+                capabilities.supportedPictureSizes()
+        );
+    }
 
-	private void putFocusMode(Capabilities capabilities, Parameters parameters) {
-		parameters.putValue(
-				Parameters.Type.FOCUS_MODE,
-				focusModeSelector.select(
-						capabilities.supportedFocusModes()
-				)
-		);
-	}
+    private void putFocusMode(Capabilities capabilities, Parameters parameters) {
+        parameters.putValue(
+                Parameters.Type.FOCUS_MODE,
+                focusModeSelector.select(
+                        capabilities.supportedFocusModes()
+                )
+        );
+    }
 
-	private void putFlash(Capabilities capabilities, Parameters parameters) {
-		parameters.putValue(
-				Parameters.Type.FLASH,
-				flashSelector.select(
-						capabilities.supportedFlashModes()
-				)
-		);
-	}
+    private void putFlash(Capabilities capabilities, Parameters parameters) {
+        parameters.putValue(
+                Parameters.Type.FLASH,
+                flashSelector.select(
+                        capabilities.supportedFlashModes()
+                )
+        );
+    }
 
 }

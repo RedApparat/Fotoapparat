@@ -20,70 +20,70 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class RequestTest {
 
-	@Mock
-	private CaptureRequest.Builder builder;
-	@Mock
-	private CameraDevice cameraDevice;
-	@Mock
-	private CaptureRequest captureRequest;
-	@Mock
-	private Surface surface;
+    @Mock
+    private CaptureRequest.Builder builder;
+    @Mock
+    private CameraDevice cameraDevice;
+    @Mock
+    private CaptureRequest captureRequest;
+    @Mock
+    private Surface surface;
 
-	@SuppressWarnings("WrongConstant")
-	@Before
-	public void setUp() throws Exception {
-		given(cameraDevice.createCaptureRequest(anyInt()))
-				.willReturn(builder);
+    @SuppressWarnings("WrongConstant")
+    @Before
+    public void setUp() throws Exception {
+        given(cameraDevice.createCaptureRequest(anyInt()))
+                .willReturn(builder);
 
-		given(builder.build())
-				.willReturn(captureRequest);
-	}
+        given(builder.build())
+                .willReturn(captureRequest);
+    }
 
-	@Test
-	public void stillCapture_setCaptureIntent() throws Exception {
-		// Given
-		CaptureRequestBuilder request = simpleRequest();
+    @Test
+    public void stillCapture_setCaptureIntent() throws Exception {
+        // Given
+        CaptureRequestBuilder request = simpleRequest();
 
-		// When
-		Request.create(request);
+        // When
+        Request.create(request);
 
-		// Then
-		verify(builder)
-				.set(CaptureRequest.CONTROL_CAPTURE_INTENT,
-						CameraMetadata.CONTROL_CAPTURE_INTENT_STILL_CAPTURE);
-		verify(builder)
-				.set(CaptureRequest.CONTROL_MODE,
-						CaptureRequest.CONTROL_MODE_AUTO);
-	}
+        // Then
+        verify(builder)
+                .set(CaptureRequest.CONTROL_CAPTURE_INTENT,
+                        CameraMetadata.CONTROL_CAPTURE_INTENT_STILL_CAPTURE);
+        verify(builder)
+                .set(CaptureRequest.CONTROL_MODE,
+                        CaptureRequest.CONTROL_MODE_AUTO);
+    }
 
-	@Test
-	public void stillCapture_notSetCaptureIntent() throws Exception {
-		// Given
-		CaptureRequestBuilder request = CaptureRequestBuilder
-				.create(
-						cameraDevice,
-						CameraDevice.TEMPLATE_PREVIEW
-				)
-				.into(surface);
+    @Test
+    public void stillCapture_notSetCaptureIntent() throws Exception {
+        // Given
+        CaptureRequestBuilder request = CaptureRequestBuilder
+                .create(
+                        cameraDevice,
+                        CameraDevice.TEMPLATE_PREVIEW
+                )
+                .into(surface);
 
-		// When
-		Request.create(request);
+        // When
+        Request.create(request);
 
-		// Then
-		verify(builder, never())
-				.set(CaptureRequest.CONTROL_CAPTURE_INTENT,
-						CameraMetadata.CONTROL_CAPTURE_INTENT_STILL_CAPTURE);
-		verify(builder, never())
-				.set(CaptureRequest.CONTROL_MODE,
-						CaptureRequest.CONTROL_MODE_AUTO);
-	}
+        // Then
+        verify(builder, never())
+                .set(CaptureRequest.CONTROL_CAPTURE_INTENT,
+                        CameraMetadata.CONTROL_CAPTURE_INTENT_STILL_CAPTURE);
+        verify(builder, never())
+                .set(CaptureRequest.CONTROL_MODE,
+                        CaptureRequest.CONTROL_MODE_AUTO);
+    }
 
-	private CaptureRequestBuilder simpleRequest() {
-		return CaptureRequestBuilder
-				.create(
-						cameraDevice,
-						CameraDevice.TEMPLATE_STILL_CAPTURE
-				)
-				.into(surface);
-	}
+    private CaptureRequestBuilder simpleRequest() {
+        return CaptureRequestBuilder
+                .create(
+                        cameraDevice,
+                        CameraDevice.TEMPLATE_STILL_CAPTURE
+                )
+                .into(surface);
+    }
 }

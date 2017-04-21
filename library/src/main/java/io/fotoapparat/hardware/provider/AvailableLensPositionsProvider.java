@@ -9,9 +9,9 @@ import io.fotoapparat.parameter.LensPosition;
  */
 public interface AvailableLensPositionsProvider {
 
-	/**
-	 * @return list of {@link LensPosition} which are available on the device.
-	 */
-	List<LensPosition> getAvailableLensPositions();
+    /**
+     * @return list of {@link LensPosition} which are available on the device.
+     */
+    List<LensPosition> getAvailableLensPositions();
 
 }

@@ -19,47 +19,47 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 @RunWith(MockitoJUnitRunner.class)
 public class ConfigurePreviewStreamRoutineTest {
 
-	@Mock
-	CameraDevice cameraDevice;
-	@Mock
-	PreviewStream previewStream;
-	@Mock
-	FrameProcessor frameProcessor;
+    @Mock
+    CameraDevice cameraDevice;
+    @Mock
+    PreviewStream previewStream;
+    @Mock
+    FrameProcessor frameProcessor;
 
-	@InjectMocks
-	ConfigurePreviewStreamRoutine testee;
+    @InjectMocks
+    ConfigurePreviewStreamRoutine testee;
 
-	@Before
-	public void setUp() throws Exception {
-		given(cameraDevice.getPreviewStream())
-				.willReturn(previewStream);
-	}
+    @Before
+    public void setUp() throws Exception {
+        given(cameraDevice.getPreviewStream())
+                .willReturn(previewStream);
+    }
 
-	@Test
-	public void configurePreview() throws Exception {
-		// When
-		testee.run();
+    @Test
+    public void configurePreview() throws Exception {
+        // When
+        testee.run();
 
-		// Then
-		InOrder inOrder = inOrder(previewStream);
+        // Then
+        InOrder inOrder = inOrder(previewStream);
 
-		inOrder.verify(previewStream).addProcessor(frameProcessor);
-		inOrder.verify(previewStream).start();
-	}
+        inOrder.verify(previewStream).addProcessor(frameProcessor);
+        inOrder.verify(previewStream).start();
+    }
 
-	@Test
-	public void noFrameProcessor() throws Exception {
-		// Given
-		ConfigurePreviewStreamRoutine testee = new ConfigurePreviewStreamRoutine(
-				cameraDevice,
-				null
-		);
+    @Test
+    public void noFrameProcessor() throws Exception {
+        // Given
+        ConfigurePreviewStreamRoutine testee = new ConfigurePreviewStreamRoutine(
+                cameraDevice,
+                null
+        );
 
-		// When
-		testee.run();
+        // When
+        testee.run();
 
-		// Then
-		verifyZeroInteractions(previewStream);
-	}
+        // Then
+        verifyZeroInteractions(previewStream);
+    }
 
 }

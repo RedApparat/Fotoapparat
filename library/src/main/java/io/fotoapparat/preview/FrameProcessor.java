@@ -10,12 +10,12 @@ package io.fotoapparat.preview;
  */
 public interface FrameProcessor {
 
-	/**
-	 * Performs processing on preview frames. Read class description for more details.
-	 *
-	 * @param frame frame of the preview. Do not cache it as it will eventually be reused by the
-	 *              camera.
-	 */
-	void processFrame(Frame frame);
+    /**
+     * Performs processing on preview frames. Read class description for more details.
+     *
+     * @param frame frame of the preview. Do not cache it as it will eventually be reused by the
+     *              camera.
+     */
+    void processFrame(Frame frame);
 
 }

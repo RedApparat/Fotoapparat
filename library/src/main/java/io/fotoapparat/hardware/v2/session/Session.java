@@ -21,70 +21,70 @@ import io.fotoapparat.hardware.v2.CameraThread;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Session extends CameraCaptureSession.StateCallback {
 
-	private final CountDownLatch sessionLatch = new CountDownLatch(1);
-	private final CameraDevice camera;
-	private final List<Surface> outputSurfaces;
-	private CameraCaptureSession session;
+    private final CountDownLatch sessionLatch = new CountDownLatch(1);
+    private final CameraDevice camera;
+    private final List<Surface> outputSurfaces;
+    private CameraCaptureSession session;
 
-	Session(CameraDevice camera, Surface captureSurface) {
-		this(camera, Collections.singletonList(captureSurface));
-	}
+    Session(CameraDevice camera, Surface captureSurface) {
+        this(camera, Collections.singletonList(captureSurface));
+    }
 
-	Session(CameraDevice camera, List<Surface> outputSurfaces) {
-		this.camera = camera;
-		this.outputSurfaces = outputSurfaces;
-	}
+    Session(CameraDevice camera, List<Surface> outputSurfaces) {
+        this.camera = camera;
+        this.outputSurfaces = outputSurfaces;
+    }
 
-	/**
-	 * Waits and returns the {@link CameraCaptureSession} synchronously after it has been
-	 * obtained.
-	 *
-	 * @return the requested {@link CameraCaptureSession} to open
-	 */
-	public CameraCaptureSession getCaptureSession() {
-		if (session == null) {
-			createCaptureSession();
-		}
-		return session;
-	}
+    /**
+     * Waits and returns the {@link CameraCaptureSession} synchronously after it has been
+     * obtained.
+     *
+     * @return the requested {@link CameraCaptureSession} to open
+     */
+    public CameraCaptureSession getCaptureSession() {
+        if (session == null) {
+            createCaptureSession();
+        }
+        return session;
+    }
 
-	/**
-	 * Closes the {@link CameraCaptureSession} asynchronously.
-	 */
-	public void close() {
-		if (session != null) {
-			session.close();
-		}
-	}
+    /**
+     * Closes the {@link CameraCaptureSession} asynchronously.
+     */
+    public void close() {
+        if (session != null) {
+            session.close();
+        }
+    }
 
-	@Override
-	public void onConfigured(@NonNull CameraCaptureSession session) {
-		this.session = session;
-		sessionLatch.countDown();
-	}
+    @Override
+    public void onConfigured(@NonNull CameraCaptureSession session) {
+        this.session = session;
+        sessionLatch.countDown();
+    }
 
-	@Override
-	public void onConfigureFailed(@NonNull CameraCaptureSession session) {
-		session.close();
-	}
+    @Override
+    public void onConfigureFailed(@NonNull CameraCaptureSession session) {
+        session.close();
+    }
 
-	@Override
-	public void onClosed(@NonNull CameraCaptureSession session) {
-		super.onClosed(session);
-	}
+    @Override
+    public void onClosed(@NonNull CameraCaptureSession session) {
+        super.onClosed(session);
+    }
 
-	private void createCaptureSession() {
-		try {
-			camera.createCaptureSession(
-					outputSurfaces,
-					this,
-					CameraThread
-							.getInstance()
-							.createHandler()
-			);
-			sessionLatch.await();
-		} catch (CameraAccessException | InterruptedException e) {
-			// Do nothing
-		}
-	}
+    private void createCaptureSession() {
+        try {
+            camera.createCaptureSession(
+                    outputSurfaces,
+                    this,
+                    CameraThread
+                            .getInstance()
+                            .createHandler()
+            );
+            sessionLatch.await();
+        } catch (CameraAccessException | InterruptedException e) {
+            // Do nothing
+        }
+    }
 }

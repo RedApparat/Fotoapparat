@@ -13,26 +13,26 @@ import static junit.framework.Assert.assertSame;
 @RunWith(MockitoJUnitRunner.class)
 public class CapabilitiesResultTest {
 
-	static final PendingResult<Capabilities> PENDING_RESULT = new PendingResult<>(
-			immediateFuture(
-					Capabilities.empty()
-			),
-			new ImmediateExecutor()
-	);
+    static final PendingResult<Capabilities> PENDING_RESULT = new PendingResult<>(
+            immediateFuture(
+                    Capabilities.empty()
+            ),
+            new ImmediateExecutor()
+    );
 
-	@Test
-	public void toPendingResult() throws Exception {
-		// Given
-		CapabilitiesResult photoResult = new CapabilitiesResult(PENDING_RESULT);
+    @Test
+    public void toPendingResult() throws Exception {
+        // Given
+        CapabilitiesResult photoResult = new CapabilitiesResult(PENDING_RESULT);
 
-		// When
-		PendingResult<Capabilities> pendingResult = photoResult.toPendingResult();
+        // When
+        PendingResult<Capabilities> pendingResult = photoResult.toPendingResult();
 
-		// Then
-		assertSame(
-				PENDING_RESULT,
-				pendingResult
-		);
-	}
+        // Then
+        assertSame(
+                PENDING_RESULT,
+                pendingResult
+        );
+    }
 
 }

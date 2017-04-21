@@ -16,98 +16,98 @@ import static org.junit.Assert.assertNull;
 
 public class ParametersTest {
 
-	Parameters testee;
+    Parameters testee;
 
-	@Before
-	public void setUp() throws Exception {
-		testee = new Parameters();
-	}
+    @Before
+    public void setUp() throws Exception {
+        testee = new Parameters();
+    }
 
-	@Test
-	public void nullByDefault() throws Exception {
-		// When
-		Object value = testee.getValue(Parameters.Type.FOCUS_MODE);
+    @Test
+    public void nullByDefault() throws Exception {
+        // When
+        Object value = testee.getValue(Parameters.Type.FOCUS_MODE);
 
-		// Then
-		assertNull(value);
-	}
+        // Then
+        assertNull(value);
+    }
 
-	@Test
-	public void readAndWrite() throws Exception {
-		// When
-		testee.putValue(Parameters.Type.FOCUS_MODE, FocusMode.AUTO);
-		Object value = testee.getValue(Parameters.Type.FOCUS_MODE);
+    @Test
+    public void readAndWrite() throws Exception {
+        // When
+        testee.putValue(Parameters.Type.FOCUS_MODE, FocusMode.AUTO);
+        Object value = testee.getValue(Parameters.Type.FOCUS_MODE);
 
-		// Then
-		assertEquals(
-				FocusMode.AUTO,
-				value
-		);
-	}
+        // Then
+        assertEquals(
+                FocusMode.AUTO,
+                value
+        );
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void putValue_TypeMismatch() throws Exception {
-		// When
-		testee.putValue(Parameters.Type.PICTURE_SIZE, FocusMode.AUTO);
+    @Test(expected = IllegalArgumentException.class)
+    public void putValue_TypeMismatch() throws Exception {
+        // When
+        testee.putValue(Parameters.Type.PICTURE_SIZE, FocusMode.AUTO);
 
-		// Then
-		// Expect exception
-	}
+        // Then
+        // Expect exception
+    }
 
-	@Test
-	public void putValue_Null() throws Exception {
-		// Given
-		testee.putValue(Parameters.Type.FLASH, null);
+    @Test
+    public void putValue_Null() throws Exception {
+        // Given
+        testee.putValue(Parameters.Type.FLASH, null);
 
-		// When
-		Object value = testee.getValue(Parameters.Type.FLASH);
+        // When
+        Object value = testee.getValue(Parameters.Type.FLASH);
 
-		// Then
-		assertNull(value);
-	}
+        // Then
+        assertNull(value);
+    }
 
-	@Test
-	public void keysStoredSeparately() throws Exception {
-		// Given
-		testee.putValue(Parameters.Type.PICTURE_SIZE, new Size(100, 100));
+    @Test
+    public void keysStoredSeparately() throws Exception {
+        // Given
+        testee.putValue(Parameters.Type.PICTURE_SIZE, new Size(100, 100));
 
-		// When
-		Object value = testee.getValue(Parameters.Type.FOCUS_MODE);
+        // When
+        Object value = testee.getValue(Parameters.Type.FOCUS_MODE);
 
-		// Then
-		assertNull(value);
-	}
+        // Then
+        assertNull(value);
+    }
 
-	@Test
-	public void storedTypes() throws Exception {
-		// Given
-		testee.putValue(Parameters.Type.FOCUS_MODE, FocusMode.AUTO);
-		testee.putValue(Parameters.Type.PICTURE_SIZE, new Size(100, 100));
-		testee.putValue(Parameters.Type.FLASH, null);
+    @Test
+    public void storedTypes() throws Exception {
+        // Given
+        testee.putValue(Parameters.Type.FOCUS_MODE, FocusMode.AUTO);
+        testee.putValue(Parameters.Type.PICTURE_SIZE, new Size(100, 100));
+        testee.putValue(Parameters.Type.FLASH, null);
 
-		// When
-		Set<Parameters.Type> result = testee.storedTypes();
+        // When
+        Set<Parameters.Type> result = testee.storedTypes();
 
-		// Then
-		assertEquals(
-				asSet(
-						Parameters.Type.FOCUS_MODE,
-						Parameters.Type.PICTURE_SIZE
-				),
-				result
-		);
-	}
+        // Then
+        assertEquals(
+                asSet(
+                        Parameters.Type.FOCUS_MODE,
+                        Parameters.Type.PICTURE_SIZE
+                ),
+                result
+        );
+    }
 
-	@Test
-	public void storedTypes_EmptyByDefault() throws Exception {
-		// When
-		Set<Parameters.Type> result = testee.storedTypes();
+    @Test
+    public void storedTypes_EmptyByDefault() throws Exception {
+        // When
+        Set<Parameters.Type> result = testee.storedTypes();
 
-		// Then
-		assertEquals(
-				emptySet(),
-				result
-		);
-	}
+        // Then
+        assertEquals(
+                emptySet(),
+                result
+        );
+    }
 
 }

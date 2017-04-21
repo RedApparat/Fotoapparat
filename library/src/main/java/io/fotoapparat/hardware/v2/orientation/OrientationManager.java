@@ -15,61 +15,61 @@ import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class OrientationManager implements OrientationOperator {
 
-	private final Characteristics characteristics;
-	private final List<Listener> listeners = new ArrayList<>();
-	private int orientation;
+    private final Characteristics characteristics;
+    private final List<Listener> listeners = new ArrayList<>();
+    private int orientation;
 
-	public OrientationManager(Characteristics characteristics) {
-		this.characteristics = characteristics;
-	}
+    public OrientationManager(Characteristics characteristics) {
+        this.characteristics = characteristics;
+    }
 
-	/**
-	 * Notifies that the display orientation has changed.
-	 *
-	 * @param orientation the display orientation in degrees. One of: 0, 90, 180 and 270
-	 */
-	@Override
-	public void setDisplayOrientation(int orientation) {
-		this.orientation = orientation;
-		for (Listener listener : listeners) {
-			listener.onDisplayOrientationChanged(orientation);
-		}
-	}
+    /**
+     * Notifies that the display orientation has changed.
+     *
+     * @param orientation the display orientation in degrees. One of: 0, 90, 180 and 270
+     */
+    @Override
+    public void setDisplayOrientation(int orientation) {
+        this.orientation = orientation;
+        for (Listener listener : listeners) {
+            listener.onDisplayOrientationChanged(orientation);
+        }
+    }
 
-	/**
-	 * Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
-	 * We have to take that into account and rotate JPEG properly.
-	 *
-	 * @return The clockwise rotation angle in degrees, relative to the orientation to the camera,
-	 * that the JPEG picture needs to be rotated by, to be viewed upright.
-	 */
-	@SuppressWarnings("ConstantConditions")
-	public Integer getSensorOrientation() {
-		return (characteristics.getSensorOrientation() - orientation + 360) % 360;
-	}
+    /**
+     * Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
+     * We have to take that into account and rotate JPEG properly.
+     *
+     * @return The clockwise rotation angle in degrees, relative to the orientation to the camera,
+     * that the JPEG picture needs to be rotated by, to be viewed upright.
+     */
+    @SuppressWarnings("ConstantConditions")
+    public Integer getSensorOrientation() {
+        return (characteristics.getSensorOrientation() - orientation + 360) % 360;
+    }
 
-	/**
-	 * Adds a listener to be notified when the orientation has changed.
-	 *
-	 * @param listener the listener to be notified
-	 */
-	public synchronized void addListener(Listener listener) {
-		if (listeners.contains(listener)) {
-			return;
-		}
-		listeners.add(listener);
-	}
+    /**
+     * Adds a listener to be notified when the orientation has changed.
+     *
+     * @param listener the listener to be notified
+     */
+    public synchronized void addListener(Listener listener) {
+        if (listeners.contains(listener)) {
+            return;
+        }
+        listeners.add(listener);
+    }
 
-	/**
-	 * Notifies that the display orientation has changed.
-	 **/
-	public interface Listener {
+    /**
+     * Notifies that the display orientation has changed.
+     **/
+    public interface Listener {
 
-		/**
-		 * Called when the display orientation has changed.
-		 *
-		 * @param orientation the display orientation in degrees. One of: 0, 90, 180 and 270
-		 */
-		void onDisplayOrientationChanged(int orientation);
-	}
+        /**
+         * Called when the display orientation has changed.
+         *
+         * @param orientation the display orientation in degrees. One of: 0, 90, 180 and 270
+         */
+        void onDisplayOrientationChanged(int orientation);
+    }
 }

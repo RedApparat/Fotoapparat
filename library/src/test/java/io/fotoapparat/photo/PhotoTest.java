@@ -6,20 +6,20 @@ import static org.junit.Assert.assertEquals;
 
 public class PhotoTest {
 
-	@Test
-	public void empty() throws Exception {
-		// When
-		Photo result = Photo.empty();
+    @Test
+    public void empty() throws Exception {
+        // When
+        Photo result = Photo.empty();
 
-		// Then
-		assertEquals(
-				0,
-				result.encodedImage.length
-		);
+        // Then
+        assertEquals(
+                0,
+                result.encodedImage.length
+        );
 
-		assertEquals(
-				0,
-				result.rotationDegrees
-		);
-	}
+        assertEquals(
+                0,
+                result.rotationDegrees
+        );
+    }
 }

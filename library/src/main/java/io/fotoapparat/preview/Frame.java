@@ -9,54 +9,54 @@ import io.fotoapparat.parameter.Size;
  */
 public class Frame {
 
-	/**
-	 * Size of the frame in pixels (before rotation).
-	 */
-	public final Size size;
+    /**
+     * Size of the frame in pixels (before rotation).
+     */
+    public final Size size;
 
-	/**
-	 * Image in NV21 format.
-	 */
-	public final byte[] image;
+    /**
+     * Image in NV21 format.
+     */
+    public final byte[] image;
 
-	/**
-	 * Clockwise rotation of the image in degrees relatively to user.
-	 */
-	public final int rotation;
+    /**
+     * Clockwise rotation of the image in degrees relatively to user.
+     */
+    public final int rotation;
 
-	public Frame(Size size, byte[] image, int rotation) {
-		this.size = size;
-		this.image = image;
-		this.rotation = rotation;
-	}
+    public Frame(Size size, byte[] image, int rotation) {
+        this.size = size;
+        this.image = image;
+        this.rotation = rotation;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-		Frame frame = (Frame) o;
+        Frame frame = (Frame) o;
 
-		return rotation == frame.rotation
-				&& size.equals(frame.size)
-				&& Arrays.equals(image, frame.image);
-	}
+        return rotation == frame.rotation
+                && size.equals(frame.size)
+                && Arrays.equals(image, frame.image);
+    }
 
-	@Override
-	public int hashCode() {
-		int result = size.hashCode();
-		result = 31 * result + Arrays.hashCode(image);
-		result = 31 * result + rotation;
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        int result = size.hashCode();
+        result = 31 * result + Arrays.hashCode(image);
+        result = 31 * result + rotation;
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		return "Frame{" +
-				"size=" + size +
-				", image=" + Arrays.toString(image) +
-				", rotation=" + rotation +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "Frame{" +
+                "size=" + size +
+                ", image=" + Arrays.toString(image) +
+                ", rotation=" + rotation +
+                '}';
+    }
 
 }

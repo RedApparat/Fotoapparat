@@ -9,25 +9,25 @@ import io.fotoapparat.preview.PreviewStream;
  */
 public class ConfigurePreviewStreamRoutine implements Runnable {
 
-	private final CameraDevice cameraDevice;
-	private final FrameProcessor frameProcessor;
+    private final CameraDevice cameraDevice;
+    private final FrameProcessor frameProcessor;
 
-	public ConfigurePreviewStreamRoutine(CameraDevice cameraDevice,
-										 FrameProcessor frameProcessor) {
-		this.cameraDevice = cameraDevice;
-		this.frameProcessor = frameProcessor;
-	}
+    public ConfigurePreviewStreamRoutine(CameraDevice cameraDevice,
+                                         FrameProcessor frameProcessor) {
+        this.cameraDevice = cameraDevice;
+        this.frameProcessor = frameProcessor;
+    }
 
-	@Override
-	public void run() {
-		if (frameProcessor == null) {
-			return;
-		}
+    @Override
+    public void run() {
+        if (frameProcessor == null) {
+            return;
+        }
 
-		PreviewStream previewStream = cameraDevice.getPreviewStream();
+        PreviewStream previewStream = cameraDevice.getPreviewStream();
 
-		previewStream.addProcessor(frameProcessor);
-		previewStream.start();
-	}
+        previewStream.addProcessor(frameProcessor);
+        previewStream.start();
+    }
 
 }

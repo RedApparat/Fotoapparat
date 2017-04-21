@@ -17,42 +17,47 @@ import io.fotoapparat.hardware.CameraDevice;
  */
 public class CameraView extends FrameLayout implements CameraRenderer {
 
-	private TextureRendererView rendererView;
+    private TextureRendererView rendererView;
 
-	public CameraView(@NonNull Context context) {
-		super(context);
+    public CameraView(@NonNull Context context) {
+        super(context);
 
-		init();
-	}
+        init();
+    }
 
-	public CameraView(@NonNull Context context, @Nullable AttributeSet attrs) {
-		super(context, attrs);
+    public CameraView(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
 
-		init();
-	}
+        init();
+    }
 
-	public CameraView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
-		super(context, attrs, defStyleAttr);
+    public CameraView(@NonNull Context context,
+                      @Nullable AttributeSet attrs,
+                      @AttrRes int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
 
-		init();
-	}
+        init();
+    }
 
-	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-	public CameraView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
-		super(context, attrs, defStyleAttr, defStyleRes);
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public CameraView(@NonNull Context context,
+                      @Nullable AttributeSet attrs,
+                      @AttrRes int defStyleAttr,
+                      @StyleRes int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
 
-		init();
-	}
+        init();
+    }
 
-	private void init() {
-		rendererView = new TextureRendererView(getContext());
+    private void init() {
+        rendererView = new TextureRendererView(getContext());
 
-		addView(rendererView);
-	}
+        addView(rendererView);
+    }
 
-	@Override
-	public void attachCamera(CameraDevice camera) {
-		rendererView.attachCamera(camera);
-	}
+    @Override
+    public void attachCamera(CameraDevice camera) {
+        rendererView.attachCamera(camera);
+    }
 
 }

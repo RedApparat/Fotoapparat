@@ -7,16 +7,16 @@ import io.fotoapparat.hardware.CameraDevice;
  */
 public class StopCameraRoutine implements Runnable {
 
-	private final CameraDevice cameraDevice;
+    private final CameraDevice cameraDevice;
 
-	public StopCameraRoutine(CameraDevice cameraDevice) {
-		this.cameraDevice = cameraDevice;
-	}
+    public StopCameraRoutine(CameraDevice cameraDevice) {
+        this.cameraDevice = cameraDevice;
+    }
 
-	@Override
-	public void run() {
-		cameraDevice.stopPreview();
-		cameraDevice.close();
-	}
+    @Override
+    public void run() {
+        cameraDevice.stopPreview();
+        cameraDevice.close();
+    }
 
 }

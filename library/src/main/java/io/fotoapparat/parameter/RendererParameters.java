@@ -8,38 +8,38 @@ import io.fotoapparat.view.CameraRenderer;
  */
 public class RendererParameters {
 
-	/**
-	 * Size of preview frame in pixels.
-	 */
-	public final Size previewSize;
+    /**
+     * Size of preview frame in pixels.
+     */
+    public final Size previewSize;
 
-	/**
-	 * The clockwise rotation angle in degrees, relative to the orientation to the camera,
-	 * that the preview needs to be rotated by, to be viewed right.
-	 */
-	public final int frameRotation;
+    /**
+     * The clockwise rotation angle in degrees, relative to the orientation to the camera,
+     * that the preview needs to be rotated by, to be viewed right.
+     */
+    public final int frameRotation;
 
-	public RendererParameters(Size previewSize,
-							  int frameRotation) {
-		this.previewSize = previewSize;
-		this.frameRotation = frameRotation;
-	}
+    public RendererParameters(Size previewSize,
+                              int frameRotation) {
+        this.previewSize = previewSize;
+        this.frameRotation = frameRotation;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-		RendererParameters that = (RendererParameters) o;
+        RendererParameters that = (RendererParameters) o;
 
-		return frameRotation == that.frameRotation && (previewSize != null ? previewSize.equals(that.previewSize) : that.previewSize == null);
+        return frameRotation == that.frameRotation && (previewSize != null ? previewSize.equals(that.previewSize) : that.previewSize == null);
 
-	}
+    }
 
-	@Override
-	public int hashCode() {
-		int result = previewSize != null ? previewSize.hashCode() : 0;
-		result = 31 * result + frameRotation;
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        int result = previewSize != null ? previewSize.hashCode() : 0;
+        result = 31 * result + frameRotation;
+        return result;
+    }
 }

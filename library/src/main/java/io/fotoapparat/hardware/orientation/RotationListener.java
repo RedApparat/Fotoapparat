@@ -9,36 +9,36 @@ import android.view.OrientationEventListener;
  */
 public class RotationListener extends OrientationEventListener {
 
-	private Listener listener;
+    private Listener listener;
 
-	public RotationListener(Context context) {
-		super(context);
-	}
+    public RotationListener(Context context) {
+        super(context);
+    }
 
-	@Override
-	public void onOrientationChanged(int orientation) {
-		if (listener != null && canDetectOrientation()) {
-			listener.onRotationChanged();
-		}
-	}
+    @Override
+    public void onOrientationChanged(int orientation) {
+        if (listener != null && canDetectOrientation()) {
+            listener.onRotationChanged();
+        }
+    }
 
-	/**
-	 * Sets a listener to this class to notify future rotation events.
-	 *
-	 * @param listener The new listener
-	 */
-	void setRotationListener(@NonNull Listener listener) {
-		this.listener = listener;
-	}
+    /**
+     * Sets a listener to this class to notify future rotation events.
+     *
+     * @param listener The new listener
+     */
+    void setRotationListener(@NonNull Listener listener) {
+        this.listener = listener;
+    }
 
-	/**
-	 * Notified when the rotation of the device is updated.
-	 */
-	interface Listener {
+    /**
+     * Notified when the rotation of the device is updated.
+     */
+    interface Listener {
 
-		/**
-		 * Called when the rotation of the device has changed.
-		 */
-		void onRotationChanged();
-	}
+        /**
+         * Called when the rotation of the device has changed.
+         */
+        void onRotationChanged();
+    }
 }

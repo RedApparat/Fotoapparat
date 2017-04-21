@@ -53,7 +53,8 @@ public class TestUtils {
             }
 
             @Override
-            public T get(long timeout, @NonNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+            public T get(long timeout,
+                         @NonNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
                 return value;
             }
         };

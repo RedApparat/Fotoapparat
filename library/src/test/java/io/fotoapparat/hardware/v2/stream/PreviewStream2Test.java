@@ -20,45 +20,45 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class PreviewStream2Test {
 
-	static final Size PREVIEW_SIZE = new Size(10, 20);
+    static final Size PREVIEW_SIZE = new Size(10, 20);
 
-	@Mock
-	ParametersProvider parametersProvider;
+    @Mock
+    ParametersProvider parametersProvider;
 
-	@Test
-	public void acquireFrame() throws Exception {
-		// Given
-		given(parametersProvider.getPreviewSize())
-				.willReturn(PREVIEW_SIZE);
+    @Test
+    public void acquireFrame() throws Exception {
+        // Given
+        given(parametersProvider.getPreviewSize())
+                .willReturn(PREVIEW_SIZE);
 
-		final AtomicReference<OnFrameAcquiredListener> listenerReference = new AtomicReference<>();
-		final AtomicReference<Frame> frameReference = new AtomicReference<>();
-		final CountDownLatch listenerSet = new CountDownLatch(1);
-		final CountDownLatch frameAcquired = new CountDownLatch(1);
+        final AtomicReference<OnFrameAcquiredListener> listenerReference = new AtomicReference<>();
+        final AtomicReference<Frame> frameReference = new AtomicReference<>();
+        final CountDownLatch listenerSet = new CountDownLatch(1);
+        final CountDownLatch frameAcquired = new CountDownLatch(1);
 
-		PreviewStream2 testee = new PreviewStream2(new OnImageAcquiredObserver() {
-			@Override
-			public void setListener(OnFrameAcquiredListener listener) {
-				listenerReference.set(listener);
-				listenerSet.countDown();
-			}
-		}, parametersProvider);
+        PreviewStream2 testee = new PreviewStream2(new OnImageAcquiredObserver() {
+            @Override
+            public void setListener(OnFrameAcquiredListener listener) {
+                listenerReference.set(listener);
+                listenerSet.countDown();
+            }
+        }, parametersProvider);
 
-		testee.addProcessor(new FrameProcessor() {
-			@Override
-			public void processFrame(Frame frame) {
-				frameReference.set(frame);
-				frameAcquired.countDown();
-			}
-		});
-		testee.start();
+        testee.addProcessor(new FrameProcessor() {
+            @Override
+            public void processFrame(Frame frame) {
+                frameReference.set(frame);
+                frameAcquired.countDown();
+            }
+        });
+        testee.start();
 
-		// When
-		listenerSet.await();
-		listenerReference.get().onFrameAcquired(new byte[]{1});
+        // When
+        listenerSet.await();
+        listenerReference.get().onFrameAcquired(new byte[]{1});
 
-		// Then
-		frameAcquired.await();
-		assertEquals(new Frame(PREVIEW_SIZE, new byte[]{1}, 0), frameReference.get());
-	}
+        // Then
+        frameAcquired.await();
+        assertEquals(new Frame(PREVIEW_SIZE, new byte[]{1}, 0), frameReference.get());
+    }
 }

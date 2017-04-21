@@ -6,8 +6,8 @@ package io.fotoapparat.hardware.operators;
  */
 public interface SurfaceOperator {
 
-	/**
-	 * Sets the desired surface on which the camera preview will be displayed.
-	 */
-	void setDisplaySurface(Object displaySurface);
+    /**
+     * Sets the desired surface on which the camera preview will be displayed.
+     */
+    void setDisplaySurface(Object displaySurface);
 }

@@ -10,46 +10,46 @@ import io.reactivex.observers.TestObserver;
 
 public class CompletableAdapterTest {
 
-	private TestObserver<Object> observer = new TestObserver<>();
+    private TestObserver<Object> observer = new TestObserver<>();
 
-	@Test
-	public void completed() throws Exception {
-		// Given
-		Future<String> future = new CallableFuture<>(new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				return "Hello";
-			}
-		});
+    @Test
+    public void completed() throws Exception {
+        // Given
+        Future<String> future = new CallableFuture<>(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return "Hello";
+            }
+        });
 
-		// When
-		CompletableAdapter.<String>toCompletable()
-				.adapt(future)
-				.subscribe(observer);
+        // When
+        CompletableAdapter.<String>toCompletable()
+                .adapt(future)
+                .subscribe(observer);
 
-		// Then
-		observer.assertNoValues();
-		observer.assertNoErrors();
-	}
+        // Then
+        observer.assertNoValues();
+        observer.assertNoErrors();
+    }
 
-	@Test
-	public void error() throws Exception {
-		// Given
-		Future<String> future = new CallableFuture<>(new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				throw new RuntimeException("What a failure");
-			}
-		});
+    @Test
+    public void error() throws Exception {
+        // Given
+        Future<String> future = new CallableFuture<>(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                throw new RuntimeException("What a failure");
+            }
+        });
 
-		// When
-		CompletableAdapter.<String>toCompletable()
-				.adapt(future)
-				.subscribe(observer);
+        // When
+        CompletableAdapter.<String>toCompletable()
+                .adapt(future)
+                .subscribe(observer);
 
-		// Then
-		observer.assertNoValues();
-		observer.assertError(ExecutionException.class);
-	}
+        // Then
+        observer.assertNoValues();
+        observer.assertError(ExecutionException.class);
+    }
 
 }

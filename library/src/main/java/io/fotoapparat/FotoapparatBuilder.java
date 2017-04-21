@@ -33,130 +33,130 @@ import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
  */
 public class FotoapparatBuilder {
 
-	Context context;
-	AvailableLensPositionsProvider availableLensPositionsProvider = new V1AvailableLensPositionProvider();
-	CameraProvider cameraProvider = new V1Provider();
-	CameraRenderer renderer;
+    Context context;
+    AvailableLensPositionsProvider availableLensPositionsProvider = new V1AvailableLensPositionProvider();
+    CameraProvider cameraProvider = new V1Provider();
+    CameraRenderer renderer;
 
-	SelectorFunction<LensPosition> lensPositionSelector = firstAvailable(
-			back(),
-			front(),
-			external()
-	);
-	SelectorFunction<Size> photoSizeSelector = biggestSize();
-	SelectorFunction<Size> previewSizeSelector = biggestSize();
-	SelectorFunction<FocusMode> focusModeSelector = firstAvailable(
-			continuousFocus(),
-			autoFocus(),
-			fixed()
-	);
-	SelectorFunction<Flash> flashSelector = Selectors.nothing();
+    SelectorFunction<LensPosition> lensPositionSelector = firstAvailable(
+            back(),
+            front(),
+            external()
+    );
+    SelectorFunction<Size> photoSizeSelector = biggestSize();
+    SelectorFunction<Size> previewSizeSelector = biggestSize();
+    SelectorFunction<FocusMode> focusModeSelector = firstAvailable(
+            continuousFocus(),
+            autoFocus(),
+            fixed()
+    );
+    SelectorFunction<Flash> flashSelector = Selectors.nothing();
 
-	FrameProcessor frameProcessor = null;
+    FrameProcessor frameProcessor = null;
 
-	Logger logger = Loggers.none();
+    Logger logger = Loggers.none();
 
-	FotoapparatBuilder(Context context) {
-		this.context = context;
-	}
+    FotoapparatBuilder(Context context) {
+        this.context = context;
+    }
 
-	/**
-	 * @param cameraProvider decides which {@link CameraDevice} to use.
-	 */
-	FotoapparatBuilder cameraProvider(CameraProvider cameraProvider) {
-		this.cameraProvider = cameraProvider;
-		return this;
-	}
+    /**
+     * @param cameraProvider decides which {@link CameraDevice} to use.
+     */
+    FotoapparatBuilder cameraProvider(CameraProvider cameraProvider) {
+        this.cameraProvider = cameraProvider;
+        return this;
+    }
 
-	/**
-	 * @param selector selects size of the photo (in pixels) from list of available sizes.
-	 */
-	public FotoapparatBuilder photoSize(SelectorFunction<Size> selector) {
-		photoSizeSelector = selector;
-		return this;
-	}
+    /**
+     * @param selector selects size of the photo (in pixels) from list of available sizes.
+     */
+    public FotoapparatBuilder photoSize(SelectorFunction<Size> selector) {
+        photoSizeSelector = selector;
+        return this;
+    }
 
-	/**
-	 * @param selector selects size of preview stream (in pixels) from list of available sizes.
-	 */
-	public FotoapparatBuilder previewSize(SelectorFunction<Size> selector) {
-		previewSizeSelector = selector;
-		return this;
-	}
+    /**
+     * @param selector selects size of preview stream (in pixels) from list of available sizes.
+     */
+    public FotoapparatBuilder previewSize(SelectorFunction<Size> selector) {
+        previewSizeSelector = selector;
+        return this;
+    }
 
-	/**
-	 * @param selector selects focus mode from list of available modes.
-	 */
-	public FotoapparatBuilder focusMode(SelectorFunction<FocusMode> selector) {
-		focusModeSelector = selector;
-		return this;
-	}
+    /**
+     * @param selector selects focus mode from list of available modes.
+     */
+    public FotoapparatBuilder focusMode(SelectorFunction<FocusMode> selector) {
+        focusModeSelector = selector;
+        return this;
+    }
 
-	/**
-	 * @param selector selects flash mode from list of available modes.
-	 */
-	public FotoapparatBuilder flash(SelectorFunction<Flash> selector) {
-		flashSelector = selector;
-		return this;
-	}
+    /**
+     * @param selector selects flash mode from list of available modes.
+     */
+    public FotoapparatBuilder flash(SelectorFunction<Flash> selector) {
+        flashSelector = selector;
+        return this;
+    }
 
-	/**
-	 * @param selector camera sensor position from list of available positions.
-	 */
-	public FotoapparatBuilder lensPosition(SelectorFunction<LensPosition> selector) {
-		lensPositionSelector = selector;
-		return this;
-	}
+    /**
+     * @param selector camera sensor position from list of available positions.
+     */
+    public FotoapparatBuilder lensPosition(SelectorFunction<LensPosition> selector) {
+        lensPositionSelector = selector;
+        return this;
+    }
 
-	/**
-	 * @param frameProcessor receives preview frames for processing.
-	 * @see FrameProcessor
-	 */
-	public FotoapparatBuilder frameProcessor(FrameProcessor frameProcessor) {
-		this.frameProcessor = frameProcessor;
-		return this;
-	}
+    /**
+     * @param frameProcessor receives preview frames for processing.
+     * @see FrameProcessor
+     */
+    public FotoapparatBuilder frameProcessor(FrameProcessor frameProcessor) {
+        this.frameProcessor = frameProcessor;
+        return this;
+    }
 
-	/**
-	 * @param logger logger which will print logs. No logger is set by default.
-	 * @see Loggers
-	 */
-	public FotoapparatBuilder logger(Logger logger) {
-		this.logger = logger;
-		return this;
-	}
+    /**
+     * @param logger logger which will print logs. No logger is set by default.
+     * @see Loggers
+     */
+    public FotoapparatBuilder logger(Logger logger) {
+        this.logger = logger;
+        return this;
+    }
 
-	/**
-	 * @param renderer view which will draw the stream from the camera.
-	 * @see CameraView
-	 */
-	public FotoapparatBuilder into(CameraRenderer renderer) {
-		this.renderer = renderer;
-		return this;
-	}
+    /**
+     * @param renderer view which will draw the stream from the camera.
+     * @see CameraView
+     */
+    public FotoapparatBuilder into(CameraRenderer renderer) {
+        this.renderer = renderer;
+        return this;
+    }
 
-	/**
-	 * @return set up instance of {@link Fotoapparat}.
-	 * @throws IllegalStateException if some mandatory parameters are not specified.
-	 */
-	public Fotoapparat build() {
-		validate();
+    /**
+     * @return set up instance of {@link Fotoapparat}.
+     * @throws IllegalStateException if some mandatory parameters are not specified.
+     */
+    public Fotoapparat build() {
+        validate();
 
-		return Fotoapparat.create(this);
-	}
+        return Fotoapparat.create(this);
+    }
 
-	private void validate() {
-		if (renderer == null) {
-			throw new IllegalStateException("CameraRenderer is mandatory.");
-		}
+    private void validate() {
+        if (renderer == null) {
+            throw new IllegalStateException("CameraRenderer is mandatory.");
+        }
 
-		if (lensPositionSelector == null) {
-			throw new IllegalStateException("LensPosition selector is mandatory.");
-		}
+        if (lensPositionSelector == null) {
+            throw new IllegalStateException("LensPosition selector is mandatory.");
+        }
 
-		if (photoSizeSelector == null) {
-			throw new IllegalStateException("Photo size selector is mandatory.");
-		}
-	}
+        if (photoSizeSelector == null) {
+            throw new IllegalStateException("Photo size selector is mandatory.");
+        }
+    }
 
 }

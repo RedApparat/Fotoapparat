@@ -23,78 +23,78 @@ import static io.fotoapparat.hardware.v2.parameters.converters.FlashConverter.ex
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class CapabilitiesFactory implements CapabilitiesOperator {
-	private final Characteristics characteristics;
+    private final Characteristics characteristics;
 
-	public CapabilitiesFactory(Characteristics characteristics) {
-		this.characteristics = characteristics;
-	}
+    public CapabilitiesFactory(Characteristics characteristics) {
+        this.characteristics = characteristics;
+    }
 
-	@NonNull
-	private static Set<Size> convertSizesList(List<android.util.Size> availableSizes) {
-		HashSet<Size> sizesSet = new HashSet<>(availableSizes.size());
+    @NonNull
+    private static Set<Size> convertSizesList(List<android.util.Size> availableSizes) {
+        HashSet<Size> sizesSet = new HashSet<>(availableSizes.size());
 
-		for (android.util.Size size : availableSizes) {
-			sizesSet.add(new Size(size.getWidth(), size.getHeight()));
-		}
+        for (android.util.Size size : availableSizes) {
+            sizesSet.add(new Size(size.getWidth(), size.getHeight()));
+        }
 
-		return sizesSet;
-	}
+        return sizesSet;
+    }
 
-	@Override
-	public Capabilities getCapabilities() {
-		return new Capabilities(
-				availableJpegSizes(),
-				availablePreviewSizes(),
-				availableFocusModes(),
-				availableFlashModes()
-		);
-	}
+    @Override
+    public Capabilities getCapabilities() {
+        return new Capabilities(
+                availableJpegSizes(),
+                availablePreviewSizes(),
+                availableFocusModes(),
+                availableFlashModes()
+        );
+    }
 
-	@SuppressWarnings("ConstantConditions")
-	private Set<Size> availableJpegSizes() {
-		return convertSizesList(characteristics.getJpegOutputSizes());
-	}
+    @SuppressWarnings("ConstantConditions")
+    private Set<Size> availableJpegSizes() {
+        return convertSizesList(characteristics.getJpegOutputSizes());
+    }
 
-	@SuppressWarnings("ConstantConditions")
-	private Set<Size> availablePreviewSizes() {
-		return convertSizesList(characteristics.getPreviewSizes());
-	}
+    @SuppressWarnings("ConstantConditions")
+    private Set<Size> availablePreviewSizes() {
+        return convertSizesList(characteristics.getPreviewSizes());
+    }
 
-	@SuppressWarnings("ConstantConditions")
-	private Set<FocusMode> availableFocusModes() {
-		Set<FocusMode> focusModes = new HashSet<>();
-		for (int afMode : characteristics.autoFocusModes()) {
-			focusModes.add(FocusConverter.afModeToFocus(afMode));
-		}
+    @SuppressWarnings("ConstantConditions")
+    private Set<FocusMode> availableFocusModes() {
+        Set<FocusMode> focusModes = new HashSet<>();
+        for (int afMode : characteristics.autoFocusModes()) {
+            focusModes.add(FocusConverter.afModeToFocus(afMode));
+        }
 
-		return focusModes;
-	}
+        return focusModes;
+    }
 
-	@SuppressWarnings("ConstantConditions")
-	private Set<Flash> availableFlashModes() {
-		if (characteristics.isFlashAvailable()) {
-			return availableFlashUnitModes();
-		}
-		return Collections.singleton(Flash.OFF);
+    @SuppressWarnings("ConstantConditions")
+    private Set<Flash> availableFlashModes() {
+        if (characteristics.isFlashAvailable()) {
+            return availableFlashUnitModes();
+        }
+        return Collections.singleton(Flash.OFF);
 
-	}
+    }
 
-	@SuppressWarnings("ConstantConditions")
-	private Set<Flash> availableFlashUnitModes() {
-		Set<Flash> flashes = new HashSet<>();
-		flashes.add(Flash.OFF);
-		flashes.add(Flash.TORCH);
+    @SuppressWarnings("ConstantConditions")
+    private Set<Flash> availableFlashUnitModes() {
+        Set<Flash> flashes = new HashSet<>();
+        flashes.add(Flash.OFF);
+        flashes.add(Flash.TORCH);
 
-		int[] autoExposureModes = characteristics.autoExposureModes();
+        int[] autoExposureModes = characteristics.autoExposureModes();
 
-		for (int autoExposureMode : autoExposureModes) {
-			Flash flash = exposureModeToFlash(autoExposureMode);
-			if (flash != null) {
-				flashes.add(flash);
-			}
-		}
+        for (int autoExposureMode : autoExposureModes) {
+            Flash flash = exposureModeToFlash(autoExposureMode);
+            if (flash != null) {
+                flashes.add(flash);
+            }
+        }
 
-		return flashes;
-	}
+        return flashes;
+    }
 
 }

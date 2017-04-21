@@ -10,18 +10,18 @@ import rx.Single;
  */
 public class SingleAdapter<T> implements Adapter<T, Single<T>> {
 
-	private SingleAdapter() {
-	}
+    private SingleAdapter() {
+    }
 
-	/**
-	 * @return {@link Adapter} which adapts result to {@link Single}.
-	 */
-	public static <R> SingleAdapter<R> toSingle() {
-		return new SingleAdapter<>();
-	}
+    /**
+     * @return {@link Adapter} which adapts result to {@link Single}.
+     */
+    public static <R> SingleAdapter<R> toSingle() {
+        return new SingleAdapter<>();
+    }
 
-	@Override
-	public Single<T> adapt(Future<T> future) {
-		return Single.from(future);
-	}
+    @Override
+    public Single<T> adapt(Future<T> future) {
+        return Single.from(future);
+    }
 }

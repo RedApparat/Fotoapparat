@@ -8,16 +8,16 @@ import io.fotoapparat.parameter.LensPosition;
  */
 public interface ConnectionOperator {
 
-	/**
-	 * Opens a connection to a camera.
-	 *
-	 * @param lensPosition The camera position relatively to the screen of the device,
-	 *                     which will determine which camera to open.
-	 */
-	void open(LensPosition lensPosition);
+    /**
+     * Opens a connection to a camera.
+     *
+     * @param lensPosition The camera position relatively to the screen of the device,
+     *                     which will determine which camera to open.
+     */
+    void open(LensPosition lensPosition);
 
-	/**
-	 * Closes the connection to a camera.
-	 */
-	void close();
+    /**
+     * Closes the connection to a camera.
+     */
+    void close();
 }

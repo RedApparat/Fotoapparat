@@ -6,16 +6,16 @@ package io.fotoapparat.hardware.operators;
  */
 public interface PreviewOperator {
 
-	/**
-	 * Starts the preview to the surface.
-	 * <p>
-	 * {@link #stopPreview()} should be called
-	 * to stop the operation.
-	 */
-	void startPreview();
+    /**
+     * Starts the preview to the surface.
+     * <p>
+     * {@link #stopPreview()} should be called
+     * to stop the operation.
+     */
+    void startPreview();
 
-	/**
-	 * Stops the preview from the surface.
-	 */
-	void stopPreview();
+    /**
+     * Stops the preview from the surface.
+     */
+    void stopPreview();
 }

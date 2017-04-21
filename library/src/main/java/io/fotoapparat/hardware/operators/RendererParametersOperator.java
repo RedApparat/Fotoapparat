@@ -7,9 +7,9 @@ import io.fotoapparat.parameter.RendererParameters;
  */
 public interface RendererParametersOperator {
 
-	/**
-	 * @return {@link RendererParameters}.
-	 */
-	RendererParameters getRendererParameters();
+    /**
+     * @return {@link RendererParameters}.
+     */
+    RendererParameters getRendererParameters();
 
 }

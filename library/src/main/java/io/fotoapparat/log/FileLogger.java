@@ -9,29 +9,29 @@ import java.io.IOException;
  */
 class FileLogger implements Logger {
 
-	private final File file;
-	private FileWriter writer;
+    private final File file;
+    private FileWriter writer;
 
-	FileLogger(File file) {
-		this.file = file;
-	}
+    FileLogger(File file) {
+        this.file = file;
+    }
 
-	@Override
-	public void log(String message) {
-		try {
-			ensureWriterInitialized();
+    @Override
+    public void log(String message) {
+        try {
+            ensureWriterInitialized();
 
-			writer.write(message + "\n");
-			writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+            writer.write(message + "\n");
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	private void ensureWriterInitialized() throws IOException {
-		if (writer == null) {
-			writer = new FileWriter(file);
-		}
-	}
+    private void ensureWriterInitialized() throws IOException {
+        if (writer == null) {
+            writer = new FileWriter(file);
+        }
+    }
 
 }

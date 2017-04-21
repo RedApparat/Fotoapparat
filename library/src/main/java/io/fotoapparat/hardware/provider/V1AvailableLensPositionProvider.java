@@ -14,24 +14,24 @@ import io.fotoapparat.parameter.LensPosition;
 @SuppressWarnings("deprecation")
 public class V1AvailableLensPositionProvider implements AvailableLensPositionsProvider {
 
-	@Override
-	public List<LensPosition> getAvailableLensPositions() {
-		HashSet<LensPosition> positions = new HashSet<>();
+    @Override
+    public List<LensPosition> getAvailableLensPositions() {
+        HashSet<LensPosition> positions = new HashSet<>();
 
-		final int numberOfCameras = Camera.getNumberOfCameras();
+        final int numberOfCameras = Camera.getNumberOfCameras();
 
-		for (int i = 0; i < numberOfCameras; i++) {
-			Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-			Camera.getCameraInfo(i, cameraInfo);
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+            Camera.getCameraInfo(i, cameraInfo);
 
-			positions.add(
-					cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT
-							? LensPosition.FRONT
-							: LensPosition.BACK
-			);
-		}
+            positions.add(
+                    cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT
+                            ? LensPosition.FRONT
+                            : LensPosition.BACK
+            );
+        }
 
-		return new ArrayList<>(positions);
-	}
+        return new ArrayList<>(positions);
+    }
 
 }

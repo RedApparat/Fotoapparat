@@ -10,21 +10,21 @@ import io.fotoapparat.parameter.RendererParameters;
 @SuppressWarnings("NewApi")
 public class RendererParametersProvider implements RendererParametersOperator {
 
-	private final ParametersProvider parametersProvider;
-	private final OrientationManager orientationManager;
+    private final ParametersProvider parametersProvider;
+    private final OrientationManager orientationManager;
 
-	public RendererParametersProvider(ParametersProvider parametersProvider,
-									  OrientationManager orientationManager) {
-		this.parametersProvider = parametersProvider;
-		this.orientationManager = orientationManager;
-	}
+    public RendererParametersProvider(ParametersProvider parametersProvider,
+                                      OrientationManager orientationManager) {
+        this.parametersProvider = parametersProvider;
+        this.orientationManager = orientationManager;
+    }
 
-	@Override
-	public RendererParameters getRendererParameters() {
-		return new RendererParameters(
-				parametersProvider.getPreviewSize(),
-				orientationManager.getSensorOrientation()
-		);
-	}
+    @Override
+    public RendererParameters getRendererParameters() {
+        return new RendererParameters(
+                parametersProvider.getPreviewSize(),
+                orientationManager.getSensorOrientation()
+        );
+    }
 
 }

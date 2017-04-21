@@ -8,10 +8,10 @@ import io.fotoapparat.photo.Photo;
  */
 public interface CaptureOperator {
 
-	/**
-	 * Invokes a still picture capture action.
-	 *
-	 * @return The captured photo.
-	 */
-	Photo takePicture();
+    /**
+     * Invokes a still picture capture action.
+     *
+     * @return The captured photo.
+     */
+    Photo takePicture();
 }

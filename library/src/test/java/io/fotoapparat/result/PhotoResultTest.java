@@ -22,61 +22,61 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class PhotoResultTest {
 
-	static final PendingResult<Photo> PENDING_RESULT = new PendingResult<>(
-			immediateFuture(
-					Photo.empty()
-			),
-			new ImmediateExecutor()
-	);
+    static final PendingResult<Photo> PENDING_RESULT = new PendingResult<>(
+            immediateFuture(
+                    Photo.empty()
+            ),
+            new ImmediateExecutor()
+    );
 
-	@Test
-	public void toPendingResult() throws Exception {
-		// Given
-		PhotoResult photoResult = new PhotoResult(PENDING_RESULT);
+    @Test
+    public void toPendingResult() throws Exception {
+        // Given
+        PhotoResult photoResult = new PhotoResult(PENDING_RESULT);
 
-		// When
-		PendingResult<Photo> pendingResult = photoResult.toPendingResult();
+        // When
+        PendingResult<Photo> pendingResult = photoResult.toPendingResult();
 
-		// Then
-		assertSame(
-				PENDING_RESULT,
-				pendingResult
-		);
-	}
+        // Then
+        assertSame(
+                PENDING_RESULT,
+                pendingResult
+        );
+    }
 
-	@Test
-	public void toBitmap() throws Exception {
-		// Given
-		PendingResult<Photo> pendingResult = spy(PENDING_RESULT);
+    @Test
+    public void toBitmap() throws Exception {
+        // Given
+        PendingResult<Photo> pendingResult = spy(PENDING_RESULT);
 
-		PhotoResult photoResult = new PhotoResult(pendingResult);
+        PhotoResult photoResult = new PhotoResult(pendingResult);
 
-		// When
-		PendingResult<BitmapPhoto> result = photoResult.toBitmap();
+        // When
+        PendingResult<BitmapPhoto> result = photoResult.toBitmap();
 
-		// Then
-		assertNotNull(result);
+        // Then
+        assertNotNull(result);
 
-		verify(pendingResult).transform(
-				isA(BitmapPhotoTransformer.class)
-		);
-	}
+        verify(pendingResult).transform(
+                isA(BitmapPhotoTransformer.class)
+        );
+    }
 
-	@Test
-	public void saveToFile() throws Exception {
-		// Given
-		PendingResult<Photo> pendingResult = spy(PENDING_RESULT);
+    @Test
+    public void saveToFile() throws Exception {
+        // Given
+        PendingResult<Photo> pendingResult = spy(PENDING_RESULT);
 
-		PhotoResult photoResult = new PhotoResult(pendingResult);
+        PhotoResult photoResult = new PhotoResult(pendingResult);
 
-		// When
-		PendingResult<?> result = photoResult.saveToFile(new File(""));
+        // When
+        PendingResult<?> result = photoResult.saveToFile(new File(""));
 
-		// Then
-		assertNotNull(result);
+        // Then
+        assertNotNull(result);
 
-		verify(pendingResult).transform(
-				isA(SaveToFileTransformer.class)
-		);
-	}
+        verify(pendingResult).transform(
+                isA(SaveToFileTransformer.class)
+        );
+    }
 }

@@ -15,46 +15,46 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class UpdateOrientationRoutineTest {
 
-	@Mock
-	CameraDevice cameraDevice;
-	@Mock
-	OrientationSensor orientationSensor;
+    @Mock
+    CameraDevice cameraDevice;
+    @Mock
+    OrientationSensor orientationSensor;
 
-	UpdateOrientationRoutine testee;
+    UpdateOrientationRoutine testee;
 
-	@Before
-	public void setUp() throws Exception {
-		testee = new UpdateOrientationRoutine(
-				cameraDevice,
-				orientationSensor,
-				new ImmediateExecutor()
-		);
-	}
+    @Before
+    public void setUp() throws Exception {
+        testee = new UpdateOrientationRoutine(
+                cameraDevice,
+                orientationSensor,
+                new ImmediateExecutor()
+        );
+    }
 
-	@Test
-	public void start() throws Exception {
-		// When
-		testee.start();
+    @Test
+    public void start() throws Exception {
+        // When
+        testee.start();
 
-		// Then
-		verify(orientationSensor).start(testee);
-	}
+        // Then
+        verify(orientationSensor).start(testee);
+    }
 
-	@Test
-	public void stop() throws Exception {
-		// When
-		testee.stop();
+    @Test
+    public void stop() throws Exception {
+        // When
+        testee.stop();
 
-		// Then
-		verify(orientationSensor).stop();
-	}
+        // Then
+        verify(orientationSensor).stop();
+    }
 
-	@Test
-	public void onOrientationChanged() throws Exception {
-		// When
-		testee.onOrientationChanged(90);
+    @Test
+    public void onOrientationChanged() throws Exception {
+        // When
+        testee.onOrientationChanged(90);
 
-		// Then
-		verify(cameraDevice).setDisplayOrientation(90);
-	}
+        // Then
+        verify(cameraDevice).setDisplayOrientation(90);
+    }
 }

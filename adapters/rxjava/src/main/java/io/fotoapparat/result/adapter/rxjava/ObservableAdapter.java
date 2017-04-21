@@ -10,18 +10,18 @@ import rx.Observable;
  */
 public class ObservableAdapter<T> implements Adapter<T, Observable<T>> {
 
-	private ObservableAdapter() {
-	}
+    private ObservableAdapter() {
+    }
 
-	/**
-	 * @return {@link Adapter} which adapts result to {@link Observable}.
-	 */
-	public static <R> ObservableAdapter<R> toObservable() {
-		return new ObservableAdapter<>();
-	}
+    /**
+     * @return {@link Adapter} which adapts result to {@link Observable}.
+     */
+    public static <R> ObservableAdapter<R> toObservable() {
+        return new ObservableAdapter<>();
+    }
 
-	@Override
-	public Observable<T> adapt(Future<T> future) {
-		return Observable.from(future);
-	}
+    @Override
+    public Observable<T> adapt(Future<T> future) {
+        return Observable.from(future);
+    }
 }

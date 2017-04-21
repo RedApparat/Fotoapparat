@@ -24,57 +24,57 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class CameraSelectorTest {
 
-	@Mock(answer = Answers.RETURNS_DEEP_STUBS)
-	CameraManager manager;
-	@InjectMocks
-	CameraSelector testee;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    CameraManager manager;
+    @InjectMocks
+    CameraSelector testee;
 
-	@Before
-	public void setUp() throws Exception {
-		given(manager.getCameraCharacteristics("0").get(CameraCharacteristics.LENS_FACING))
-				.willReturn(CameraMetadata.LENS_FACING_BACK);
+    @Before
+    public void setUp() throws Exception {
+        given(manager.getCameraCharacteristics("0").get(CameraCharacteristics.LENS_FACING))
+                .willReturn(CameraMetadata.LENS_FACING_BACK);
 
-		given(manager.getCameraCharacteristics("1").get(CameraCharacteristics.LENS_FACING))
-				.willReturn(CameraMetadata.LENS_FACING_FRONT);
-	}
+        given(manager.getCameraCharacteristics("1").get(CameraCharacteristics.LENS_FACING))
+                .willReturn(CameraMetadata.LENS_FACING_FRONT);
+    }
 
-	@Test(expected = CameraException.class)
-	public void cameraNotAvailable() throws Exception {
-		// Given
-		given(manager.getCameraIdList())
-				.willThrow(new CameraAccessException(CAMERA_ERROR));
+    @Test(expected = CameraException.class)
+    public void cameraNotAvailable() throws Exception {
+        // Given
+        given(manager.getCameraIdList())
+                .willThrow(new CameraAccessException(CAMERA_ERROR));
 
-		// When
-		testee.findCameraId(LensPosition.EXTERNAL);
+        // When
+        testee.findCameraId(LensPosition.EXTERNAL);
 
-		// Then
-		// exception
-	}
+        // Then
+        // exception
+    }
 
-	@Test(expected = CameraException.class)
-	public void noCameraFound() throws Exception {
-		// Given
-		given(manager.getCameraIdList())
-				.willReturn(new String[]{"0"});
+    @Test(expected = CameraException.class)
+    public void noCameraFound() throws Exception {
+        // Given
+        given(manager.getCameraIdList())
+                .willReturn(new String[]{"0"});
 
-		// When
-		testee.findCameraId(LensPosition.EXTERNAL);
+        // When
+        testee.findCameraId(LensPosition.EXTERNAL);
 
-		// Then
-		// exception
-	}
+        // Then
+        // exception
+    }
 
-	@Test
-	public void getFrontCamera() throws Exception {
-		// Given
-		given(manager.getCameraIdList())
-				.willReturn(new String[]{"0", "1"});
+    @Test
+    public void getFrontCamera() throws Exception {
+        // Given
+        given(manager.getCameraIdList())
+                .willReturn(new String[]{"0", "1"});
 
-		// When
-		String cameraId = testee.findCameraId(LensPosition.FRONT);
+        // When
+        String cameraId = testee.findCameraId(LensPosition.FRONT);
 
-		// Then
-		assertEquals("1", cameraId);
-	}
+        // Then
+        assertEquals("1", cameraId);
+    }
 
 }
