@@ -19,7 +19,7 @@ public class TextureListener implements TextureView.SurfaceTextureListener {
 	public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
 		if (listener != null) {
 			listener.onSurfaceAvailable(surface);
-			listener.onTextureSizeChanged(width, height); // todo need?
+			listener.onTextureSizeChanged(width, height);
 		}
 	}
 
