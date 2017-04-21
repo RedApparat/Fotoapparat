@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import io.fotoapparat.parameter.Size;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.preview.PreviewStream;
@@ -20,6 +21,7 @@ public class PreviewStream1 implements PreviewStream {
 	private final Camera camera;
 
 	private final Set<FrameProcessor> frameProcessors = new LinkedHashSet<>();
+	private Size previewSize = null;
 
 	public PreviewStream1(Camera camera) {
 		this.camera = camera;
@@ -36,6 +38,10 @@ public class PreviewStream1 implements PreviewStream {
 		ensureNv21Format(parameters);
 
 		Camera.Size previewSize = parameters.getPreviewSize();
+		this.previewSize = new Size(
+				previewSize.width,
+				previewSize.height
+		);
 
 		return new byte[bytesPerFrame(previewSize)];
 	}
@@ -79,13 +85,21 @@ public class PreviewStream1 implements PreviewStream {
 	}
 
 	private void dispatchFrame(byte[] image) {
-		final Frame frame = new Frame(image, 0); // TODO provide rotation
+		ensurePreviewSizeAvailable();
+
+		final Frame frame = new Frame(previewSize, image, 0); // TODO provide rotation
 
 		for (final FrameProcessor frameProcessor : frameProcessors) {
 			frameProcessor.processFrame(frame);
 		}
 
 		returnFrameToBuffer(frame);
+	}
+
+	private void ensurePreviewSizeAvailable() {
+		if (previewSize == null) {
+			throw new IllegalStateException("previewSize is null. Frame was not added?");
+		}
 	}
 
 	private void returnFrameToBuffer(Frame frame) {

@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
+import io.fotoapparat.parameter.Size;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.preview.PreviewStream;
@@ -16,11 +18,15 @@ import io.fotoapparat.preview.PreviewStream;
 public class PreviewStream2 implements PreviewStream,
 		OnImageAcquiredObserver.OnFrameAcquiredListener {
 
-	private final Set<FrameProcessor> frameProcessors = new LinkedHashSet<>();
 	private final OnImageAcquiredObserver surfaceReader;
+	private final ParametersProvider parametersProvider;
 
-	public PreviewStream2(OnImageAcquiredObserver surfaceReader) {
+	private final Set<FrameProcessor> frameProcessors = new LinkedHashSet<>();
+
+	public PreviewStream2(OnImageAcquiredObserver surfaceReader,
+						  ParametersProvider parametersProvider) {
 		this.surfaceReader = surfaceReader;
+		this.parametersProvider = parametersProvider;
 	}
 
 	@Override
@@ -55,7 +61,7 @@ public class PreviewStream2 implements PreviewStream,
 	}
 
 	private void dispatchFrame(byte[] image) {
-		final Frame frame = new Frame(image, 0); // TODO provide rotation?
+		final Frame frame = new Frame(parametersProvider.getPreviewSize(), image, 0); // TODO provide rotation?
 
 		for (FrameProcessor frameProcessor : frameProcessors) {
 			frameProcessor.processFrame(frame);

@@ -86,7 +86,10 @@ public class V2Provider implements CameraProvider {
 				orientationManager
 		);
 
-		PreviewStream2 previewStream = new PreviewStream2(continuousSurfaceReader);
+		PreviewStream2 previewStream = new PreviewStream2(
+				continuousSurfaceReader,
+				parametersProvider
+		);
 
 		RendererParametersProvider rendererParametersOperator = new RendererParametersProvider(
 				parametersProvider,
