@@ -6,7 +6,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
-import io.fotoapparat.parameter.Size;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.preview.PreviewStream;
@@ -61,7 +60,7 @@ public class PreviewStream2 implements PreviewStream,
 	}
 
 	private void dispatchFrame(byte[] image) {
-		final Frame frame = new Frame(parametersProvider.getPreviewSize(), image, 0); // TODO provide rotation?
+		final Frame frame = new Frame(parametersProvider.getPreviewSize(), image, 0);
 
 		for (FrameProcessor frameProcessor : frameProcessors) {
 			frameProcessor.processFrame(frame);
