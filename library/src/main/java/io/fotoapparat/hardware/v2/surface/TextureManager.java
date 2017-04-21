@@ -13,6 +13,8 @@ import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
+import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
+import io.fotoapparat.parameter.Size;
 import io.fotoapparat.view.TextureListener;
 
 /**
@@ -23,11 +25,14 @@ public class TextureManager
 		implements TextureListener.Listener, OrientationManager.Listener, SurfaceOperator {
 
 	private final CountDownLatch surfaceLatch = new CountDownLatch(1);
+	private final ParametersProvider parametersProvider;
 	private Surface surface;
 	private TextureView textureView;
 	private int screenOrientation;
 
-	public TextureManager(OrientationManager orientationManager) {
+	public TextureManager(OrientationManager orientationManager,
+						  ParametersProvider parametersProvider) {
+		this.parametersProvider = parametersProvider;
 		orientationManager.addListener(this);
 	}
 
@@ -83,6 +88,8 @@ public class TextureManager
 
 	@Override
 	public void onSurfaceAvailable(SurfaceTexture surfaceTexture) {
+		setBufferSize(surfaceTexture);
+
 		this.surface = new Surface(surfaceTexture);
 		surfaceLatch.countDown();
 	}
@@ -104,6 +111,11 @@ public class TextureManager
 			// Do nothing
 		}
 		return surface;
+	}
+
+	private void setBufferSize(SurfaceTexture surfaceTexture) {
+		Size previewSize = parametersProvider.getPreviewSize();
+		surfaceTexture.setDefaultBufferSize(previewSize.width, previewSize.height);
 	}
 
 	private void correctOrientation(float width, float height) {

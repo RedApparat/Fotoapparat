@@ -52,7 +52,8 @@ public class V2Provider implements CameraProvider {
 		ParametersProvider parametersProvider = new ParametersProvider();
 
 		TextureManager textureManager = new TextureManager(
-				orientationManager
+				orientationManager,
+				parametersProvider
 		);
 
 		StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(parametersProvider);

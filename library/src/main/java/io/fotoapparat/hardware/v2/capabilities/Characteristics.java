@@ -1,6 +1,7 @@
 package io.fotoapparat.hardware.v2.capabilities;
 
 import android.graphics.ImageFormat;
+import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
@@ -8,6 +9,9 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Size;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -16,6 +20,14 @@ import java.util.concurrent.CountDownLatch;
 @SuppressWarnings("ConstantConditions")
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Characteristics {
+	/**
+	 * Max preview height that is guaranteed by Camera2 API
+	 */
+	static final int MAX_PREVIEW_HEIGHT = 1080;
+	/**
+	 * Max preview width that is guaranteed by Camera2 API
+	 */
+	static final int MAX_PREVIEW_WIDTH = 1920;
 
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
 	private final CameraManager manager;
@@ -121,9 +133,30 @@ public class Characteristics {
 	 *
 	 * @return The list of the supported sizes.
 	 */
-	public Size[] getJpegOutputSizes() {
-		return getCameraCharacteristics()
+	public List<Size> getJpegOutputSizes() {
+		Size[] outputSizes = getCameraCharacteristics()
 				.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
 				.getOutputSizes(ImageFormat.JPEG);
+		return Arrays.asList(outputSizes);
+	}
+
+	/**
+	 * List of sizes that this camera device can export to a stream.
+	 *
+	 * @return The list of the supported sizes.
+	 */
+	public List<Size> getPreviewSizes() {
+		Size[] outputSizes = getCameraCharacteristics()
+				.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+				.getOutputSizes(SurfaceTexture.class);
+
+		List<Size> filteredOutputSizes = new ArrayList<>();
+		for (Size outputSize : outputSizes) {
+			if (outputSize.getWidth() <= MAX_PREVIEW_WIDTH && outputSize.getHeight() <= MAX_PREVIEW_HEIGHT) {
+				filteredOutputSizes.add(outputSize);
+			}
+		}
+
+		return filteredOutputSizes;
 	}
 }

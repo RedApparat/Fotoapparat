@@ -1,11 +1,12 @@
 package io.fotoapparat.hardware.v2.capabilities;
 
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
@@ -28,11 +29,22 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
 		this.characteristics = characteristics;
 	}
 
+	@NonNull
+	private static Set<Size> convertSizesList(List<android.util.Size> availableSizes) {
+		HashSet<Size> sizesSet = new HashSet<>(availableSizes.size());
+
+		for (android.util.Size size : availableSizes) {
+			sizesSet.add(new Size(size.getWidth(), size.getHeight()));
+		}
+
+		return sizesSet;
+	}
+
 	@Override
 	public Capabilities getCapabilities() {
 		return new Capabilities(
 				availableJpegSizes(),
-				Collections.<Size>emptySet(),
+				availablePreviewSizes(),
 				availableFocusModes(),
 				availableFlashModes()
 		);
@@ -40,14 +52,12 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
 
 	@SuppressWarnings("ConstantConditions")
 	private Set<Size> availableJpegSizes() {
-		android.util.Size[] availableSizes = characteristics.getJpegOutputSizes();
-		HashSet<Size> sizesSet = new HashSet<>(availableSizes.length);
+		return convertSizesList(characteristics.getJpegOutputSizes());
+	}
 
-		for (android.util.Size size : Arrays.asList(availableSizes)) {
-			sizesSet.add(new Size(size.getWidth(), size.getHeight()));
-		}
-
-		return sizesSet;
+	@SuppressWarnings("ConstantConditions")
+	private Set<Size> availablePreviewSizes() {
+		return convertSizesList(characteristics.getPreviewSizes());
 	}
 
 	@SuppressWarnings("ConstantConditions")

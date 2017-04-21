@@ -12,7 +12,6 @@ import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -58,50 +57,31 @@ public class ParametersProviderTest {
 	public void getCaptureSize() throws Exception {
 		// Given
 		given(parameters.getValue(Parameters.Type.PICTURE_SIZE))
+				.willReturn(new Size(4000, 3000));
+
+		testee.updateParameters(parameters);
+
+		// When
+		Size captureSize = testee.getStillCaptureSize();
+		float stillCaptureAspectRatio = testee.getStillCaptureAspectRatio();
+
+		// Then
+		assertEquals(new Size(4000, 3000), captureSize);
+		assertEquals(4000f / 3000, stillCaptureAspectRatio);
+	}
+
+	@Test
+	public void getPreviewSize() throws Exception {
+		// Given
+		given(parameters.getValue(Parameters.Type.PREVIEW_SIZE))
 				.willReturn(new Size(1920, 1080));
 
 		testee.updateParameters(parameters);
 
 		// When
-		Size focusMode = testee.getStillCaptureSize();
-		float stillCaptureAspectRatio = testee.getStillCaptureAspectRatio();
-
-		// Then
-		assertEquals(new Size(1920, 1080), focusMode);
-		assertEquals(1920f / 1080, stillCaptureAspectRatio);
-	}
-
-	@Test
-	public void bigAspectRatio() throws Exception {
-		// Given
-		given(parameters.getValue(Parameters.Type.PICTURE_SIZE))
-				.willReturn(new Size(3240, 1080));
-
-		testee.updateParameters(parameters);
-
-		// When
 		Size previewSize = testee.getPreviewSize();
 
 		// Then
-		assertTrue(previewSize.width <= ParametersProvider.MAX_PREVIEW_WIDTH);
-		assertTrue(previewSize.height <= ParametersProvider.MAX_PREVIEW_HEIGHT);
-		assertEquals(3240f / 1080, previewSize.getAspectRatio());
-	}
-
-	@Test
-	public void smallAspectRatio() throws Exception {
-		// Given
-		given(parameters.getValue(Parameters.Type.PICTURE_SIZE))
-				.willReturn(new Size(1080, 3240));
-
-		testee.updateParameters(parameters);
-
-		// When
-		Size previewSize = testee.getPreviewSize();
-
-		// Then
-		assertTrue(previewSize.width <= ParametersProvider.MAX_PREVIEW_WIDTH);
-		assertTrue(previewSize.height <= ParametersProvider.MAX_PREVIEW_HEIGHT);
-		assertEquals(1080f / 3240f, previewSize.getAspectRatio());
+		assertEquals(new Size(1920, 1080), previewSize);
 	}
 }

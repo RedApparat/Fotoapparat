@@ -10,6 +10,8 @@ import io.fotoapparat.parameter.Size;
 
 import static io.fotoapparat.parameter.Parameters.Type.FLASH;
 import static io.fotoapparat.parameter.Parameters.Type.FOCUS_MODE;
+import static io.fotoapparat.parameter.Parameters.Type.PICTURE_SIZE;
+import static io.fotoapparat.parameter.Parameters.Type.PREVIEW_SIZE;
 
 /**
  * Manages the parameters of a {@link io.fotoapparat.hardware.CameraDevice}.
@@ -25,11 +27,11 @@ public class ParametersProvider implements ParametersOperator {
 	 */
 	static final int MAX_PREVIEW_WIDTH = 1920;
 	private final CountDownLatch countDownLatch = new CountDownLatch(1);
-	private Parameters parameters;
+	private Parameters selectedParameters;
 
 	@Override
-	public void updateParameters(Parameters parameters) {
-		this.parameters = parameters;
+	public void updateParameters(Parameters selectedParameters) {
+		this.selectedParameters = selectedParameters;
 		countDownLatch.countDown();
 	}
 
@@ -39,13 +41,13 @@ public class ParametersProvider implements ParametersOperator {
 	 *
 	 * @return the last updated parameters.
 	 */
-	private Parameters getParameters() {
+	private Parameters getSelectedParameters() {
 		try {
 			countDownLatch.await();
 		} catch (InterruptedException e) {
 			// Do nothing
 		}
-		return parameters;
+		return selectedParameters;
 	}
 
 	/**
@@ -54,7 +56,7 @@ public class ParametersProvider implements ParametersOperator {
 	 * @return The flash firing mode.
 	 */
 	public Flash getFlash() {
-		return getParameters().getValue(FLASH);
+		return getSelectedParameters().getValue(FLASH);
 	}
 
 	/**
@@ -63,7 +65,7 @@ public class ParametersProvider implements ParametersOperator {
 	 * @return The focus mode.
 	 */
 	public FocusMode getFocus() {
-		return getParameters().getValue(FOCUS_MODE);
+		return getSelectedParameters().getValue(FOCUS_MODE);
 	}
 
 	/**
@@ -72,7 +74,7 @@ public class ParametersProvider implements ParametersOperator {
 	 * @return The size.
 	 */
 	public Size getStillCaptureSize() {
-		return getParameters().getValue(Parameters.Type.PICTURE_SIZE);
+		return getSelectedParameters().getValue(PICTURE_SIZE);
 	}
 
 	/**
@@ -81,18 +83,7 @@ public class ParametersProvider implements ParametersOperator {
 	 * @return The size.
 	 */
 	public Size getPreviewSize() {
-		float stillCaptureAspectRatio = getStillCaptureAspectRatio();
-
-		if ((int) (MAX_PREVIEW_HEIGHT * stillCaptureAspectRatio) <= MAX_PREVIEW_WIDTH) {
-			return new Size(
-					(int) (MAX_PREVIEW_HEIGHT * stillCaptureAspectRatio),
-					MAX_PREVIEW_HEIGHT
-			);
-		}
-		return new Size(
-				MAX_PREVIEW_WIDTH,
-				(int) (MAX_PREVIEW_WIDTH / stillCaptureAspectRatio)
-		);
+		return getSelectedParameters().getValue(PREVIEW_SIZE);
 	}
 
 	/**

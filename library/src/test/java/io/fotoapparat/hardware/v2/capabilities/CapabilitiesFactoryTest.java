@@ -3,6 +3,7 @@ package io.fotoapparat.hardware.v2.capabilities;
 import android.hardware.camera2.CameraMetadata;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Size;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collections;
 import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
@@ -47,7 +49,7 @@ public class CapabilitiesFactoryTest {
 	public void testSets() throws Exception {
 		// Given
 		given(characteristics.getJpegOutputSizes())
-				.willReturn(new android.util.Size[]{});
+				.willReturn(Collections.<Size>emptyList());
 
 		given(characteristics.isFlashAvailable())
 				.willReturn(true);
