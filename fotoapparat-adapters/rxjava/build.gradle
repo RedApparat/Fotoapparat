@@ -11,8 +11,8 @@ android {
 }
 
 dependencies {
-    compile project(':library')
-    provided "io.reactivex.rxjava2:rxjava:${project.rxjava2Version}"
+    compile project(':fotoapparat')
+    provided "io.reactivex:rxjava:${project.rxjava1Version}"
 
     testCompile "junit:junit:${project.junitVersion}"
 }

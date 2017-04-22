@@ -1,4 +1,6 @@
-include ':sample', ':library'
+include ':fotoapparat'
 
-include ':adapters:rxjava'
-include ':adapters:rxjava2'
+include ':fotoapparat-adapters:rxjava'
+include ':fotoapparat-adapters:rxjava2'
+
+include ':sample'
