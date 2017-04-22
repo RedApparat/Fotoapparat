@@ -103,16 +103,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         if (hasCameraPermission) {
             fotoapparat.start();
         }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         if (hasCameraPermission) {
             fotoapparat.stop();
         }

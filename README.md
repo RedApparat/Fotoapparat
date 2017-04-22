@@ -72,14 +72,14 @@ Call `start()` and `stop()`. No rocket science here.
 
 ```java
 @Override
-protected void onResume() {
-    super.onResume();
+protected void onStart() {
+    super.onStart();
     fotoapparat.start();
 }
- 
+
 @Override
-protected void onPause() {
-    super.onPause();
+protected void onStop() {
+    super.onStop();
     fotoapparat.stop();
 }
 ```
