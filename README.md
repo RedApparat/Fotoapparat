@@ -45,10 +45,10 @@ Configure `Fotoapparat` instance
 ```java
 Fotoapparat
     .with(context)  
-    .into(cameraView)           // the view from step one
+    .into(cameraView)           // view which will draw the camera preview
     .photoSize(biggestSize())   // we want to have the biggest photo possible
     .lensPosition(back())       // we want back camera
-    .focusMode(firstAvailable(  // (optional) user the first focus mode which is supported by device
+    .focusMode(firstAvailable(  // (optional) use the first focus mode which is supported by device
             continuousFocus(),
             autoFocus(),        // in case if continuous focus is not available on device, auto focus will be used
             fixed()             // if even auto focus is not available - fixed focus mode will be used
