@@ -10,6 +10,8 @@ android {
     defaultConfig {
         minSdkVersion Integer.parseInt(project.minSdkVersion)
         targetSdkVersion Integer.parseInt(project.targetSdkVersion)
+
+        archivesBaseName = 'adapter-rxjava'
     }
 }
 
@@ -18,10 +20,4 @@ dependencies {
     provided "io.reactivex:rxjava:${project.rxjava1Version}"
 
     testCompile "junit:junit:${project.junitVersion}"
-}
-
-install {
-    repositories.mavenInstaller {
-        pom.artifactId = 'adapter-rxjava'
-    }
 }

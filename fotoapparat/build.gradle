@@ -10,6 +10,8 @@ android {
     defaultConfig {
         minSdkVersion Integer.parseInt(project.minSdkVersion)
         targetSdkVersion Integer.parseInt(project.targetSdkVersion)
+
+        archivesBaseName = 'library'
     }
 
     buildTypes {
@@ -26,10 +28,4 @@ dependencies {
     testCompile "org.mockito:mockito-core:${project.mockitoVersion}"
     testCompile 'commons-io:commons-io:2.5'
 
-}
-
-install {
-    repositories.mavenInstaller {
-        pom.artifactId = 'library'
-    }
 }
