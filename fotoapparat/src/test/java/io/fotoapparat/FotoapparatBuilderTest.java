@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Flash;
@@ -30,6 +31,8 @@ public class FotoapparatBuilderTest {
 
     @Mock
     Context context;
+    @Mock
+    AvailableLensPositionsProvider availableLensPositionsProvider;
     @Mock
     CameraProvider cameraProvider;
     @Mock
@@ -68,6 +71,28 @@ public class FotoapparatBuilderTest {
 
         // Then
         assertNotNull(result);
+    }
+
+    @Test
+    public void availableLensPositionsProvider_HasDefault() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments();
+
+        // Then
+        assertNotNull(builder.availableLensPositionsProvider);
+    }
+
+    @Test
+    public void availableLensPositionsProvider_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .availableLensPositionsProvider(availableLensPositionsProvider);
+
+        // Then
+        assertEquals(
+                availableLensPositionsProvider,
+                builder.availableLensPositionsProvider
+        );
     }
 
     @Test

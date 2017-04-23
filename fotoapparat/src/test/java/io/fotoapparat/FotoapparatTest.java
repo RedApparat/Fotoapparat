@@ -201,4 +201,15 @@ public class FotoapparatTest {
         // Then
         // Expect exception
     }
+
+    @Test(expected = IllegalStateException.class)
+    public void ensureNonNullContext() throws Exception {
+        // Given
+
+        // When
+        Fotoapparat.with(null);
+
+        // Then
+        // Expect exception
+    }
 }

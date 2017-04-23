@@ -1,12 +1,12 @@
 package io.fotoapparat;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.provider.CameraProvider;
-import io.fotoapparat.hardware.provider.V1AvailableLensPositionProvider;
-import io.fotoapparat.hardware.provider.V1Provider;
+import io.fotoapparat.hardware.provider.ProviderSelector;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.log.Loggers;
 import io.fotoapparat.parameter.Flash;
@@ -34,8 +34,8 @@ import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 public class FotoapparatBuilder {
 
     Context context;
-    AvailableLensPositionsProvider availableLensPositionsProvider = new V1AvailableLensPositionProvider();
-    CameraProvider cameraProvider = new V1Provider();
+    AvailableLensPositionsProvider availableLensPositionsProvider;
+    CameraProvider cameraProvider;
     CameraRenderer renderer;
 
     SelectorFunction<LensPosition> lensPositionSelector = firstAvailable(
@@ -56,8 +56,22 @@ public class FotoapparatBuilder {
 
     Logger logger = Loggers.none();
 
-    FotoapparatBuilder(Context context) {
+    FotoapparatBuilder(@NonNull Context context) {
         this.context = context;
+
+        ProviderSelector providerSelector = new ProviderSelector(context);
+
+        availableLensPositionsProvider = providerSelector.availableLensPositionsProvider();
+        cameraProvider = providerSelector.cameraProvider();
+    }
+
+    /**
+     * @param availableLensPositionsProvider provides list of {@link LensPosition} which are
+     *                                       available on the device.
+     */
+    FotoapparatBuilder availableLensPositionsProvider(AvailableLensPositionsProvider availableLensPositionsProvider) {
+        this.availableLensPositionsProvider = availableLensPositionsProvider;
+        return this;
     }
 
     /**
@@ -146,6 +160,14 @@ public class FotoapparatBuilder {
     }
 
     private void validate() {
+        if (availableLensPositionsProvider == null) {
+            throw new IllegalStateException("AvailableLensPositionsProvider is mandatory.");
+        }
+
+        if (cameraProvider == null) {
+            throw new IllegalStateException("CameraProvider is mandatory.");
+        }
+
         if (renderer == null) {
             throw new IllegalStateException("CameraRenderer is mandatory.");
         }

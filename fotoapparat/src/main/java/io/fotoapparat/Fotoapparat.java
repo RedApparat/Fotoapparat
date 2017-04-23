@@ -57,6 +57,10 @@ public class Fotoapparat {
     }
 
     public static FotoapparatBuilder with(Context context) {
+        if (context == null) {
+            throw new IllegalStateException("Context is null.");
+        }
+
         return new FotoapparatBuilder(context);
     }
 
