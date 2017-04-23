@@ -108,7 +108,15 @@ photoResult
     });
     
 // Of course you can also get a photo in a blocking way. Do not do it on main thread though.
-BitmapPhoto result = photoResult.toBitmap().await()
+BitmapPhoto result = photoResult.toBitmap().await();
+ 
+// Convert asynchronous events to RxJava 1.x/2.x types. See /fotoapparat-adapters/ module
+photoResult
+        .toBitmap()
+        .adapt(SingleAdapter.<BitmapPhoto>toSingle())
+        .subscribe(bitmapPhoto -> {
+            
+        });
 ```
 
 ## Set up
