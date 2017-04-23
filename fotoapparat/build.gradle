@@ -27,3 +27,9 @@ dependencies {
     testCompile 'commons-io:commons-io:2.5'
 
 }
+
+install {
+    repositories.mavenInstaller {
+        pom.artifactId = 'library'
+    }
+}

@@ -19,3 +19,9 @@ dependencies {
 
     testCompile "junit:junit:${project.junitVersion}"
 }
+
+install {
+    repositories.mavenInstaller {
+        pom.artifactId = 'adapter-rxjava'
+    }
+}
