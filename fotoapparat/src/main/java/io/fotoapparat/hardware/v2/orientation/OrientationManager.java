@@ -8,6 +8,7 @@ import java.util.List;
 
 import io.fotoapparat.hardware.operators.OrientationOperator;
 import io.fotoapparat.hardware.v2.capabilities.Characteristics;
+import io.fotoapparat.hardware.v2.connection.CameraConnection;
 
 /**
  * Object is which is aware of orientation related values.
@@ -15,12 +16,12 @@ import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class OrientationManager implements OrientationOperator {
 
-    private final Characteristics characteristics;
     private final List<Listener> listeners = new ArrayList<>();
+    private final CameraConnection cameraConnection;
     private int orientation;
 
-    public OrientationManager(Characteristics characteristics) {
-        this.characteristics = characteristics;
+    public OrientationManager(CameraConnection cameraConnection) {
+        this.cameraConnection = cameraConnection;
     }
 
     /**
@@ -45,7 +46,7 @@ public class OrientationManager implements OrientationOperator {
      */
     @SuppressWarnings("ConstantConditions")
     public Integer getSensorOrientation() {
-        return (characteristics.getSensorOrientation() - orientation + 360) % 360;
+        return (cameraConnection.getCharacteristics().getSensorOrientation() - orientation + 360) % 360;
     }
 
     /**

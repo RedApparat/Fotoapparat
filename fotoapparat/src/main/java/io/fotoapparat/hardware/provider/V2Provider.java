@@ -40,14 +40,13 @@ public class V2Provider implements CameraProvider {
     public CameraDevice get(Logger logger) {
 
         CameraSelector cameraSelector = new CameraSelector(manager);
-        Characteristics characteristics = new Characteristics(manager);
 
-        CameraConnection cameraConnection = new CameraConnection(manager,
-                cameraSelector,
-                characteristics
+        CameraConnection cameraConnection = new CameraConnection(
+                manager,
+                cameraSelector
         );
 
-        OrientationManager orientationManager = new OrientationManager(characteristics);
+        OrientationManager orientationManager = new OrientationManager(cameraConnection);
 
         ParametersProvider parametersProvider = new ParametersProvider();
 
@@ -66,8 +65,7 @@ public class V2Provider implements CameraProvider {
                 stillSurfaceReader,
                 continuousSurfaceReader,
                 textureManager,
-                parametersProvider,
-                characteristics
+                parametersProvider
         );
 
         SessionManager sessionManager = new SessionManager(
@@ -78,7 +76,7 @@ public class V2Provider implements CameraProvider {
                 textureManager
         );
 
-        CapabilitiesFactory capabilitiesOperator = new CapabilitiesFactory(characteristics);
+        CapabilitiesFactory capabilitiesOperator = new CapabilitiesFactory(cameraConnection);
 
         CapturingRoutine capturingRoutine = new CapturingRoutine(
                 captureRequestFactory,
