@@ -11,14 +11,19 @@ import io.fotoapparat.photo.Photo;
  */
 class TakePictureTask extends FutureTask<Photo> {
 
-    public TakePictureTask(final CameraDevice cameraDevice) {
-        super(new Callable<Photo>() {
-            @Override
-            public Photo call() throws Exception {
-                cameraDevice.autoFocus();
-                return cameraDevice.takePicture();
-            }
-        });
-    }
+	public TakePictureTask(final CameraDevice cameraDevice) {
+		super(new Callable<Photo>() {
+			@Override
+			public Photo call() throws Exception {
+				cameraDevice.autoFocus();
+
+				Photo photo = cameraDevice.takePicture();
+
+				cameraDevice.startPreview();
+
+				return photo;
+			}
+		});
+	}
 
 }
