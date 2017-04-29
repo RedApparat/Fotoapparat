@@ -4,9 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import io.fotoapparat.hardware.CameraDevice;
-import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.provider.CameraProvider;
-import io.fotoapparat.hardware.provider.ProviderSelector;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.log.Loggers;
 import io.fotoapparat.parameter.Flash;
@@ -19,6 +17,7 @@ import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.view.CameraRenderer;
 import io.fotoapparat.view.CameraView;
 
+import static io.fotoapparat.hardware.provider.CameraProviders.defaultProvider;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.continuousFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.fixed;
@@ -33,152 +32,135 @@ import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
  */
 public class FotoapparatBuilder {
 
-    Context context;
-    AvailableLensPositionsProvider availableLensPositionsProvider;
-    CameraProvider cameraProvider;
-    CameraRenderer renderer;
+	Context context;
+	CameraProvider cameraProvider;
+	CameraRenderer renderer;
 
-    SelectorFunction<LensPosition> lensPositionSelector = firstAvailable(
-            back(),
-            front(),
-            external()
-    );
-    SelectorFunction<Size> photoSizeSelector = biggestSize();
-    SelectorFunction<Size> previewSizeSelector = biggestSize();
-    SelectorFunction<FocusMode> focusModeSelector = firstAvailable(
-            continuousFocus(),
-            autoFocus(),
-            fixed()
-    );
-    SelectorFunction<Flash> flashSelector = Selectors.nothing();
+	SelectorFunction<LensPosition> lensPositionSelector = firstAvailable(
+			back(),
+			front(),
+			external()
+	);
+	SelectorFunction<Size> photoSizeSelector = biggestSize();
+	SelectorFunction<Size> previewSizeSelector = biggestSize();
+	SelectorFunction<FocusMode> focusModeSelector = firstAvailable(
+			continuousFocus(),
+			autoFocus(),
+			fixed()
+	);
+	SelectorFunction<Flash> flashSelector = Selectors.nothing();
 
-    FrameProcessor frameProcessor = null;
+	FrameProcessor frameProcessor = null;
 
-    Logger logger = Loggers.none();
+	Logger logger = Loggers.none();
 
-    FotoapparatBuilder(@NonNull Context context) {
-        this.context = context;
+	FotoapparatBuilder(@NonNull Context context) {
+		this.context = context;
 
-        ProviderSelector providerSelector = new ProviderSelector(context);
+		cameraProvider = defaultProvider(context);
+	}
 
-        availableLensPositionsProvider = providerSelector.availableLensPositionsProvider();
-        cameraProvider = providerSelector.cameraProvider();
-    }
+	/**
+	 * @param cameraProvider decides which {@link CameraDevice} to use.
+	 */
+	public FotoapparatBuilder cameraProvider(CameraProvider cameraProvider) {
+		this.cameraProvider = cameraProvider;
+		return this;
+	}
 
-    /**
-     * @param availableLensPositionsProvider provides list of {@link LensPosition} which are
-     *                                       available on the device.
-     */
-    FotoapparatBuilder availableLensPositionsProvider(AvailableLensPositionsProvider availableLensPositionsProvider) {
-        this.availableLensPositionsProvider = availableLensPositionsProvider;
-        return this;
-    }
+	/**
+	 * @param selector selects size of the photo (in pixels) from list of available sizes.
+	 */
+	public FotoapparatBuilder photoSize(SelectorFunction<Size> selector) {
+		photoSizeSelector = selector;
+		return this;
+	}
 
-    /**
-     * @param cameraProvider decides which {@link CameraDevice} to use.
-     */
-    FotoapparatBuilder cameraProvider(CameraProvider cameraProvider) {
-        this.cameraProvider = cameraProvider;
-        return this;
-    }
+	/**
+	 * @param selector selects size of preview stream (in pixels) from list of available sizes.
+	 */
+	public FotoapparatBuilder previewSize(SelectorFunction<Size> selector) {
+		previewSizeSelector = selector;
+		return this;
+	}
 
-    /**
-     * @param selector selects size of the photo (in pixels) from list of available sizes.
-     */
-    public FotoapparatBuilder photoSize(SelectorFunction<Size> selector) {
-        photoSizeSelector = selector;
-        return this;
-    }
+	/**
+	 * @param selector selects focus mode from list of available modes.
+	 */
+	public FotoapparatBuilder focusMode(SelectorFunction<FocusMode> selector) {
+		focusModeSelector = selector;
+		return this;
+	}
 
-    /**
-     * @param selector selects size of preview stream (in pixels) from list of available sizes.
-     */
-    public FotoapparatBuilder previewSize(SelectorFunction<Size> selector) {
-        previewSizeSelector = selector;
-        return this;
-    }
+	/**
+	 * @param selector selects flash mode from list of available modes.
+	 */
+	public FotoapparatBuilder flash(SelectorFunction<Flash> selector) {
+		flashSelector = selector;
+		return this;
+	}
 
-    /**
-     * @param selector selects focus mode from list of available modes.
-     */
-    public FotoapparatBuilder focusMode(SelectorFunction<FocusMode> selector) {
-        focusModeSelector = selector;
-        return this;
-    }
+	/**
+	 * @param selector camera sensor position from list of available positions.
+	 */
+	public FotoapparatBuilder lensPosition(SelectorFunction<LensPosition> selector) {
+		lensPositionSelector = selector;
+		return this;
+	}
 
-    /**
-     * @param selector selects flash mode from list of available modes.
-     */
-    public FotoapparatBuilder flash(SelectorFunction<Flash> selector) {
-        flashSelector = selector;
-        return this;
-    }
+	/**
+	 * @param frameProcessor receives preview frames for processing.
+	 * @see FrameProcessor
+	 */
+	public FotoapparatBuilder frameProcessor(FrameProcessor frameProcessor) {
+		this.frameProcessor = frameProcessor;
+		return this;
+	}
 
-    /**
-     * @param selector camera sensor position from list of available positions.
-     */
-    public FotoapparatBuilder lensPosition(SelectorFunction<LensPosition> selector) {
-        lensPositionSelector = selector;
-        return this;
-    }
+	/**
+	 * @param logger logger which will print logs. No logger is set by default.
+	 * @see Loggers
+	 */
+	public FotoapparatBuilder logger(Logger logger) {
+		this.logger = logger;
+		return this;
+	}
 
-    /**
-     * @param frameProcessor receives preview frames for processing.
-     * @see FrameProcessor
-     */
-    public FotoapparatBuilder frameProcessor(FrameProcessor frameProcessor) {
-        this.frameProcessor = frameProcessor;
-        return this;
-    }
+	/**
+	 * @param renderer view which will draw the stream from the camera.
+	 * @see CameraView
+	 */
+	public FotoapparatBuilder into(CameraRenderer renderer) {
+		this.renderer = renderer;
+		return this;
+	}
 
-    /**
-     * @param logger logger which will print logs. No logger is set by default.
-     * @see Loggers
-     */
-    public FotoapparatBuilder logger(Logger logger) {
-        this.logger = logger;
-        return this;
-    }
+	/**
+	 * @return set up instance of {@link Fotoapparat}.
+	 * @throws IllegalStateException if some mandatory parameters are not specified.
+	 */
+	public Fotoapparat build() {
+		validate();
 
-    /**
-     * @param renderer view which will draw the stream from the camera.
-     * @see CameraView
-     */
-    public FotoapparatBuilder into(CameraRenderer renderer) {
-        this.renderer = renderer;
-        return this;
-    }
+		return Fotoapparat.create(this);
+	}
 
-    /**
-     * @return set up instance of {@link Fotoapparat}.
-     * @throws IllegalStateException if some mandatory parameters are not specified.
-     */
-    public Fotoapparat build() {
-        validate();
+	private void validate() {
+		if (cameraProvider == null) {
+			throw new IllegalStateException("CameraProvider is mandatory.");
+		}
 
-        return Fotoapparat.create(this);
-    }
+		if (renderer == null) {
+			throw new IllegalStateException("CameraRenderer is mandatory.");
+		}
 
-    private void validate() {
-        if (availableLensPositionsProvider == null) {
-            throw new IllegalStateException("AvailableLensPositionsProvider is mandatory.");
-        }
+		if (lensPositionSelector == null) {
+			throw new IllegalStateException("LensPosition selector is mandatory.");
+		}
 
-        if (cameraProvider == null) {
-            throw new IllegalStateException("CameraProvider is mandatory.");
-        }
-
-        if (renderer == null) {
-            throw new IllegalStateException("CameraRenderer is mandatory.");
-        }
-
-        if (lensPositionSelector == null) {
-            throw new IllegalStateException("LensPosition selector is mandatory.");
-        }
-
-        if (photoSizeSelector == null) {
-            throw new IllegalStateException("Photo size selector is mandatory.");
-        }
-    }
+		if (photoSizeSelector == null) {
+			throw new IllegalStateException("Photo size selector is mandatory.");
+		}
+	}
 
 }

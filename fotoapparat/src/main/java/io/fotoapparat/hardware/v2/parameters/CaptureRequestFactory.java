@@ -54,7 +54,7 @@ public class CaptureRequestFactory {
 		return CaptureRequestBuilder
 				.create(camera, CameraDevice.TEMPLATE_PREVIEW)
 				.into(viewSurface, frameSurface)
-				.flash(flash)
+//				.flash(flash)
 				.build();
 	}
 
