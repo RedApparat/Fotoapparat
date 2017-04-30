@@ -10,6 +10,7 @@ import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.session.Session;
 import io.fotoapparat.hardware.v2.session.SessionManager;
+import io.fotoapparat.result.FocusResultState;
 
 /**
  * Performs a lens focus routine.
@@ -26,12 +27,13 @@ public class FocusRoutine implements AutoFocusOperator {
     }
 
     @Override
-    public void autoFocus() {
+    public FocusResultState autoFocus() {
         try {
             focusLens();
         } catch (CameraAccessException e) {
             throw new CameraException(e);
         }
+        return null; // TODO: 01.05.17
     }
 
     private void focusLens() throws CameraAccessException {

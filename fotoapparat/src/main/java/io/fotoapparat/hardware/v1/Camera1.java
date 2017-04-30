@@ -24,6 +24,7 @@ import io.fotoapparat.parameter.RendererParameters;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
+import io.fotoapparat.result.FocusResultState;
 
 /**
  * Camera hardware driver for v1 {@link Camera} API.
@@ -261,7 +262,7 @@ public class Camera1 implements CameraDevice {
 	}
 
 	@Override
-	public void autoFocus() {
+	public FocusResultState autoFocus() {
 		recordMethod();
 
 		final CountDownLatch latch = new CountDownLatch(1);
@@ -277,6 +278,13 @@ public class Camera1 implements CameraDevice {
 		} catch (InterruptedException e) {
 			// Do nothing
 		}
+
+		return null; //todo
+	}
+
+	@Override
+	public void measureExposure() {
+		// TODO: 30.04.17
 	}
 
 	@Override
