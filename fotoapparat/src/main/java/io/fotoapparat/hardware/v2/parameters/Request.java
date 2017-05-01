@@ -138,7 +138,11 @@ class Request {
     }
 
     private void cancelPrecaptureExposure() {
-        if (!cancelPrecaptureExposure || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (!cancelPrecaptureExposure) {
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return;
         }
 

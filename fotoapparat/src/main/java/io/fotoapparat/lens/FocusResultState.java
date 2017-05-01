@@ -3,26 +3,23 @@ package io.fotoapparat.lens;
 /**
  * The result of an attempt to lock the focus.
  */
-public enum FocusResultState {
+public class FocusResultState {
 
     /**
-     * The camera's lens does not support focus operation.
+     * {@code True} if the camera succeeded to lock the focus.
      */
-    NOT_SUPPORTED_OPERATION,
-
+    public final boolean succeeded;
     /**
-     * The camera failed to lock the focus.
+     * {@code True} if the camera needs to perform an exposure measurement.
      */
-    FAILURE,
+    public final boolean needsExposureMeasurement;
 
-    /**
-     * The camera succeeded to lock the focus.
-     */
-    SUCCESS,
+    public FocusResultState(boolean succeeded, boolean needsExposureMeasurement) {
+        this.succeeded = succeeded;
+        this.needsExposureMeasurement = needsExposureMeasurement;
+    }
 
-    /**
-     * The camera succeeded to lock the focus but needs to perform an exposure measurement.
-     */
-    SUCCESS_NEEDS_EXPOSURE_MEASUREMENT
-
+    public static FocusResultState none() {
+        return new FocusResultState(false, false);
+    }
 }

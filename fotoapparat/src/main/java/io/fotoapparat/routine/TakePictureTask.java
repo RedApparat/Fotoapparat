@@ -7,9 +7,6 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.lens.FocusResultState;
 import io.fotoapparat.photo.Photo;
 
-import static io.fotoapparat.lens.FocusResultState.FAILURE;
-import static io.fotoapparat.lens.FocusResultState.SUCCESS_NEEDS_EXPOSURE_MEASUREMENT;
-
 /**
  * Takes photo and returns result as {@link Photo}.
  */
@@ -21,14 +18,14 @@ class TakePictureTask extends FutureTask<Photo> {
             public Photo call() throws Exception {
 
                 int focusAttempts = 0;
-                FocusResultState focusResultState = FAILURE;
+                FocusResultState focusResultState = FocusResultState.none();
 
-                while (focusAttempts < 3 && focusResultState == FAILURE) {
+                while (focusAttempts < 3 && !focusResultState.succeeded) {
                     focusResultState = cameraDevice.autoFocus();
                     focusAttempts++;
                 }
 
-                if (focusResultState == SUCCESS_NEEDS_EXPOSURE_MEASUREMENT) {
+                if (focusResultState.needsExposureMeasurement) {
                     cameraDevice.measureExposure();
                 }
 

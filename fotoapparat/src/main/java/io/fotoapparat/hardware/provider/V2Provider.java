@@ -94,10 +94,12 @@ public class V2Provider implements CameraProvider {
 
         LensOperationsFactory lensOperationsFactory = new LensOperationsFactory(
                 sessionManager,
-                captureRequestFactory
+                captureRequestFactory,
+                orientationManager
         );
 
         FocusExecutor focusExecutor = new FocusExecutor(
+                parametersProvider,
                 lensOperationsFactory
         );
         ExposureGatheringExecutor exposureGatheringExecutor = new ExposureGatheringExecutor(
@@ -105,8 +107,7 @@ public class V2Provider implements CameraProvider {
         );
         CaptureExecutor captureExecutor = new CaptureExecutor(
                 lensOperationsFactory,
-                stillSurfaceReader,
-                orientationManager
+                stillSurfaceReader
         );
 
         return new Camera2(
