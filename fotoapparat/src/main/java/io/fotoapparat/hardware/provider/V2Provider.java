@@ -41,7 +41,8 @@ public class V2Provider implements CameraProvider {
     public CameraDevice get(Logger logger) {
         CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
         AvailableLensPositionsProvider availableLensPositionsProvider = new V2AvailableLensPositionProvider(
-                context);
+                context
+        );
 
         CameraSelector cameraSelector = new CameraSelector(manager);
 
@@ -50,9 +51,11 @@ public class V2Provider implements CameraProvider {
                 cameraSelector
         );
 
-        OrientationManager orientationManager = new OrientationManager(cameraConnection);
-
         ParametersProvider parametersProvider = new ParametersProvider();
+
+        OrientationManager orientationManager = new OrientationManager(
+                cameraConnection
+        );
 
         TextureManager textureManager = new TextureManager(
                 orientationManager,

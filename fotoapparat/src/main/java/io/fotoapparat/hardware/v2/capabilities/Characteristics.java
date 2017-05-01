@@ -3,6 +3,7 @@ package io.fotoapparat.hardware.v2.capabilities;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraMetadata;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -34,6 +35,15 @@ public class Characteristics {
         }
 
         return sizesSet;
+    }
+
+    /**
+     * Whether this camera's lens is facing the front side, relatively the device's screen.
+     *
+     * @return {@code true} if the camera's lens is facing front.
+     */
+    public boolean isFrontFacingLens() {
+        return cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) == CameraMetadata.LENS_FACING_FRONT;
     }
 
     /**

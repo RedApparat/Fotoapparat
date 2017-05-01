@@ -29,6 +29,19 @@ public class CharacteristicsTest {
     Characteristics testee;
 
     @Test
+    public void isFrontFacingLens() throws Exception {
+        // Given
+        given(cameraCharacteristics.get(CameraCharacteristics.LENS_FACING))
+                .willReturn(CameraMetadata.LENS_FACING_FRONT);
+
+        // When
+        boolean flashAvailable = testee.isFrontFacingLens();
+
+        // Then
+        assertTrue(flashAvailable);
+    }
+
+    @Test
     public void isFlashAvailable() throws Exception {
         // Given
         given(cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE))

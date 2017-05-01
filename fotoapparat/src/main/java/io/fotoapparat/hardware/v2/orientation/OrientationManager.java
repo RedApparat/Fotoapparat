@@ -44,9 +44,12 @@ public class OrientationManager implements OrientationOperator {
      * @return The clockwise rotation angle in degrees, relative to the orientation to the camera,
      * that the JPEG picture needs to be rotated by, to be viewed upright.
      */
-    @SuppressWarnings("ConstantConditions")
-    public Integer getSensorOrientation() {
-        return (cameraConnection.getCharacteristics().getSensorOrientation() - orientation + 360) % 360;
+    public int getSensorOrientation() {
+        Characteristics characteristics = cameraConnection.getCharacteristics();
+
+        int orientation = characteristics.isFrontFacingLens() ? this.orientation : -this.orientation;
+
+        return (characteristics.getSensorOrientation() + orientation + 360) % 360;
     }
 
     /**
