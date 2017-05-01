@@ -24,7 +24,7 @@ class FileLogger implements Logger {
             writer.write(message + "\n");
             writer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            // Do nothing
         }
     }
 
