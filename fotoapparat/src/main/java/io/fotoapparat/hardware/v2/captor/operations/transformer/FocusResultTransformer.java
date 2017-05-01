@@ -20,11 +20,11 @@ public class FocusResultTransformer implements Transformer<CaptureResult, FocusR
         if (autoFocusState != null && isFocusLocked(autoFocusState)) {
 
             Integer autoExposure = input.get(CaptureResult.CONTROL_AE_STATE);
-            if (autoExposure == null || !isExposureValuesConverged(autoExposure)) {
-                return FocusResultState.SUCCESS_NEEDS_EXPOSURE_MEASUREMENT;
+            if (autoExposure != null && isExposureValuesConverged(autoExposure)) {
+                return FocusResultState.SUCCESS;
             }
 
-            return FocusResultState.SUCCESS;
+            return FocusResultState.SUCCESS_NEEDS_EXPOSURE_MEASUREMENT;
         }
 
         return FocusResultState.FAILURE;

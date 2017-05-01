@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
  * @param <T> the type of the expected result.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-class LensOperation<T> implements Callable<T> {
+public class LensOperation<T> implements Callable<T> {
 
     private final CaptureCallback<T> captureCallback;
 

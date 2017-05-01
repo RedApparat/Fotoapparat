@@ -51,10 +51,10 @@ class CaptureCallback<R> extends CameraCaptureSession.CaptureCallback implements
      * @param <R>            The type of the expected result.
      * @return A new instance of this object.
      */
-    public static <R> CaptureCallback<R> newInstance(CameraCaptureSession captureSession,
-                                                     CaptureRequest request,
-                                                     Handler handler,
-                                                     Transformer<CaptureResult, R> transformer) {
+    static <R> CaptureCallback<R> newInstance(CameraCaptureSession captureSession,
+                                              CaptureRequest request,
+                                              Handler handler,
+                                              Transformer<CaptureResult, R> transformer) {
         return new CaptureCallback<>(
                 captureSession,
                 request,
