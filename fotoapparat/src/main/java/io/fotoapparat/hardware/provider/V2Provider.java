@@ -9,7 +9,8 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.v2.Camera2;
 import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.captor.CapturingRoutine;
-import io.fotoapparat.hardware.v2.captor.FocusRoutine;
+import io.fotoapparat.hardware.v2.captor.executors.FocusExecutor;
+import io.fotoapparat.hardware.v2.captor.operations.LensOperationsFactory;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
@@ -28,92 +29,97 @@ import io.fotoapparat.log.Logger;
  */
 public class V2Provider implements CameraProvider {
 
-	private final Context context;
+    private final Context context;
 
-	public V2Provider(Context context) {
-		this.context = context;
-	}
+    public V2Provider(Context context) {
+        this.context = context;
+    }
 
-	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-	@Override
-	public CameraDevice get(Logger logger) {
-		CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
-		AvailableLensPositionsProvider availableLensPositionsProvider = new V2AvailableLensPositionProvider(context);
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public CameraDevice get(Logger logger) {
+        CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+        AvailableLensPositionsProvider availableLensPositionsProvider = new V2AvailableLensPositionProvider(
+                context);
 
-		CameraSelector cameraSelector = new CameraSelector(manager);
+        CameraSelector cameraSelector = new CameraSelector(manager);
 
-		CameraConnection cameraConnection = new CameraConnection(
-				manager,
-				cameraSelector
-		);
+        CameraConnection cameraConnection = new CameraConnection(
+                manager,
+                cameraSelector
+        );
 
-		OrientationManager orientationManager = new OrientationManager(cameraConnection);
+        OrientationManager orientationManager = new OrientationManager(cameraConnection);
 
-		ParametersProvider parametersProvider = new ParametersProvider();
+        ParametersProvider parametersProvider = new ParametersProvider();
 
-		TextureManager textureManager = new TextureManager(
-				orientationManager,
-				parametersProvider
-		);
+        TextureManager textureManager = new TextureManager(
+                orientationManager,
+                parametersProvider
+        );
 
-		StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(parametersProvider);
-		ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(
-				parametersProvider
-		);
+        StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(parametersProvider);
+        ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(
+                parametersProvider
+        );
 
-		CaptureRequestFactory captureRequestFactory = new CaptureRequestFactory(
-				cameraConnection,
-				stillSurfaceReader,
-				continuousSurfaceReader,
-				textureManager,
-				parametersProvider
-		);
+        CaptureRequestFactory captureRequestFactory = new CaptureRequestFactory(
+                cameraConnection,
+                stillSurfaceReader,
+                continuousSurfaceReader,
+                textureManager,
+                parametersProvider
+        );
 
-		SessionManager sessionManager = new SessionManager(
-				stillSurfaceReader,
-				continuousSurfaceReader,
-				cameraConnection,
-				captureRequestFactory,
-				textureManager
-		);
+        SessionManager sessionManager = new SessionManager(
+                stillSurfaceReader,
+                continuousSurfaceReader,
+                cameraConnection,
+                captureRequestFactory,
+                textureManager
+        );
 
-		CapabilitiesFactory capabilitiesOperator = new CapabilitiesFactory(cameraConnection);
+        CapabilitiesFactory capabilitiesOperator = new CapabilitiesFactory(cameraConnection);
 
-		CapturingRoutine capturingRoutine = new CapturingRoutine(
-				captureRequestFactory,
-				stillSurfaceReader,
-				sessionManager,
-				orientationManager
-		);
+        CapturingRoutine capturingRoutine = new CapturingRoutine(
+                captureRequestFactory,
+                stillSurfaceReader,
+                sessionManager,
+                orientationManager
+        );
 
-		PreviewStream2 previewStream = new PreviewStream2(
-				continuousSurfaceReader,
-				parametersProvider
-		);
+        PreviewStream2 previewStream = new PreviewStream2(
+                continuousSurfaceReader,
+                parametersProvider
+        );
 
-		RendererParametersProvider rendererParametersOperator = new RendererParametersProvider(
-				parametersProvider,
-				orientationManager
-		);
+        RendererParametersProvider rendererParametersOperator = new RendererParametersProvider(
+                parametersProvider,
+                orientationManager
+        );
 
-		FocusRoutine focusRoutine = new FocusRoutine(
-				captureRequestFactory,
-				sessionManager
-		);
+        LensOperationsFactory lensOperationsFactory = new LensOperationsFactory(
+                sessionManager,
+                captureRequestFactory
+        );
 
-		return new Camera2(
-				logger,
-				cameraConnection,
-				sessionManager,
-				textureManager,
-				orientationManager,
-				parametersProvider,
-				capabilitiesOperator,
-				capturingRoutine,
-				previewStream,
-				rendererParametersOperator,
-				focusRoutine,
-				availableLensPositionsProvider
-		);
-	}
+        FocusExecutor focusExecutor = new FocusExecutor(
+                lensOperationsFactory
+        );
+
+        return new Camera2(
+                logger,
+                cameraConnection,
+                sessionManager,
+                textureManager,
+                orientationManager,
+                parametersProvider,
+                capabilitiesOperator,
+                capturingRoutine,
+                previewStream,
+                rendererParametersOperator,
+                focusExecutor,
+                availableLensPositionsProvider
+        );
+    }
 }

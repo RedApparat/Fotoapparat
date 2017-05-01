@@ -19,7 +19,7 @@ import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.RendererParameters;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
-import io.fotoapparat.result.FocusResultState;
+import io.fotoapparat.lens.FocusResultState;
 
 /**
  * Abstraction for camera hardware.

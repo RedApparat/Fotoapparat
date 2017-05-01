@@ -1,4 +1,4 @@
-package io.fotoapparat.result;
+package io.fotoapparat.lens;
 
 /**
  * The result of an attempt to lock the focus.
@@ -8,7 +8,7 @@ public enum FocusResultState {
     /**
      * The camera failed to lock the focus.
      */
-    FAILUTE,
+    FAILURE,
 
     /**
      * The camera succeeded to lock the focus.

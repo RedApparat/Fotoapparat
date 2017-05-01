@@ -23,7 +23,7 @@ import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.RendererParameters;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
-import io.fotoapparat.result.FocusResultState;
+import io.fotoapparat.lens.FocusResultState;
 
 /**
  * Camera hardware driver for v2 {@link Camera2} API.
@@ -130,9 +130,7 @@ public class Camera2 implements CameraDevice {
     public FocusResultState autoFocus() {
         recordMethod();
 
-        autoFocusOperator.autoFocus();
-
-        return null; //todo
+        return autoFocusOperator.autoFocus();
     }
 
     @Override

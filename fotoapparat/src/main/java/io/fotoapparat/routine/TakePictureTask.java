@@ -4,26 +4,26 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
 import io.fotoapparat.hardware.CameraDevice;
+import io.fotoapparat.lens.FocusResultState;
 import io.fotoapparat.photo.Photo;
-import io.fotoapparat.result.FocusResultState;
 
-import static io.fotoapparat.result.FocusResultState.FAILUTE;
-import static io.fotoapparat.result.FocusResultState.SUCCESS_NEEDS_EXPOSURE_MEASUREMENT;
+import static io.fotoapparat.lens.FocusResultState.FAILURE;
+import static io.fotoapparat.lens.FocusResultState.SUCCESS_NEEDS_EXPOSURE_MEASUREMENT;
 
 /**
  * Takes photo and returns result as {@link Photo}.
  */
 class TakePictureTask extends FutureTask<Photo> {
 
-    public TakePictureTask(final CameraDevice cameraDevice) {
+    TakePictureTask(final CameraDevice cameraDevice) {
         super(new Callable<Photo>() {
             @Override
             public Photo call() throws Exception {
 
                 int focusAttempts = 0;
-                FocusResultState focusResultState = FAILUTE;
+                FocusResultState focusResultState = FAILURE;
 
-                while (focusAttempts < 3 && focusResultState == FAILUTE) {
+                while (focusAttempts < 3 && focusResultState == FAILURE) {
                     focusResultState = cameraDevice.autoFocus();
                     focusAttempts++;
                 }

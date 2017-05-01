@@ -1,6 +1,6 @@
 package io.fotoapparat.hardware.operators;
 
-import io.fotoapparat.result.FocusResultState;
+import io.fotoapparat.lens.FocusResultState;
 
 /**
  * Performs auto focus.
