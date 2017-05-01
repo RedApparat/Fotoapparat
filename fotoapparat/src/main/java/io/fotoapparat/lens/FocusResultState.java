@@ -19,7 +19,21 @@ public class FocusResultState {
         this.needsExposureMeasurement = needsExposureMeasurement;
     }
 
+    /**
+     * Creates a new instance which has neither succeeded nor needs exposure measurement.
+     *
+     * @return A new, invalid {@link FocusResultState}
+     */
     public static FocusResultState none() {
         return new FocusResultState(false, false);
+    }
+
+    /**
+     * Creates a new instance which has succeeded but doesn't need exposure measurement.
+     *
+     * @return A new {@link FocusResultState}
+     */
+    public static FocusResultState successNoMeasurement() {
+        return new FocusResultState(true, false);
     }
 }
