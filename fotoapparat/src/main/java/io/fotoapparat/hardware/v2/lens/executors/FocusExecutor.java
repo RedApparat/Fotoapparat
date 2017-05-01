@@ -1,11 +1,11 @@
-package io.fotoapparat.hardware.v2.captor.executors;
+package io.fotoapparat.hardware.v2.lens.executors;
 
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import io.fotoapparat.hardware.operators.AutoFocusOperator;
-import io.fotoapparat.hardware.v2.captor.operations.LensOperation;
-import io.fotoapparat.hardware.v2.captor.operations.LensOperationsFactory;
+import io.fotoapparat.hardware.v2.lens.operations.LensOperation;
+import io.fotoapparat.hardware.v2.lens.operations.LensOperationsFactory;
 import io.fotoapparat.lens.FocusResultState;
 
 /**

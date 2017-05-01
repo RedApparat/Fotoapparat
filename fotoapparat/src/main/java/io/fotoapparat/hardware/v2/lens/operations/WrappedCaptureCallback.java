@@ -1,4 +1,4 @@
-package io.fotoapparat.hardware.v2.captor.operations;
+package io.fotoapparat.hardware.v2.lens.operations;
 
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -22,7 +22,7 @@ import io.fotoapparat.result.transformer.Transformer;
  * @param <R> the type of the expected result.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-class CaptureCallback<R> extends CameraCaptureSession.CaptureCallback implements Callable<R> {
+class WrappedCaptureCallback<R> extends CameraCaptureSession.CaptureCallback implements Callable<R> {
 
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
 
@@ -33,10 +33,10 @@ class CaptureCallback<R> extends CameraCaptureSession.CaptureCallback implements
 
     private R stage;
 
-    private CaptureCallback(CameraCaptureSession captureSession,
-                            CaptureRequest request,
-                            Handler handler,
-                            Transformer<CaptureResult, R> transformer) {
+    private WrappedCaptureCallback(CameraCaptureSession captureSession,
+                                   CaptureRequest request,
+                                   Handler handler,
+                                   Transformer<CaptureResult, R> transformer) {
         this.captureSession = captureSession;
         this.request = request;
         this.handler = handler;
@@ -51,11 +51,11 @@ class CaptureCallback<R> extends CameraCaptureSession.CaptureCallback implements
      * @param <R>            The type of the expected result.
      * @return A new instance of this object.
      */
-    static <R> CaptureCallback<R> newInstance(CameraCaptureSession captureSession,
-                                              CaptureRequest request,
-                                              Handler handler,
-                                              Transformer<CaptureResult, R> transformer) {
-        return new CaptureCallback<>(
+    static <R> WrappedCaptureCallback<R> newInstance(CameraCaptureSession captureSession,
+                                                     CaptureRequest request,
+                                                     Handler handler,
+                                                     Transformer<CaptureResult, R> transformer) {
+        return new WrappedCaptureCallback<>(
                 captureSession,
                 request,
                 handler,

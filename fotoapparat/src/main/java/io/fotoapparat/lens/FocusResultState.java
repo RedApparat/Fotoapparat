@@ -6,6 +6,11 @@ package io.fotoapparat.lens;
 public enum FocusResultState {
 
     /**
+     * The camera's lens does not support focus operation.
+     */
+    NOT_SUPPORTED_OPERATION,
+
+    /**
      * The camera failed to lock the focus.
      */
     FAILURE,

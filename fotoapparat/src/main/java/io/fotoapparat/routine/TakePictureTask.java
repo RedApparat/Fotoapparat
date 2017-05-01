@@ -32,6 +32,7 @@ class TakePictureTask extends FutureTask<Photo> {
                     cameraDevice.measureExposure();
                 }
 
+                // cameraDevice.stopPreview(); // todo can we do it in camera1?
                 Photo photo = cameraDevice.takePicture();
 
                 cameraDevice.startPreview();

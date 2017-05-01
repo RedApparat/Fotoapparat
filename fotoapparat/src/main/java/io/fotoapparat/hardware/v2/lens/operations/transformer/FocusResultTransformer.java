@@ -1,4 +1,4 @@
-package io.fotoapparat.hardware.v2.captor.operations.transformer;
+package io.fotoapparat.hardware.v2.lens.operations.transformer;
 
 import android.hardware.camera2.CaptureResult;
 import android.os.Build;

@@ -54,7 +54,7 @@ public class CaptureRequestFactory {
 		return CaptureRequestBuilder
 				.create(camera, CameraDevice.TEMPLATE_PREVIEW)
 				.into(viewSurface, frameSurface)
-//				.flash(flash)
+//				.flash(flash) // FIXME: 01.05.17 need?
 				.build();
 	}
 
@@ -78,7 +78,6 @@ public class CaptureRequestFactory {
 				.triggerAutoFocus(true)
 				.triggerPrecaptureExposure(triggerAutoExposure)
 				.build();
-
 	}
 
 	/**
@@ -87,7 +86,7 @@ public class CaptureRequestFactory {
 	 * @return The camera request.
 	 * @throws CameraAccessException If the camera device has been disconnected.
 	 */
-	public CaptureRequest createPrecaptureRequest() throws CameraAccessException {
+	public CaptureRequest createExposureGatheringRequest() throws CameraAccessException {
 
 		CameraDevice camera = cameraConnection.getCamera();
 		Surface surface = textureManager.getSurface();

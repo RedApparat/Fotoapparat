@@ -8,10 +8,11 @@ import android.support.annotation.RequiresApi;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.v2.Camera2;
 import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
-import io.fotoapparat.hardware.v2.captor.CapturingRoutine;
-import io.fotoapparat.hardware.v2.captor.executors.FocusExecutor;
-import io.fotoapparat.hardware.v2.captor.operations.LensOperationsFactory;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
+import io.fotoapparat.hardware.v2.lens.executors.CaptureExecutor;
+import io.fotoapparat.hardware.v2.lens.executors.ExposureGatheringExecutor;
+import io.fotoapparat.hardware.v2.lens.executors.FocusExecutor;
+import io.fotoapparat.hardware.v2.lens.operations.LensOperationsFactory;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
@@ -81,13 +82,6 @@ public class V2Provider implements CameraProvider {
 
         CapabilitiesFactory capabilitiesOperator = new CapabilitiesFactory(cameraConnection);
 
-        CapturingRoutine capturingRoutine = new CapturingRoutine(
-                captureRequestFactory,
-                stillSurfaceReader,
-                sessionManager,
-                orientationManager
-        );
-
         PreviewStream2 previewStream = new PreviewStream2(
                 continuousSurfaceReader,
                 parametersProvider
@@ -106,6 +100,14 @@ public class V2Provider implements CameraProvider {
         FocusExecutor focusExecutor = new FocusExecutor(
                 lensOperationsFactory
         );
+        ExposureGatheringExecutor exposureGatheringExecutor = new ExposureGatheringExecutor(
+                lensOperationsFactory
+        );
+        CaptureExecutor captureExecutor = new CaptureExecutor(
+                lensOperationsFactory,
+                stillSurfaceReader,
+                orientationManager
+        );
 
         return new Camera2(
                 logger,
@@ -115,10 +117,11 @@ public class V2Provider implements CameraProvider {
                 orientationManager,
                 parametersProvider,
                 capabilitiesOperator,
-                capturingRoutine,
                 previewStream,
                 rendererParametersOperator,
                 focusExecutor,
+                exposureGatheringExecutor,
+                captureExecutor,
                 availableLensPositionsProvider
         );
     }
