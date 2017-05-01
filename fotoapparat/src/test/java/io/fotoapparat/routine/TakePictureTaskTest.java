@@ -9,11 +9,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.hardware.CameraDevice;
+import io.fotoapparat.lens.FocusResultState;
 import io.fotoapparat.photo.Photo;
 
-import static io.fotoapparat.lens.FocusResultState.FAILURE;
-import static io.fotoapparat.lens.FocusResultState.SUCCESS;
-import static io.fotoapparat.lens.FocusResultState.SUCCESS_NEEDS_EXPOSURE_MEASUREMENT;
 import static io.fotoapparat.test.TestUtils.resultOf;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -41,7 +39,7 @@ public class TakePictureTaskTest {
     public void noFocusAfter3Attempts_takePicture() throws Exception {
         // Given
         given(cameraDevice.autoFocus())
-                .willReturn(FAILURE);
+                .willReturn(new FocusResultState(false, true));
 
         // When
         Photo result = resultOf(testee);
@@ -59,7 +57,7 @@ public class TakePictureTaskTest {
     public void exposureMeasurementRequired_takePhoto() throws Exception {
         // Given
         given(cameraDevice.autoFocus())
-                .willReturn(SUCCESS_NEEDS_EXPOSURE_MEASUREMENT);
+                .willReturn(new FocusResultState(true, true));
 
         // When
         Photo result = resultOf(testee);
@@ -78,7 +76,7 @@ public class TakePictureTaskTest {
     public void takePhoto() throws Exception {
         // Given
         given(cameraDevice.autoFocus())
-                .willReturn(SUCCESS);
+                .willReturn(new FocusResultState(true, false));
 
         // When
         Photo result = resultOf(testee);
