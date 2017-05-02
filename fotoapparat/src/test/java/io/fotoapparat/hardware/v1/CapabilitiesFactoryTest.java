@@ -19,7 +19,6 @@ import io.fotoapparat.parameter.Size;
 
 import static io.fotoapparat.test.TestUtils.asSet;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptySet;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 
@@ -116,7 +115,7 @@ public class CapabilitiesFactoryTest {
 
 		// Then
 		assertEquals(
-				emptySet(),
+				Collections.singleton(Flash.OFF),
 				capabilities.supportedFlashModes()
 		);
 	}

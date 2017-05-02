@@ -29,7 +29,7 @@ public class Parameters {
 
     private void ensureType(Type type, Object value) {
         if (value == null) {
-            return;
+            throw new IllegalArgumentException("Provided " + type.clazz + " value must not be null.");
         }
 
         if (!type.clazz.isInstance(value)) {

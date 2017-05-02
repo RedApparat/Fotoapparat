@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.Set;
 
+import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
@@ -54,16 +55,16 @@ public class ParametersTest {
         // Expect exception
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void putValue_Null() throws Exception {
         // Given
         testee.putValue(Parameters.Type.FLASH, null);
 
         // When
-        Object value = testee.getValue(Parameters.Type.FLASH);
+        testee.getValue(Parameters.Type.FLASH);
 
         // Then
-        assertNull(value);
+        // exception
     }
 
     @Test
@@ -83,7 +84,7 @@ public class ParametersTest {
         // Given
         testee.putValue(Parameters.Type.FOCUS_MODE, FocusMode.AUTO);
         testee.putValue(Parameters.Type.PICTURE_SIZE, new Size(100, 100));
-        testee.putValue(Parameters.Type.FLASH, null);
+        testee.putValue(Parameters.Type.FLASH, Flash.OFF);
 
         // When
         Set<Parameters.Type> result = testee.storedTypes();
@@ -92,7 +93,8 @@ public class ParametersTest {
         assertEquals(
                 asSet(
                         Parameters.Type.FOCUS_MODE,
-                        Parameters.Type.PICTURE_SIZE
+                        Parameters.Type.PICTURE_SIZE,
+                        Parameters.Type.FLASH
                 ),
                 result
         );
