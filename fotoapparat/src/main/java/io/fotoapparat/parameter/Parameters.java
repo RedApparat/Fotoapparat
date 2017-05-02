@@ -29,7 +29,8 @@ public class Parameters {
 
     private void ensureType(Type type, Object value) {
         if (value == null) {
-            throw new IllegalArgumentException("Provided " + type.clazz + " value must not be null.");
+            throw new IllegalArgumentException("Provided " + type.clazz.getSimpleName()
+                    + " value must not be null. Camera does not support the selected configurations.");
         }
 
         if (!type.clazz.isInstance(value)) {
