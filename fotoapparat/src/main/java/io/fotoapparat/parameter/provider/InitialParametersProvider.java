@@ -10,6 +10,8 @@ import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.AspectRatioSelectors;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 
+import static io.fotoapparat.parameter.provider.InitialParametersValidator.validate;
+
 /**
  * Provides initial {@link Parameters} for {@link CameraDevice}.
  */
@@ -45,6 +47,8 @@ public class InitialParametersProvider {
         putPreviewSize(capabilities, parameters);
         putFocusMode(capabilities, parameters);
         putFlash(capabilities, parameters);
+
+        validate(parameters);
 
         return parameters;
     }

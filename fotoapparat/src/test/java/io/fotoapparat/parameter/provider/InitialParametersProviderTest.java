@@ -129,4 +129,16 @@ public class InitialParametersProviderTest {
         );
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void initialParameterMissing() throws Exception {
+        // Given
+        given(flashModeSelector.select(FLASH))
+                .willReturn(null);
+
+        // When
+        Parameters parameters = testee.initialParameters();
+
+        // Then
+        // exception
+    }
 }
