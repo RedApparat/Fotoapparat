@@ -22,11 +22,12 @@ import static io.fotoapparat.log.Loggers.loggers;
 import static io.fotoapparat.parameter.selector.AspectRatioSelectors.standardRatio;
 import static io.fotoapparat.parameter.selector.FlashSelectors.autoFlash;
 import static io.fotoapparat.parameter.selector.FlashSelectors.autoRedEye;
+import static io.fotoapparat.parameter.selector.FlashSelectors.off;
 import static io.fotoapparat.parameter.selector.FlashSelectors.torch;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.continuousFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.fixed;
-import static io.fotoapparat.parameter.selector.LensPositionSelectors.back;
+import static io.fotoapparat.parameter.selector.LensPositionSelectors.front;
 import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 .with(this)
                 .into(cameraView)
                 .photoSize(standardRatio(biggestSize()))
-                .lensPosition(back())
+                .lensPosition(front())
                 .focusMode(firstAvailable(
                         continuousFocus(),
                         autoFocus(),
@@ -64,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 .flash(firstAvailable(
                         autoRedEye(),
                         autoFlash(),
-                        torch()
+                        torch(),
+                        off()
                 ))
                 .frameProcessor(new SampleFrameProcessor())
                 .logger(loggers(

@@ -51,11 +51,11 @@ class PermissionsDelegate {
 
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             noPermissionView.setVisibility(View.GONE);
-            return false;
+            return true;
         }
 
         requestCameraPermission();
         noPermissionView.setVisibility(View.VISIBLE);
-        return true;
+        return false;
     }
 }
