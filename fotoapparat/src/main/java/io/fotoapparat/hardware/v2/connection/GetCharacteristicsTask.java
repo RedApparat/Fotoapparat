@@ -5,8 +5,6 @@ import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
-import java.util.concurrent.Callable;
-
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 
@@ -14,19 +12,19 @@ import io.fotoapparat.hardware.v2.capabilities.Characteristics;
  * Returns the {@link Characteristics} of a selected camera.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-class GetCharacteristicsTask implements Callable<Characteristics> {
+class GetCharacteristicsTask {
 
     private final CameraManager manager;
-    private final String cameraId;
 
-    GetCharacteristicsTask(CameraManager manager,
-                           String cameraId) {
+    GetCharacteristicsTask(CameraManager manager) {
         this.manager = manager;
-        this.cameraId = cameraId;
     }
 
-    @Override
-    public Characteristics call() {
+    /**
+     * @param cameraId The desired camera id to get the {@link Characteristics}.
+     * @return The {@link Characteristics} of a selected camera
+     */
+    public Characteristics execute(String cameraId) {
         try {
             return new Characteristics(
                     manager.getCameraCharacteristics(cameraId)

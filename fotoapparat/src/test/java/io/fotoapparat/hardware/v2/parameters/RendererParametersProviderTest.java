@@ -10,8 +10,6 @@ import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.parameter.RendererParameters;
 import io.fotoapparat.parameter.Size;
 
-import static io.fotoapparat.hardware.v2.capabilities.PreviewSizeInfo.MAX_PREVIEW_HEIGHT;
-import static io.fotoapparat.hardware.v2.capabilities.PreviewSizeInfo.MAX_PREVIEW_WIDTH;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 
@@ -29,7 +27,7 @@ public class RendererParametersProviderTest {
     @Test
     public void getParameters() throws Exception {
         // Given
-        Size size = new Size(MAX_PREVIEW_WIDTH, MAX_PREVIEW_HEIGHT);
+        Size size = new Size(1920, 1080);
         int sensorOrientation = 90;
 
         given(parametersProvider.getPreviewSize())

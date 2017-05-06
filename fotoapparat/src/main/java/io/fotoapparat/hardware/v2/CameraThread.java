@@ -20,7 +20,7 @@ public class CameraThread extends HandlerThread {
         return INSTANCE;
     }
 
-    private CameraThread() {
+    public CameraThread() {
         super("CameraThread");
         start();
     }

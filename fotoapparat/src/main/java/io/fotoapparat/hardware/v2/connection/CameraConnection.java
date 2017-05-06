@@ -6,44 +6,47 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import io.fotoapparat.hardware.operators.ConnectionOperator;
+import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 import io.fotoapparat.hardware.v2.selection.CameraSelector;
 import io.fotoapparat.parameter.LensPosition;
 
 /**
- * A wrapper around {@link CameraDevice.StateCallback} to provide the open
- * camera and its characteristics.
+ * A wrapper around {@link CameraDevice.StateCallback} to open and close a camera.
  */
 @SuppressWarnings("MissingPermission")
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class CameraConnection implements ConnectionOperator {
 
-    private final CameraManager manager;
     private final CameraSelector cameraSelector;
+    private final OpenCameraTask openCameraTask;
+    private final GetCharacteristicsTask getCharacteristicsTask;
 
     private Characteristics characteristics;
     private CameraDevice camera;
     private Listener listener;
 
-    public CameraConnection(CameraManager manager,
-                            CameraSelector cameraSelector) {
-        this.manager = manager;
+    public CameraConnection(CameraSelector cameraSelector,
+                            CameraManager manager,
+                            CameraThread cameraThread) {
         this.cameraSelector = cameraSelector;
+        openCameraTask = new OpenCameraTask(
+                manager,
+                cameraThread
+        );
+
+        getCharacteristicsTask = new GetCharacteristicsTask(
+                manager
+        );
+
     }
 
     @Override
     public void open(LensPosition lensPosition) {
         String cameraId = cameraSelector.findCameraId(lensPosition);
 
-        characteristics = new GetCharacteristicsTask(
-                manager,
-                cameraId
-        ).call();
-
-        camera = new OpenCameraTask(
-                manager,
-                cameraId
-        ).call();
+        characteristics = getCharacteristicsTask.execute(cameraId);
+        camera = openCameraTask.execute(cameraId);
     }
 
     @Override
