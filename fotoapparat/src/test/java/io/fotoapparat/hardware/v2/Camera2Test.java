@@ -10,25 +10,34 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
+import java.util.List;
 
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.hardware.operators.AutoFocusOperator;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
 import io.fotoapparat.hardware.operators.CaptureOperator;
 import io.fotoapparat.hardware.operators.ConnectionOperator;
+import io.fotoapparat.hardware.operators.ExposureMeasurementOperator;
 import io.fotoapparat.hardware.operators.OrientationOperator;
 import io.fotoapparat.hardware.operators.ParametersOperator;
 import io.fotoapparat.hardware.operators.PreviewOperator;
+import io.fotoapparat.hardware.operators.RendererParametersOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
+import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
+import io.fotoapparat.lens.FocusResultState;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.parameter.RendererParameters;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
 
+import static io.fotoapparat.lens.FocusResultState.successNoMeasurement;
 import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -56,6 +65,14 @@ public class Camera2Test {
     CaptureOperator captureOperator;
     @Mock
     PreviewStream previewStream;
+    @Mock
+    AutoFocusOperator autoFocusOperator;
+    @Mock
+    AvailableLensPositionsProvider availableLensPositionsProvider;
+    @Mock
+    RendererParametersOperator rendererParametersOperator;
+    @Mock
+    ExposureMeasurementOperator exposureMeasurementOperator;
 
     @InjectMocks
     Camera2 testee;
@@ -178,4 +195,60 @@ public class Camera2Test {
         verify(logger).log(anyString());
         assertEquals(this.previewStream, previewStream);
     }
+
+    @Test
+    public void autoFocus() throws Exception {
+        // Given
+        given(autoFocusOperator.autoFocus())
+                .willReturn(successNoMeasurement());
+
+        // When
+        FocusResultState resultState = testee.autoFocus();
+
+        // Then
+        verify(logger).log(anyString());
+        assertEquals(successNoMeasurement(), resultState);
+    }
+
+    @Test
+    public void measureExposure() throws Exception {
+        // Given
+
+        // When
+        testee.measureExposure();
+
+        // Then
+        verify(logger).log(anyString());
+        verify(exposureMeasurementOperator).measureExposure();
+    }
+
+    @Test
+    public void getRendererParameters() throws Exception {
+        // Given
+        RendererParameters rendererParameters = new RendererParameters(new Size(1920, 1080), 0);
+        given(rendererParametersOperator.getRendererParameters())
+                .willReturn(rendererParameters);
+
+        // When
+        RendererParameters resultRendererParameters = testee.getRendererParameters();
+
+        // Then
+        verify(logger).log(anyString());
+        assertEquals(rendererParameters, resultRendererParameters);
+    }
+
+    @Test
+    public void getAvailableLensPositions() throws Exception {
+        // Given
+        given(availableLensPositionsProvider.getAvailableLensPositions())
+                .willReturn(singletonList(LensPosition.EXTERNAL));
+
+        // When
+        List<LensPosition> lensPositions = testee.getAvailableLensPositions();
+
+        // Then
+        verify(logger).log(anyString());
+        assertEquals(singletonList(LensPosition.EXTERNAL), lensPositions);
+    }
+
 }

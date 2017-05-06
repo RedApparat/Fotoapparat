@@ -167,6 +167,8 @@ public class Camera2 implements CameraDevice {
 
     @Override
     public List<LensPosition> getAvailableLensPositions() {
+        recordMethod();
+
         return availableLensPositionsProvider.getAvailableLensPositions();
     }
 

@@ -36,4 +36,23 @@ public class FocusResultState {
     public static FocusResultState successNoMeasurement() {
         return new FocusResultState(true, false);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FocusResultState that = (FocusResultState) o;
+
+        if (succeeded != that.succeeded) return false;
+        return needsExposureMeasurement == that.needsExposureMeasurement;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (succeeded ? 1 : 0);
+        result = 31 * result + (needsExposureMeasurement ? 1 : 0);
+        return result;
+    }
 }
