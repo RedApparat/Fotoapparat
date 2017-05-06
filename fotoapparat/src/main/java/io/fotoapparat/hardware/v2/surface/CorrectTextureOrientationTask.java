@@ -5,8 +5,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.TextureView;
 
-import java.util.concurrent.CountDownLatch;
-
 /**
  * Corrects the landscape orientation of the {@link TextureView}.
  */
@@ -71,20 +69,12 @@ class CorrectTextureOrientationTask implements Runnable {
 
         correctRotation(matrix, screenOrientation, centerHorizontal, centerVertical);
 
-        final CountDownLatch latch = new CountDownLatch(1);
         new Handler(Looper.getMainLooper())
                 .post(new Runnable() {
                     @Override
                     public void run() {
                         textureView.setTransform(matrix);
-                        latch.countDown();
                     }
                 });
-
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            // Do nothing
-        }
     }
 }
