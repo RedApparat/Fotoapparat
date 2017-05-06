@@ -133,6 +133,9 @@ compile 'io.fotoapparat.fotoapparat:library:x.y.z'
 
 Camera permission will be automatically added to your `AndroidManifest.xml`. Do not forget to request this permission on Marshmallow and higher.
 
+We are currently working for a stable release, so for now use `-SNAPSHOT` in the version code above.
+
+
 ## Credits
 
 We want to say thanks to [Mark Murphy](https://github.com/commonsguy) for the awesome job he did with [CWAC-Camera](https://github.com/commonsguy/cwac-camera). We were using his library for a couple of years and now we feel that Fotoapparat is a next step in the right direction.
