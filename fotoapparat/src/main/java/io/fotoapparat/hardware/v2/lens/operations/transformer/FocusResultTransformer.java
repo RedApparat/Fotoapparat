@@ -17,10 +17,10 @@ public class FocusResultTransformer implements Transformer<CaptureResult, FocusR
     public FocusResultState transform(CaptureResult input) {
         Integer autoFocusState = input.get(CaptureResult.CONTROL_AF_STATE);
 
-        boolean lockSuceeded = autoFocusState != null && isFocusLocked(autoFocusState);
+        boolean lockSucceeded = autoFocusState != null && isFocusLocked(autoFocusState);
         boolean needsExposureMeasurement = needsExposureMeasurement(input);
 
-        return new FocusResultState(lockSuceeded, needsExposureMeasurement);
+        return new FocusResultState(lockSucceeded, needsExposureMeasurement);
     }
 
     private boolean needsExposureMeasurement(CaptureResult input) {
