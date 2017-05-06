@@ -17,14 +17,14 @@ import io.fotoapparat.preview.PreviewStream;
 public class PreviewStream2 implements PreviewStream,
         OnImageAcquiredObserver.OnFrameAcquiredListener {
 
-    private final OnImageAcquiredObserver surfaceReader;
+    private final OnImageAcquiredObserver imageAcquiredObserver;
     private final ParametersProvider parametersProvider;
 
     private final Set<FrameProcessor> frameProcessors = new LinkedHashSet<>();
 
-    public PreviewStream2(OnImageAcquiredObserver surfaceReader,
+    public PreviewStream2(OnImageAcquiredObserver imageAcquiredObserver,
                           ParametersProvider parametersProvider) {
-        this.surfaceReader = surfaceReader;
+        this.imageAcquiredObserver = imageAcquiredObserver;
         this.parametersProvider = parametersProvider;
     }
 
@@ -49,7 +49,7 @@ public class PreviewStream2 implements PreviewStream,
 
     @Override
     public void start() {
-        surfaceReader.setListener(this);
+        imageAcquiredObserver.setListener(this);
     }
 
     @Override
