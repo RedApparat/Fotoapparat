@@ -8,8 +8,8 @@ import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
-import io.fotoapparat.hardware.v2.surface.ContinuousSurfaceReader;
-import io.fotoapparat.hardware.v2.surface.StillSurfaceReader;
+import io.fotoapparat.hardware.v2.readers.ContinuousSurfaceReader;
+import io.fotoapparat.hardware.v2.readers.StillSurfaceReader;
 import io.fotoapparat.hardware.v2.surface.TextureManager;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;

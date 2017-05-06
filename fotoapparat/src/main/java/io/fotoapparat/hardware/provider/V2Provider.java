@@ -19,9 +19,10 @@ import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.hardware.v2.parameters.RendererParametersProvider;
 import io.fotoapparat.hardware.v2.selection.CameraSelector;
 import io.fotoapparat.hardware.v2.session.SessionManager;
+import io.fotoapparat.hardware.v2.session.SessionProvider;
 import io.fotoapparat.hardware.v2.stream.PreviewStream2;
-import io.fotoapparat.hardware.v2.surface.ContinuousSurfaceReader;
-import io.fotoapparat.hardware.v2.surface.StillSurfaceReader;
+import io.fotoapparat.hardware.v2.readers.ContinuousSurfaceReader;
+import io.fotoapparat.hardware.v2.readers.StillSurfaceReader;
 import io.fotoapparat.hardware.v2.surface.TextureManager;
 import io.fotoapparat.log.Logger;
 
@@ -57,13 +58,13 @@ public class V2Provider implements CameraProvider {
                 cameraConnection
         );
 
-        TextureManager textureManager = new TextureManager(
-                orientationManager,
+        StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(parametersProvider);
+        ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(
                 parametersProvider
         );
 
-        StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(parametersProvider);
-        ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(
+        TextureManager textureManager = new TextureManager(
+                orientationManager,
                 parametersProvider
         );
 
@@ -75,12 +76,17 @@ public class V2Provider implements CameraProvider {
                 parametersProvider
         );
 
-        SessionManager sessionManager = new SessionManager(
+        SessionProvider sessionProvider = new SessionProvider(
                 stillSurfaceReader,
                 continuousSurfaceReader,
                 cameraConnection,
                 captureRequestFactory,
                 textureManager
+        );
+
+        SessionManager sessionManager = new SessionManager(
+                cameraConnection,
+                sessionProvider
         );
 
         CapabilitiesFactory capabilitiesOperator = new CapabilitiesFactory(cameraConnection);

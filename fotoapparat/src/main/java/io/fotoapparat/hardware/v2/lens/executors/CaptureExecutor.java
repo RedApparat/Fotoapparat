@@ -3,7 +3,7 @@ package io.fotoapparat.hardware.v2.lens.executors;
 import io.fotoapparat.hardware.operators.CaptureOperator;
 import io.fotoapparat.hardware.v2.lens.operations.LensOperation;
 import io.fotoapparat.hardware.v2.lens.operations.LensOperationsFactory;
-import io.fotoapparat.hardware.v2.surface.StillSurfaceReader;
+import io.fotoapparat.hardware.v2.readers.StillSurfaceReader;
 import io.fotoapparat.lens.CaptureResultState;
 import io.fotoapparat.photo.Photo;
 

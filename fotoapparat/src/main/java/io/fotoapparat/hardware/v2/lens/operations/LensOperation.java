@@ -1,5 +1,6 @@
 package io.fotoapparat.hardware.v2.lens.operations;
 
+import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.os.Build;
@@ -8,7 +9,6 @@ import android.support.annotation.RequiresApi;
 
 import java.util.concurrent.Callable;
 
-import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.result.transformer.Transformer;
 
 /**
@@ -24,21 +24,21 @@ public class LensOperation<T> implements Callable<T> {
     /**
      * Creates a new lens operation.
      *
-     * @param sessionManager The active session manager.
      * @param request        The desired request to the camera.
      * @param handler        The handler to run the callback from the camera.
      * @param transformer    The transformer which will convert the {@link CaptureResult} into a
      *                       desired result.
+     * @param captureSession The currently open capture session.
      * @param <T>            The type of the desired result.
      * @return The result of this lens operation.
      */
-    public static <T> LensOperation<T> from(SessionManager sessionManager,
-                                            CaptureRequest request,
+    public static <T> LensOperation<T> from(CaptureRequest request,
                                             Handler handler,
-                                            Transformer<CaptureResult, T> transformer) {
+                                            Transformer<CaptureResult, T> transformer,
+                                            CameraCaptureSession captureSession) {
 
         WrappedCaptureCallback<T> wrappedCaptureCallback = WrappedCaptureCallback.newInstance(
-                sessionManager.getCaptureSession(),
+                captureSession,
                 request,
                 handler,
                 transformer
@@ -47,7 +47,7 @@ public class LensOperation<T> implements Callable<T> {
         return new LensOperation<>(wrappedCaptureCallback);
     }
 
-    LensOperation(WrappedCaptureCallback<T> wrappedCaptureCallback) {
+    private LensOperation(WrappedCaptureCallback<T> wrappedCaptureCallback) {
         this.wrappedCaptureCallback = wrappedCaptureCallback;
     }
 

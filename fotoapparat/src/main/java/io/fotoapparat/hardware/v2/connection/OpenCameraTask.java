@@ -1,0 +1,71 @@
+package io.fotoapparat.hardware.v2.connection;
+
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+
+import io.fotoapparat.hardware.CameraException;
+import io.fotoapparat.hardware.v2.CameraThread;
+
+/**
+ * Returns the open {@link CameraDevice}.
+ */
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+@SuppressWarnings("MissingPermission")
+class OpenCameraTask extends CameraDevice.StateCallback implements Callable<CameraDevice> {
+
+    private final CountDownLatch countDownLatch = new CountDownLatch(1);
+    private final CameraManager manager;
+    private final String cameraId;
+    private CameraDevice camera;
+
+    OpenCameraTask(CameraManager manager, String cameraId) {
+        this.manager = manager;
+        this.cameraId = cameraId;
+    }
+
+    @NonNull
+    @Override
+    public CameraDevice call() {
+        try {
+            manager.openCamera(cameraId,
+                    this,
+                    CameraThread
+                            .getInstance()
+                            .createHandler()
+            );
+        } catch (CameraAccessException e) {
+            throw new CameraException(e);
+        }
+
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            // do nothing
+        }
+
+        return camera;
+    }
+
+    @Override
+    public void onOpened(@NonNull CameraDevice camera) {
+        this.camera = camera;
+        countDownLatch.countDown();
+    }
+
+    @Override
+    public void onDisconnected(@NonNull CameraDevice camera) {
+        camera.close();
+    }
+
+    @Override
+    public void onError(@NonNull CameraDevice camera, int error) {
+        camera.close();
+    }
+}

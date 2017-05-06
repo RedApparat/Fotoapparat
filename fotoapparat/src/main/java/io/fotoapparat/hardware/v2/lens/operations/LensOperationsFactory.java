@@ -43,10 +43,10 @@ public class LensOperationsFactory {
         try {
             return LensOperation
                     .from(
-                            sessionManager,
                             captureRequestFactory.createLockRequest(),
                             handler,
-                            new FocusResultTransformer()
+                            new FocusResultTransformer(),
+                            sessionManager.getCaptureSession()
                     );
         } catch (CameraAccessException e) {
             throw new CameraException(e);
@@ -60,10 +60,10 @@ public class LensOperationsFactory {
         try {
             return LensOperation
                     .from(
-                            sessionManager,
                             captureRequestFactory.createExposureGatheringRequest(),
                             handler,
-                            new ExposureResultTransformer()
+                            new ExposureResultTransformer(),
+                            sessionManager.getCaptureSession()
                     );
         } catch (CameraAccessException e) {
             throw new CameraException(e);
@@ -79,10 +79,10 @@ public class LensOperationsFactory {
 
             return LensOperation
                     .from(
-                            sessionManager,
                             captureRequestFactory.createCaptureRequest(sensorOrientation),
                             handler,
-                            new CaptureResultTransformer()
+                            new CaptureResultTransformer(),
+                            sessionManager.getCaptureSession()
                     );
         } catch (CameraAccessException e) {
             throw new CameraException(e);

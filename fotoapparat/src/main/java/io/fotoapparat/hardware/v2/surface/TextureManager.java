@@ -21,6 +21,7 @@ public class TextureManager
     private Surface surface;
     private int screenOrientation;
     private TextureView textureView;
+    private Listener listener;
 
     public TextureManager(OrientationManager orientationManager,
                           ParametersProvider parametersProvider) {
@@ -49,11 +50,16 @@ public class TextureManager
         }
 
         textureView = (TextureView) displaySurface;
+
         surface = new SetupTextureViewRoutine(
                 textureView,
-                parametersProvider.getPreviewSize(),
+                parametersProvider,
                 screenOrientation
         ).call();
+
+        if (listener != null) {
+            listener.onSurfaceAvailable(surface);
+        }
     }
 
     /**
@@ -63,9 +69,33 @@ public class TextureManager
      */
     public Surface getSurface() {
         if (surface == null) {
-            throw new IllegalStateException("Surface not yet available.");
+            throw new IllegalStateException("Target display surface has not been set.");
         }
         return surface;
+    }
+
+    /**
+     * Sets a listener to be notified when a new {@link Surface} is created.
+     *
+     * @param listener the listener to be notified
+     */
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
+    /**
+     * Notifies that a new {@link Surface} for the given display surface ({@link TextureView}) has
+     * been created.
+     **/
+    public interface Listener {
+
+        /**
+         * Called when a new {@link Surface} for the given display surface ({@link TextureView}) has
+         * been created.
+         *
+         * @param surface The surface of the {@link TextureView}.
+         */
+        void onSurfaceAvailable(Surface surface);
     }
 
 }

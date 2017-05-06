@@ -1,4 +1,4 @@
-package io.fotoapparat.hardware.v2.surface;
+package io.fotoapparat.hardware.v2.readers;
 
 import android.graphics.ImageFormat;
 import android.media.Image;

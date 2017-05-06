@@ -6,7 +6,7 @@ import android.view.TextureView;
 
 import java.util.concurrent.Callable;
 
-import io.fotoapparat.parameter.Size;
+import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.view.TextureSizeChangeListener;
 import io.fotoapparat.view.TextureSizeChangeListener.Listener;
 
@@ -16,21 +16,28 @@ import io.fotoapparat.view.TextureSizeChangeListener.Listener;
 class SetupTextureViewRoutine implements Callable<Surface> {
 
     private final TextureView textureView;
-    private final Size previewSize;
+    private final ParametersProvider parametersProvider;
     private final int screenOrientation;
 
-    SetupTextureViewRoutine(TextureView textureView, Size previewSize, int screenOrientation) {
+    SetupTextureViewRoutine(TextureView textureView,
+                            ParametersProvider parametersProvider,
+                            int screenOrientation) {
         this.textureView = textureView;
-        this.previewSize = previewSize;
+        this.parametersProvider = parametersProvider;
         this.screenOrientation = screenOrientation;
     }
 
     @Override
     public Surface call() {
 
-        SurfaceTexture surfaceTexture = new GetSurfaceTextureTask(textureView).call();
+        SurfaceTexture surfaceTexture = new GetSurfaceTextureTask(
+                textureView
+        ).call();
 
-        new SetTextureBufferSizeTask(surfaceTexture, previewSize).run();
+        new SetTextureBufferSizeTask(
+                surfaceTexture,
+                parametersProvider.getPreviewSize()
+        ).run();
 
         new CorrectTextureOrientationTask(
                 textureView,

@@ -1,11 +1,9 @@
-package io.fotoapparat.hardware.v2.surface;
+package io.fotoapparat.hardware.v2.readers;
 
 import android.graphics.ImageFormat;
 import android.media.Image;
 import android.media.ImageReader;
 import android.os.Build;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.annotation.RequiresApi;
 import android.view.Surface;
 

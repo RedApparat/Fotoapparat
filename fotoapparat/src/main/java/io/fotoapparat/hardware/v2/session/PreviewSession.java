@@ -2,6 +2,7 @@ package io.fotoapparat.hardware.v2.session;
 
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CaptureRequest;
 import android.os.Build;
@@ -21,9 +22,10 @@ import io.fotoapparat.hardware.operators.PreviewOperator;
  * It facilitates a {@link SurfaceTexture} to preview the results of the {@link CameraDevice}.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class PreviewSession extends Session implements PreviewOperator {
+class PreviewSession extends Session implements PreviewOperator {
 
     private final CaptureRequest captureRequest;
+    private CameraCaptureSession captureSession;
 
     PreviewSession(CameraDevice camera,
                    CaptureRequest captureRequest,
@@ -36,7 +38,8 @@ public class PreviewSession extends Session implements PreviewOperator {
     @Override
     public void startPreview() {
         try {
-            getCaptureSession().setRepeatingRequest(
+            captureSession = getCaptureSession();
+            captureSession.setRepeatingRequest(
                     captureRequest,
                     null,
                     null
@@ -48,6 +51,11 @@ public class PreviewSession extends Session implements PreviewOperator {
 
     @Override
     public void stopPreview() {
-        getCaptureSession().close();
+        if (captureSession == null) {
+            throw new IllegalStateException(
+                    "Tried to stop preview, but previews has not been yet started."
+            );
+        }
+        captureSession.close();
     }
 }

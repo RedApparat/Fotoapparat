@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.v2.CameraThread;
 
 /**
@@ -19,7 +20,7 @@ import io.fotoapparat.hardware.v2.CameraThread;
  * for a {@link CameraDevice} to provide the opened session synchronously.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class Session extends CameraCaptureSession.StateCallback {
+class Session extends CameraCaptureSession.StateCallback {
 
     private final CountDownLatch sessionLatch = new CountDownLatch(1);
     private final CameraDevice camera;
@@ -83,7 +84,9 @@ public class Session extends CameraCaptureSession.StateCallback {
                             .createHandler()
             );
             sessionLatch.await();
-        } catch (CameraAccessException | InterruptedException e) {
+        } catch (CameraAccessException e) {
+            throw new CameraException(e);
+        } catch (InterruptedException e) {
             // Do nothing
         }
     }
