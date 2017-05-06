@@ -14,6 +14,7 @@ import java.util.List;
 
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.operators.PreviewOperator;
+import io.fotoapparat.hardware.v2.CameraThread;
 
 /**
  * Wrapper around the internal {@link android.hardware.camera2.CameraCaptureSession}
@@ -29,8 +30,9 @@ class PreviewSession extends Session implements PreviewOperator {
 
     PreviewSession(CameraDevice camera,
                    CaptureRequest captureRequest,
-                   List<Surface> surfaces) {
-        super(camera, Collections.unmodifiableList(surfaces));
+                   List<Surface> surfaces,
+                   CameraThread cameraThread) {
+        super(camera, Collections.unmodifiableList(surfaces), cameraThread);
         this.captureRequest = captureRequest;
     }
 

@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -25,15 +24,13 @@ class Session extends CameraCaptureSession.StateCallback {
     private final CountDownLatch sessionLatch = new CountDownLatch(1);
     private final CameraDevice camera;
     private final List<Surface> outputSurfaces;
+    private final CameraThread cameraThread;
     private CameraCaptureSession session;
 
-    Session(CameraDevice camera, Surface captureSurface) {
-        this(camera, Collections.singletonList(captureSurface));
-    }
-
-    Session(CameraDevice camera, List<Surface> outputSurfaces) {
+    Session(CameraDevice camera, List<Surface> outputSurfaces, CameraThread cameraThread) {
         this.camera = camera;
         this.outputSurfaces = outputSurfaces;
+        this.cameraThread = cameraThread;
     }
 
     /**
@@ -79,9 +76,7 @@ class Session extends CameraCaptureSession.StateCallback {
             camera.createCaptureSession(
                     outputSurfaces,
                     this,
-                    CameraThread
-                            .getInstance()
-                            .createHandler()
+                    cameraThread.createHandler()
             );
             sessionLatch.await();
         } catch (CameraAccessException e) {

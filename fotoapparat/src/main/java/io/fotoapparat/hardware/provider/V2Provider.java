@@ -32,6 +32,7 @@ import io.fotoapparat.log.Logger;
  */
 public class V2Provider implements CameraProvider {
 
+    private static final CameraThread CAMERA_THREAD = new CameraThread();
     private final Context context;
 
     public V2Provider(Context context) {
@@ -41,8 +42,6 @@ public class V2Provider implements CameraProvider {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public CameraDevice get(Logger logger) {
-
-        CameraThread cameraThread = new CameraThread();
 
         CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
         AvailableLensPositionsProvider availableLensPositionsProvider = new V2AvailableLensPositionProvider(
@@ -54,7 +53,7 @@ public class V2Provider implements CameraProvider {
         CameraConnection cameraConnection = new CameraConnection(
                 cameraSelector,
                 manager,
-                cameraThread
+                CAMERA_THREAD
         );
 
         ParametersProvider parametersProvider = new ParametersProvider();
@@ -63,9 +62,13 @@ public class V2Provider implements CameraProvider {
                 cameraConnection
         );
 
-        StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(parametersProvider);
+        StillSurfaceReader stillSurfaceReader = new StillSurfaceReader(
+                parametersProvider,
+                CAMERA_THREAD
+        );
         ContinuousSurfaceReader continuousSurfaceReader = new ContinuousSurfaceReader(
-                parametersProvider
+                parametersProvider,
+                CAMERA_THREAD
         );
         TextureManager textureManager = new TextureManager(
                 orientationManager,
@@ -85,7 +88,8 @@ public class V2Provider implements CameraProvider {
                 continuousSurfaceReader,
                 cameraConnection,
                 captureRequestFactory,
-                textureManager
+                textureManager,
+                CAMERA_THREAD
         );
 
         SessionManager sessionManager = new SessionManager(
@@ -108,7 +112,8 @@ public class V2Provider implements CameraProvider {
         LensOperationsFactory lensOperationsFactory = new LensOperationsFactory(
                 sessionManager,
                 captureRequestFactory,
-                orientationManager
+                orientationManager,
+                CAMERA_THREAD
         );
 
         FocusExecutor focusExecutor = new FocusExecutor(

@@ -24,16 +24,16 @@ public class LensOperationsFactory {
     private final SessionManager sessionManager;
     private final CaptureRequestFactory captureRequestFactory;
     private final OrientationManager orientationManager;
-    private final Handler handler = CameraThread
-            .getInstance()
-            .createHandler();
+    private final Handler handler;
 
     public LensOperationsFactory(SessionManager sessionManager,
                                  CaptureRequestFactory captureRequestFactory,
-                                 OrientationManager orientationManager) {
+                                 OrientationManager orientationManager,
+                                 CameraThread cameraThread) {
         this.sessionManager = sessionManager;
         this.captureRequestFactory = captureRequestFactory;
         this.orientationManager = orientationManager;
+        handler = cameraThread.createHandler();
     }
 
     /**

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.fotoapparat.hardware.CameraException;
+import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.readers.ContinuousSurfaceReader;
@@ -26,16 +27,18 @@ public class SessionProvider implements TextureManager.Listener {
     private ContinuousSurfaceReader continuousSurfaceReader;
     private CameraConnection connection;
     private CaptureRequestFactory captureRequestFactory;
+    private CameraThread cameraThread;
 
     public SessionProvider(StillSurfaceReader surfaceReader,
                            ContinuousSurfaceReader continuousSurfaceReader,
                            CameraConnection connection,
                            CaptureRequestFactory captureRequestFactory,
-                           TextureManager textureManager) {
+                           TextureManager textureManager, CameraThread cameraThread) {
         this.surfaceReader = surfaceReader;
         this.continuousSurfaceReader = continuousSurfaceReader;
         this.connection = connection;
         this.captureRequestFactory = captureRequestFactory;
+        this.cameraThread = cameraThread;
         textureManager.setListener(this);
     }
 
@@ -53,7 +56,8 @@ public class SessionProvider implements TextureManager.Listener {
             previewSession = new PreviewSession(
                     camera,
                     previewRequest,
-                    surfaces
+                    surfaces,
+                    cameraThread
             );
         } catch (CameraAccessException e) {
             throw new CameraException(e);

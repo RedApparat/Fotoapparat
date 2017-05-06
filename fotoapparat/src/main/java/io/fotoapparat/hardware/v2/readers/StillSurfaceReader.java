@@ -20,11 +20,13 @@ import io.fotoapparat.parameter.Size;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class StillSurfaceReader {
 
+    private final CameraThread cameraThread;
     private final ParametersProvider parametersProvider;
     private ImageReader imageReader;
 
-    public StillSurfaceReader(ParametersProvider parametersProvider) {
+    public StillSurfaceReader(ParametersProvider parametersProvider, CameraThread cameraThread) {
         this.parametersProvider = parametersProvider;
+        this.cameraThread = cameraThread;
     }
 
     /**
@@ -45,7 +47,7 @@ public class StillSurfaceReader {
      * @return the Image as byte array.
      */
     public byte[] getPhotoBytes() {
-        ImageCaptureAction imageCaptureAction = new ImageCaptureAction(imageReader);
+        ImageCaptureAction imageCaptureAction = new ImageCaptureAction(imageReader, cameraThread);
 
         return imageCaptureAction.getPhoto();
     }
@@ -69,13 +71,11 @@ public class StillSurfaceReader {
         private final ImageReader imageReader;
         private byte[] bytes;
 
-        private ImageCaptureAction(ImageReader imageReader) {
+        private ImageCaptureAction(ImageReader imageReader, CameraThread cameraThread) {
             this.imageReader = imageReader;
             imageReader.setOnImageAvailableListener(
                     this,
-                    CameraThread
-                            .getInstance()
-                            .createHandler()
+                    cameraThread.createHandler()
             );
         }
 
