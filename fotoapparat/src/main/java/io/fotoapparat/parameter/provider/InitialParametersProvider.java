@@ -10,13 +10,12 @@ import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.AspectRatioSelectors;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 
-import static io.fotoapparat.parameter.provider.InitialParametersValidator.validate;
-
 /**
  * Provides initial {@link Parameters} for {@link CameraDevice}.
  */
 public class InitialParametersProvider {
 
+    private final InitialParametersValidator parametersValidator;
     private final CapabilitiesOperator capabilitiesOperator;
     private final SelectorFunction<Size> photoSizeSelector;
     private final SelectorFunction<Size> previewSizeSelector;
@@ -27,12 +26,14 @@ public class InitialParametersProvider {
                                      SelectorFunction<Size> photoSizeSelector,
                                      SelectorFunction<Size> previewSizeSelector,
                                      SelectorFunction<FocusMode> focusModeSelector,
-                                     SelectorFunction<Flash> flashSelector) {
+                                     SelectorFunction<Flash> flashSelector,
+                                     InitialParametersValidator parametersValidator) {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
         this.previewSizeSelector = previewSizeSelector;
         this.focusModeSelector = focusModeSelector;
         this.flashSelector = flashSelector;
+        this.parametersValidator = parametersValidator;
     }
 
     /**
@@ -48,7 +49,7 @@ public class InitialParametersProvider {
         putFocusMode(capabilities, parameters);
         putFlash(capabilities, parameters);
 
-        validate(parameters);
+        parametersValidator.validate(parameters);
 
         return parameters;
     }

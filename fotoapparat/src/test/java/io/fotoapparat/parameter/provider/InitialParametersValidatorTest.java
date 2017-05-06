@@ -2,6 +2,9 @@ package io.fotoapparat.parameter.provider;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
@@ -13,9 +16,13 @@ import static io.fotoapparat.parameter.Parameters.Type.FOCUS_MODE;
 import static io.fotoapparat.parameter.Parameters.Type.PICTURE_SIZE;
 import static io.fotoapparat.parameter.Parameters.Type.PREVIEW_SIZE;
 
+@RunWith(MockitoJUnitRunner.class)
 public class InitialParametersValidatorTest {
 
     private Parameters parameters = new Parameters();
+
+    @InjectMocks
+    InitialParametersValidator testee;
 
     @Before
     public void setUp() throws Exception {
@@ -31,7 +38,7 @@ public class InitialParametersValidatorTest {
         parameters.putValue(PICTURE_SIZE, null);
 
         // When
-        InitialParametersValidator.validate(parameters);
+        testee.validate(parameters);
 
         // Then
         // exception
@@ -43,7 +50,7 @@ public class InitialParametersValidatorTest {
         parameters.putValue(PREVIEW_SIZE, null);
 
         // When
-        InitialParametersValidator.validate(parameters);
+        testee.validate(parameters);
 
         // Then
         // exception
@@ -55,7 +62,7 @@ public class InitialParametersValidatorTest {
         parameters.putValue(FOCUS_MODE, null);
 
         // When
-        InitialParametersValidator.validate(parameters);
+        testee.validate(parameters);
 
         // Then
         // exception
@@ -67,7 +74,7 @@ public class InitialParametersValidatorTest {
         parameters.putValue(FLASH, null);
 
         // When
-        InitialParametersValidator.validate(parameters);
+        testee.validate(parameters);
 
         // Then
         // exception
