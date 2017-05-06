@@ -19,8 +19,8 @@ import io.fotoapparat.parameter.LensPosition;
 public class CameraConnection implements ConnectionOperator {
 
     private final CameraSelector cameraSelector;
-    private final OpenCameraTask openCameraTask;
-    private final GetCharacteristicsTask getCharacteristicsTask;
+    private final CameraManager manager;
+    private final CameraThread cameraThread;
 
     private Characteristics characteristics;
     private CameraDevice camera;
@@ -30,23 +30,22 @@ public class CameraConnection implements ConnectionOperator {
                             CameraManager manager,
                             CameraThread cameraThread) {
         this.cameraSelector = cameraSelector;
-        openCameraTask = new OpenCameraTask(
-                manager,
-                cameraThread
-        );
-
-        getCharacteristicsTask = new GetCharacteristicsTask(
-                manager
-        );
-
+        this.manager = manager;
+        this.cameraThread = cameraThread;
     }
 
     @Override
     public void open(LensPosition lensPosition) {
         String cameraId = cameraSelector.findCameraId(lensPosition);
 
-        characteristics = getCharacteristicsTask.execute(cameraId);
-        camera = openCameraTask.execute(cameraId);
+        characteristics = new GetCharacteristicsTask(
+                manager
+        ).execute(cameraId);
+
+        camera = new OpenCameraTask(
+                manager,
+                cameraThread
+        ).execute(cameraId);
     }
 
     @Override
