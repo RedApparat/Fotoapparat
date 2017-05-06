@@ -1,6 +1,7 @@
 package io.fotoapparat.hardware.v2.session;
 
 import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CaptureRequest;
 import android.view.Surface;
@@ -65,8 +66,8 @@ public class SessionManager implements PreviewOperator, CameraConnection.Listene
                     Arrays.asList(previewSurface, captureSurface, frameSurface)
             );
 
-            previewSession.startPreview();
             session = previewSession;
+            previewSession.startPreview();
         } catch (CameraAccessException e) {
             throw new CameraException(e);
         }
@@ -82,14 +83,14 @@ public class SessionManager implements PreviewOperator, CameraConnection.Listene
     /**
      * @return the currently opened capture session of the camera
      */
-    public Session getCaptureSession() {
+    public CameraCaptureSession getCaptureSession() {
         if (session == null) {
 
             CameraDevice camera = connection.getCamera();
             Surface captureSurface = surfaceReader.getSurface();
             session = new Session(camera, captureSurface);
         }
-        return session;
+        return session.getCaptureSession();
     }
 
 }

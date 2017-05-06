@@ -38,7 +38,7 @@ public class LensOperation<T> implements Callable<T> {
                                             Transformer<CaptureResult, T> transformer) {
 
         WrappedCaptureCallback<T> wrappedCaptureCallback = WrappedCaptureCallback.newInstance(
-                sessionManager.getCaptureSession().getCaptureSession(),
+                sessionManager.getCaptureSession(),
                 request,
                 handler,
                 transformer

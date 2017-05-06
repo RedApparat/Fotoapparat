@@ -5,22 +5,19 @@ import android.view.TextureView;
 
 /**
  * This listener can be used to be notified when the {@link SurfaceTexture}
- * has a change in its state.
+ * has a change in its size.
  */
-public class TextureListener implements TextureView.SurfaceTextureListener {
+public class TextureSizeChangeListener implements TextureView.SurfaceTextureListener {
 
     private Listener listener;
 
-    public TextureListener(Listener listener) {
+    public TextureSizeChangeListener(Listener listener) {
         this.listener = listener;
     }
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        if (listener != null) {
-            listener.onSurfaceAvailable(surface);
-            listener.onTextureSizeChanged(width, height);
-        }
+        // Do nothing
     }
 
     @Override
@@ -45,17 +42,9 @@ public class TextureListener implements TextureView.SurfaceTextureListener {
 
     /**
      * Listener to be used when the {@link SurfaceTexture}
-     * has a change in its availability and size.
+     * has a change in its size.
      */
     public interface Listener {
-
-        /**
-         * Invoked when a {@link TextureView}'s SurfaceTexture is ready for use.
-         *
-         * @param surface The surface returned by
-         *                {@link android.view.TextureView#getSurfaceTexture()}
-         */
-        void onSurfaceAvailable(SurfaceTexture surface);
 
         /**
          * Invoked when the {@link SurfaceTexture}'s size has changed.
