@@ -18,6 +18,7 @@ import io.fotoapparat.parameter.selector.SelectorFunction;
 
 import static io.fotoapparat.test.TestUtils.asSet;
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -48,6 +49,8 @@ public class InitialParametersProviderTest {
     SelectorFunction<FocusMode> focusModeSelector;
     @Mock
     SelectorFunction<Flash> flashModeSelector;
+    @Mock
+    InitialParametersValidator initialParametersValidator;
 
     InitialParametersProvider testee;
 
@@ -58,7 +61,8 @@ public class InitialParametersProviderTest {
                 photoSizeSelector,
                 previewSizeSelector,
                 focusModeSelector,
-                flashModeSelector
+                flashModeSelector,
+                initialParametersValidator
         );
 
         given(cameraDevice.getCapabilities())
@@ -129,4 +133,14 @@ public class InitialParametersProviderTest {
         );
     }
 
+    @Test
+    public void parameterValidation() throws Exception {
+        // Given
+
+        // When
+        testee.initialParameters();
+
+        // Then
+        verify(initialParametersValidator).validate(any(Parameters.class));
+    }
 }

@@ -71,7 +71,7 @@ public class CapabilitiesFactory {
 		List<String> supportedFlashModes = parameters.getSupportedFlashModes();
 		return supportedFlashModes != null
 				? supportedFlashModes
-				: Collections.<String>emptyList();
+				: Collections.singletonList(Camera.Parameters.FLASH_MODE_OFF);
 	}
 
 	private Set<FocusMode> extractFocusModes(Camera.Parameters parameters) {
