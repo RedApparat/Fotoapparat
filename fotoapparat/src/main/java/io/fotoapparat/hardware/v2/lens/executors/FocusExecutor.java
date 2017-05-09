@@ -7,7 +7,7 @@ import io.fotoapparat.hardware.operators.AutoFocusOperator;
 import io.fotoapparat.hardware.v2.lens.operations.LensOperation;
 import io.fotoapparat.hardware.v2.lens.operations.LensOperationsFactory;
 import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
-import io.fotoapparat.lens.FocusResultState;
+import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.parameter.Flash;
 
 /**
@@ -24,20 +24,20 @@ public class FocusExecutor implements AutoFocusOperator {
         this.lensOperationsFactory = lensOperationsFactory;
     }
 
-    private static FocusResultState forceExposureMetering(FocusResultState focusResultState) {
-        return new FocusResultState(focusResultState.succeeded, true);
+    private static FocusResult forceExposureMetering(FocusResult focusResult) {
+        return new FocusResult(focusResult.succeeded, true);
     }
 
     @Override
-    public FocusResultState autoFocus() {
-        LensOperation<FocusResultState> lensOperation = lensOperationsFactory.createLockFocusOperation();
-        FocusResultState focusResultState = lensOperation.call();
+    public FocusResult autoFocus() {
+        LensOperation<FocusResult> lensOperation = lensOperationsFactory.createLockFocusOperation();
+        FocusResult focusResult = lensOperation.call();
 
         if (parametersProvider.getFlash() == Flash.ON) {
-            return forceExposureMetering(focusResultState);
+            return forceExposureMetering(focusResult);
         }
 
-        return focusResultState;
+        return focusResult;
     }
 
 }

@@ -17,7 +17,7 @@ import io.fotoapparat.hardware.orientation.OrientationUtils;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.provider.V1AvailableLensPositionProvider;
 import io.fotoapparat.hardware.v1.capabilities.CapabilitiesFactory;
-import io.fotoapparat.lens.FocusResultState;
+import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
@@ -262,7 +262,7 @@ public class Camera1 implements CameraDevice {
     }
 
     @Override
-    public FocusResultState autoFocus() {
+    public FocusResult autoFocus() {
         recordMethod();
 
         final CountDownLatch latch = new CountDownLatch(1);
@@ -279,7 +279,7 @@ public class Camera1 implements CameraDevice {
             // Do nothing
         }
 
-        return FocusResultState.successNoMeasurement();
+        return FocusResult.successNoMeasurement();
     }
 
     @Override

@@ -18,7 +18,7 @@ import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.operators.RendererParametersOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
-import io.fotoapparat.lens.FocusResultState;
+import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
@@ -131,7 +131,7 @@ public class Camera2 implements CameraDevice {
     }
 
     @Override
-    public FocusResultState autoFocus() {
+    public FocusResult autoFocus() {
         recordMethod();
 
         return autoFocusOperator.autoFocus();

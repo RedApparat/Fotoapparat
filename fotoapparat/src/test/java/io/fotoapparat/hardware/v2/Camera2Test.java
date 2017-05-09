@@ -24,7 +24,7 @@ import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.operators.RendererParametersOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
-import io.fotoapparat.lens.FocusResultState;
+import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
@@ -35,7 +35,7 @@ import io.fotoapparat.parameter.Size;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
 
-import static io.fotoapparat.lens.FocusResultState.successNoMeasurement;
+import static io.fotoapparat.lens.FocusResult.successNoMeasurement;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertEquals;
@@ -203,7 +203,7 @@ public class Camera2Test {
                 .willReturn(successNoMeasurement());
 
         // When
-        FocusResultState resultState = testee.autoFocus();
+        FocusResult resultState = testee.autoFocus();
 
         // Then
         verify(logger).log(anyString());

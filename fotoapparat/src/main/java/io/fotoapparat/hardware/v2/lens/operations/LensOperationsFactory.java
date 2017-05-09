@@ -13,7 +13,7 @@ import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.lens.CaptureResultState;
 import io.fotoapparat.lens.ExposureResultState;
-import io.fotoapparat.lens.FocusResultState;
+import io.fotoapparat.lens.FocusResult;
 
 /**
  * Factory which provides several lens operations.
@@ -39,7 +39,7 @@ public class LensOperationsFactory {
     /**
      * @return A new operation to lock the lens focus.
      */
-    public LensOperation<FocusResultState> createLockFocusOperation() {
+    public LensOperation<FocusResult> createLockFocusOperation() {
         try {
             return LensOperation
                     .from(

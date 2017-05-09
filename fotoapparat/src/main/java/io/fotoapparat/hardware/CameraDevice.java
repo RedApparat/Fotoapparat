@@ -19,7 +19,7 @@ import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.RendererParameters;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
-import io.fotoapparat.lens.FocusResultState;
+import io.fotoapparat.lens.FocusResult;
 
 /**
  * Abstraction for camera hardware.
@@ -54,7 +54,7 @@ public interface CameraDevice extends CaptureOperator,
     Capabilities getCapabilities();
 
     @Override
-    FocusResultState autoFocus();
+    FocusResult autoFocus();
 
     @Override
     void measureExposure();

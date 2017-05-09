@@ -4,7 +4,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
 import io.fotoapparat.hardware.CameraDevice;
-import io.fotoapparat.lens.FocusResultState;
+import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.photo.Photo;
 
 /**
@@ -18,18 +18,17 @@ class TakePictureTask extends FutureTask<Photo> {
             public Photo call() throws Exception {
 
                 int focusAttempts = 0;
-                FocusResultState focusResultState = FocusResultState.none();
+                FocusResult focusResult = FocusResult.none();
 
-                while (focusAttempts < 3 && !focusResultState.succeeded) {
-                    focusResultState = cameraDevice.autoFocus();
+                while (focusAttempts < 3 && !focusResult.succeeded) {
+                    focusResult = cameraDevice.autoFocus();
                     focusAttempts++;
                 }
 
-                if (focusResultState.needsExposureMeasurement) {
+                if (focusResult.needsExposureMeasurement) {
                     cameraDevice.measureExposure();
                 }
 
-                // cameraDevice.stopPreview(); // todo can we do it in camera1?
                 Photo photo = cameraDevice.takePicture();
 
                 cameraDevice.startPreview();
