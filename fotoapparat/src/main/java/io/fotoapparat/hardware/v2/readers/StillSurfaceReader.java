@@ -80,6 +80,12 @@ public class StillSurfaceReader {
         }
 
         private byte[] getPhoto() {
+            Image image = imageReader.acquireLatestImage();
+            if (image != null) {
+                removeListener();
+                return imageToBytes(image);
+            }
+
             try {
                 countDownLatch.await();
             } catch (InterruptedException e) {
@@ -91,19 +97,25 @@ public class StillSurfaceReader {
 
         @Override
         public void onImageAvailable(ImageReader reader) {
-            Image image = reader.acquireNextImage();
-            Image.Plane[] planes = image.getPlanes();
-            if (planes.length > 0) {
-                ByteBuffer buffer = planes[0].getBuffer();
-                bytes = new byte[buffer.remaining()];
-                buffer.get(bytes);
-
-            }
-            image.close();
+            Image image = reader.acquireLatestImage();
+            bytes = imageToBytes(image);
 
             removeListener();
 
             countDownLatch.countDown();
+        }
+
+        private byte[] imageToBytes(Image image) {
+            Image.Plane[] planes = image.getPlanes();
+
+            ByteBuffer buffer = planes[0].getBuffer();
+
+            byte[] result = new byte[buffer.remaining()];
+            buffer.get(result);
+
+            image.close();
+
+            return result;
         }
 
         private void removeListener() {
