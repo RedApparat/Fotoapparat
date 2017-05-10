@@ -38,9 +38,6 @@ public class OrientationManager implements OrientationOperator {
     }
 
     /**
-     * Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
-     * We have to take that into account and rotate JPEG properly.
-     *
      * @return The clockwise rotation angle in degrees, relative to the orientation to the camera,
      * that the JPEG picture needs to be rotated by, to be viewed upright.
      */
