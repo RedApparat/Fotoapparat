@@ -33,7 +33,7 @@ public class OrientationManagerTest {
         givenLandscapeScreen();
 
         // When
-        int orientation = testee.getSensorOrientation();
+        int orientation = testee.getPhotoOrientation();
 
         // Then
         assertEquals(0, orientation);
@@ -46,10 +46,10 @@ public class OrientationManagerTest {
         givenPortraitScreen();
 
         // When
-        int orientation = testee.getSensorOrientation();
+        int orientation = testee.getPhotoOrientation();
 
         // Then
-        assertEquals(90, orientation);
+        assertEquals(270, orientation);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class OrientationManagerTest {
         givenReverseLandscapeScreen();
 
         // When
-        int orientation = testee.getSensorOrientation();
+        int orientation = testee.getPhotoOrientation();
 
         // Then
         assertEquals(180, orientation);
@@ -72,10 +72,10 @@ public class OrientationManagerTest {
         givenReversePortraitScreen();
 
         // When
-        int orientation = testee.getSensorOrientation();
+        int orientation = testee.getPhotoOrientation();
 
         // Then
-        assertEquals(270, orientation);
+        assertEquals(90, orientation);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class OrientationManagerTest {
         givenReverseLandscapeScreen();
 
         // When
-        int orientation = testee.getSensorOrientation();
+        int orientation = testee.getPhotoOrientation();
 
         // Then
         assertEquals(0, orientation);
@@ -100,10 +100,10 @@ public class OrientationManagerTest {
         givenPortraitScreen();
 
         // When
-        int orientation = testee.getSensorOrientation();
+        int orientation = testee.getPhotoOrientation();
 
         // Then
-        assertEquals(90, orientation);
+        assertEquals(270, orientation);
     }
 
     @Test
@@ -114,7 +114,7 @@ public class OrientationManagerTest {
         givenLandscapeScreen();
 
         // When
-        int orientation = testee.getSensorOrientation();
+        int orientation = testee.getPhotoOrientation();
 
         // Then
         assertEquals(180, orientation);
@@ -128,10 +128,10 @@ public class OrientationManagerTest {
         givenReversePortraitScreen();
 
         // When
-        int orientation = testee.getSensorOrientation();
+        int orientation = testee.getPhotoOrientation();
 
         // Then
-        assertEquals(270, orientation);
+        assertEquals(90, orientation);
     }
 
     private void givenFrontLens() {

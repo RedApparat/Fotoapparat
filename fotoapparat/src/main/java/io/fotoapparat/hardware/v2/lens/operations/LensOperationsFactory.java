@@ -8,7 +8,6 @@ import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.lens.operations.transformer.CaptureResultTransformer;
 import io.fotoapparat.hardware.v2.lens.operations.transformer.ExposureResultTransformer;
 import io.fotoapparat.hardware.v2.lens.operations.transformer.FocusResultTransformer;
-import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
 import io.fotoapparat.hardware.v2.session.SessionManager;
 import io.fotoapparat.lens.CaptureResultState;
@@ -23,16 +22,13 @@ public class LensOperationsFactory {
 
     private final SessionManager sessionManager;
     private final CaptureRequestFactory captureRequestFactory;
-    private final OrientationManager orientationManager;
     private final Handler handler;
 
     public LensOperationsFactory(SessionManager sessionManager,
                                  CaptureRequestFactory captureRequestFactory,
-                                 OrientationManager orientationManager,
                                  CameraThread cameraThread) {
         this.sessionManager = sessionManager;
         this.captureRequestFactory = captureRequestFactory;
-        this.orientationManager = orientationManager;
         handler = cameraThread.createHandler();
     }
 
@@ -75,11 +71,9 @@ public class LensOperationsFactory {
      */
     public LensOperation<CaptureResultState> createCaptureOperation() {
         try {
-            Integer sensorOrientation = orientationManager.getSensorOrientation();
-
             return LensOperation
                     .from(
-                            captureRequestFactory.createCaptureRequest(sensorOrientation),
+                            captureRequestFactory.createCaptureRequest(),
                             handler,
                             new CaptureResultTransformer(),
                             sessionManager.getCaptureSession()

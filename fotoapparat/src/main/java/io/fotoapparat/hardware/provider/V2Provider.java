@@ -10,7 +10,7 @@ import io.fotoapparat.hardware.v2.Camera2;
 import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.capabilities.CapabilitiesFactory;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
-import io.fotoapparat.hardware.v2.lens.executors.CaptureExecutor;
+import io.fotoapparat.hardware.v2.lens.executors.CaptureOperatorImpl;
 import io.fotoapparat.hardware.v2.lens.executors.ExposureGatheringExecutor;
 import io.fotoapparat.hardware.v2.lens.executors.FocusExecutor;
 import io.fotoapparat.hardware.v2.lens.operations.LensOperationsFactory;
@@ -112,7 +112,6 @@ public class V2Provider implements CameraProvider {
         LensOperationsFactory lensOperationsFactory = new LensOperationsFactory(
                 sessionManager,
                 captureRequestFactory,
-                orientationManager,
                 CAMERA_THREAD
         );
 
@@ -123,9 +122,10 @@ public class V2Provider implements CameraProvider {
         ExposureGatheringExecutor exposureGatheringExecutor = new ExposureGatheringExecutor(
                 lensOperationsFactory
         );
-        CaptureExecutor captureExecutor = new CaptureExecutor(
+        CaptureOperatorImpl captureExecutor = new CaptureOperatorImpl(
                 lensOperationsFactory,
-                stillSurfaceReader
+                stillSurfaceReader,
+                orientationManager
         );
 
         return new Camera2(

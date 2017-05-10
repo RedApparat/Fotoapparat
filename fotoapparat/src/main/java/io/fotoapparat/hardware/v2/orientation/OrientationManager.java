@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.fotoapparat.hardware.operators.OrientationOperator;
+import io.fotoapparat.hardware.orientation.OrientationUtils;
 import io.fotoapparat.hardware.v2.capabilities.Characteristics;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 
@@ -38,15 +39,20 @@ public class OrientationManager implements OrientationOperator {
     }
 
     /**
-     * @return The clockwise rotation angle in degrees, relative to the orientation to the camera,
-     * that the JPEG picture needs to be rotated by, to be viewed upright.
+     * @return the clockwise rotation of the photo in degrees, relative to the orientation to the
+     * camera.
      */
-    public int getSensorOrientation() {
+    public int getPhotoOrientation() {
         Characteristics characteristics = cameraConnection.getCharacteristics();
-
-        int orientation = characteristics.isFrontFacingLens() ? this.orientation : -this.orientation;
-
-        return (characteristics.getSensorOrientation() + orientation + 360) % 360;
+//
+//        int orientation = characteristics.isFrontFacingLens() ? this.orientation : -this.orientation;
+//
+//        return (characteristics.getSensorOrientation() + orientation + 360) % 360;
+        return OrientationUtils.computeImageOrientation(
+                orientation,
+                characteristics.getSensorOrientation(),
+                characteristics.isFrontFacingLens()
+        );
     }
 
     /**

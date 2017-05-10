@@ -29,7 +29,6 @@ class CaptureRequestBuilder {
     boolean triggerPrecaptureExposure;
     boolean cancelPrecaptureExposure;
     boolean shouldSetExposureMode;
-    Integer sensorOrientation;
 
     private CaptureRequestBuilder(CameraDevice cameraDevice, @RequestTemplate int requestTemplate) {
         this.cameraDevice = cameraDevice;
@@ -85,11 +84,6 @@ class CaptureRequestBuilder {
 
     CaptureRequestBuilder cancelPrecaptureExposure(boolean cancelPrecaptureExposure) {
         this.cancelPrecaptureExposure = cancelPrecaptureExposure;
-        return this;
-    }
-
-    CaptureRequestBuilder sensorOrientation(Integer sensorOrientation) {
-        this.sensorOrientation = sensorOrientation;
         return this;
     }
 

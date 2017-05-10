@@ -32,7 +32,7 @@ public class RendererParametersProviderTest {
 
         given(parametersProvider.getPreviewSize())
                 .willReturn(size);
-        given(orientationManager.getSensorOrientation())
+        given(orientationManager.getPhotoOrientation())
                 .willReturn(sensorOrientation);
 
         // When

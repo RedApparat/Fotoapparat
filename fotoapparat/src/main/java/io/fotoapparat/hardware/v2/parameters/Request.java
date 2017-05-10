@@ -32,7 +32,6 @@ class Request {
     private final boolean shouldSetExposureMode;
     private final Flash flash;
     private final FocusMode focus;
-    private final Integer sensorOrientation;
     private CaptureRequest.Builder captureRequest;
 
     private Request(CameraDevice cameraDevice,
@@ -42,8 +41,7 @@ class Request {
                     boolean triggerPrecaptureExposure,
                     boolean cancelPrecaptureExposure,
                     Flash flash, boolean shouldSetExposureMode,
-                    FocusMode focus,
-                    Integer sensorOrientation) {
+                    FocusMode focus) {
         this.cameraDevice = cameraDevice;
         this.requestTemplate = requestTemplate;
         this.surfaces = surfaces;
@@ -53,7 +51,6 @@ class Request {
         this.shouldSetExposureMode = shouldSetExposureMode;
         this.flash = flash;
         this.focus = focus;
-        this.sensorOrientation = sensorOrientation;
     }
 
     static CaptureRequest create(CaptureRequestBuilder builder) throws CameraAccessException {
@@ -66,8 +63,8 @@ class Request {
                 builder.cancelPrecaptureExposure,
                 builder.flash,
                 builder.shouldSetExposureMode,
-                builder.focus,
-                builder.sensorOrientation)
+                builder.focus
+        )
                 .build();
     }
 
@@ -91,8 +88,6 @@ class Request {
         setFlash();
         setExposure();
         setFocus();
-
-        setSensorOrientation();
 
         return captureRequest.build();
     }
@@ -182,10 +177,4 @@ class Request {
         captureRequest.set(CaptureRequest.CONTROL_AF_MODE, focusMode);
     }
 
-    private void setSensorOrientation() {
-        if (sensorOrientation == null) {
-            return;
-        }
-        captureRequest.set(CaptureRequest.JPEG_ORIENTATION, sensorOrientation);
-    }
 }

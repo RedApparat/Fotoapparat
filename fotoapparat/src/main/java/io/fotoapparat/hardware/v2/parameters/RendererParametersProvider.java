@@ -23,7 +23,7 @@ public class RendererParametersProvider implements RendererParametersOperator {
     public RendererParameters getRendererParameters() {
         return new RendererParameters(
                 parametersProvider.getPreviewSize(),
-                orientationManager.getSensorOrientation()
+                orientationManager.getPhotoOrientation()
         );
     }
 

@@ -146,14 +146,6 @@ public class Camera1 implements CameraDevice {
                 computeDisplayOrientation(degrees, info)
         );
         previewStream.setFrameOrientation(imageRotation);
-
-        updateImageRotation(imageRotation);
-    }
-
-    private void updateImageRotation(int rotation) {
-        Camera.Parameters parameters = camera.getParameters();
-        parameters.setRotation((360 - rotation) % 360);
-        camera.setParameters(parameters);
     }
 
     private int computeDisplayOrientation(int screenRotationDegrees,

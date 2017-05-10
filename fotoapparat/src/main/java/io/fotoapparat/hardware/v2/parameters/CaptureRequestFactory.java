@@ -106,12 +106,10 @@ public class CaptureRequestFactory {
     }
 
     /**
-     * Creates a request responsible to take a still image.
-     *
-     * @return The camera request.
-     * @throws CameraAccessException If the camera device has been disconnected.
+     * @return a request to take a photo.
+     * @throws CameraAccessException if the camera device has been disconnected.
      */
-    public CaptureRequest createCaptureRequest(Integer sensorOrientation) throws CameraAccessException {
+    public CaptureRequest createCaptureRequest() throws CameraAccessException {
 
         CameraDevice camera = cameraConnection.getCamera();
         Surface surface = surfaceReader.getSurface();
@@ -125,7 +123,6 @@ public class CaptureRequestFactory {
                 .flash(flash)
                 .focus(focus)
                 .setExposureMode(true)
-                .sensorOrientation(sensorOrientation)
                 .build();
     }
 

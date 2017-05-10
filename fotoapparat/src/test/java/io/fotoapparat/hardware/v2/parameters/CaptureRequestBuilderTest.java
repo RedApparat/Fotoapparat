@@ -150,19 +150,6 @@ public class CaptureRequestBuilderTest {
         assertTrue(builder.shouldTriggerAutoFocus);
     }
 
-    @Test
-    public void sensorOrientationIsSet() throws Exception {
-        // Given
-        CaptureRequestBuilder builder = builderWithMandatoryArguments()
-                .sensorOrientation(90);
-
-        // When
-        builder.build();
-
-        // Then
-        assertEquals((Integer) 90, builder.sensorOrientation);
-    }
-
     private CaptureRequestBuilder builderWithMandatoryArguments() {
         return CaptureRequestBuilder
                 .create(cameraDevice, CameraDevice.TEMPLATE_STILL_CAPTURE)
