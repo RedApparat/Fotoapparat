@@ -51,7 +51,7 @@ public class PhotoResult {
      */
     public PendingResult<?> saveToFile(File file) {
         return pendingResult
-                .transform(new SaveToFileTransformer(file));
+                .transform(SaveToFileTransformer.create(file));
     }
 
     /**

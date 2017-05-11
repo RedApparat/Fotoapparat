@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import io.fotoapparat.photo.Photo;
+import io.fotoapparat.util.ExifOrientationWriter;
 
 /**
  * Saves {@link Photo} to file.
@@ -14,12 +15,22 @@ import io.fotoapparat.photo.Photo;
 public class SaveToFileTransformer implements Transformer<Photo, Void> {
 
     private final File file;
+    private final ExifOrientationWriter exifOrientationWriter;
+
+    SaveToFileTransformer(File file,
+                          ExifOrientationWriter exifOrientationWriter) {
+        this.file = file;
+        this.exifOrientationWriter = exifOrientationWriter;
+    }
 
     /**
-     * @param file output file.
+     * @param file Output file.
      */
-    public SaveToFileTransformer(File file) {
-        this.file = file;
+    public static SaveToFileTransformer create(File file) {
+        return new SaveToFileTransformer(
+                file,
+                new ExifOrientationWriter()
+        );
     }
 
     @Override
@@ -28,6 +39,8 @@ public class SaveToFileTransformer implements Transformer<Photo, Void> {
 
         try {
             saveImage(input, outputStream);
+
+            exifOrientationWriter.writeExifOrientation(file, input);
         } catch (IOException e) {
             throw new FileSaveException(e);
         }
