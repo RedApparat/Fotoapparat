@@ -12,7 +12,6 @@ import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.v2.CameraThread;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.parameters.CaptureRequestFactory;
-import io.fotoapparat.hardware.v2.readers.ContinuousSurfaceReader;
 import io.fotoapparat.hardware.v2.readers.StillSurfaceReader;
 import io.fotoapparat.hardware.v2.surface.TextureManager;
 
@@ -24,18 +23,15 @@ public class SessionProvider implements TextureManager.Listener {
 
     private PreviewSession previewSession;
     private StillSurfaceReader surfaceReader;
-    private ContinuousSurfaceReader continuousSurfaceReader;
     private CameraConnection connection;
     private CaptureRequestFactory captureRequestFactory;
     private CameraThread cameraThread;
 
     public SessionProvider(StillSurfaceReader surfaceReader,
-                           ContinuousSurfaceReader continuousSurfaceReader,
                            CameraConnection connection,
                            CaptureRequestFactory captureRequestFactory,
                            TextureManager textureManager, CameraThread cameraThread) {
         this.surfaceReader = surfaceReader;
-        this.continuousSurfaceReader = continuousSurfaceReader;
         this.connection = connection;
         this.captureRequestFactory = captureRequestFactory;
         this.cameraThread = cameraThread;
@@ -47,8 +43,7 @@ public class SessionProvider implements TextureManager.Listener {
         CameraDevice camera = connection.getCamera();
 
         Surface captureSurface = surfaceReader.getSurface();
-        Surface frameSurface = continuousSurfaceReader.getSurface();
-        List<Surface> surfaces = Arrays.asList(surface, captureSurface, frameSurface);
+        List<Surface> surfaces = Arrays.asList(surface, captureSurface);
 
         try {
             CaptureRequest previewRequest = captureRequestFactory.createPreviewRequest();

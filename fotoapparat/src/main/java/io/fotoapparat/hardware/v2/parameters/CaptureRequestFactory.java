@@ -8,7 +8,6 @@ import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
-import io.fotoapparat.hardware.v2.readers.ContinuousSurfaceReader;
 import io.fotoapparat.hardware.v2.readers.StillSurfaceReader;
 import io.fotoapparat.hardware.v2.surface.TextureManager;
 import io.fotoapparat.parameter.Flash;
@@ -21,19 +20,16 @@ import io.fotoapparat.parameter.FocusMode;
 public class CaptureRequestFactory {
 
     private final StillSurfaceReader surfaceReader;
-    private final ContinuousSurfaceReader continuousSurfaceReader;
     private final TextureManager textureManager;
     private final ParametersProvider parametersProvider;
     private final CameraConnection cameraConnection;
 
     public CaptureRequestFactory(CameraConnection cameraConnection,
                                  StillSurfaceReader surfaceReader,
-                                 ContinuousSurfaceReader continuousSurfaceReader,
                                  TextureManager textureManager,
                                  ParametersProvider parametersProvider) {
         this.cameraConnection = cameraConnection;
         this.surfaceReader = surfaceReader;
-        this.continuousSurfaceReader = continuousSurfaceReader;
         this.textureManager = textureManager;
         this.parametersProvider = parametersProvider;
     }
@@ -48,12 +44,11 @@ public class CaptureRequestFactory {
 
         CameraDevice camera = cameraConnection.getCamera();
         Surface viewSurface = textureManager.getSurface();
-        Surface frameSurface = continuousSurfaceReader.getSurface();
         Flash flash = parametersProvider.getFlash();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_PREVIEW)
-                .into(viewSurface, frameSurface)
+                .into(viewSurface)
                 .flash(flash)
                 .build();
     }
