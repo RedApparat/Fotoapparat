@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.hardware.v2.stream.OnImageAcquiredObserver.OnFrameAcquiredListener;
+import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
@@ -24,6 +25,8 @@ public class PreviewStream2Test {
 
     @Mock
     ParametersProvider parametersProvider;
+    @Mock
+    Logger logger;
 
     @Test
     public void acquireFrame() throws Exception {
@@ -42,7 +45,7 @@ public class PreviewStream2Test {
                 listenerReference.set(listener);
                 listenerSet.countDown();
             }
-        }, parametersProvider);
+        }, parametersProvider, logger);
 
         testee.addProcessor(new FrameProcessor() {
             @Override

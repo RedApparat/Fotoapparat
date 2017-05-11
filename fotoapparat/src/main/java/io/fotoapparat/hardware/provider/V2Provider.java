@@ -99,7 +99,8 @@ public class V2Provider implements CameraProvider {
 
         PreviewStream2 previewStream = new PreviewStream2(
                 continuousSurfaceReader,
-                parametersProvider
+                parametersProvider,
+                logger
         );
 
         RendererParametersProvider rendererParametersOperator = new RendererParametersProvider(

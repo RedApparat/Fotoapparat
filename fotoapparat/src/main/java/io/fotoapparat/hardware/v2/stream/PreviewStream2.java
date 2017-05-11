@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
+import io.fotoapparat.log.Logger;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.preview.PreviewStream;
@@ -19,13 +20,16 @@ public class PreviewStream2 implements PreviewStream,
 
     private final OnImageAcquiredObserver imageAcquiredObserver;
     private final ParametersProvider parametersProvider;
+    private final Logger logger;
 
     private final Set<FrameProcessor> frameProcessors = new LinkedHashSet<>();
 
     public PreviewStream2(OnImageAcquiredObserver imageAcquiredObserver,
-                          ParametersProvider parametersProvider) {
+                          ParametersProvider parametersProvider,
+                          Logger logger) {
         this.imageAcquiredObserver = imageAcquiredObserver;
         this.parametersProvider = parametersProvider;
+        this.logger = logger;
     }
 
     @Override
@@ -50,6 +54,8 @@ public class PreviewStream2 implements PreviewStream,
     @Override
     public void start() {
         imageAcquiredObserver.setListener(this);
+
+        logger.log("Frame processors are currently not supported in Camera2. To use them please switch to Camera1.");
     }
 
     @Override
