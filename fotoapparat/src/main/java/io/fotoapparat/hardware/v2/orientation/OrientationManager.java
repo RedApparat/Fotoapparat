@@ -39,15 +39,12 @@ public class OrientationManager implements OrientationOperator {
     }
 
     /**
-     * @return the clockwise rotation of the photo in degrees, relative to the orientation to the
+     * @return The clockwise rotation of the photo in degrees, relative to the orientation to the
      * camera.
      */
     public int getPhotoOrientation() {
         Characteristics characteristics = cameraConnection.getCharacteristics();
-//
-//        int orientation = characteristics.isFrontFacingLens() ? this.orientation : -this.orientation;
-//
-//        return (characteristics.getSensorOrientation() + orientation + 360) % 360;
+
         return OrientationUtils.computeImageOrientation(
                 orientation,
                 characteristics.getSensorOrientation(),
@@ -69,7 +66,7 @@ public class OrientationManager implements OrientationOperator {
 
     /**
      * Notifies that the display orientation has changed.
-     **/
+     */
     public interface Listener {
 
         /**
