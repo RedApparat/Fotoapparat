@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 .into(cameraView)
                 .photoSize(standardRatio(biggestSize()))
                 .lensPosition(firstAvailable(
-//                        front(),
+                        front(),
                         back()
                 ))
                 .focusMode(firstAvailable(
