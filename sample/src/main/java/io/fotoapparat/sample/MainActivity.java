@@ -31,6 +31,7 @@ import static io.fotoapparat.parameter.selector.LensPositionSelectors.back;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.front;
 import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
+import static io.fotoapparat.result.transformer.SizeTransformers.scaled;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 .into(cameraView)
                 .photoSize(standardRatio(biggestSize()))
                 .lensPosition(firstAvailable(
-                        front(),
+//                        front(),
                         back()
                 ))
                 .focusMode(firstAvailable(
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         ));
 
         photoResult
-                .toBitmap()
+                .toBitmap(scaled(0.25f))
                 .whenAvailable(new PendingResult.Callback<BitmapPhoto>() {
                     @Override
                     public void onResult(BitmapPhoto result) {

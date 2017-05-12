@@ -5,10 +5,14 @@ import android.graphics.Bitmap;
 import java.io.File;
 import java.util.concurrent.Future;
 
+import io.fotoapparat.parameter.Size;
 import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.result.transformer.BitmapPhotoTransformer;
 import io.fotoapparat.result.transformer.SaveToFileTransformer;
+import io.fotoapparat.result.transformer.Transformer;
+
+import static io.fotoapparat.result.transformer.SizeTransformers.originalSize;
 
 /**
  * Result of taking the photo.
@@ -34,14 +38,26 @@ public class PhotoResult {
     }
 
     /**
-     * Converts result to {@link Bitmap}.
+     * Converts result to {@link Bitmap} with the same size as original photo.
      *
      * @return result as pending {@link BitmapPhoto} which will be available at some point in the
      * future.
      */
     public PendingResult<BitmapPhoto> toBitmap() {
+        return toBitmap(originalSize());
+    }
+
+    /**
+     * Converts result to {@link Bitmap} of size provided by {@link Transformer}.
+     *
+     * @param sizeTransformer Given the original size of the photo, returns the updated size so that
+     *                        photo will be downscaled, upscaled or unchanged.
+     * @return result as pending {@link BitmapPhoto} which will be available at some point in the
+     * future.
+     */
+    public PendingResult<BitmapPhoto> toBitmap(Transformer<Size, Size> sizeTransformer) {
         return pendingResult
-                .transform(new BitmapPhotoTransformer());
+                .transform(new BitmapPhotoTransformer(sizeTransformer));
     }
 
     /**
