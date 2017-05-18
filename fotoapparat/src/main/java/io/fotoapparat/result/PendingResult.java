@@ -101,6 +101,13 @@ public class PendingResult<T> {
         });
     }
 
+    /**
+     * Alias for {@link #whenAvailable(Callback)}.
+     */
+    public void whenDone(@NonNull final Callback<T> callback) {
+        whenAvailable(callback);
+    }
+
     private void notifyCallbackOnMainThread(final T result,
                                             final Callback<T> callback) {
         MAIN_THREAD_HANDLER.post(new Runnable() {
