@@ -65,7 +65,7 @@ public class PhotoResult {
      *
      * @return pending operation which completes when photo is saved to file.
      */
-    public PendingResult<?> saveToFile(File file) {
+    public PendingResult<Void> saveToFile(File file) {
         return pendingResult
                 .transform(SaveToFileTransformer.create(file));
     }
