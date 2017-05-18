@@ -17,7 +17,7 @@ import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.view.CameraRenderer;
 import io.fotoapparat.view.CameraView;
 
-import static io.fotoapparat.hardware.provider.CameraProviders.defaultProvider;
+import static io.fotoapparat.hardware.provider.CameraProviders.v1;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.continuousFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.fixed;
@@ -33,7 +33,7 @@ import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 public class FotoapparatBuilder {
 
     Context context;
-    CameraProvider cameraProvider;
+    CameraProvider cameraProvider = v1();
     CameraRenderer renderer;
 
     SelectorFunction<LensPosition> lensPositionSelector = firstAvailable(
@@ -56,8 +56,6 @@ public class FotoapparatBuilder {
 
     FotoapparatBuilder(@NonNull Context context) {
         this.context = context;
-
-        cameraProvider = defaultProvider(context);
     }
 
     /**
