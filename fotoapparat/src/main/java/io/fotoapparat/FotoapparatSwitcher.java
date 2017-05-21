@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 /**
  * Switches between different instances of {@link Fotoapparat}. Convenient when you want to allow
  * user to switch between different cameras or configurations.
+ * <p>
+ * This class is not thread safe. Consider using it from a single thread.
  */
 public class FotoapparatSwitcher {
 
