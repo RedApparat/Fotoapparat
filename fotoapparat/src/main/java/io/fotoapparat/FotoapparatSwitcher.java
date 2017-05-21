@@ -1,7 +1,6 @@
 package io.fotoapparat;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 /**
  * Switches between different instances of {@link Fotoapparat}. Convenient when you want to allow
@@ -11,6 +10,22 @@ import android.support.annotation.Nullable;
  */
 public class FotoapparatSwitcher {
 
+    @NonNull
+    private Fotoapparat fotoapparat;
+
+    private boolean started = false;
+
+    private FotoapparatSwitcher(@NonNull Fotoapparat fotoapparat) {
+        this.fotoapparat = fotoapparat;
+    }
+
+    /**
+     * @return {@link FotoapparatSwitcher} with given {@link Fotoapparat} used by default.
+     */
+    public static FotoapparatSwitcher withDefault(@NonNull Fotoapparat fotoapparat) {
+        return new FotoapparatSwitcher(fotoapparat);
+    }
+
     /**
      * Starts {@link Fotoapparat} associated with this switcher. Every new {@link Fotoapparat} will
      * be started automatically until {@link #stop()} is called.
@@ -18,7 +33,9 @@ public class FotoapparatSwitcher {
      * @throws IllegalStateException if switcher is already started.
      */
     public void start() {
-        // TODO
+        fotoapparat.start();
+
+        started = true;
     }
 
     /**
@@ -27,7 +44,9 @@ public class FotoapparatSwitcher {
      * @throws IllegalStateException if switcher is already stopped.
      */
     public void stop() {
-        // TODO
+        fotoapparat.stop();
+
+        started = false;
     }
 
     /**
@@ -39,16 +58,20 @@ public class FotoapparatSwitcher {
      * @throws NullPointerException if given {@link Fotoapparat} is {@code null}.
      */
     public void switchTo(@NonNull Fotoapparat fotoapparat) {
-        // TODO
+        if (started) {
+            this.fotoapparat.stop();
+            fotoapparat.start();
+        }
+
+        this.fotoapparat = fotoapparat;
     }
 
     /**
-     * @return currently used instance of {@link Fotoapparat} or {@code null} if switcher was not
-     * started (or is stopped).
+     * @return currently used instance of {@link Fotoapparat}.
      */
-    @Nullable
+    @NonNull
     public Fotoapparat getCurrentFotoapparat() {
-        return null;    // TODO
+        return fotoapparat;
     }
 
 }
