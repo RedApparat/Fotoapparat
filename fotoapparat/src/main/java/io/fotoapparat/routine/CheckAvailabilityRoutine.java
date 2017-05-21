@@ -23,7 +23,11 @@ public class CheckAvailabilityRoutine {
      * available.
      */
     public boolean isAvailable() {
-        return true;
+        return selectedLensPosition() != null;
+    }
+
+    private LensPosition selectedLensPosition() {
+        return lensPositionSelector.select(cameraDevice.getAvailableLensPositions());
     }
 
 }
