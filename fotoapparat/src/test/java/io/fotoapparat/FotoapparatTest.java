@@ -13,6 +13,7 @@ import io.fotoapparat.photo.Photo;
 import io.fotoapparat.result.CapabilitiesResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.routine.AutoFocusRoutine;
+import io.fotoapparat.routine.CheckAvailabilityRoutine;
 import io.fotoapparat.routine.ConfigurePreviewStreamRoutine;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
@@ -22,6 +23,8 @@ import io.fotoapparat.test.ImmediateExecutor;
 
 import static io.fotoapparat.test.TestUtils.immediateFuture;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -54,6 +57,8 @@ public class FotoapparatTest {
     TakePictureRoutine takePictureRoutine;
     @Mock
     AutoFocusRoutine autoFocusRoutine;
+    @Mock
+    CheckAvailabilityRoutine checkAvailabilityRoutine;
 
     Fotoapparat testee;
 
@@ -67,6 +72,7 @@ public class FotoapparatTest {
                 capabilitiesProvider,
                 takePictureRoutine,
                 autoFocusRoutine,
+                checkAvailabilityRoutine,
                 new ImmediateExecutor()
         );
     }
@@ -212,4 +218,31 @@ public class FotoapparatTest {
         // Then
         // Expect exception
     }
+
+    @Test
+    public void isAvailable_Yes() throws Exception {
+        // Given
+        given(checkAvailabilityRoutine.isAvailable())
+                .willReturn(true);
+
+        // When
+        boolean result = testee.isAvailable();
+
+        // Then
+        assertTrue(result);
+    }
+
+    @Test
+    public void isAvailable_No() throws Exception {
+        // Given
+        given(checkAvailabilityRoutine.isAvailable())
+                .willReturn(false);
+
+        // When
+        boolean result = testee.isAvailable();
+
+        // Then
+        assertFalse(result);
+    }
+
 }
