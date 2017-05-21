@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import java.io.File;
 
 import io.fotoapparat.Fotoapparat;
+import io.fotoapparat.FotoapparatSwitcher;
+import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
@@ -27,8 +29,7 @@ import static io.fotoapparat.parameter.selector.FlashSelectors.torch;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.continuousFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.fixed;
-import static io.fotoapparat.parameter.selector.LensPositionSelectors.back;
-import static io.fotoapparat.parameter.selector.LensPositionSelectors.front;
+import static io.fotoapparat.parameter.selector.LensPositionSelectors.lensPosition;
 import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 import static io.fotoapparat.result.transformer.SizeTransformers.scaled;
@@ -36,9 +37,12 @@ import static io.fotoapparat.result.transformer.SizeTransformers.scaled;
 public class MainActivity extends AppCompatActivity {
 
     private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
-    private Fotoapparat fotoapparat;
     private boolean hasCameraPermission;
     private CameraView cameraView;
+
+    private FotoapparatSwitcher fotoapparatSwitcher;
+    private Fotoapparat frontFotoapparat;
+    private Fotoapparat backFotoapparat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +58,41 @@ public class MainActivity extends AppCompatActivity {
             permissionsDelegate.requestCameraPermission();
         }
 
-        fotoapparat = Fotoapparat
+        frontFotoapparat = createFotoapparat(LensPosition.FRONT);
+        backFotoapparat = createFotoapparat(LensPosition.BACK);
+        fotoapparatSwitcher = FotoapparatSwitcher.withDefault(backFotoapparat);
+
+        cameraView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePicture();
+            }
+        });
+
+        View switchCameraButton = findViewById(R.id.switchCamera);
+        switchCameraButton.setVisibility(
+                canSwitchCameras()
+                        ? View.VISIBLE
+                        : View.GONE
+        );
+        switchCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchCamera();
+            }
+        });
+    }
+
+    private boolean canSwitchCameras() {
+        return frontFotoapparat.isAvailable() == backFotoapparat.isAvailable();
+    }
+
+    private Fotoapparat createFotoapparat(LensPosition position) {
+        return Fotoapparat
                 .with(this)
                 .into(cameraView)
                 .photoSize(standardRatio(biggestSize()))
-                .lensPosition(firstAvailable(
-                        front(),
-                        back()
-                ))
+                .lensPosition(lensPosition(position))
                 .focusMode(firstAvailable(
                         continuousFocus(),
                         autoFocus(),
@@ -79,17 +110,10 @@ public class MainActivity extends AppCompatActivity {
                         fileLogger(this)
                 ))
                 .build();
-
-        cameraView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture();
-            }
-        });
     }
 
     private void takePicture() {
-        PhotoResult photoResult = fotoapparat.takePicture();
+        PhotoResult photoResult = fotoapparatSwitcher.getCurrentFotoapparat().takePicture();
 
         photoResult.saveToFile(new File(
                 getExternalFilesDir("photos"),
@@ -109,11 +133,19 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    private void switchCamera() {
+        if (fotoapparatSwitcher.getCurrentFotoapparat() == frontFotoapparat) {
+            fotoapparatSwitcher.switchTo(backFotoapparat);
+        } else {
+            fotoapparatSwitcher.switchTo(frontFotoapparat);
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
         if (hasCameraPermission) {
-            fotoapparat.start();
+            fotoapparatSwitcher.start();
         }
     }
 
@@ -121,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         if (hasCameraPermission) {
-            fotoapparat.stop();
+            fotoapparatSwitcher.stop();
         }
     }
 
@@ -131,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (permissionsDelegate.resultGranted(requestCode, permissions, grantResults)) {
-            fotoapparat.start();
+            fotoapparatSwitcher.start();
             cameraView.setVisibility(View.VISIBLE);
         }
     }
@@ -140,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void processFrame(Frame frame) {
-            // Do nothing
+            // Perform frame processing, if needed
         }
 
     }
