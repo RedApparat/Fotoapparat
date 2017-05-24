@@ -31,7 +31,11 @@ public class LensPositionSelectors {
         return lensPosition(LensPosition.EXTERNAL);
     }
 
-    private static SelectorFunction<LensPosition> lensPosition(final LensPosition position) {
+    /**
+     * @return {@link SelectorFunction} which provides the given camera if it is available.
+     * Otherwise provides {@code null}.
+     */
+    public static SelectorFunction<LensPosition> lensPosition(final LensPosition position) {
         return Selectors.single(position);
     }
 

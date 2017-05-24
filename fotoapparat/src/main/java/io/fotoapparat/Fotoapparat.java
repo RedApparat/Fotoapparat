@@ -15,6 +15,7 @@ import io.fotoapparat.parameter.provider.InitialParametersValidator;
 import io.fotoapparat.result.CapabilitiesResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.routine.AutoFocusRoutine;
+import io.fotoapparat.routine.CheckAvailabilityRoutine;
 import io.fotoapparat.routine.ConfigurePreviewStreamRoutine;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
@@ -35,6 +36,7 @@ public class Fotoapparat {
     private final CapabilitiesProvider capabilitiesProvider;
     private final TakePictureRoutine takePictureRoutine;
     private final AutoFocusRoutine autoFocusRoutine;
+    private final CheckAvailabilityRoutine checkAvailabilityRoutine;
     private final Executor executor;
 
     private boolean started = false;
@@ -46,6 +48,7 @@ public class Fotoapparat {
                 CapabilitiesProvider capabilitiesProvider,
                 TakePictureRoutine takePictureRoutine,
                 AutoFocusRoutine autoFocusRoutine,
+                CheckAvailabilityRoutine checkAvailabilityRoutine,
                 Executor executor) {
         this.startCameraRoutine = startCameraRoutine;
         this.stopCameraRoutine = stopCameraRoutine;
@@ -54,6 +57,7 @@ public class Fotoapparat {
         this.capabilitiesProvider = capabilitiesProvider;
         this.takePictureRoutine = takePictureRoutine;
         this.autoFocusRoutine = autoFocusRoutine;
+        this.checkAvailabilityRoutine = checkAvailabilityRoutine;
         this.executor = executor;
     }
 
@@ -119,6 +123,11 @@ public class Fotoapparat {
 
         AutoFocusRoutine autoFocusRoutine = new AutoFocusRoutine(cameraDevice);
 
+        CheckAvailabilityRoutine checkAvailabilityRoutine = new CheckAvailabilityRoutine(
+                cameraDevice,
+                builder.lensPositionSelector
+        );
+
         return new Fotoapparat(
                 startCameraRoutine,
                 stopCameraRoutine,
@@ -127,8 +136,17 @@ public class Fotoapparat {
                 capabilitiesProvider,
                 takePictureRoutine,
                 autoFocusRoutine,
+                checkAvailabilityRoutine,
                 SERIAL_EXECUTOR
         );
+    }
+
+    /**
+     * @return {@code true} if camera for this {@link Fotoapparat} is available. {@code false} if
+     * it is not available.
+     */
+    public boolean isAvailable() {
+        return checkAvailabilityRoutine.isAvailable();
     }
 
     /**

@@ -128,12 +128,10 @@ repositories {
   maven { url 'https://jitpack.io' }
 }
  
-compile 'io.fotoapparat.fotoapparat:library:x.y.z'
+compile 'io.fotoapparat.fotoapparat:library:1.0.0'
 ```
 
 Camera permission will be automatically added to your `AndroidManifest.xml`. Do not forget to request this permission on Marshmallow and higher.
-
-We are currently working for a stable release, so for now use `-SNAPSHOT` in the version code above.
 
 
 ## Credits
