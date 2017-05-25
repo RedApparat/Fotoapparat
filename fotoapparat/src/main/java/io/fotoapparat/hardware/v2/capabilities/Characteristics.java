@@ -7,6 +7,7 @@ import android.hardware.camera2.CameraMetadata;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.util.Range;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -136,4 +137,7 @@ public class Characteristics {
         return convertSizes(outputSizes);
     }
 
+    Range<Integer> getSensorSensitivityRange() {
+         return cameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE);
+    }
 }

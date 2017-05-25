@@ -2,6 +2,7 @@ package io.fotoapparat.hardware.v1.capabilities;
 
 import android.hardware.Camera;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,6 +15,7 @@ import io.fotoapparat.hardware.v1.Camera1;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.selector.Predicate;
 
 /**
  * {@link Capabilities} of {@link Camera1}.
@@ -29,7 +31,8 @@ public class CapabilitiesFactory {
 				extractPictureSizes(parameters),
 				extractPreviewSizes(parameters),
 				extractFocusModes(parameters),
-				extractFlashModes(parameters)
+				extractFlashModes(parameters),
+				extractSupportsSensorSensitivityValue(parameters)
 		);
 	}
 
@@ -84,6 +87,49 @@ public class CapabilitiesFactory {
 		}
 
 		return result;
+	}
+
+	private SensorSensitivityCapability extractSupportsSensorSensitivityValue(Camera.Parameters parameters) {
+		final Set<Integer> isoValuesSet = new HashSet<>();
+
+		// Based on https://stackoverflow.com/a/23567103/791323
+		String flat = parameters.flatten();
+		String[] isoValues = null;
+		String values_keyword=null;
+		String iso_keyword=null;
+		if(flat.contains("iso-values")) {
+			// most used keywords
+			values_keyword="iso-values";
+			iso_keyword="iso";
+		} else if(flat.contains("iso-mode-values")) {
+			// google galaxy nexus keywords
+			values_keyword="iso-mode-values";
+			iso_keyword="iso";
+		} else if(flat.contains("iso-speed-values")) {
+			// micromax a101 keywords
+			values_keyword="iso-speed-values";
+			iso_keyword="iso-speed";
+		} else if(flat.contains("nv-picture-iso-values")) {
+			// LG dual p990 keywords
+			values_keyword="nv-picture-iso-values";
+			iso_keyword="nv-picture-iso";
+		}
+		// add other eventual keywords here...
+		if(iso_keyword!=null) {
+			// flatten supports the iso key!!
+			String iso = flat.substring(flat.indexOf(values_keyword));
+			iso = iso.substring(iso.indexOf("=")+1);
+
+			if(iso.contains(";")) iso = iso.substring(0, iso.indexOf(";"));
+
+			isoValues = iso.split(",");
+			for(String value: isoValues) {
+				isoValuesSet.add(Integer.valueOf(value));
+			}
+
+		}
+
+		return new SensorSensitivityCapability(isoValuesSet);
 	}
 
 }
