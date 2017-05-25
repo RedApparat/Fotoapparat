@@ -1,5 +1,7 @@
 package io.fotoapparat.parameter.selector;
 
+import java.util.Collection;
+
 import io.fotoapparat.parameter.FocusMode;
 
 /**
@@ -11,7 +13,7 @@ public class FocusModeSelectors {
      * @return {@link SelectorFunction} which provides a non-adjustable focus mode if available.
      * Otherwise provides {@code null}.
      */
-    public static SelectorFunction<FocusMode> fixed() {
+    public static SelectorFunction<Collection<FocusMode>, FocusMode> fixed() {
         return focusMode(FocusMode.FIXED);
     }
 
@@ -19,7 +21,7 @@ public class FocusModeSelectors {
      * @return {@link SelectorFunction} which provides a focus mode targeting infinity if available.
      * Otherwise provides {@code null}.
      */
-    public static SelectorFunction<FocusMode> infinity() {
+    public static SelectorFunction<Collection<FocusMode>, FocusMode> infinity() {
         return focusMode(FocusMode.INFINITY);
     }
 
@@ -27,7 +29,7 @@ public class FocusModeSelectors {
      * @return {@link SelectorFunction} which provides a macro focus mode if available.
      * Otherwise provides {@code null}.
      */
-    public static SelectorFunction<FocusMode> macro() {
+    public static SelectorFunction<Collection<FocusMode>, FocusMode> macro() {
         return focusMode(FocusMode.MACRO);
     }
 
@@ -35,7 +37,7 @@ public class FocusModeSelectors {
      * @return {@link SelectorFunction} which provides an auto focus mode if available.
      * Otherwise provides {@code null}.
      */
-    public static SelectorFunction<FocusMode> autoFocus() {
+    public static SelectorFunction<Collection<FocusMode>, FocusMode> autoFocus() {
         return focusMode(FocusMode.AUTO);
     }
 
@@ -44,7 +46,7 @@ public class FocusModeSelectors {
      * in focus if available.
      * Otherwise provides {@code null}.
      */
-    public static SelectorFunction<FocusMode> continuousFocus() {
+    public static SelectorFunction<Collection<FocusMode>, FocusMode> continuousFocus() {
         return focusMode(FocusMode.CONTINUOUS_FOCUS);
     }
 
@@ -53,7 +55,7 @@ public class FocusModeSelectors {
      * an extended depth of field if available.
      * Otherwise provides {@code null}.
      */
-    public static SelectorFunction<FocusMode> edof() {
+    public static SelectorFunction<Collection<FocusMode>, FocusMode> edof() {
         return focusMode(FocusMode.EDOF);
     }
 
@@ -61,7 +63,7 @@ public class FocusModeSelectors {
      * @return function which selects given {@link FocusMode} from the list if it is available. If
      * it is not available - provides {@code null}.
      */
-    private static SelectorFunction<FocusMode> focusMode(final FocusMode focusMode) {
+    private static SelectorFunction<Collection<FocusMode>, FocusMode> focusMode(final FocusMode focusMode) {
         return Selectors.single(focusMode);
     }
 

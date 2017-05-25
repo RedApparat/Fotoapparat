@@ -3,6 +3,8 @@ package io.fotoapparat;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import java.util.Collection;
+
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.log.Logger;
@@ -36,19 +38,19 @@ public class FotoapparatBuilder {
     CameraProvider cameraProvider = v1();
     CameraRenderer renderer;
 
-    SelectorFunction<LensPosition> lensPositionSelector = firstAvailable(
+    SelectorFunction<Collection<LensPosition>, LensPosition> lensPositionSelector = firstAvailable(
             back(),
             front(),
             external()
     );
-    SelectorFunction<Size> photoSizeSelector = biggestSize();
-    SelectorFunction<Size> previewSizeSelector = biggestSize();
-    SelectorFunction<FocusMode> focusModeSelector = firstAvailable(
+    SelectorFunction<Collection<Size>, Size> photoSizeSelector = biggestSize();
+    SelectorFunction<Collection<Size>, Size> previewSizeSelector = biggestSize();
+    SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector = firstAvailable(
             continuousFocus(),
             autoFocus(),
             fixed()
     );
-    SelectorFunction<Flash> flashSelector = FlashSelectors.off();
+    SelectorFunction<Collection<Flash>, Flash> flashSelector = FlashSelectors.off();
 
     FrameProcessor frameProcessor = null;
 
@@ -69,7 +71,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector selects size of the photo (in pixels) from list of available sizes.
      */
-    public FotoapparatBuilder photoSize(SelectorFunction<Size> selector) {
+    public FotoapparatBuilder photoSize(SelectorFunction<Collection<Size>, Size> selector) {
         photoSizeSelector = selector;
         return this;
     }
@@ -77,7 +79,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector selects size of preview stream (in pixels) from list of available sizes.
      */
-    public FotoapparatBuilder previewSize(SelectorFunction<Size> selector) {
+    public FotoapparatBuilder previewSize(SelectorFunction<Collection<Size>, Size> selector) {
         previewSizeSelector = selector;
         return this;
     }
@@ -85,7 +87,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector selects focus mode from list of available modes.
      */
-    public FotoapparatBuilder focusMode(SelectorFunction<FocusMode> selector) {
+    public FotoapparatBuilder focusMode(SelectorFunction<Collection<FocusMode>, FocusMode> selector) {
         focusModeSelector = selector;
         return this;
     }
@@ -93,7 +95,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector selects flash mode from list of available modes.
      */
-    public FotoapparatBuilder flash(SelectorFunction<Flash> selector) {
+    public FotoapparatBuilder flash(SelectorFunction<Collection<Flash>, Flash> selector) {
         flashSelector = selector;
         return this;
     }
@@ -101,7 +103,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector camera sensor position from list of available positions.
      */
-    public FotoapparatBuilder lensPosition(SelectorFunction<LensPosition> selector) {
+    public FotoapparatBuilder lensPosition(SelectorFunction<Collection<LensPosition>, LensPosition> selector) {
         lensPositionSelector = selector;
         return this;
     }

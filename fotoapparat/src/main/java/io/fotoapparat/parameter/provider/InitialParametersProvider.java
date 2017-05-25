@@ -1,5 +1,7 @@
 package io.fotoapparat.parameter.provider;
 
+import java.util.Collection;
+
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
@@ -17,16 +19,16 @@ public class InitialParametersProvider {
 
     private final InitialParametersValidator parametersValidator;
     private final CapabilitiesOperator capabilitiesOperator;
-    private final SelectorFunction<Size> photoSizeSelector;
-    private final SelectorFunction<Size> previewSizeSelector;
-    private final SelectorFunction<FocusMode> focusModeSelector;
-    private final SelectorFunction<Flash> flashSelector;
+    private final SelectorFunction<Collection<Size>, Size> photoSizeSelector;
+    private final SelectorFunction<Collection<Size>, Size> previewSizeSelector;
+    private final SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector;
+    private final SelectorFunction<Collection<Flash>, Flash> flashSelector;
 
     public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
-                                     SelectorFunction<Size> photoSizeSelector,
-                                     SelectorFunction<Size> previewSizeSelector,
-                                     SelectorFunction<FocusMode> focusModeSelector,
-                                     SelectorFunction<Flash> flashSelector,
+                                     SelectorFunction<Collection<Size>, Size> photoSizeSelector,
+                                     SelectorFunction<Collection<Size>, Size> previewSizeSelector,
+                                     SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector,
+                                     SelectorFunction<Collection<Flash>, Flash> flashSelector,
                                      InitialParametersValidator parametersValidator) {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;

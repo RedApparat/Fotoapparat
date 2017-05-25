@@ -16,8 +16,8 @@ public class SizeSelectors {
     /**
      * @return {@link SelectorFunction} which always provides the biggest size.
      */
-    public static SelectorFunction<Size> biggestSize() {
-        return new SelectorFunction<Size>() {
+    public static SelectorFunction<Collection<Size>, Size> biggestSize() {
+        return new SelectorFunction<Collection<Size>, Size>() {
             @Override
             public Size select(Collection<Size> items) {
                 return Collections.max(items, COMPARATOR_BY_AREA);
@@ -28,8 +28,8 @@ public class SizeSelectors {
     /**
      * @return {@link SelectorFunction} which always provides the smallest size.
      */
-    public static SelectorFunction<Size> smallestSize() {
-        return new SelectorFunction<Size>() {
+    public static SelectorFunction<Collection<Size>, Size> smallestSize() {
+        return new SelectorFunction<Collection<Size>, Size>() {
             @Override
             public Size select(Collection<Size> items) {
                 return Collections.min(items, COMPARATOR_BY_AREA);

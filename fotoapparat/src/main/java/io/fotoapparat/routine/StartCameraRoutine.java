@@ -1,5 +1,7 @@
 package io.fotoapparat.routine;
 
+import java.util.Collection;
+
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
 import io.fotoapparat.parameter.LensPosition;
@@ -14,13 +16,13 @@ public class StartCameraRoutine implements Runnable {
 
 	private final CameraDevice cameraDevice;
 	private final CameraRenderer cameraRenderer;
-	private final SelectorFunction<LensPosition> lensPositionSelector;
+	private final SelectorFunction<Collection<LensPosition>, LensPosition> lensPositionSelector;
 	private final ScreenOrientationProvider screenOrientationProvider;
 	private final InitialParametersProvider initialParametersProvider;
 
 	public StartCameraRoutine(CameraDevice cameraDevice,
 							  CameraRenderer cameraRenderer,
-							  SelectorFunction<LensPosition> lensPositionSelector,
+							  SelectorFunction<Collection<LensPosition>, LensPosition> lensPositionSelector,
 							  ScreenOrientationProvider screenOrientationProvider,
 							  InitialParametersProvider initialParametersProvider) {
 		this.cameraDevice = cameraDevice;

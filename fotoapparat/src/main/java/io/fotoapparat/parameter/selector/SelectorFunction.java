@@ -1,15 +1,14 @@
 package io.fotoapparat.parameter.selector;
 
-import java.util.Collection;
-
 /**
- * Function which selects one element from many.
+ * Function which selects a value based on the input
  */
-public interface SelectorFunction<T> {
+public interface SelectorFunction<Input, Output> {
 
     /**
-     * @return element from given collection.
+     * @return selected value.
      */
-    T select(Collection<T> items);
+    Output select(Input input);
 
 }
+
