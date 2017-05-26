@@ -9,9 +9,11 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
-import io.fotoapparat.parameter.selector.AspectRatioSelectors;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.range.Range;
+import io.fotoapparat.parameter.selector.Selectors;
+
+import static io.fotoapparat.parameter.selector.AspectRatioSelectors.aspectRatio;
 
 /**
  * Provides initial {@link Parameters} for {@link CameraDevice}.
@@ -66,12 +68,19 @@ public class InitialParametersProvider {
 
         parameters.putValue(
                 Parameters.Type.PREVIEW_SIZE,
-                AspectRatioSelectors
-                        .aspectRatio(
-                                photoSize.getAspectRatio(),
+                Selectors
+                        .firstAvailable(
+                                previewWithSameAspectRatio(photoSize),
                                 previewSizeSelector
                         )
                         .select(capabilities.supportedPreviewSizes())
+        );
+    }
+
+    private SelectorFunction<Collection<Size>, Size> previewWithSameAspectRatio(Size photoSize) {
+        return aspectRatio(
+                photoSize.getAspectRatio(),
+                previewSizeSelector
         );
     }
 

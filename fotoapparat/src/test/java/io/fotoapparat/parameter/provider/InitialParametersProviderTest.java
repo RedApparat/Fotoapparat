@@ -17,6 +17,7 @@ import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 
 import static io.fotoapparat.test.TestUtils.asSet;
+import static java.util.Collections.singleton;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -127,6 +128,36 @@ public class InitialParametersProviderTest {
         // Then
         verify(previewSizeSelector).select(VALID_PREVIEW_SIZES);
 
+        assertEquals(
+                PREVIEW_SIZE,
+                parameters.getValue(Parameters.Type.PREVIEW_SIZE)
+        );
+    }
+
+    @Test
+    public void selectPreviewSize_SameAspectRatioNotAvailable() throws Exception {
+        // Given
+        Size photoSize = new Size(10000, 100);
+        Set<Size> photoSizes = singleton(photoSize);
+
+        given(photoSizeSelector.select(photoSizes))
+                .willReturn(photoSize);
+
+        given(cameraDevice.getCapabilities())
+                .willReturn(new Capabilities(
+                        photoSizes,
+                        ALL_PREVIEW_SIZES,
+                        FOCUS_MODES,
+                        FLASH
+                ));
+
+        given(previewSizeSelector.select(ALL_PREVIEW_SIZES))
+                .willReturn(PREVIEW_SIZE);
+
+        // When
+        Parameters parameters = testee.initialParameters();
+
+        // Then
         assertEquals(
                 PREVIEW_SIZE,
                 parameters.getValue(Parameters.Type.PREVIEW_SIZE)
