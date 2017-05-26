@@ -2,7 +2,6 @@ package io.fotoapparat.hardware.v1.capabilities;
 
 import android.hardware.Camera;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -15,7 +14,7 @@ import io.fotoapparat.hardware.v1.Camera1;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
-import io.fotoapparat.parameter.selector.Predicate;
+import io.fotoapparat.parameter.range.DiscreetRange;
 
 /**
  * {@link Capabilities} of {@link Camera1}.
@@ -89,7 +88,7 @@ public class CapabilitiesFactory {
 		return result;
 	}
 
-	private SensorSensitivityCapability extractSupportsSensorSensitivityValue(Camera.Parameters parameters) {
+	private DiscreetRange extractSupportsSensorSensitivityValue(Camera.Parameters parameters) {
 		final Set<Integer> isoValuesSet = new HashSet<>();
 
 		// Based on https://stackoverflow.com/a/23567103/791323
@@ -116,7 +115,7 @@ public class CapabilitiesFactory {
 		}
 		// add other eventual keywords here...
 		if(iso_keyword!=null) {
-			// flatten supports the iso key!!
+			// flatten contains the iso key!!
 			String iso = flat.substring(flat.indexOf(values_keyword));
 			iso = iso.substring(iso.indexOf("=")+1);
 
@@ -129,7 +128,7 @@ public class CapabilitiesFactory {
 
 		}
 
-		return new SensorSensitivityCapability(isoValuesSet);
+		return new DiscreetRange<>(isoValuesSet);
 	}
 
 }

@@ -1,7 +1,6 @@
 package io.fotoapparat.hardware.v2.capabilities;
 
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.Range;
 
@@ -16,7 +15,7 @@ import io.fotoapparat.hardware.v2.parameters.converters.FocusConverter;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
-import io.fotoapparat.parameter.selector.Predicate;
+import io.fotoapparat.parameter.range.ContinuousRange;
 
 import static io.fotoapparat.hardware.v2.parameters.converters.FlashConverter.exposureModeToFlash;
 
@@ -39,7 +38,7 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
 				availablePreviewSizes(),
 				availableFocusModes(),
 				availableFlashModes(),
-				availableSensorSensativity()
+				availableSensorSensitivity()
 		);
 	}
 
@@ -97,9 +96,9 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
 		return flashes;
 	}
 
-	private SensorSensitivityCapability availableSensorSensativity() {
+	private ContinuousRange availableSensorSensitivity() {
 		final Range<Integer> range = characteristics().getSensorSensitivityRange();
-		return new SensorSensitivityCapability(range);
+		return new ContinuousRange<>(range);
 	}
 
 	private Characteristics characteristics() {

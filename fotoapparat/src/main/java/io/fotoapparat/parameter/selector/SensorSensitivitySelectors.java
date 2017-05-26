@@ -1,6 +1,6 @@
 package io.fotoapparat.parameter.selector;
 
-import io.fotoapparat.hardware.BaseSensorSensitivityCapability;
+import io.fotoapparat.parameter.range.Range;
 
 /**
  * Created by ychen on 5/24/2017.
@@ -8,11 +8,11 @@ import io.fotoapparat.hardware.BaseSensorSensitivityCapability;
 
 public class SensorSensitivitySelectors {
 
-    public static SelectorFunction<BaseSensorSensitivityCapability, Integer> manualSensorSensitivity(final Integer value) {
-        return new SelectorFunction<BaseSensorSensitivityCapability, Integer>() {
+    public static SelectorFunction<Range<Integer>, Integer> manualSensorSensitivity(final Integer value) {
+        return new SelectorFunction<Range<Integer>, Integer>() {
             @Override
-            public Integer select(BaseSensorSensitivityCapability sensorSensitivityCapability) {
-                if(sensorSensitivityCapability.supports(value)) {
+            public Integer select(Range<Integer> sensorSensitivityCapability) {
+                if(sensorSensitivityCapability.contains(value)) {
                     return value;
                 } else {
                     return null;
@@ -21,19 +21,19 @@ public class SensorSensitivitySelectors {
         };
     };
 
-    public static SelectorFunction<BaseSensorSensitivityCapability, Integer> highestSensorSensitivity() {
-        return new SelectorFunction<BaseSensorSensitivityCapability, Integer>() {
+    public static SelectorFunction<Range<Integer>, Integer> highestSensorSensitivity() {
+        return new SelectorFunction<Range<Integer>, Integer>() {
             @Override
-            public Integer select(BaseSensorSensitivityCapability sensorSensitivityCapability) {
+            public Integer select(Range<Integer> sensorSensitivityCapability) {
                 return sensorSensitivityCapability.highest();
             }
         };
     }
 
-    public static SelectorFunction<BaseSensorSensitivityCapability, Integer> lowestSensorSensitivity() {
-        return new SelectorFunction<BaseSensorSensitivityCapability, Integer>() {
+    public static SelectorFunction<Range<Integer>, Integer> lowestSensorSensitivity() {
+        return new SelectorFunction<Range<Integer>, Integer>() {
             @Override
-            public Integer select(BaseSensorSensitivityCapability sensorSensitivityCapability) {
+            public Integer select(Range<Integer> sensorSensitivityCapability) {
                 return sensorSensitivityCapability.lowest();
             }
         };

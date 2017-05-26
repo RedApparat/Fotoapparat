@@ -5,10 +5,10 @@ import android.support.annotation.NonNull;
 import java.util.Collections;
 import java.util.Set;
 
-import io.fotoapparat.hardware.v1.capabilities.SensorSensitivityCapability;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
 
 /**
  * Capabilities of camera hardware.
@@ -24,13 +24,13 @@ public class Capabilities {
     @NonNull
     private final Set<Flash> flashModes;
     @NonNull
-    private final BaseSensorSensitivityCapability sensorSensitivityCapability;
+    private final Range sensorSensitivityCapability;
 
     public Capabilities(@NonNull Set<Size> photoSizes,
                         @NonNull Set<Size> previewSizes,
                         @NonNull Set<FocusMode> focusModes,
                         @NonNull Set<Flash> flashModes,
-                        @NonNull BaseSensorSensitivityCapability sensorSensitivityCapability) {
+                        @NonNull Range sensorSensitivityCapability) {
         this.photoSizes = photoSizes;
         this.previewSizes = previewSizes;
         this.focusModes = focusModes;
@@ -47,7 +47,7 @@ public class Capabilities {
                 Collections.<Size>emptySet(),
                 Collections.<FocusMode>emptySet(),
                 Collections.<Flash>emptySet(),
-                SensorSensitivityCapability.EMPTY
+                Range.<Integer>emptyRange()
         );
     }
 
@@ -82,7 +82,7 @@ public class Capabilities {
     /**
      * @return the sensor sensitivity capability
      */
-    public BaseSensorSensitivityCapability sensorSensitivityCapability() {
+    public Range sensorSensitivityCapability() {
         return sensorSensitivityCapability;
     }
 
