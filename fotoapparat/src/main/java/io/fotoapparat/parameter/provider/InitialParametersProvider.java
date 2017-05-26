@@ -11,6 +11,7 @@ import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.AspectRatioSelectors;
 import io.fotoapparat.parameter.selector.SelectorFunction;
+import io.fotoapparat.parameter.range.Range;
 
 /**
  * Provides initial {@link Parameters} for {@link CameraDevice}.
@@ -23,18 +24,21 @@ public class InitialParametersProvider {
     private final SelectorFunction<Collection<Size>, Size> previewSizeSelector;
     private final SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector;
     private final SelectorFunction<Collection<Flash>, Flash> flashSelector;
+    private final SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector;
 
     public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
                                      SelectorFunction<Collection<Size>, Size> photoSizeSelector,
                                      SelectorFunction<Collection<Size>, Size> previewSizeSelector,
                                      SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector,
                                      SelectorFunction<Collection<Flash>, Flash> flashSelector,
+                                     SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector,
                                      InitialParametersValidator parametersValidator) {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
         this.previewSizeSelector = previewSizeSelector;
         this.focusModeSelector = focusModeSelector;
         this.flashSelector = flashSelector;
+        this.sensorSensitivitySelector = sensorSensitivitySelector;
         this.parametersValidator = parametersValidator;
     }
 
@@ -50,6 +54,7 @@ public class InitialParametersProvider {
         putPreviewSize(capabilities, parameters);
         putFocusMode(capabilities, parameters);
         putFlash(capabilities, parameters);
+        putSensorSensitivity(capabilities, parameters);
 
         parametersValidator.validate(parameters);
 
@@ -97,6 +102,15 @@ public class InitialParametersProvider {
                 Parameters.Type.FLASH,
                 flashSelector.select(
                         capabilities.supportedFlashModes()
+                )
+        );
+    }
+
+    private void putSensorSensitivity(Capabilities capabilities, Parameters parameters) {
+        parameters.putValue(
+                Parameters.Type.SENSOR_SENSITIVITY,
+                sensorSensitivitySelector.select(
+                        capabilities.sensorSensitivityCapability()
                 )
         );
     }

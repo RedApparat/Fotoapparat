@@ -87,7 +87,12 @@ public class Parameters {
         /**
          * Flash firing mode of the camera. Expected type: {@link Flash}.
          */
-        FLASH(Flash.class);
+        FLASH(Flash.class),
+
+        /**
+         * Sensor sensitivity (ISO). Expected type: (Integer).
+         */
+        SENSOR_SENSITIVITY(Integer.class);
 
         private final Class<?> clazz;
 

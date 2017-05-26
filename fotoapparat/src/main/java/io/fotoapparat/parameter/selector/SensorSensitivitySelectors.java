@@ -19,7 +19,7 @@ public class SensorSensitivitySelectors {
                 }
             }
         };
-    };
+    }
 
     public static SelectorFunction<Range<Integer>, Integer> highestSensorSensitivity() {
         return new SelectorFunction<Range<Integer>, Integer>() {
@@ -35,6 +35,15 @@ public class SensorSensitivitySelectors {
             @Override
             public Integer select(Range<Integer> sensorSensitivityCapability) {
                 return sensorSensitivityCapability.lowest();
+            }
+        };
+    }
+
+    public static SelectorFunction<Range<Integer>,Integer> automaticSensorSensitivity() {
+        return new SelectorFunction<Range<Integer>, Integer>() {
+            @Override
+            public Integer select(Range<Integer> integerRange) {
+                return null;
             }
         };
     }

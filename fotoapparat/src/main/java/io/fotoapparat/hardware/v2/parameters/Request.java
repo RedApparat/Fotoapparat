@@ -32,6 +32,7 @@ class Request {
     private final boolean shouldSetExposureMode;
     private final Flash flash;
     private final FocusMode focus;
+    private final Integer sensorSensitivity;
     private CaptureRequest.Builder captureRequest;
 
     private Request(CameraDevice cameraDevice,
@@ -41,7 +42,8 @@ class Request {
                     boolean triggerPrecaptureExposure,
                     boolean cancelPrecaptureExposure,
                     Flash flash, boolean shouldSetExposureMode,
-                    FocusMode focus) {
+                    FocusMode focus,
+                    Integer sensorSensitivity) {
         this.cameraDevice = cameraDevice;
         this.requestTemplate = requestTemplate;
         this.surfaces = surfaces;
@@ -51,6 +53,7 @@ class Request {
         this.shouldSetExposureMode = shouldSetExposureMode;
         this.flash = flash;
         this.focus = focus;
+        this.sensorSensitivity = sensorSensitivity;
     }
 
     static CaptureRequest create(CaptureRequestBuilder builder) throws CameraAccessException {
@@ -63,7 +66,8 @@ class Request {
                 builder.cancelPrecaptureExposure,
                 builder.flash,
                 builder.shouldSetExposureMode,
-                builder.focus
+                builder.focus,
+                builder.sensorSensitivity
         )
                 .build();
     }
@@ -88,6 +92,7 @@ class Request {
         setFlash();
         setExposure();
         setFocus();
+        setSensorSensitivity();
 
         return captureRequest.build();
     }
@@ -175,6 +180,13 @@ class Request {
 
         int focusMode = focusToAfMode(focus);
         captureRequest.set(CaptureRequest.CONTROL_AF_MODE, focusMode);
+    }
+
+    private void setSensorSensitivity() {
+        if (sensorSensitivity == null) {
+            return;
+        }
+        captureRequest.set(CaptureRequest.SENSOR_SENSITIVITY, sensorSensitivity);
     }
 
 }

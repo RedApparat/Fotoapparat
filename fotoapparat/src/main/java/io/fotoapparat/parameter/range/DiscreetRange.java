@@ -20,11 +20,17 @@ public class DiscreetRange<T extends Comparable<? super T>> extends Range<T> {
 
     @Override
     public T highest() {
+        if(values.isEmpty()) {
+            return null;
+        }
         return Collections.max(values);
     }
 
     @Override
     public T lowest() {
+        if(values.isEmpty()) {
+            return null;
+        }
         return Collections.min(values);
     }
 }
