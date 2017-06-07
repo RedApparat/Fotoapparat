@@ -12,6 +12,7 @@ import static io.fotoapparat.parameter.Parameters.Type.FLASH;
 import static io.fotoapparat.parameter.Parameters.Type.FOCUS_MODE;
 import static io.fotoapparat.parameter.Parameters.Type.PICTURE_SIZE;
 import static io.fotoapparat.parameter.Parameters.Type.PREVIEW_SIZE;
+import static io.fotoapparat.parameter.Parameters.Type.SENSOR_SENSITIVITY;
 
 /**
  * Manages the parameters of a {@link io.fotoapparat.hardware.CameraDevice}.
@@ -85,6 +86,15 @@ public class ParametersProvider implements ParametersOperator {
      */
     public float getStillCaptureAspectRatio() {
         return getStillCaptureSize().getAspectRatio();
+    }
+
+    /**
+     * Returns the sensor sensitivity (ISO).
+     *
+     * @return The sensor sensitivity.
+     */
+    public Integer getSensorSensitivity() {
+        return selectedParameters.getValue(SENSOR_SENSITIVITY);
     }
 
 }

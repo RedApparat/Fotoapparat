@@ -45,11 +45,13 @@ public class CaptureRequestFactory {
         CameraDevice camera = cameraConnection.getCamera();
         Surface viewSurface = textureManager.getSurface();
         Flash flash = parametersProvider.getFlash();
+        Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_PREVIEW)
                 .into(viewSurface)
                 .flash(flash)
+                .sensorSensitivity(sensorSensitivity)
                 .build();
     }
 
@@ -65,6 +67,7 @@ public class CaptureRequestFactory {
         Surface surface = textureManager.getSurface();
         Flash flash = parametersProvider.getFlash();
         boolean triggerAutoExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
+        Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
@@ -72,6 +75,7 @@ public class CaptureRequestFactory {
                 .flash(flash)
                 .triggerAutoFocus(true)
                 .triggerPrecaptureExposure(triggerAutoExposure)
+                .sensorSensitivity(sensorSensitivity)
                 .build();
     }
 
@@ -87,6 +91,7 @@ public class CaptureRequestFactory {
         Surface surface = textureManager.getSurface();
         Flash flash = parametersProvider.getFlash();
         FocusMode focus = parametersProvider.getFocus();
+        Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
 
         boolean triggerPrecaptureExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
 
@@ -97,6 +102,7 @@ public class CaptureRequestFactory {
                 .flash(flash)
                 .focus(focus)
                 .setExposureMode(true)
+                .sensorSensitivity(sensorSensitivity)
                 .build();
     }
 
@@ -110,6 +116,7 @@ public class CaptureRequestFactory {
         Surface surface = surfaceReader.getSurface();
         Flash flash = parametersProvider.getFlash();
         FocusMode focus = parametersProvider.getFocus();
+        Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
@@ -117,6 +124,7 @@ public class CaptureRequestFactory {
                 .cancelPrecaptureExposure(true)
                 .flash(flash)
                 .focus(focus)
+                .sensorSensitivity(sensorSensitivity)
                 .setExposureMode(true)
                 .build();
     }

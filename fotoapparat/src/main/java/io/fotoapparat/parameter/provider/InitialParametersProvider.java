@@ -1,5 +1,7 @@
 package io.fotoapparat.parameter.provider;
 
+import java.util.Collection;
+
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
@@ -8,6 +10,7 @@ import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
+import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.selector.Selectors;
 
 import static io.fotoapparat.parameter.selector.AspectRatioSelectors.aspectRatio;
@@ -19,22 +22,25 @@ public class InitialParametersProvider {
 
     private final InitialParametersValidator parametersValidator;
     private final CapabilitiesOperator capabilitiesOperator;
-    private final SelectorFunction<Size> photoSizeSelector;
-    private final SelectorFunction<Size> previewSizeSelector;
-    private final SelectorFunction<FocusMode> focusModeSelector;
-    private final SelectorFunction<Flash> flashSelector;
+    private final SelectorFunction<Collection<Size>, Size> photoSizeSelector;
+    private final SelectorFunction<Collection<Size>, Size> previewSizeSelector;
+    private final SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector;
+    private final SelectorFunction<Collection<Flash>, Flash> flashSelector;
+    private final SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector;
 
     public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
-                                     SelectorFunction<Size> photoSizeSelector,
-                                     SelectorFunction<Size> previewSizeSelector,
-                                     SelectorFunction<FocusMode> focusModeSelector,
-                                     SelectorFunction<Flash> flashSelector,
+                                     SelectorFunction<Collection<Size>, Size> photoSizeSelector,
+                                     SelectorFunction<Collection<Size>, Size> previewSizeSelector,
+                                     SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector,
+                                     SelectorFunction<Collection<Flash>, Flash> flashSelector,
+                                     SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector,
                                      InitialParametersValidator parametersValidator) {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
         this.previewSizeSelector = previewSizeSelector;
         this.focusModeSelector = focusModeSelector;
         this.flashSelector = flashSelector;
+        this.sensorSensitivitySelector = sensorSensitivitySelector;
         this.parametersValidator = parametersValidator;
     }
 
@@ -50,6 +56,7 @@ public class InitialParametersProvider {
         putPreviewSize(capabilities, parameters);
         putFocusMode(capabilities, parameters);
         putFlash(capabilities, parameters);
+        putSensorSensitivity(capabilities, parameters);
 
         parametersValidator.validate(parameters);
 
@@ -70,7 +77,7 @@ public class InitialParametersProvider {
         );
     }
 
-    private SelectorFunction<Size> previewWithSameAspectRatio(Size photoSize) {
+    private SelectorFunction<Collection<Size>, Size> previewWithSameAspectRatio(Size photoSize) {
         return aspectRatio(
                 photoSize.getAspectRatio(),
                 previewSizeSelector
@@ -104,6 +111,15 @@ public class InitialParametersProvider {
                 Parameters.Type.FLASH,
                 flashSelector.select(
                         capabilities.supportedFlashModes()
+                )
+        );
+    }
+
+    private void putSensorSensitivity(Capabilities capabilities, Parameters parameters) {
+        parameters.putValue(
+                Parameters.Type.SENSOR_SENSITIVITY,
+                sensorSensitivitySelector.select(
+                        capabilities.sensorSensitivityCapability()
                 )
         );
     }

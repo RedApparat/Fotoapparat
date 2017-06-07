@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collection;
 import java.util.Set;
 
 import io.fotoapparat.hardware.CameraDevice;
@@ -14,8 +15,10 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 
+import static io.fotoapparat.test.TestUtils.asRange;
 import static io.fotoapparat.test.TestUtils.asSet;
 import static java.util.Collections.singleton;
 import static junit.framework.Assert.assertEquals;
@@ -29,6 +32,7 @@ public class InitialParametersProviderTest {
     static final Size PHOTO_SIZE = new Size(4000, 3000);
     static final Size PREVIEW_SIZE = new Size(2000, 1500);
     static final Size PREVIEW_SIZE_WRONG_ASPECT_RATIO = new Size(1000, 1000);
+    static final Integer SENSOR_SENSITIVITY = 1000;
 
     static final Set<FocusMode> FOCUS_MODES = asSet(FocusMode.FIXED);
     static final Set<Flash> FLASH = asSet(Flash.AUTO_RED_EYE);
@@ -39,17 +43,20 @@ public class InitialParametersProviderTest {
             PREVIEW_SIZE,
             PREVIEW_SIZE_WRONG_ASPECT_RATIO
     );
+    static final Range<Integer> SENSOR_SENSITIVITY_RANGE = asRange(SENSOR_SENSITIVITY);
 
     @Mock
     CameraDevice cameraDevice;
     @Mock
-    SelectorFunction<Size> photoSizeSelector;
+    SelectorFunction<Collection<Size>, Size> photoSizeSelector;
     @Mock
-    SelectorFunction<Size> previewSizeSelector;
+    SelectorFunction<Collection<Size>, Size> previewSizeSelector;
     @Mock
-    SelectorFunction<FocusMode> focusModeSelector;
+    SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector;
     @Mock
-    SelectorFunction<Flash> flashModeSelector;
+    SelectorFunction<Collection<Flash>, Flash> flashModeSelector;
+    @Mock
+    SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector;
     @Mock
     InitialParametersValidator initialParametersValidator;
 
@@ -63,6 +70,7 @@ public class InitialParametersProviderTest {
                 previewSizeSelector,
                 focusModeSelector,
                 flashModeSelector,
+                sensorSensitivitySelector,
                 initialParametersValidator
         );
 
@@ -71,7 +79,8 @@ public class InitialParametersProviderTest {
                         PHOTO_SIZES,
                         ALL_PREVIEW_SIZES,
                         FOCUS_MODES,
-                        FLASH
+                        FLASH,
+                        SENSOR_SENSITIVITY_RANGE
                 ));
 
         given(photoSizeSelector.select(PHOTO_SIZES))
@@ -82,6 +91,8 @@ public class InitialParametersProviderTest {
                 .willReturn(FocusMode.FIXED);
         given(flashModeSelector.select(FLASH))
                 .willReturn(Flash.AUTO_RED_EYE);
+        given(sensorSensitivitySelector.select(SENSOR_SENSITIVITY_RANGE))
+                .willReturn(SENSOR_SENSITIVITY);
     }
 
     @Test
@@ -148,7 +159,8 @@ public class InitialParametersProviderTest {
                         photoSizes,
                         ALL_PREVIEW_SIZES,
                         FOCUS_MODES,
-                        FLASH
+                        FLASH,
+                        SENSOR_SENSITIVITY_RANGE
                 ));
 
         given(previewSizeSelector.select(ALL_PREVIEW_SIZES))
@@ -163,6 +175,21 @@ public class InitialParametersProviderTest {
                 parameters.getValue(Parameters.Type.PREVIEW_SIZE)
         );
     }
+
+    @Test
+    public void selectSensorSensitivity() throws Exception {
+        // When
+        Parameters parameters = testee.initialParameters();
+
+        // Then
+        verify(sensorSensitivitySelector).select(SENSOR_SENSITIVITY_RANGE);
+
+        assertEquals(
+                SENSOR_SENSITIVITY,
+                parameters.getValue(Parameters.Type.SENSOR_SENSITIVITY)
+        );
+    }
+
 
     @Test
     public void parameterValidation() throws Exception {

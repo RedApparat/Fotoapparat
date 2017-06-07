@@ -82,6 +82,7 @@ public class Fotoapparat {
                 builder.previewSizeSelector,
                 builder.focusModeSelector,
                 builder.flashSelector,
+                builder.sensorSensitivitySelector,
                 parametersValidator
         );
 

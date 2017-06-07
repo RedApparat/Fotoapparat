@@ -32,6 +32,7 @@ import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.RendererParameters;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
 
@@ -156,7 +157,8 @@ public class Camera2Test {
                 Collections.<Size>emptySet(),
                 Collections.<Size>emptySet(),
                 singleton(FocusMode.MACRO),
-                Collections.<Flash>emptySet()
+                Collections.<Flash>emptySet(),
+                Range.emptyRange()
         );
         given(capabilitiesOperator.getCapabilities())
                 .willReturn(capabilities);

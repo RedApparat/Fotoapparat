@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collection;
+
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Flash;
@@ -36,15 +38,15 @@ public class FotoapparatBuilderTest {
 	CameraRenderer cameraRenderer;
 
 	@Mock
-	SelectorFunction<Size> photoSizeSelector;
+	SelectorFunction<Collection<Size>, Size> photoSizeSelector;
 	@Mock
-	SelectorFunction<Size> previewSizeSelector;
+	SelectorFunction<Collection<Size>, Size> previewSizeSelector;
 	@Mock
-	SelectorFunction<LensPosition> lensPositionSelector;
+	SelectorFunction<Collection<LensPosition>, LensPosition> lensPositionSelector;
 	@Mock
-	SelectorFunction<FocusMode> focusModeSelector;
+	SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector;
 	@Mock
-	SelectorFunction<Flash> flashSelector;
+	SelectorFunction<Collection<Flash>, Flash> flashSelector;
 
 	@Mock
 	FrameProcessor frameProcessor;

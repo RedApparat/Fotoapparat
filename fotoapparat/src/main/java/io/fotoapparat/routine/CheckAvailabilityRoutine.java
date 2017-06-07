@@ -1,5 +1,7 @@
 package io.fotoapparat.routine;
 
+import java.util.Collection;
+
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.selector.SelectorFunction;
@@ -10,10 +12,10 @@ import io.fotoapparat.parameter.selector.SelectorFunction;
 public class CheckAvailabilityRoutine {
 
     private final CameraDevice cameraDevice;
-    private final SelectorFunction<LensPosition> lensPositionSelector;
+    private final SelectorFunction<Collection<LensPosition>, LensPosition> lensPositionSelector;
 
     public CheckAvailabilityRoutine(CameraDevice cameraDevice,
-                                    SelectorFunction<LensPosition> lensPositionSelector) {
+                                    SelectorFunction<Collection<LensPosition>, LensPosition> lensPositionSelector) {
         this.cameraDevice = cameraDevice;
         this.lensPositionSelector = lensPositionSelector;
     }
