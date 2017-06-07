@@ -8,6 +8,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collection;
 import java.util.List;
 
 import static io.fotoapparat.test.TestUtils.asSet;
@@ -21,9 +22,9 @@ import static org.mockito.Mockito.verify;
 public class SelectorsTest {
 
     @Mock
-    SelectorFunction<String> functionA;
+    SelectorFunction<Collection<String>, String> functionA;
     @Mock
-    SelectorFunction<String> functionB;
+    SelectorFunction<Collection<String>, String> functionB;
 
     @Test
     public void firstAvailable() throws Exception {
@@ -51,7 +52,7 @@ public class SelectorsTest {
     @Test
     public void filtered() throws Exception {
         // Given
-        SelectorFunction<String> function = Selectors.filtered(
+        SelectorFunction<Collection<String>, String> function = Selectors.filtered(
                 functionA,
                 new Predicate<String>() {
                     @Override
@@ -102,7 +103,7 @@ public class SelectorsTest {
     @Test
     public void nothing() throws Exception {
         // When
-        String result = Selectors.<String>nothing()
+        String result = Selectors.<Collection<String>, String>nothing()
                 .select(asList("A", "B", "C"));
 
         // Then

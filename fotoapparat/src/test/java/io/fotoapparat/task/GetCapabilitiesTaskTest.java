@@ -16,6 +16,7 @@ import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.provider.GetCapabilitiesTask;
 
+import static io.fotoapparat.test.TestUtils.asRange;
 import static io.fotoapparat.test.TestUtils.resultOf;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -28,7 +29,8 @@ public class GetCapabilitiesTaskTest {
             Collections.singleton(new Size(1400, 1080)),
             Collections.singleton(new Size(1400, 1080)),
             Collections.singleton(FocusMode.CONTINUOUS_FOCUS),
-            Collections.singleton(Flash.OFF)
+            Collections.singleton(Flash.OFF),
+            asRange(1000)
     );
 
     @Mock

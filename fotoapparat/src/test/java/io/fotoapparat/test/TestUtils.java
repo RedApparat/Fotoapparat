@@ -2,6 +2,7 @@ package io.fotoapparat.test;
 
 import android.support.annotation.NonNull;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -9,6 +10,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import io.fotoapparat.parameter.range.DiscreetRange;
+import io.fotoapparat.parameter.range.Range;
 
 import static java.util.Arrays.asList;
 
@@ -64,4 +68,7 @@ public class TestUtils {
         return new HashSet<>(asList(items));
     }
 
+    public static <T extends Comparable<T>> Range<T> asRange(T... items) {
+        return new DiscreetRange<T>(Arrays.asList(items));
+    }
 }
