@@ -96,37 +96,42 @@ public class CapabilitiesFactory {
 		String[] isoValues = null;
 		String values_keyword=null;
 		String iso_keyword=null;
-		if(flat.contains("iso-values")) {
-			// most used keywords
-			values_keyword="iso-values";
-			iso_keyword="iso";
-		} else if(flat.contains("iso-mode-values")) {
-			// google galaxy nexus keywords
-			values_keyword="iso-mode-values";
-			iso_keyword="iso";
-		} else if(flat.contains("iso-speed-values")) {
-			// micromax a101 keywords
-			values_keyword="iso-speed-values";
-			iso_keyword="iso-speed";
-		} else if(flat.contains("nv-picture-iso-values")) {
-			// LG dual p990 keywords
-			values_keyword="nv-picture-iso-values";
-			iso_keyword="nv-picture-iso";
+
+		if (flat == null) {
+			return new DiscreetRange<>(Collections.<Integer>emptySet());
 		}
+
+		if (flat.contains("iso-values")) {
+            // most used keywords
+            values_keyword = "iso-values";
+            iso_keyword = "iso";
+        } else if (flat.contains("iso-mode-values")) {
+            // google galaxy nexus keywords
+            values_keyword = "iso-mode-values";
+            iso_keyword = "iso";
+        } else if (flat.contains("iso-speed-values")) {
+            // micromax a101 keywords
+            values_keyword = "iso-speed-values";
+            iso_keyword = "iso-speed";
+        } else if (flat.contains("nv-picture-iso-values")) {
+            // LG dual p990 keywords
+            values_keyword = "nv-picture-iso-values";
+            iso_keyword = "nv-picture-iso";
+        }
 		// add other eventual keywords here...
-		if(iso_keyword!=null) {
-			// flatten contains the iso key!!
-			String iso = flat.substring(flat.indexOf(values_keyword));
-			iso = iso.substring(iso.indexOf("=")+1);
+		if (iso_keyword != null) {
+            // flatten contains the iso key!!
+            String iso = flat.substring(flat.indexOf(values_keyword));
+            iso = iso.substring(iso.indexOf("=") + 1);
 
-			if(iso.contains(";")) iso = iso.substring(0, iso.indexOf(";"));
+            if (iso.contains(";")) iso = iso.substring(0, iso.indexOf(";"));
 
-			isoValues = iso.split(",");
-			for(String value: isoValues) {
-				isoValuesSet.add(Integer.valueOf(value));
-			}
+            isoValues = iso.split(",");
+            for (String value : isoValues) {
+                isoValuesSet.add(Integer.valueOf(value));
+            }
 
-		}
+        }
 
 		return new DiscreetRange<>(isoValuesSet);
 	}
