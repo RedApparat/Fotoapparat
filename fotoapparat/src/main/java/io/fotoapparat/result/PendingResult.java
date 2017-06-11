@@ -94,9 +94,13 @@ public class PendingResult<T> {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                final T result = getResultUnsafe();
+                try {
+                    final T result = getResultUnsafe();
 
-                notifyCallbackOnMainThread(result, callback);
+                    notifyCallbackOnMainThread(result, callback);
+                } catch (RecoverableRuntimeException e) {
+                    // Ignore
+                }
             }
         });
     }
