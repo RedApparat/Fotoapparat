@@ -16,3 +16,17 @@ fotoapparat.takePicture()
 		}
 	});
 ```
+
+## Set up
+
+Add the Fotoapparat and the relevant adapter dependency to your `build.gradle`
+
+```groovy
+repositories {
+  maven { url 'https://jitpack.io' }
+}
+
+compile 'io.fotoapparat.fotoapparat:library:1.0.2'
+compile 'io.fotoapparat.fotoapparat:adapter-rxjava:1.0.2'   // for RxJava 1
+compile 'io.fotoapparat.fotoapparat:adapter-rxjava2:1.0.2'  // for RxJava 2
+```
