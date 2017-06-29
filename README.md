@@ -141,7 +141,7 @@ Camera permission will be automatically added to your `AndroidManifest.xml`. Do 
 
 We want to say thanks to [Mark Murphy](https://github.com/commonsguy) for the awesome job he did with [CWAC-Camera](https://github.com/commonsguy/cwac-camera). We were using his library for a couple of years and now we feel that Fotoapparat is a next step in the right direction.
 
-We also want to say many thanks to [Leander Lenzing](http://leanderlenzing.com/) for he amazing icon. Don't forget to follow his work in [dribbble](https://dribbble.com/leanderlenzing).
+We also want to say many thanks to [Leander Lenzing](http://leanderlenzing.com/) for the amazing icon. Don't forget to follow his work in [dribbble](https://dribbble.com/leanderlenzing).
 
 ## License
 
