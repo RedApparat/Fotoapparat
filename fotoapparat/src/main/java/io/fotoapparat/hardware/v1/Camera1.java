@@ -266,10 +266,18 @@ public class Camera1 implements CameraDevice {
     public RendererParameters getRendererParameters() {
         recordMethod();
 
-        return new RendererParameters(
+        RendererParameters rendererParameters = new RendererParameters(
                 previewSize(),
                 imageRotation
         );
+
+        logRendererParameters(rendererParameters);
+
+        return rendererParameters;
+    }
+
+    private void logRendererParameters(RendererParameters rendererParameters) {
+        logger.log("Renderer parameters are: " + rendererParameters);
     }
 
     @Override
