@@ -64,6 +64,13 @@ public class Parameters {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Parameters{" +
+                "values=" + values +
+                '}';
+    }
+
     /**
      * Type of values which can be stored in {@link Parameters}.
      */

@@ -38,7 +38,7 @@ public class Camera1 implements CameraDevice {
     private final Logger logger;
 
     private Camera camera;
-    private int cameraId;
+    private int cameraId = -1;
     private PreviewStream1 previewStream;
 
     private Throwable lastStacktrace;
@@ -51,6 +51,14 @@ public class Camera1 implements CameraDevice {
         this.logger = logger;
     }
 
+    private static void throwOnFailSetDisplaySurface(Object displaySurface, IOException e) {
+        throw new CameraException("Unable to set display surface: " + displaySurface, e);
+    }
+
+    private static void throwOnFailSetParameters(Parameters parameters, Exception e) {
+        throw new CameraException("Failed to set parameters: " + parameters, e);
+    }
+
     @Override
     public void open(LensPosition lensPosition) {
         recordMethod();
@@ -60,7 +68,7 @@ public class Camera1 implements CameraDevice {
             camera = Camera.open(cameraId);
             previewStream = new PreviewStream1(camera);
         } catch (RuntimeException e) {
-            throw new CameraException(e);
+            throwOnFailedToOpenCamera(lensPosition, e);
         }
 
         camera.setErrorCallback(new Camera.ErrorCallback() {
@@ -73,6 +81,13 @@ public class Camera1 implements CameraDevice {
                 throw new IllegalStateException("Camera error code: " + error);
             }
         });
+    }
+
+    private void throwOnFailedToOpenCamera(LensPosition lensPosition, RuntimeException e) {
+        throw new CameraException(
+                "Failed to open camera with lens position: " + lensPosition + " and id: " + cameraId,
+                e
+        );
     }
 
     private int cameraIdForLensPosition(LensPosition lensPosition) {
@@ -130,7 +145,7 @@ public class Camera1 implements CameraDevice {
         try {
             trySetDisplaySurface(displaySurface);
         } catch (IOException e) {
-            throw new CameraException(e);
+            throwOnFailSetDisplaySurface(displaySurface, e);
         }
     }
 
@@ -175,7 +190,11 @@ public class Camera1 implements CameraDevice {
                 camera.getParameters()
         );
 
-        camera.setParameters(cameraParameters);
+        try {
+            camera.setParameters(cameraParameters);
+        } catch (Exception e) {
+            throwOnFailSetParameters(parameters, e);
+        }
     }
 
     @Override
@@ -258,12 +277,17 @@ public class Camera1 implements CameraDevice {
         recordMethod();
 
         final CountDownLatch latch = new CountDownLatch(1);
-        camera.autoFocus(new Camera.AutoFocusCallback() {
-            @Override
-            public void onAutoFocus(boolean success, Camera camera) {
-                latch.countDown();
-            }
-        });
+
+        try {
+            camera.autoFocus(new Camera.AutoFocusCallback() {
+                @Override
+                public void onAutoFocus(boolean success, Camera camera) {
+                    latch.countDown();
+                }
+            });
+        } catch (Exception e) {
+            throwOnFailAutoFocus(e);
+        }
 
         try {
             latch.await();
@@ -274,9 +298,13 @@ public class Camera1 implements CameraDevice {
         return FocusResult.successNoMeasurement();
     }
 
+    private void throwOnFailAutoFocus(Exception e) {
+        throw new CameraException("Failed to perform autofocus using device " + cameraId, e);
+    }
+
     @Override
     public void measureExposure() {
-        // TODO: 30.04.17
+        // Do nothing. Not supported by Camera1.
     }
 
     @Override
