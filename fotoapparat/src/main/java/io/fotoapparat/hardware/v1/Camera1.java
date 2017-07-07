@@ -8,6 +8,7 @@ import android.view.TextureView;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.fotoapparat.hardware.CameraDevice;
@@ -31,6 +32,8 @@ import io.fotoapparat.preview.PreviewStream;
  */
 @SuppressWarnings("deprecation")
 public class Camera1 implements CameraDevice {
+
+    private static final long AUTOFOCUS_TIMEOUT_SECONDS = 3L;
 
     private final CapabilitiesFactory capabilitiesFactory;
     private final ParametersConverter parametersConverter;
@@ -298,7 +301,7 @@ public class Camera1 implements CameraDevice {
         }
 
         try {
-            latch.await();
+            latch.await(AUTOFOCUS_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             // Do nothing
         }
