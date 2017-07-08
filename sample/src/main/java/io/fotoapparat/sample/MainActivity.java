@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         setupFotoapparat();
 
         takePictureOnClick(cameraView);
-        autoFocusOnLongClick(cameraView);
+        focusOnLongClick(cameraView);
 
         setupSwitchCameraButton();
     }
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void autoFocusOnLongClick(View view) {
+    private void focusOnLongClick(View view) {
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

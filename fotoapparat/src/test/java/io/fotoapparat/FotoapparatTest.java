@@ -11,14 +11,16 @@ import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.parameter.provider.CapabilitiesProvider;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.result.CapabilitiesResult;
+import io.fotoapparat.result.FocusResult;
+import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
-import io.fotoapparat.routine.focus.AutoFocusRoutine;
 import io.fotoapparat.routine.CheckAvailabilityRoutine;
 import io.fotoapparat.routine.ConfigurePreviewStreamRoutine;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
-import io.fotoapparat.routine.picture.TakePictureRoutine;
 import io.fotoapparat.routine.UpdateOrientationRoutine;
+import io.fotoapparat.routine.focus.AutoFocusRoutine;
+import io.fotoapparat.routine.picture.TakePictureRoutine;
 import io.fotoapparat.test.ImmediateExecutor;
 
 import static io.fotoapparat.test.TestUtils.immediateFuture;
@@ -37,6 +39,13 @@ public class FotoapparatTest {
                     Photo.empty()
             )
     );
+
+    static final PendingResult<FocusResult> FOCUS_RESULT = PendingResult.fromFuture(
+            immediateFuture(
+                    FocusResult.FOCUSED
+            )
+    );
+
     static final CapabilitiesResult CAPABILITIES_RESULT = CapabilitiesResult.fromFuture(
             immediateFuture(
                     Capabilities.empty()
@@ -203,6 +212,34 @@ public class FotoapparatTest {
     public void autoFocus_NotStartedYet() throws Exception {
         // When
         testee.autoFocus();
+
+        // Then
+        // Expect exception
+    }
+
+    @Test
+    public void focus() throws Exception {
+        // Given
+        given(autoFocusRoutine.autoFocus())
+                .willReturn(FOCUS_RESULT);
+
+        testee.start();
+
+        // When
+        PendingResult<FocusResult> result = testee.focus();
+
+        // Then
+        assertEquals(
+                FOCUS_RESULT,
+                result
+        );
+
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void focus_NotStartedYet() throws Exception {
+        // When
+        testee.focus();
 
         // Then
         // Expect exception
