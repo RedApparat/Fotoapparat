@@ -12,12 +12,12 @@ import io.fotoapparat.parameter.provider.CapabilitiesProvider;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.result.CapabilitiesResult;
 import io.fotoapparat.result.PhotoResult;
-import io.fotoapparat.routine.AutoFocusRoutine;
+import io.fotoapparat.routine.focus.AutoFocusRoutine;
 import io.fotoapparat.routine.CheckAvailabilityRoutine;
 import io.fotoapparat.routine.ConfigurePreviewStreamRoutine;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
-import io.fotoapparat.routine.TakePictureRoutine;
+import io.fotoapparat.routine.picture.TakePictureRoutine;
 import io.fotoapparat.routine.UpdateOrientationRoutine;
 import io.fotoapparat.test.ImmediateExecutor;
 
@@ -196,7 +196,7 @@ public class FotoapparatTest {
         testee.autoFocus();
 
         // Then
-        verify(autoFocusRoutine).run();
+        verify(autoFocusRoutine).autoFocus();
     }
 
     @Test(expected = IllegalStateException.class)

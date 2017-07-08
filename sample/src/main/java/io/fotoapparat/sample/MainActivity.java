@@ -58,27 +58,55 @@ public class MainActivity extends AppCompatActivity {
             permissionsDelegate.requestCameraPermission();
         }
 
+        setupFotoapparat();
+
+        takePictureOnClick(cameraView);
+        autoFocusOnLongClick(cameraView);
+
+        setupSwitchCameraButton();
+    }
+
+    private void setupFotoapparat() {
         frontFotoapparat = createFotoapparat(LensPosition.FRONT);
         backFotoapparat = createFotoapparat(LensPosition.BACK);
         fotoapparatSwitcher = FotoapparatSwitcher.withDefault(backFotoapparat);
+    }
 
-        cameraView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture();
-            }
-        });
-
+    private void setupSwitchCameraButton() {
         View switchCameraButton = findViewById(R.id.switchCamera);
         switchCameraButton.setVisibility(
                 canSwitchCameras()
                         ? View.VISIBLE
                         : View.GONE
         );
-        switchCameraButton.setOnClickListener(new View.OnClickListener() {
+        switchCameraOnClick(switchCameraButton);
+    }
+
+    private void switchCameraOnClick(View view) {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switchCamera();
+            }
+        });
+    }
+
+    private void autoFocusOnLongClick(View view) {
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                fotoapparatSwitcher.getCurrentFotoapparat().autoFocus();
+
+                return true;
+            }
+        });
+    }
+
+    private void takePictureOnClick(View view) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePicture();
             }
         });
     }

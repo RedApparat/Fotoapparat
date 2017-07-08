@@ -1,4 +1,4 @@
-package io.fotoapparat.routine;
+package io.fotoapparat.routine.picture;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.photo.Photo;
+import io.fotoapparat.routine.picture.TakePictureTask;
 
 import static io.fotoapparat.test.TestUtils.resultOf;
 import static junit.framework.Assert.assertEquals;

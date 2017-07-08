@@ -14,12 +14,12 @@ import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.parameter.provider.InitialParametersValidator;
 import io.fotoapparat.result.CapabilitiesResult;
 import io.fotoapparat.result.PhotoResult;
-import io.fotoapparat.routine.AutoFocusRoutine;
+import io.fotoapparat.routine.focus.AutoFocusRoutine;
 import io.fotoapparat.routine.CheckAvailabilityRoutine;
 import io.fotoapparat.routine.ConfigurePreviewStreamRoutine;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
-import io.fotoapparat.routine.TakePictureRoutine;
+import io.fotoapparat.routine.picture.TakePictureRoutine;
 import io.fotoapparat.routine.UpdateOrientationRoutine;
 
 /**
@@ -121,7 +121,10 @@ public class Fotoapparat {
                 SERIAL_EXECUTOR
         );
 
-        AutoFocusRoutine autoFocusRoutine = new AutoFocusRoutine(cameraDevice);
+        AutoFocusRoutine autoFocusRoutine = new AutoFocusRoutine(
+                cameraDevice,
+                SERIAL_EXECUTOR
+        );
 
         CheckAvailabilityRoutine checkAvailabilityRoutine = new CheckAvailabilityRoutine(
                 cameraDevice,
@@ -177,9 +180,7 @@ public class Fotoapparat {
     public Fotoapparat autoFocus() {
         ensureStarted();
 
-        executor.execute(
-                autoFocusRoutine
-        );
+        autoFocusRoutine.autoFocus();
 
         return this;
     }

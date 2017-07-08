@@ -1,4 +1,4 @@
-package io.fotoapparat.routine;
+package io.fotoapparat.routine.picture;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +11,8 @@ import java.util.concurrent.Executor;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.result.PhotoResult;
+import io.fotoapparat.routine.picture.TakePictureRoutine;
+import io.fotoapparat.routine.picture.TakePictureTask;
 import io.fotoapparat.test.ImmediateExecutor;
 
 import static org.junit.Assert.assertNotNull;
