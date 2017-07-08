@@ -14,10 +14,15 @@ import java.util.concurrent.atomic.AtomicReference;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.hardware.operators.ParametersOperator;
 import io.fotoapparat.hardware.orientation.OrientationUtils;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.provider.V1AvailableLensPositionProvider;
 import io.fotoapparat.hardware.v1.capabilities.CapabilitiesFactory;
+import io.fotoapparat.hardware.v1.parameters.SplitParametersOperator;
+import io.fotoapparat.hardware.v1.parameters.SupressExceptionsParametersOperator;
+import io.fotoapparat.hardware.v1.parameters.SwitchOnFailureParametersOperator;
+import io.fotoapparat.hardware.v1.parameters.UnsafeParametersOperator;
 import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
@@ -56,10 +61,6 @@ public class Camera1 implements CameraDevice {
 
     private static void throwOnFailSetDisplaySurface(Object displaySurface, IOException e) {
         throw new CameraException("Unable to set display surface: " + displaySurface, e);
-    }
-
-    private static void throwOnFailSetParameters(Parameters parameters, Exception e) {
-        throw new CameraException("Failed to set parameters: " + parameters, e);
     }
 
     @Override
@@ -188,16 +189,27 @@ public class Camera1 implements CameraDevice {
     public void updateParameters(Parameters parameters) {
         recordMethod();
 
-        Camera.Parameters cameraParameters = parametersConverter.convert(
-                parameters,
-                camera.getParameters()
+        parametersOperator().updateParameters(parameters);
+    }
+
+    @NonNull
+    private SwitchOnFailureParametersOperator parametersOperator() {
+        ParametersOperator unsafeParametersOperator = new UnsafeParametersOperator(
+                camera,
+                parametersConverter
         );
 
-        try {
-            camera.setParameters(cameraParameters);
-        } catch (Exception e) {
-            throwOnFailSetParameters(parameters, e);
-        }
+        ParametersOperator fallbackOperator = new SplitParametersOperator(
+                new SupressExceptionsParametersOperator(
+                        unsafeParametersOperator,
+                        logger
+                )
+        );
+
+        return new SwitchOnFailureParametersOperator(
+                unsafeParametersOperator,
+                fallbackOperator
+        );
     }
 
     @Override
