@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import io.fotoapparat.error.UnrecoverableErrorCallback;
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Flash;
@@ -28,227 +29,252 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class FotoapparatBuilderTest {
 
-	@Mock
-	Context context;
-	@Mock
-	CameraProvider cameraProvider;
-	@Mock
-	CameraRenderer cameraRenderer;
+    @Mock
+    Context context;
+    @Mock
+    CameraProvider cameraProvider;
+    @Mock
+    CameraRenderer cameraRenderer;
 
-	@Mock
-	SelectorFunction<Size> photoSizeSelector;
-	@Mock
-	SelectorFunction<Size> previewSizeSelector;
-	@Mock
-	SelectorFunction<LensPosition> lensPositionSelector;
-	@Mock
-	SelectorFunction<FocusMode> focusModeSelector;
-	@Mock
-	SelectorFunction<Flash> flashSelector;
+    @Mock
+    SelectorFunction<Size> photoSizeSelector;
+    @Mock
+    SelectorFunction<Size> previewSizeSelector;
+    @Mock
+    SelectorFunction<LensPosition> lensPositionSelector;
+    @Mock
+    SelectorFunction<FocusMode> focusModeSelector;
+    @Mock
+    SelectorFunction<Flash> flashSelector;
 
-	@Mock
-	FrameProcessor frameProcessor;
+    @Mock
+    FrameProcessor frameProcessor;
 
-	@Mock
-	Logger logger;
+    @Mock
+    Logger logger;
 
-	@Before
-	public void setUp() throws Exception {
-		given(context.getSystemService(Context.WINDOW_SERVICE))
-				.willReturn(Mockito.mock(WindowManager.class));
-	}
+    @Mock
+    UnrecoverableErrorCallback unrecoverableErrorCallback;
 
-	@Test
-	public void onlyMandatoryParameters() throws Exception {
-		// Given
-		FotoapparatBuilder builder = builderWithMandatoryArguments();
+    @Before
+    public void setUp() throws Exception {
+        given(context.getSystemService(Context.WINDOW_SERVICE))
+                .willReturn(Mockito.mock(WindowManager.class));
+    }
 
-		// When
-		Fotoapparat result = builder.build();
+    @Test
+    public void onlyMandatoryParameters() throws Exception {
+        // Given
+        FotoapparatBuilder builder = builderWithMandatoryArguments();
 
-		// Then
-		assertNotNull(result);
-	}
+        // When
+        Fotoapparat result = builder.build();
 
-	@Test
-	public void cameraProvider_HasDefault() throws Exception {
-		// When
-		FotoapparatBuilder builder = builderWithMandatoryArguments();
+        // Then
+        assertNotNull(result);
+    }
 
-		// Then
-		assertNotNull(builder.cameraProvider);
-	}
+    @Test
+    public void cameraProvider_HasDefault() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments();
 
-	@Test
-	public void cameraProvider_IsConfigurable() throws Exception {
-		// When
-		FotoapparatBuilder builder = builderWithMandatoryArguments()
-				.cameraProvider(cameraProvider);
+        // Then
+        assertNotNull(builder.cameraProvider);
+    }
 
-		// Then
-		assertEquals(
-				cameraProvider,
-				builder.cameraProvider
-		);
-	}
+    @Test
+    public void cameraProvider_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .cameraProvider(cameraProvider);
 
-	@Test
-	public void logger_HasDefault() throws Exception {
-		// When
-		FotoapparatBuilder builder = builderWithMandatoryArguments();
+        // Then
+        assertEquals(
+                cameraProvider,
+                builder.cameraProvider
+        );
+    }
 
-		// Then
-		assertNotNull(builder.logger);
-	}
+    @Test
+    public void logger_HasDefault() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments();
 
-	@Test
-	public void logger_IsConfigurable() throws Exception {
-		// When
-		FotoapparatBuilder builder = builderWithMandatoryArguments()
-				.logger(logger);
+        // Then
+        assertNotNull(builder.logger);
+    }
 
-		// Then
-		assertEquals(
-				logger,
-				builder.logger
-		);
-	}
+    @Test
+    public void logger_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .logger(logger);
 
-	@Test
-	public void focusMode_HasDefault() throws Exception {
-		// When
-		FotoapparatBuilder builder = builderWithMandatoryArguments();
+        // Then
+        assertEquals(
+                logger,
+                builder.logger
+        );
+    }
 
-		// Then
-		assertNotNull(builder.focusModeSelector);
-	}
+    @Test
+    public void focusMode_HasDefault() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments();
 
-	@Test
-	public void focusMode_IsConfigurable() throws Exception {
-		// When
-		FotoapparatBuilder builder = builderWithMandatoryArguments()
-				.focusMode(focusModeSelector);
+        // Then
+        assertNotNull(builder.focusModeSelector);
+    }
 
-		// Then
-		assertEquals(
-				focusModeSelector,
-				builder.focusModeSelector
-		);
-	}
+    @Test
+    public void focusMode_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .focusMode(focusModeSelector);
 
-	@Test
-	public void flashMode_IsConfigurable() throws Exception {
-		// When
-		FotoapparatBuilder builder = builderWithMandatoryArguments()
-				.flash(flashSelector);
+        // Then
+        assertEquals(
+                focusModeSelector,
+                builder.focusModeSelector
+        );
+    }
 
-		// Then
-		assertEquals(
-				flashSelector,
-				builder.flashSelector
-		);
-	}
+    @Test
+    public void flashMode_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .flash(flashSelector);
 
-	@Test
-	public void frameProcessor_NullByDefault() throws Exception {
-		// When
-		FotoapparatBuilder builder = builderWithMandatoryArguments();
+        // Then
+        assertEquals(
+                flashSelector,
+                builder.flashSelector
+        );
+    }
 
-		// Then
-		assertNull(builder.frameProcessor);
-	}
+    @Test
+    public void frameProcessor_NullByDefault() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments();
 
-	@Test
-	public void frameProcessor_IsConfigurable() throws Exception {
-		// When
-		FotoapparatBuilder builder = builderWithMandatoryArguments()
-				.frameProcessor(frameProcessor);
+        // Then
+        assertNull(builder.frameProcessor);
+    }
 
-		// Then
-		assertEquals(
-				frameProcessor,
-				builder.frameProcessor
-		);
-	}
+    @Test
+    public void frameProcessor_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .frameProcessor(frameProcessor);
 
-	@Test
-	public void photoSize_IsConfigurable() throws Exception {
-		// When
-		FotoapparatBuilder builder = builderWithMandatoryArguments()
-				.photoSize(photoSizeSelector);
+        // Then
+        assertEquals(
+                frameProcessor,
+                builder.frameProcessor
+        );
+    }
 
-		// Then
-		assertEquals(
-				photoSizeSelector,
-				builder.photoSizeSelector
-		);
-	}
+    @Test
+    public void photoSize_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .photoSize(photoSizeSelector);
 
-	@Test
-	public void previewSize_HasDefault() throws Exception {
-		// When
-		FotoapparatBuilder builder = builderWithMandatoryArguments();
+        // Then
+        assertEquals(
+                photoSizeSelector,
+                builder.photoSizeSelector
+        );
+    }
 
-		// Then
-		assertNotNull(builder.previewSizeSelector);
-	}
+    @Test
+    public void previewSize_HasDefault() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments();
 
-	@Test
-	public void previewSize_IsConfigurable() throws Exception {
-		// When
-		FotoapparatBuilder builder = builderWithMandatoryArguments()
-				.previewSize(previewSizeSelector);
+        // Then
+        assertNotNull(builder.previewSizeSelector);
+    }
 
-		// Then
-		assertEquals(
-				previewSizeSelector,
-				builder.previewSizeSelector
-		);
-	}
+    @Test
+    public void previewSize_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .previewSize(previewSizeSelector);
 
-	@Test(expected = IllegalStateException.class)
-	public void rendererIsMandatory() throws Exception {
-		// Given
-		FotoapparatBuilder builder = builderWithMandatoryArguments()
-				.into(null);
+        // Then
+        assertEquals(
+                previewSizeSelector,
+                builder.previewSizeSelector
+        );
+    }
 
-		// When
-		builder.build();
+    @Test
+    public void unrecoverableErrorCallback_HasDefault() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments();
 
-		// Then
-		// Expect exception
-	}
+        // Then
+        assertNotNull(builder.unrecoverableErrorCallback);
+    }
 
-	@Test(expected = IllegalStateException.class)
-	public void lensPositionIsMandatory() throws Exception {
-		// Given
-		FotoapparatBuilder builder = builderWithMandatoryArguments()
-				.lensPosition(null);
+    @Test
+    public void unrecoverableErrorCallback_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .unrecoverableErrorCallback(unrecoverableErrorCallback);
 
-		// When
-		builder.build();
+        // Then
+        assertEquals(
+                unrecoverableErrorCallback,
+                builder.unrecoverableErrorCallback
+        );
+    }
 
-		// Then
-		// Expect exception
-	}
+    @Test(expected = IllegalStateException.class)
+    public void rendererIsMandatory() throws Exception {
+        // Given
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .into(null);
 
-	@Test(expected = IllegalStateException.class)
-	public void photoSizeIsMandatory() throws Exception {
-		// Given
-		FotoapparatBuilder builder = builderWithMandatoryArguments()
-				.photoSize(null);
+        // When
+        builder.build();
 
-		// When
-		builder.build();
+        // Then
+        // Expect exception
+    }
 
-		// Then
-		// Expect exception
-	}
+    @Test(expected = IllegalStateException.class)
+    public void lensPositionIsMandatory() throws Exception {
+        // Given
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .lensPosition(null);
 
-	private FotoapparatBuilder builderWithMandatoryArguments() {
-		return new FotoapparatBuilder(context)
-				.lensPosition(lensPositionSelector)
-				.photoSize(photoSizeSelector)
-				.into(cameraRenderer);
-	}
+        // When
+        builder.build();
+
+        // Then
+        // Expect exception
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void photoSizeIsMandatory() throws Exception {
+        // Given
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .photoSize(null);
+
+        // When
+        builder.build();
+
+        // Then
+        // Expect exception
+    }
+
+    private FotoapparatBuilder builderWithMandatoryArguments() {
+        return new FotoapparatBuilder(context)
+                .lensPosition(lensPositionSelector)
+                .photoSize(photoSizeSelector)
+                .into(cameraRenderer);
+    }
 }

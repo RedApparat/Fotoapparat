@@ -3,6 +3,7 @@ package io.fotoapparat;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import io.fotoapparat.error.UnrecoverableErrorCallback;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.log.Logger;
@@ -53,6 +54,8 @@ public class FotoapparatBuilder {
     FrameProcessor frameProcessor = null;
 
     Logger logger = Loggers.none();
+
+    UnrecoverableErrorCallback unrecoverableErrorCallback = UnrecoverableErrorCallback.NULL;
 
     FotoapparatBuilder(@NonNull Context context) {
         this.context = context;
@@ -121,6 +124,15 @@ public class FotoapparatBuilder {
      */
     public FotoapparatBuilder logger(@NonNull Logger logger) {
         this.logger = logger;
+        return this;
+    }
+
+    /**
+     * @param callback which will be notified when unrecoverable error happens in Fotoapparat.
+     * @see UnrecoverableErrorCallback
+     */
+    public FotoapparatBuilder unrecoverableErrorCallback(@NonNull UnrecoverableErrorCallback callback) {
+        this.unrecoverableErrorCallback = callback;
         return this;
     }
 
