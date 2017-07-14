@@ -5,11 +5,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.FotoapparatSwitcher;
+import io.fotoapparat.error.CameraErrorCallback;
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.preview.Frame;
@@ -137,6 +140,12 @@ public class MainActivity extends AppCompatActivity {
                         logcat(),
                         fileLogger(this)
                 ))
+                .cameraErrorCallback(new CameraErrorCallback() {
+                    @Override
+                    public void onError(CameraException e) {
+                        Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                })
                 .build();
     }
 
