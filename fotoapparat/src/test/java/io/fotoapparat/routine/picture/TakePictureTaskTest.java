@@ -9,15 +9,17 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.hardware.CameraDevice;
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.photo.Photo;
-import io.fotoapparat.routine.picture.TakePictureTask;
 
 import static io.fotoapparat.test.TestUtils.resultOf;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TakePictureTaskTest {
@@ -90,4 +92,24 @@ public class TakePictureTaskTest {
 
         assertEquals(result, PHOTO);
     }
+
+    @Test
+    public void startPreviewFailed() throws Exception {
+        // Given
+        given(cameraDevice.autoFocus())
+                .willReturn(new FocusResult(true, false));
+
+        doThrow(new CameraException("test"))
+                .when(cameraDevice)
+                .startPreview();
+
+        // When
+        Photo result = resultOf(testee);
+
+        // Then
+        verify(cameraDevice).startPreview();
+
+        assertEquals(result, PHOTO);
+    }
+
 }
