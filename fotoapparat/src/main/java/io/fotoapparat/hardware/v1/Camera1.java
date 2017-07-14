@@ -82,7 +82,7 @@ public class Camera1 implements CameraDevice {
                     lastStacktrace.printStackTrace();
                 }
 
-                throw new IllegalStateException("Camera error code: " + error);
+                logger.log("Camera error code: " + error);
             }
         });
     }
@@ -123,7 +123,7 @@ public class Camera1 implements CameraDevice {
     public void close() {
         recordMethod();
 
-        if (camera != null) {
+        if (isCameraOpened()) {
             camera.release();
         }
     }
@@ -132,14 +132,27 @@ public class Camera1 implements CameraDevice {
     public void startPreview() {
         recordMethod();
 
-        camera.startPreview();
+        try {
+            camera.startPreview();
+        } catch (RuntimeException e) {
+            throwOnFailStartPreview(e);
+        }
+    }
+
+    private void throwOnFailStartPreview(RuntimeException e) {
+        throw new CameraException(
+                "Failed to start preview for camera devices: " + cameraId,
+                e
+        );
     }
 
     @Override
     public void stopPreview() {
         recordMethod();
 
-        camera.stopPreview();
+        if (isCameraOpened()) {
+            camera.stopPreview();
+        }
     }
 
     @Override
@@ -156,6 +169,10 @@ public class Camera1 implements CameraDevice {
     @Override
     public void setDisplayOrientation(int degrees) {
         recordMethod();
+
+        if (!isCameraOpened()) {
+            return;
+        }
 
         Camera.CameraInfo info = getCameraInfo(cameraId);
 
@@ -266,15 +283,14 @@ public class Camera1 implements CameraDevice {
     @Override
     public PreviewStream getPreviewStream() {
         recordMethod();
-        ensurePreviewStreamAvailable();
 
-        return previewStream;
+        return isPreviewStreamInitialized()
+                ? previewStream
+                : PreviewStream.NULL;
     }
 
-    private void ensurePreviewStreamAvailable() {
-        if (previewStream == null) {
-            throw new IllegalStateException("Preview stream is null. Make sure camera is opened.");
-        }
+    private boolean isPreviewStreamInitialized() {
+        return previewStream != null;
     }
 
     @Override
@@ -309,7 +325,9 @@ public class Camera1 implements CameraDevice {
                 }
             });
         } catch (Exception e) {
-            throwOnFailAutoFocus(e);
+            logFailedAutoFocus(e);
+
+            return FocusResult.none();
         }
 
         try {
@@ -321,8 +339,8 @@ public class Camera1 implements CameraDevice {
         return FocusResult.successNoMeasurement();
     }
 
-    private void throwOnFailAutoFocus(Exception e) {
-        throw new CameraException("Failed to perform autofocus using device " + cameraId, e);
+    private void logFailedAutoFocus(Exception e) {
+        logger.log("Failed to perform autofocus using device " + cameraId + " e: " + e.getMessage());
     }
 
     @Override
@@ -349,6 +367,10 @@ public class Camera1 implements CameraDevice {
         Camera.CameraInfo info = new Camera.CameraInfo();
         Camera.getCameraInfo(id, info);
         return info;
+    }
+
+    private boolean isCameraOpened() {
+        return camera != null;
     }
 
     private void recordMethod() {

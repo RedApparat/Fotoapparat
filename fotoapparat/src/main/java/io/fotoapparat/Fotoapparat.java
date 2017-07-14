@@ -5,6 +5,8 @@ import android.content.Context;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import io.fotoapparat.error.Callbacks;
+import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.orientation.OrientationSensor;
 import io.fotoapparat.hardware.orientation.RotationListener;
@@ -72,8 +74,12 @@ public class Fotoapparat {
     }
 
     static Fotoapparat create(FotoapparatBuilder builder) {
+        CameraErrorCallback cameraErrorCallback = Callbacks.onMainThread(
+                builder.cameraErrorCallback
+        );
 
         CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
+
         ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
         RotationListener rotationListener = new RotationListener(builder.context);
 
@@ -92,7 +98,8 @@ public class Fotoapparat {
                 builder.renderer,
                 builder.lensPositionSelector,
                 screenOrientationProvider,
-                initialParametersProvider
+                initialParametersProvider,
+                cameraErrorCallback
         );
 
         StopCameraRoutine stopCameraRoutine = new StopCameraRoutine(cameraDevice);

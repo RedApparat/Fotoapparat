@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import io.fotoapparat.error.UnrecoverableErrorCallback;
+import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Flash;
@@ -54,7 +54,7 @@ public class FotoapparatBuilderTest {
     Logger logger;
 
     @Mock
-    UnrecoverableErrorCallback unrecoverableErrorCallback;
+    CameraErrorCallback cameraErrorCallback;
 
     @Before
     public void setUp() throws Exception {
@@ -211,28 +211,29 @@ public class FotoapparatBuilderTest {
     }
 
     @Test
-    public void unrecoverableErrorCallback_HasDefault() throws Exception {
+    public void cameraErrorCallback_HasDefault() throws Exception {
         // When
         FotoapparatBuilder builder = builderWithMandatoryArguments();
 
         // Then
-        assertNotNull(builder.unrecoverableErrorCallback);
+        assertNotNull(builder.cameraErrorCallback);
     }
 
     @Test
-    public void unrecoverableErrorCallback_IsConfigurable() throws Exception {
+    public void cameraErrorCallback_IsConfigurable() throws Exception {
         // When
         FotoapparatBuilder builder = builderWithMandatoryArguments()
-                .unrecoverableErrorCallback(unrecoverableErrorCallback);
+                .cameraErrorCallback(cameraErrorCallback);
 
         // Then
         assertEquals(
-                unrecoverableErrorCallback,
-                builder.unrecoverableErrorCallback
+                cameraErrorCallback,
+                builder.cameraErrorCallback
         );
     }
 
     @Test(expected = IllegalStateException.class)
+    @SuppressWarnings("ConstantConditions")
     public void rendererIsMandatory() throws Exception {
         // Given
         FotoapparatBuilder builder = builderWithMandatoryArguments()
@@ -246,6 +247,7 @@ public class FotoapparatBuilderTest {
     }
 
     @Test(expected = IllegalStateException.class)
+    @SuppressWarnings("ConstantConditions")
     public void lensPositionIsMandatory() throws Exception {
         // Given
         FotoapparatBuilder builder = builderWithMandatoryArguments()
@@ -259,6 +261,7 @@ public class FotoapparatBuilderTest {
     }
 
     @Test(expected = IllegalStateException.class)
+    @SuppressWarnings("ConstantConditions")
     public void photoSizeIsMandatory() throws Exception {
         // Given
         FotoapparatBuilder builder = builderWithMandatoryArguments()
