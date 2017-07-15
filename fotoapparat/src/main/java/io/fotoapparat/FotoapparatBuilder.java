@@ -83,6 +83,14 @@ public class FotoapparatBuilder {
     }
 
     /**
+     * @param selector selects size of preview stream (in pixels) from list of available sizes.
+     */
+    public FotoapparatBuilder previewStyle(SelectorFunction<Size> selector) {
+        previewSizeSelector = selector;
+        return this;
+    }
+
+    /**
      * @param selector selects focus mode from list of available modes.
      */
     public FotoapparatBuilder focusMode(SelectorFunction<FocusMode> selector) {
