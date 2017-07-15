@@ -10,6 +10,7 @@ import io.fotoapparat.log.Loggers;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.FlashSelectors;
 import io.fotoapparat.parameter.selector.SelectorFunction;
@@ -24,6 +25,7 @@ import static io.fotoapparat.parameter.selector.FocusModeSelectors.fixed;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.back;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.external;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.front;
+import static io.fotoapparat.parameter.selector.ScaleTypeSelectors.centerCropped;
 import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 
@@ -43,6 +45,7 @@ public class FotoapparatBuilder {
     );
     SelectorFunction<Size> photoSizeSelector = biggestSize();
     SelectorFunction<Size> previewSizeSelector = biggestSize();
+    SelectorFunction<ScaleType> previewScaleTypeSelector = centerCropped();
     SelectorFunction<FocusMode> focusModeSelector = firstAvailable(
             continuousFocus(),
             autoFocus(),
@@ -83,10 +86,10 @@ public class FotoapparatBuilder {
     }
 
     /**
-     * @param selector selects size of preview stream (in pixels) from list of available sizes.
+     * @param selector selects scale type of preview inside the view.
      */
-    public FotoapparatBuilder previewStyle(SelectorFunction<Size> selector) {
-        previewSizeSelector = selector;
+    public FotoapparatBuilder previewScaleType(SelectorFunction<ScaleType> selector) {
+        previewScaleTypeSelector = selector;
         return this;
     }
 

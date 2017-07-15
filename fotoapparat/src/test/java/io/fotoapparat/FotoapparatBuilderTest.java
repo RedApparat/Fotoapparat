@@ -15,6 +15,7 @@ import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.preview.FrameProcessor;
@@ -39,6 +40,8 @@ public class FotoapparatBuilderTest {
     SelectorFunction<Size> photoSizeSelector;
     @Mock
     SelectorFunction<Size> previewSizeSelector;
+    @Mock
+    SelectorFunction<ScaleType> previewScaleTypeSelector;
     @Mock
     SelectorFunction<LensPosition> lensPositionSelector;
     @Mock
@@ -212,19 +215,19 @@ public class FotoapparatBuilderTest {
         FotoapparatBuilder builder = builderWithMandatoryArguments();
 
         // Then
-        assertNotNull(builder.previewSizeSelector);
+        assertNotNull(builder.previewScaleTypeSelector);
     }
 
     @Test
     public void previewStyle_IsConfigurable() throws Exception {
         // When
         FotoapparatBuilder builder = builderWithMandatoryArguments()
-                .previewStyle(previewSizeSelector);
+                .previewScaleType(previewScaleTypeSelector);
 
         // Then
         assertEquals(
-                previewSizeSelector,
-                builder.previewSizeSelector
+                previewScaleTypeSelector,
+                builder.previewScaleTypeSelector
         );
     }
 
