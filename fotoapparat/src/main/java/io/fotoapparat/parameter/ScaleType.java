@@ -6,13 +6,13 @@ package io.fotoapparat.parameter;
 public enum ScaleType {
 
     /**
-     * The preview will be scaled so as it's one dimensions will be equal and the other equal or
+     * The preview will be scaled so as its one dimensions will be equal and the other one equal or
      * larger than the corresponding dimension of the view
      */
     CENTER_CROP,
 
     /**
-     * The preview will be scaled so as it's one dimensions will be equal and the other equal or
+     * The preview will be scaled so as its one dimensions will be equal and the other one equal or
      * smaller than the corresponding dimension of the view
      */
     CENTER_INSIDE
