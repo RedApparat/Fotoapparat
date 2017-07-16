@@ -56,7 +56,6 @@ public class InitialParametersProvider {
         return parameters;
     }
 
-
     private void putPreviewSize(Capabilities capabilities, Parameters parameters) {
         Size photoSize = photoSize(capabilities);
 
