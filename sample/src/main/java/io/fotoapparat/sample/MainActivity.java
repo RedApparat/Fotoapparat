@@ -30,6 +30,7 @@ import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.continuousFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.fixed;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.lensPosition;
+import static io.fotoapparat.parameter.selector.ScaleTypeSelectors.centerCropped;
 import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 import static io.fotoapparat.result.transformer.SizeTransformers.scaled;
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 .with(this)
                 .into(cameraView)
                 .photoSize(standardRatio(biggestSize()))
+                .previewScaleType(centerCropped())
                 .lensPosition(lensPosition(position))
                 .focusMode(firstAvailable(
                         continuousFocus(),
