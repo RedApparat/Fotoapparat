@@ -23,40 +23,45 @@ public class StartCameraRoutine implements Runnable {
     private final InitialParametersProvider initialParametersProvider;
     private final CameraErrorCallback cameraErrorCallback;
 
-	public StartCameraRoutine(CameraDevice cameraDevice,
-							  CameraRenderer cameraRenderer,
-							ScaleType scaleType,  SelectorFunction<LensPosition> lensPositionSelector,
-							  ScreenOrientationProvider screenOrientationProvider,
-							  InitialParametersProvider initialParametersProvider,
-		CameraErrorCallback cameraErrorCallback) {this.cameraDevice = cameraDevice;
-		this.cameraRenderer = cameraRenderer;this.scaleType = scaleType;
-		this.lensPositionSelector = lensPositionSelector;
-		this.screenOrientationProvider = screenOrientationProvider;
-		this.initialParametersProvider = initialParametersProvider;
-	this.cameraErrorCallback = cameraErrorCallback;}
+    public StartCameraRoutine(CameraDevice cameraDevice,
+                              CameraRenderer cameraRenderer,
+                              ScaleType scaleType,
+                              SelectorFunction<LensPosition> lensPositionSelector,
+                              ScreenOrientationProvider screenOrientationProvider,
+                              InitialParametersProvider initialParametersProvider,
+                              CameraErrorCallback cameraErrorCallback) {
+        this.cameraDevice = cameraDevice;
+        this.cameraRenderer = cameraRenderer;
+        this.scaleType = scaleType;
+        this.lensPositionSelector = lensPositionSelector;
+        this.screenOrientationProvider = screenOrientationProvider;
+        this.initialParametersProvider = initialParametersProvider;
+        this.cameraErrorCallback = cameraErrorCallback;
+    }
 
-	@Override
-	public void run() {
-		try {
+    @Override
+    public void run() {
+        try {
             tryToStartCamera();
         } catch (CameraException e) {
             cameraErrorCallback.onError(e);
         }
     }
 
-    private void tryToStartCamera() {LensPosition lensPosition = lensPositionSelector.select(
-				cameraDevice.getAvailableLensPositions()
-		);
+    private void tryToStartCamera() {
+        LensPosition lensPosition = lensPositionSelector.select(
+                cameraDevice.getAvailableLensPositions()
+        );
 
-		cameraDevice.open(lensPosition);
-		cameraDevice.updateParameters(
-				initialParametersProvider.initialParameters()
-		);
-		cameraDevice.setDisplayOrientation(
-				screenOrientationProvider.getScreenRotation()
-		);
-		cameraRenderer.setScaleType(scaleType);
-		cameraRenderer.attachCamera(cameraDevice);
-		cameraDevice.startPreview();
-	}
+        cameraDevice.open(lensPosition);
+        cameraDevice.updateParameters(
+                initialParametersProvider.initialParameters()
+        );
+        cameraDevice.setDisplayOrientation(
+                screenOrientationProvider.getScreenRotation()
+        );
+        cameraRenderer.setScaleType(scaleType);
+        cameraRenderer.attachCamera(cameraDevice);
+        cameraDevice.startPreview();
+    }
 }

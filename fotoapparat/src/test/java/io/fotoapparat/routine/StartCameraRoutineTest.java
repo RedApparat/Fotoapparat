@@ -1,5 +1,6 @@
 package io.fotoapparat.routine;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
@@ -50,20 +51,37 @@ public class StartCameraRoutineTest {
     @Mock
     CameraErrorCallback cameraErrorCallback;
 
-	@Test
-	public void routine() throws Exception {
-		// GivenStartCameraRoutine testee = new StartCameraRoutine(
+    StartCameraRoutine testee;
+
+    @Before
+    public void setUp() throws Exception {
+        testee = new StartCameraRoutine(
                 cameraDevice,
                 cameraRenderer,
                 ScaleType.CENTER_INSIDE,
                 lensPositionSelector,
                 screenOrientationProvider,
-                initialParametersProvider
+                initialParametersProvider,
+                cameraErrorCallback
         );
-		List<LensPosition> availableLensPositions = asList(
-				LensPosition.FRONT,
-				LensPosition.BACK
-		);
+    }
+
+    @Test
+    public void routine() throws Exception {
+        // Given
+        StartCameraRoutine testee = new StartCameraRoutine(
+                cameraDevice,
+                cameraRenderer,
+                ScaleType.CENTER_INSIDE,
+                lensPositionSelector,
+                screenOrientationProvider,
+                initialParametersProvider,
+                cameraErrorCallback
+        );
+        List<LensPosition> availableLensPositions = asList(
+                LensPosition.FRONT,
+                LensPosition.BACK
+        );
 
         LensPosition preferredLensPosition = LensPosition.FRONT;
         ScaleType scaleType = ScaleType.CENTER_INSIDE;
@@ -83,13 +101,14 @@ public class StartCameraRoutineTest {
                 lensPositionSelector
         );
 
-		inOrder.verify(lensPositionSelector).select(availableLensPositions);
-		inOrder.verify(cameraDevice).open(preferredLensPosition);
-		inOrder.verify(cameraDevice).updateParameters(INITIAL_PARAMETERS);
-		inOrder.verify(cameraDevice).setDisplayOrientation(SCREEN_ROTATION_DEGREES);
-		inOrder.verify(cameraRenderer).setScaleType(scaleType);inOrder.verify(cameraRenderer).attachCamera(cameraDevice);
-		inOrder.verify(cameraDevice).startPreview();
-	verifyZeroInteractions(cameraErrorCallback);
+        inOrder.verify(lensPositionSelector).select(availableLensPositions);
+        inOrder.verify(cameraDevice).open(preferredLensPosition);
+        inOrder.verify(cameraDevice).updateParameters(INITIAL_PARAMETERS);
+        inOrder.verify(cameraDevice).setDisplayOrientation(SCREEN_ROTATION_DEGREES);
+        inOrder.verify(cameraRenderer).setScaleType(scaleType);
+        inOrder.verify(cameraRenderer).attachCamera(cameraDevice);
+        inOrder.verify(cameraDevice).startPreview();
+        verifyZeroInteractions(cameraErrorCallback);
     }
 
     @Test
@@ -117,7 +136,8 @@ public class StartCameraRoutineTest {
 
         verify(cameraDevice).getAvailableLensPositions();
         verify(cameraDevice).open(preferredLensPosition);
-        verifyNoMoreInteractions(cameraDevice);}
+        verifyNoMoreInteractions(cameraDevice);
+    }
 
     private void givenInitialParametersAvailable() {
         given(initialParametersProvider.initialParameters())
