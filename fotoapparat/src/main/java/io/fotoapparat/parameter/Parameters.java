@@ -64,6 +64,28 @@ public class Parameters {
         return result;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Parameters that = (Parameters) o;
+
+        return values.equals(that.values);
+    }
+
+    @Override
+    public int hashCode() {
+        return values.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Parameters{" +
+                "values=" + values +
+                '}';
+    }
+
     /**
      * Type of values which can be stored in {@link Parameters}.
      */

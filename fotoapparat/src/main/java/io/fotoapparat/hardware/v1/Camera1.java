@@ -8,15 +8,21 @@ import android.view.TextureView;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.hardware.operators.ParametersOperator;
 import io.fotoapparat.hardware.orientation.OrientationUtils;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.provider.V1AvailableLensPositionProvider;
 import io.fotoapparat.hardware.v1.capabilities.CapabilitiesFactory;
+import io.fotoapparat.hardware.v1.parameters.SplitParametersOperator;
+import io.fotoapparat.hardware.v1.parameters.SupressExceptionsParametersOperator;
+import io.fotoapparat.hardware.v1.parameters.SwitchOnFailureParametersOperator;
+import io.fotoapparat.hardware.v1.parameters.UnsafeParametersOperator;
 import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
@@ -32,13 +38,15 @@ import io.fotoapparat.preview.PreviewStream;
 @SuppressWarnings("deprecation")
 public class Camera1 implements CameraDevice {
 
+    private static final long AUTOFOCUS_TIMEOUT_SECONDS = 3L;
+
     private final CapabilitiesFactory capabilitiesFactory;
     private final ParametersConverter parametersConverter;
     private final AvailableLensPositionsProvider availableLensPositionsProvider;
     private final Logger logger;
 
     private Camera camera;
-    private int cameraId;
+    private int cameraId = -1;
     private PreviewStream1 previewStream;
 
     private Throwable lastStacktrace;
@@ -51,6 +59,10 @@ public class Camera1 implements CameraDevice {
         this.logger = logger;
     }
 
+    private static void throwOnFailSetDisplaySurface(Object displaySurface, IOException e) {
+        throw new CameraException("Unable to set display surface: " + displaySurface, e);
+    }
+
     @Override
     public void open(LensPosition lensPosition) {
         recordMethod();
@@ -60,7 +72,7 @@ public class Camera1 implements CameraDevice {
             camera = Camera.open(cameraId);
             previewStream = new PreviewStream1(camera);
         } catch (RuntimeException e) {
-            throw new CameraException(e);
+            throwOnFailedToOpenCamera(lensPosition, e);
         }
 
         camera.setErrorCallback(new Camera.ErrorCallback() {
@@ -70,9 +82,16 @@ public class Camera1 implements CameraDevice {
                     lastStacktrace.printStackTrace();
                 }
 
-                throw new IllegalStateException("Camera error code: " + error);
+                logger.log("Camera error code: " + error);
             }
         });
+    }
+
+    private void throwOnFailedToOpenCamera(LensPosition lensPosition, RuntimeException e) {
+        throw new CameraException(
+                "Failed to open camera with lens position: " + lensPosition + " and id: " + cameraId,
+                e
+        );
     }
 
     private int cameraIdForLensPosition(LensPosition lensPosition) {
@@ -104,7 +123,7 @@ public class Camera1 implements CameraDevice {
     public void close() {
         recordMethod();
 
-        if (camera != null) {
+        if (isCameraOpened()) {
             camera.release();
         }
     }
@@ -113,14 +132,27 @@ public class Camera1 implements CameraDevice {
     public void startPreview() {
         recordMethod();
 
-        camera.startPreview();
+        try {
+            camera.startPreview();
+        } catch (RuntimeException e) {
+            throwOnFailStartPreview(e);
+        }
+    }
+
+    private void throwOnFailStartPreview(RuntimeException e) {
+        throw new CameraException(
+                "Failed to start preview for camera devices: " + cameraId,
+                e
+        );
     }
 
     @Override
     public void stopPreview() {
         recordMethod();
 
-        camera.stopPreview();
+        if (isCameraOpened()) {
+            camera.stopPreview();
+        }
     }
 
     @Override
@@ -130,13 +162,17 @@ public class Camera1 implements CameraDevice {
         try {
             trySetDisplaySurface(displaySurface);
         } catch (IOException e) {
-            throw new CameraException(e);
+            throwOnFailSetDisplaySurface(displaySurface, e);
         }
     }
 
     @Override
     public void setDisplayOrientation(int degrees) {
         recordMethod();
+
+        if (!isCameraOpened()) {
+            return;
+        }
 
         Camera.CameraInfo info = getCameraInfo(cameraId);
 
@@ -170,12 +206,27 @@ public class Camera1 implements CameraDevice {
     public void updateParameters(Parameters parameters) {
         recordMethod();
 
-        Camera.Parameters cameraParameters = parametersConverter.convert(
-                parameters,
-                camera.getParameters()
+        parametersOperator().updateParameters(parameters);
+    }
+
+    @NonNull
+    private SwitchOnFailureParametersOperator parametersOperator() {
+        ParametersOperator unsafeParametersOperator = new UnsafeParametersOperator(
+                camera,
+                parametersConverter
         );
 
-        camera.setParameters(cameraParameters);
+        ParametersOperator fallbackOperator = new SplitParametersOperator(
+                new SupressExceptionsParametersOperator(
+                        unsafeParametersOperator,
+                        logger
+                )
+        );
+
+        return new SwitchOnFailureParametersOperator(
+                unsafeParametersOperator,
+                fallbackOperator
+        );
     }
 
     @Override
@@ -232,25 +283,32 @@ public class Camera1 implements CameraDevice {
     @Override
     public PreviewStream getPreviewStream() {
         recordMethod();
-        ensurePreviewStreamAvailable();
 
-        return previewStream;
+        return isPreviewStreamInitialized()
+                ? previewStream
+                : PreviewStream.NULL;
     }
 
-    private void ensurePreviewStreamAvailable() {
-        if (previewStream == null) {
-            throw new IllegalStateException("Preview stream is null. Make sure camera is opened.");
-        }
+    private boolean isPreviewStreamInitialized() {
+        return previewStream != null;
     }
 
     @Override
     public RendererParameters getRendererParameters() {
         recordMethod();
 
-        return new RendererParameters(
+        RendererParameters rendererParameters = new RendererParameters(
                 previewSize(),
                 imageRotation
         );
+
+        logRendererParameters(rendererParameters);
+
+        return rendererParameters;
+    }
+
+    private void logRendererParameters(RendererParameters rendererParameters) {
+        logger.log("Renderer parameters are: " + rendererParameters);
     }
 
     @Override
@@ -258,15 +316,22 @@ public class Camera1 implements CameraDevice {
         recordMethod();
 
         final CountDownLatch latch = new CountDownLatch(1);
-        camera.autoFocus(new Camera.AutoFocusCallback() {
-            @Override
-            public void onAutoFocus(boolean success, Camera camera) {
-                latch.countDown();
-            }
-        });
 
         try {
-            latch.await();
+            camera.autoFocus(new Camera.AutoFocusCallback() {
+                @Override
+                public void onAutoFocus(boolean success, Camera camera) {
+                    latch.countDown();
+                }
+            });
+        } catch (Exception e) {
+            logFailedAutoFocus(e);
+
+            return FocusResult.none();
+        }
+
+        try {
+            latch.await(AUTOFOCUS_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             // Do nothing
         }
@@ -274,9 +339,13 @@ public class Camera1 implements CameraDevice {
         return FocusResult.successNoMeasurement();
     }
 
+    private void logFailedAutoFocus(Exception e) {
+        logger.log("Failed to perform autofocus using device " + cameraId + " e: " + e.getMessage());
+    }
+
     @Override
     public void measureExposure() {
-        // TODO: 30.04.17
+        // Do nothing. Not supported by Camera1.
     }
 
     @Override
@@ -298,6 +367,10 @@ public class Camera1 implements CameraDevice {
         Camera.CameraInfo info = new Camera.CameraInfo();
         Camera.getCameraInfo(id, info);
         return info;
+    }
+
+    private boolean isCameraOpened() {
+        return camera != null;
     }
 
     private void recordMethod() {

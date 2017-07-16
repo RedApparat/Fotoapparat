@@ -5,6 +5,8 @@ import android.content.Context;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import io.fotoapparat.error.Callbacks;
+import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.orientation.OrientationSensor;
 import io.fotoapparat.hardware.orientation.RotationListener;
@@ -13,14 +15,16 @@ import io.fotoapparat.parameter.provider.CapabilitiesProvider;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.parameter.provider.InitialParametersValidator;
 import io.fotoapparat.result.CapabilitiesResult;
+import io.fotoapparat.result.FocusResult;
+import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
-import io.fotoapparat.routine.AutoFocusRoutine;
 import io.fotoapparat.routine.CheckAvailabilityRoutine;
 import io.fotoapparat.routine.ConfigurePreviewStreamRoutine;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
-import io.fotoapparat.routine.TakePictureRoutine;
 import io.fotoapparat.routine.UpdateOrientationRoutine;
+import io.fotoapparat.routine.focus.AutoFocusRoutine;
+import io.fotoapparat.routine.picture.TakePictureRoutine;
 
 /**
  * Camera. Takes pictures.
@@ -70,8 +74,12 @@ public class Fotoapparat {
     }
 
     static Fotoapparat create(FotoapparatBuilder builder) {
+        CameraErrorCallback cameraErrorCallback = Callbacks.onMainThread(
+                builder.cameraErrorCallback
+        );
 
         CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
+
         ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
         RotationListener rotationListener = new RotationListener(builder.context);
 
@@ -91,7 +99,8 @@ public class Fotoapparat {
                 builder.scaleType,
                 builder.lensPositionSelector,
                 screenOrientationProvider,
-                initialParametersProvider
+                initialParametersProvider,
+                cameraErrorCallback
         );
 
         StopCameraRoutine stopCameraRoutine = new StopCameraRoutine(cameraDevice);
@@ -122,7 +131,10 @@ public class Fotoapparat {
                 SERIAL_EXECUTOR
         );
 
-        AutoFocusRoutine autoFocusRoutine = new AutoFocusRoutine(cameraDevice);
+        AutoFocusRoutine autoFocusRoutine = new AutoFocusRoutine(
+                cameraDevice,
+                SERIAL_EXECUTOR
+        );
 
         CheckAvailabilityRoutine checkAvailabilityRoutine = new CheckAvailabilityRoutine(
                 cameraDevice,
@@ -176,13 +188,20 @@ public class Fotoapparat {
      * Performs auto focus. If it is not available or not enabled, does nothing.
      */
     public Fotoapparat autoFocus() {
-        ensureStarted();
-
-        executor.execute(
-                autoFocusRoutine
-        );
+        focus();
 
         return this;
+    }
+
+    /**
+     * Attempts to focus the camera asynchronously.
+     *
+     * @return the pending result of focus operation which will deliver result asynchronously.
+     */
+    public PendingResult<FocusResult> focus() {
+        ensureStarted();
+
+        return autoFocusRoutine.autoFocus();
     }
 
     /**

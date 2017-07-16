@@ -83,7 +83,7 @@ public class CapabilitiesFactory {
             );
         }
 
-        return result;
-    }
+		result.add(FocusMode.FIXED);return result;
+	}
 
 }

@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Flash;
@@ -52,6 +53,9 @@ public class FotoapparatBuilderTest {
 
     @Mock
     Logger logger;
+
+    @Mock
+    CameraErrorCallback cameraErrorCallback;
 
     @Before
     public void setUp() throws Exception {
@@ -228,8 +232,30 @@ public class FotoapparatBuilderTest {
                 builder.scaleType
         );
     }
+    @Test
+    public void cameraErrorCallback_HasDefault() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments();
+
+        // Then
+        assertNotNull(builder.cameraErrorCallback);
+    }
+
+    @Test
+    public void cameraErrorCallback_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .cameraErrorCallback(cameraErrorCallback);
+
+        // Then
+        assertEquals(
+                cameraErrorCallback,
+                builder.cameraErrorCallback
+        );
+    }
 
     @Test(expected = IllegalStateException.class)
+    @SuppressWarnings("ConstantConditions")
     public void rendererIsMandatory() throws Exception {
         // Given
         FotoapparatBuilder builder = builderWithMandatoryArguments()
@@ -242,11 +268,11 @@ public class FotoapparatBuilderTest {
         // Expect exception
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void lensPositionIsMandatory() throws Exception {
-        // Given
-        FotoapparatBuilder builder = builderWithMandatoryArguments()
-                .lensPosition(null);
+	@Test(expected = IllegalStateException.class)
+	@SuppressWarnings("ConstantConditions")public void lensPositionIsMandatory() throws Exception {
+		// Given
+		FotoapparatBuilder builder = builderWithMandatoryArguments()
+				.lensPosition(null);
 
         // When
         builder.build();
@@ -255,11 +281,11 @@ public class FotoapparatBuilderTest {
         // Expect exception
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void photoSizeIsMandatory() throws Exception {
-        // Given
-        FotoapparatBuilder builder = builderWithMandatoryArguments()
-                .photoSize(null);
+	@Test(expected = IllegalStateException.class)
+	@SuppressWarnings("ConstantConditions")public void photoSizeIsMandatory() throws Exception {
+		// Given
+		FotoapparatBuilder builder = builderWithMandatoryArguments()
+				.photoSize(null);
 
         // When
         builder.build();

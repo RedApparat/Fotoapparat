@@ -9,7 +9,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
+import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.CameraDevice;
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
@@ -20,13 +22,20 @@ import io.fotoapparat.view.CameraRenderer;
 
 import static java.util.Arrays.asList;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StartCameraRoutineTest {
 
     static final int SCREEN_ROTATION_DEGREES = 90;
     static final Parameters INITIAL_PARAMETERS = new Parameters();
+
+    @SuppressWarnings("ThrowableInstanceNeverThrown")
+    static final CameraException CAMERA_EXCEPTION = new CameraException("test");
 
     @Mock
     CameraDevice cameraDevice;
@@ -38,11 +47,12 @@ public class StartCameraRoutineTest {
     ScreenOrientationProvider screenOrientationProvider;
     @Mock
     InitialParametersProvider initialParametersProvider;
+    @Mock
+    CameraErrorCallback cameraErrorCallback;
 
-    @Test
-    public void routine() throws Exception {
-        // Given
-        StartCameraRoutine testee = new StartCameraRoutine(
+	@Test
+	public void routine() throws Exception {
+		// GivenStartCameraRoutine testee = new StartCameraRoutine(
                 cameraDevice,
                 cameraRenderer,
                 ScaleType.CENTER_INSIDE,
@@ -50,12 +60,10 @@ public class StartCameraRoutineTest {
                 screenOrientationProvider,
                 initialParametersProvider
         );
-
-
-        List<LensPosition> availableLensPositions = asList(
-                LensPosition.FRONT,
-                LensPosition.BACK
-        );
+		List<LensPosition> availableLensPositions = asList(
+				LensPosition.FRONT,
+				LensPosition.BACK
+		);
 
         LensPosition preferredLensPosition = LensPosition.FRONT;
         ScaleType scaleType = ScaleType.CENTER_INSIDE;
@@ -75,14 +83,41 @@ public class StartCameraRoutineTest {
                 lensPositionSelector
         );
 
-        inOrder.verify(lensPositionSelector).select(availableLensPositions);
-        inOrder.verify(cameraDevice).open(preferredLensPosition);
-        inOrder.verify(cameraDevice).updateParameters(INITIAL_PARAMETERS);
-        inOrder.verify(cameraDevice).setDisplayOrientation(SCREEN_ROTATION_DEGREES);
-        inOrder.verify(cameraRenderer).setScaleType(scaleType);
-        inOrder.verify(cameraRenderer).attachCamera(cameraDevice);
-        inOrder.verify(cameraDevice).startPreview();
+		inOrder.verify(lensPositionSelector).select(availableLensPositions);
+		inOrder.verify(cameraDevice).open(preferredLensPosition);
+		inOrder.verify(cameraDevice).updateParameters(INITIAL_PARAMETERS);
+		inOrder.verify(cameraDevice).setDisplayOrientation(SCREEN_ROTATION_DEGREES);
+		inOrder.verify(cameraRenderer).setScaleType(scaleType);inOrder.verify(cameraRenderer).attachCamera(cameraDevice);
+		inOrder.verify(cameraDevice).startPreview();
+	verifyZeroInteractions(cameraErrorCallback);
     }
+
+    @Test
+    public void failedToOpenCamera() throws Exception {
+        // Given
+        List<LensPosition> availableLensPositions = asList(
+                LensPosition.FRONT,
+                LensPosition.BACK
+        );
+
+        LensPosition preferredLensPosition = LensPosition.FRONT;
+
+        givenLensPositionsAvailable(availableLensPositions);
+        givenPositionSelected(preferredLensPosition);
+
+        doThrow(CAMERA_EXCEPTION)
+                .when(cameraDevice)
+                .open(preferredLensPosition);
+
+        // When
+        testee.run();
+
+        // Then
+        verify(cameraErrorCallback).onError(CAMERA_EXCEPTION);
+
+        verify(cameraDevice).getAvailableLensPositions();
+        verify(cameraDevice).open(preferredLensPosition);
+        verifyNoMoreInteractions(cameraDevice);}
 
     private void givenInitialParametersAvailable() {
         given(initialParametersProvider.initialParameters())

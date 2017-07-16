@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.photo.Photo;
+import io.fotoapparat.result.RecoverableRuntimeException;
 
 /**
  * Creates {@link BitmapPhoto} out of {@link Photo}.
@@ -27,6 +28,8 @@ public class BitmapPhotoTransformer implements Transformer<Photo, BitmapPhoto> {
 
         Bitmap bitmap = readImage(input, scaleFactor);
 
+        ensureBitmapDecoded(bitmap);
+
         if (bitmap.getWidth() != desiredSize.width || bitmap.getHeight() != desiredSize.height) {
             bitmap = Bitmap.createScaledBitmap(bitmap, desiredSize.width, desiredSize.height, true);
         }
@@ -35,6 +38,12 @@ public class BitmapPhotoTransformer implements Transformer<Photo, BitmapPhoto> {
                 bitmap,
                 input.rotationDegrees
         );
+    }
+
+    private void ensureBitmapDecoded(Bitmap bitmap) {
+        if (bitmap == null) {
+            throw new UnableToDecodeBitmapException();
+        }
     }
 
     private Bitmap readImage(Photo image, float scaleFactor) {
@@ -70,6 +79,17 @@ public class BitmapPhotoTransformer implements Transformer<Photo, BitmapPhoto> {
                 options.outWidth,
                 options.outHeight
         );
+    }
+
+    /**
+     * Thrown when it is not possible to decode bitmap from byte array.
+     */
+    private static class UnableToDecodeBitmapException extends RecoverableRuntimeException {
+
+        public UnableToDecodeBitmapException() {
+            super("Unable to decode bitmap");
+        }
+
     }
 
 }

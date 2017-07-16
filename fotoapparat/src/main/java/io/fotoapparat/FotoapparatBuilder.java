@@ -3,6 +3,7 @@ package io.fotoapparat;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.log.Logger;
@@ -58,6 +59,8 @@ public class FotoapparatBuilder {
 
     Logger logger = Loggers.none();
 
+    CameraErrorCallback cameraErrorCallback = CameraErrorCallback.NULL;
+
     FotoapparatBuilder(@NonNull Context context) {
         this.context = context;
     }
@@ -65,7 +68,7 @@ public class FotoapparatBuilder {
     /**
      * @param cameraProvider decides which {@link CameraDevice} to use.
      */
-    public FotoapparatBuilder cameraProvider(CameraProvider cameraProvider) {
+    public FotoapparatBuilder cameraProvider(@NonNull CameraProvider cameraProvider) {
         this.cameraProvider = cameraProvider;
         return this;
     }
@@ -73,7 +76,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector selects size of the photo (in pixels) from list of available sizes.
      */
-    public FotoapparatBuilder photoSize(SelectorFunction<Size> selector) {
+    public FotoapparatBuilder photoSize(@NonNull SelectorFunction<Size> selector) {
         photoSizeSelector = selector;
         return this;
     }
@@ -81,7 +84,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector selects size of preview stream (in pixels) from list of available sizes.
      */
-    public FotoapparatBuilder previewSize(SelectorFunction<Size> selector) {
+    public FotoapparatBuilder previewSize(@NonNull SelectorFunction<Size> selector) {
         previewSizeSelector = selector;
         return this;
     }
@@ -97,7 +100,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector selects focus mode from list of available modes.
      */
-    public FotoapparatBuilder focusMode(SelectorFunction<FocusMode> selector) {
+    public FotoapparatBuilder focusMode(@NonNull SelectorFunction<FocusMode> selector) {
         focusModeSelector = selector;
         return this;
     }
@@ -105,7 +108,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector selects flash mode from list of available modes.
      */
-    public FotoapparatBuilder flash(SelectorFunction<Flash> selector) {
+    public FotoapparatBuilder flash(@NonNull SelectorFunction<Flash> selector) {
         flashSelector = selector;
         return this;
     }
@@ -113,7 +116,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector camera sensor position from list of available positions.
      */
-    public FotoapparatBuilder lensPosition(SelectorFunction<LensPosition> selector) {
+    public FotoapparatBuilder lensPosition(@NonNull SelectorFunction<LensPosition> selector) {
         lensPositionSelector = selector;
         return this;
     }
@@ -122,7 +125,7 @@ public class FotoapparatBuilder {
      * @param frameProcessor receives preview frames for processing.
      * @see FrameProcessor
      */
-    public FotoapparatBuilder frameProcessor(FrameProcessor frameProcessor) {
+    public FotoapparatBuilder frameProcessor(@NonNull FrameProcessor frameProcessor) {
         this.frameProcessor = frameProcessor;
         return this;
     }
@@ -131,8 +134,17 @@ public class FotoapparatBuilder {
      * @param logger logger which will print logs. No logger is set by default.
      * @see Loggers
      */
-    public FotoapparatBuilder logger(Logger logger) {
+    public FotoapparatBuilder logger(@NonNull Logger logger) {
         this.logger = logger;
+        return this;
+    }
+
+    /**
+     * @param callback which will be notified when camera error happens in Fotoapparat.
+     * @see CameraErrorCallback
+     */
+    public FotoapparatBuilder cameraErrorCallback(@NonNull CameraErrorCallback callback) {
+        this.cameraErrorCallback = callback;
         return this;
     }
 
@@ -140,7 +152,7 @@ public class FotoapparatBuilder {
      * @param renderer view which will draw the stream from the camera.
      * @see CameraView
      */
-    public FotoapparatBuilder into(CameraRenderer renderer) {
+    public FotoapparatBuilder into(@NonNull CameraRenderer renderer) {
         this.renderer = renderer;
         return this;
     }

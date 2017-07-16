@@ -2,6 +2,9 @@
 
 ![Build status](https://travis-ci.org/Fotoapparat/Fotoapparat.svg?branch=master)
 
+
+![ ](sample/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
+
 Camera API in Android is hard. Having 2 different API for new and old Camera does not make things any easier. But fret not, that is your lucky day! After several years of working with Camera we came up with Fotoapparat.
 
 What it provides:
@@ -129,16 +132,20 @@ repositories {
   maven { url 'https://jitpack.io' }
 }
  
-compile 'io.fotoapparat.fotoapparat:library:1.0.1'
+compile 'io.fotoapparat.fotoapparat:library:1.1.0'
 ```
 
 Camera permission will be automatically added to your `AndroidManifest.xml`. Do not forget to request this permission on Marshmallow and higher.
 
+## Face detection
+
+Optionally, you can check out our other library which adds face detection capabilities - [FaceDetector](https://github.com/Fotoapparat/FaceDetector).
 
 ## Credits
 
 We want to say thanks to [Mark Murphy](https://github.com/commonsguy) for the awesome job he did with [CWAC-Camera](https://github.com/commonsguy/cwac-camera). We were using his library for a couple of years and now we feel that Fotoapparat is a next step in the right direction.
 
+We also want to say many thanks to [Leander Lenzing](http://leanderlenzing.com/) for the amazing icon. Don't forget to follow his work in [dribbble](https://dribbble.com/leanderlenzing).
 
 ## License
 

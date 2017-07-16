@@ -5,11 +5,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.FotoapparatSwitcher;
+import io.fotoapparat.error.CameraErrorCallback;
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.preview.Frame;
@@ -59,27 +62,55 @@ public class MainActivity extends AppCompatActivity {
             permissionsDelegate.requestCameraPermission();
         }
 
+        setupFotoapparat();
+
+        takePictureOnClick(cameraView);
+        focusOnLongClick(cameraView);
+
+        setupSwitchCameraButton();
+    }
+
+    private void setupFotoapparat() {
         frontFotoapparat = createFotoapparat(LensPosition.FRONT);
         backFotoapparat = createFotoapparat(LensPosition.BACK);
         fotoapparatSwitcher = FotoapparatSwitcher.withDefault(backFotoapparat);
+    }
 
-        cameraView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture();
-            }
-        });
-
+    private void setupSwitchCameraButton() {
         View switchCameraButton = findViewById(R.id.switchCamera);
         switchCameraButton.setVisibility(
                 canSwitchCameras()
                         ? View.VISIBLE
                         : View.GONE
         );
-        switchCameraButton.setOnClickListener(new View.OnClickListener() {
+        switchCameraOnClick(switchCameraButton);
+    }
+
+    private void switchCameraOnClick(View view) {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switchCamera();
+            }
+        });
+    }
+
+    private void focusOnLongClick(View view) {
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                fotoapparatSwitcher.getCurrentFotoapparat().autoFocus();
+
+                return true;
+            }
+        });
+    }
+
+    private void takePictureOnClick(View view) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePicture();
             }
         });
     }
@@ -111,6 +142,12 @@ public class MainActivity extends AppCompatActivity {
                         logcat(),
                         fileLogger(this)
                 ))
+                .cameraErrorCallback(new CameraErrorCallback() {
+                    @Override
+                    public void onError(CameraException e) {
+                        Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                })
                 .build();
     }
 

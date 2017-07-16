@@ -8,6 +8,31 @@ import android.support.annotation.NonNull;
 public interface PreviewStream {
 
     /**
+     * Null-object for {@link PreviewStream}.
+     */
+    PreviewStream NULL = new PreviewStream() {
+        @Override
+        public void addFrameToBuffer() {
+            // Do nothing
+        }
+
+        @Override
+        public void addProcessor(@NonNull FrameProcessor processor) {
+            // Do nothing
+        }
+
+        @Override
+        public void removeProcessor(@NonNull FrameProcessor processor) {
+            // Do nothing
+        }
+
+        @Override
+        public void start() {
+            // Do nothing
+        }
+    };
+
+    /**
      * Adds new frame to buffer.
      */
     void addFrameToBuffer();

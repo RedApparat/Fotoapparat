@@ -41,4 +41,12 @@ public class RendererParameters {
         result = 31 * result + frameRotation;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "RendererParameters{" +
+                "previewSize=" + previewSize +
+                ", frameRotation=" + frameRotation +
+                '}';
+    }
 }

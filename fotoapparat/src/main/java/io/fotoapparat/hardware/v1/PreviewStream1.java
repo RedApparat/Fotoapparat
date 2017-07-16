@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.preview.Frame;
@@ -17,6 +19,8 @@ import io.fotoapparat.preview.PreviewStream;
  */
 @SuppressWarnings("deprecation")
 public class PreviewStream1 implements PreviewStream {
+
+    private static Executor FRAME_PROCESSORS_EXECUTOR = Executors.newSingleThreadExecutor();
 
     private final Camera camera;
 
@@ -86,6 +90,15 @@ public class PreviewStream1 implements PreviewStream {
         camera.setPreviewCallbackWithBuffer(new Camera.PreviewCallback() {
             @Override
             public void onPreviewFrame(byte[] data, Camera camera) {
+                dispatchFrameOnBackgroundThread(data);
+            }
+        });
+    }
+
+    private void dispatchFrameOnBackgroundThread(final byte[] data) {
+        FRAME_PROCESSORS_EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
                 synchronized (frameProcessors) {
                     dispatchFrame(data);
                 }

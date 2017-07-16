@@ -20,6 +20,10 @@ public class SizeSelectors {
         return new SelectorFunction<Size>() {
             @Override
             public Size select(Collection<Size> items) {
+                if (items.isEmpty()) {
+                    return null;
+                }
+
                 return Collections.max(items, COMPARATOR_BY_AREA);
             }
         };
@@ -32,6 +36,10 @@ public class SizeSelectors {
         return new SelectorFunction<Size>() {
             @Override
             public Size select(Collection<Size> items) {
+                if (items.isEmpty()) {
+                    return null;
+                }
+
                 return Collections.min(items, COMPARATOR_BY_AREA);
             }
         };
