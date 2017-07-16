@@ -16,6 +16,7 @@ import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.parameter.RendererParameters;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 
 /**
@@ -28,7 +29,7 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
     private SurfaceTexture surfaceTexture;
     private TextureView textureView;
 
-    private Size previewSize = null;
+    private RendererParameters rendererParameters = null;
 
     public TextureRendererView(@NonNull Context context) {
         super(context);
@@ -82,15 +83,11 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
         camera.setDisplaySurface(textureView);
     }
 
-    private void updateLayout(CameraDevice camera) {
-        final Size previewSize = toPreviewSize(
-                camera.getRendererParameters()
-        );
-
+    private void updateLayout(final CameraDevice camera) {
         post(new Runnable() {
             @Override
             public void run() {
-                TextureRendererView.this.previewSize = previewSize;
+                rendererParameters = camera.getRendererParameters();
 
                 requestLayout();
             }
@@ -117,11 +114,41 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        if (previewSize == null) {
+        if (rendererParameters == null) {
             super.onLayout(changed, left, top, right, bottom);
             return;
         }
 
+        Size previewSize = toPreviewSize(rendererParameters);
+
+        if (rendererParameters.scaleType == ScaleType.CENTER_INSIDE) {
+            centerInside(previewSize);
+        } else {
+            centerCrop(previewSize);
+        }
+    }
+
+    private void centerInside(Size previewSize) {
+        final float scale = Math.min(
+                getMeasuredWidth() / (float) previewSize.width,
+                getMeasuredHeight() / (float) previewSize.height
+        );
+
+        final int width = (int) (previewSize.width * scale);
+        final int height = (int) (previewSize.height * scale);
+
+        final int extraX = Math.max(0, getMeasuredWidth() - width);
+        final int extraY = Math.max(0, getMeasuredHeight() - height);
+
+        getChildAt(0).layout(
+                extraX / 2,
+                extraY / 2,
+                width + (extraX / 2),
+                height + (extraY / 2)
+        );
+    }
+
+    private void centerCrop(Size previewSize) {
         final float scale = Math.max(
                 getMeasuredWidth() / (float) previewSize.width,
                 getMeasuredHeight() / (float) previewSize.height

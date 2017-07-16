@@ -155,6 +155,7 @@ public class Camera2Test {
         Capabilities capabilities = new Capabilities(
                 Collections.<Size>emptySet(),
                 Collections.<Size>emptySet(),
+                previewScaleTypes,
                 singleton(FocusMode.MACRO),
                 Collections.<Flash>emptySet()
         );
@@ -225,7 +226,7 @@ public class Camera2Test {
     @Test
     public void getRendererParameters() throws Exception {
         // Given
-        RendererParameters rendererParameters = new RendererParameters(new Size(1920, 1080), 0);
+        RendererParameters rendererParameters = new RendererParameters(new Size(1920, 1080), 0, scaleType);
         given(rendererParametersOperator.getRendererParameters())
                 .willReturn(rendererParameters);
 

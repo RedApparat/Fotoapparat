@@ -21,7 +21,9 @@ import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.parameter.Parameters.Type;
 import io.fotoapparat.parameter.RendererParameters;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
@@ -43,6 +45,7 @@ public class Camera1 implements CameraDevice {
 
     private Throwable lastStacktrace;
     private int imageRotation;
+    private ScaleType previewScaleType;
 
     public Camera1(Logger logger) {
         this.capabilitiesFactory = new CapabilitiesFactory();
@@ -176,6 +179,8 @@ public class Camera1 implements CameraDevice {
         );
 
         camera.setParameters(cameraParameters);
+
+        previewScaleType = parameters.getValue(Type.PREVIEW_SCALE_TYPE);
     }
 
     @Override
@@ -249,7 +254,8 @@ public class Camera1 implements CameraDevice {
 
         return new RendererParameters(
                 previewSize(),
-                imageRotation
+                imageRotation,
+                previewScaleType
         );
     }
 

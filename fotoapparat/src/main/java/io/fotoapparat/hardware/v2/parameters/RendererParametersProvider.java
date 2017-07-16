@@ -3,6 +3,7 @@ package io.fotoapparat.hardware.v2.parameters;
 import io.fotoapparat.hardware.operators.RendererParametersOperator;
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.parameter.RendererParameters;
+import io.fotoapparat.parameter.ScaleType;
 
 /**
  * Provides {@link RendererParameters} for camera v2.
@@ -23,7 +24,8 @@ public class RendererParametersProvider implements RendererParametersOperator {
     public RendererParameters getRendererParameters() {
         return new RendererParameters(
                 parametersProvider.getPreviewSize(),
-                orientationManager.getPhotoOrientation()
+                orientationManager.getPhotoOrientation(),
+                ScaleType.CENTER_CROP
         );
     }
 

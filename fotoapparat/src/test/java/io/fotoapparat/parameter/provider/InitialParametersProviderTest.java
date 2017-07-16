@@ -13,6 +13,7 @@ import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 
@@ -29,6 +30,11 @@ public class InitialParametersProviderTest {
     static final Size PHOTO_SIZE = new Size(4000, 3000);
     static final Size PREVIEW_SIZE = new Size(2000, 1500);
     static final Size PREVIEW_SIZE_WRONG_ASPECT_RATIO = new Size(1000, 1000);
+
+    static final Set<ScaleType> ALL_PREVIEW_SCALE_TYPE = asSet(
+            ScaleType.CENTER_CROP,
+            ScaleType.CENTER_INSIDE
+    );
 
     static final Set<FocusMode> FOCUS_MODES = asSet(FocusMode.FIXED);
     static final Set<Flash> FLASH = asSet(Flash.AUTO_RED_EYE);
@@ -47,6 +53,8 @@ public class InitialParametersProviderTest {
     @Mock
     SelectorFunction<Size> previewSizeSelector;
     @Mock
+    SelectorFunction<ScaleType> previewScaleTypeSelector;
+    @Mock
     SelectorFunction<FocusMode> focusModeSelector;
     @Mock
     SelectorFunction<Flash> flashModeSelector;
@@ -61,6 +69,7 @@ public class InitialParametersProviderTest {
                 cameraDevice,
                 photoSizeSelector,
                 previewSizeSelector,
+                previewScaleTypeSelector,
                 focusModeSelector,
                 flashModeSelector,
                 initialParametersValidator
@@ -70,6 +79,7 @@ public class InitialParametersProviderTest {
                 .willReturn(new Capabilities(
                         PHOTO_SIZES,
                         ALL_PREVIEW_SIZES,
+                        ALL_PREVIEW_SCALE_TYPE,
                         FOCUS_MODES,
                         FLASH
                 ));
@@ -78,6 +88,8 @@ public class InitialParametersProviderTest {
                 .willReturn(PHOTO_SIZE);
         given(previewSizeSelector.select(VALID_PREVIEW_SIZES))
                 .willReturn(PREVIEW_SIZE);
+        given(previewScaleTypeSelector.select(ALL_PREVIEW_SCALE_TYPE))
+                .willReturn(ScaleType.CENTER_CROP);
         given(focusModeSelector.select(FOCUS_MODES))
                 .willReturn(FocusMode.FIXED);
         given(flashModeSelector.select(FLASH))
@@ -121,6 +133,18 @@ public class InitialParametersProviderTest {
     }
 
     @Test
+    public void selectPreviewScaleType() throws Exception {
+        // When
+        Parameters parameters = testee.initialParameters();
+
+        // Then
+        assertEquals(
+                ScaleType.CENTER_CROP,
+                parameters.getValue(Parameters.Type.PREVIEW_SCALE_TYPE)
+        );
+    }
+
+    @Test
     public void selectPreviewSize_WithValidAspectRatio() throws Exception {
         // When
         Parameters parameters = testee.initialParameters();
@@ -147,6 +171,7 @@ public class InitialParametersProviderTest {
                 .willReturn(new Capabilities(
                         photoSizes,
                         ALL_PREVIEW_SIZES,
+                        ALL_PREVIEW_SCALE_TYPE,
                         FOCUS_MODES,
                         FLASH
                 ));

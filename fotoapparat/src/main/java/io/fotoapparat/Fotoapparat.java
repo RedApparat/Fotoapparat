@@ -80,6 +80,7 @@ public class Fotoapparat {
                 cameraDevice,
                 builder.photoSizeSelector,
                 builder.previewSizeSelector,
+                builder.previewScaleTypeSelector,
                 builder.focusModeSelector,
                 builder.flashSelector,
                 parametersValidator

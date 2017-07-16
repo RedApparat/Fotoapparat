@@ -1,7 +1,7 @@
 package io.fotoapparat.parameter;
 
 /**
- * The style of the preview.
+ * The scale type of the preview relatively to the view.
  */
 public enum ScaleType {
 

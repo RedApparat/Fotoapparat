@@ -42,8 +42,8 @@ public class RendererParametersProviderTest {
         assertEquals(
                 new RendererParameters(
                         size,
-                        sensorOrientation
-                ),
+                        sensorOrientation,
+                        scaleType),
                 rendererParameters
         );
 

@@ -6,6 +6,7 @@ import io.fotoapparat.hardware.operators.CapabilitiesOperator;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.selector.Selectors;
@@ -21,18 +22,21 @@ public class InitialParametersProvider {
     private final CapabilitiesOperator capabilitiesOperator;
     private final SelectorFunction<Size> photoSizeSelector;
     private final SelectorFunction<Size> previewSizeSelector;
+    private final SelectorFunction<ScaleType> previewScaleTypeSelector;
     private final SelectorFunction<FocusMode> focusModeSelector;
     private final SelectorFunction<Flash> flashSelector;
 
     public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
                                      SelectorFunction<Size> photoSizeSelector,
                                      SelectorFunction<Size> previewSizeSelector,
+                                     SelectorFunction<ScaleType> previewScaleTypeSelector,
                                      SelectorFunction<FocusMode> focusModeSelector,
                                      SelectorFunction<Flash> flashSelector,
                                      InitialParametersValidator parametersValidator) {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
         this.previewSizeSelector = previewSizeSelector;
+        this.previewScaleTypeSelector = previewScaleTypeSelector;
         this.focusModeSelector = focusModeSelector;
         this.flashSelector = flashSelector;
         this.parametersValidator = parametersValidator;
@@ -48,6 +52,7 @@ public class InitialParametersProvider {
 
         putPictureSize(capabilities, parameters);
         putPreviewSize(capabilities, parameters);
+        putPreviewScaleType(capabilities, parameters);
         putFocusMode(capabilities, parameters);
         putFlash(capabilities, parameters);
 
@@ -55,6 +60,7 @@ public class InitialParametersProvider {
 
         return parameters;
     }
+
 
     private void putPreviewSize(Capabilities capabilities, Parameters parameters) {
         Size photoSize = photoSize(capabilities);
@@ -67,6 +73,13 @@ public class InitialParametersProvider {
                                 previewSizeSelector
                         )
                         .select(capabilities.supportedPreviewSizes())
+        );
+    }
+
+    private void putPreviewScaleType(Capabilities capabilities, Parameters parameters) {
+        parameters.putValue(
+                Parameters.Type.PREVIEW_SCALE_TYPE,
+                previewScaleType(capabilities)
         );
     }
 
@@ -87,6 +100,12 @@ public class InitialParametersProvider {
     private Size photoSize(Capabilities capabilities) {
         return photoSizeSelector.select(
                 capabilities.supportedPictureSizes()
+        );
+    }
+
+    private ScaleType previewScaleType(Capabilities capabilities) {
+        return previewScaleTypeSelector.select(
+                capabilities.supportedPreviewScaleTypes()
         );
     }
 
