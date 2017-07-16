@@ -5,6 +5,7 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
 import io.fotoapparat.parameter.LensPosition;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.view.CameraRenderer;
@@ -16,6 +17,7 @@ public class StartCameraRoutine implements Runnable {
 
     private final CameraDevice cameraDevice;
     private final CameraRenderer cameraRenderer;
+    private final ScaleType scaleType;
     private final SelectorFunction<LensPosition> lensPositionSelector;
     private final ScreenOrientationProvider screenOrientationProvider;
     private final InitialParametersProvider initialParametersProvider;
@@ -23,12 +25,14 @@ public class StartCameraRoutine implements Runnable {
 
     public StartCameraRoutine(CameraDevice cameraDevice,
                               CameraRenderer cameraRenderer,
+                              ScaleType scaleType,
                               SelectorFunction<LensPosition> lensPositionSelector,
                               ScreenOrientationProvider screenOrientationProvider,
                               InitialParametersProvider initialParametersProvider,
                               CameraErrorCallback cameraErrorCallback) {
         this.cameraDevice = cameraDevice;
         this.cameraRenderer = cameraRenderer;
+        this.scaleType = scaleType;
         this.lensPositionSelector = lensPositionSelector;
         this.screenOrientationProvider = screenOrientationProvider;
         this.initialParametersProvider = initialParametersProvider;
@@ -56,8 +60,8 @@ public class StartCameraRoutine implements Runnable {
         cameraDevice.setDisplayOrientation(
                 screenOrientationProvider.getScreenRotation()
         );
+        cameraRenderer.setScaleType(scaleType);
         cameraRenderer.attachCamera(cameraDevice);
         cameraDevice.startPreview();
     }
-
 }

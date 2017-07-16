@@ -1,10 +1,10 @@
 package io.fotoapparat.routine;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -16,6 +16,7 @@ import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.view.CameraRenderer;
@@ -50,18 +51,40 @@ public class StartCameraRoutineTest {
     @Mock
     CameraErrorCallback cameraErrorCallback;
 
-    @InjectMocks
     StartCameraRoutine testee;
+
+    @Before
+    public void setUp() throws Exception {
+        testee = new StartCameraRoutine(
+                cameraDevice,
+                cameraRenderer,
+                ScaleType.CENTER_INSIDE,
+                lensPositionSelector,
+                screenOrientationProvider,
+                initialParametersProvider,
+                cameraErrorCallback
+        );
+    }
 
     @Test
     public void routine() throws Exception {
         // Given
+        StartCameraRoutine testee = new StartCameraRoutine(
+                cameraDevice,
+                cameraRenderer,
+                ScaleType.CENTER_INSIDE,
+                lensPositionSelector,
+                screenOrientationProvider,
+                initialParametersProvider,
+                cameraErrorCallback
+        );
         List<LensPosition> availableLensPositions = asList(
                 LensPosition.FRONT,
                 LensPosition.BACK
         );
 
         LensPosition preferredLensPosition = LensPosition.FRONT;
+        ScaleType scaleType = ScaleType.CENTER_INSIDE;
 
         givenLensPositionsAvailable(availableLensPositions);
         givenPositionSelected(preferredLensPosition);
@@ -82,9 +105,9 @@ public class StartCameraRoutineTest {
         inOrder.verify(cameraDevice).open(preferredLensPosition);
         inOrder.verify(cameraDevice).updateParameters(INITIAL_PARAMETERS);
         inOrder.verify(cameraDevice).setDisplayOrientation(SCREEN_ROTATION_DEGREES);
+        inOrder.verify(cameraRenderer).setScaleType(scaleType);
         inOrder.verify(cameraRenderer).attachCamera(cameraDevice);
         inOrder.verify(cameraDevice).startPreview();
-
         verifyZeroInteractions(cameraErrorCallback);
     }
 

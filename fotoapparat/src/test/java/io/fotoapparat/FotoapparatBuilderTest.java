@@ -16,6 +16,7 @@ import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.preview.FrameProcessor;
@@ -211,6 +212,27 @@ public class FotoapparatBuilderTest {
     }
 
     @Test
+    public void previewStyle_HasDefault() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments();
+
+        // Then
+        assertNotNull(builder.scaleType);
+    }
+
+    @Test
+    public void previewStyle_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .previewScaleType(ScaleType.CENTER_INSIDE);
+
+        // Then
+        assertEquals(
+                ScaleType.CENTER_INSIDE,
+                builder.scaleType
+        );
+    }
+    @Test
     public void cameraErrorCallback_HasDefault() throws Exception {
         // When
         FotoapparatBuilder builder = builderWithMandatoryArguments();
@@ -246,12 +268,11 @@ public class FotoapparatBuilderTest {
         // Expect exception
     }
 
-    @Test(expected = IllegalStateException.class)
-    @SuppressWarnings("ConstantConditions")
-    public void lensPositionIsMandatory() throws Exception {
-        // Given
-        FotoapparatBuilder builder = builderWithMandatoryArguments()
-                .lensPosition(null);
+	@Test(expected = IllegalStateException.class)
+	@SuppressWarnings("ConstantConditions")public void lensPositionIsMandatory() throws Exception {
+		// Given
+		FotoapparatBuilder builder = builderWithMandatoryArguments()
+				.lensPosition(null);
 
         // When
         builder.build();
@@ -260,12 +281,11 @@ public class FotoapparatBuilderTest {
         // Expect exception
     }
 
-    @Test(expected = IllegalStateException.class)
-    @SuppressWarnings("ConstantConditions")
-    public void photoSizeIsMandatory() throws Exception {
-        // Given
-        FotoapparatBuilder builder = builderWithMandatoryArguments()
-                .photoSize(null);
+	@Test(expected = IllegalStateException.class)
+	@SuppressWarnings("ConstantConditions")public void photoSizeIsMandatory() throws Exception {
+		// Given
+		FotoapparatBuilder builder = builderWithMandatoryArguments()
+				.photoSize(null);
 
         // When
         builder.build();

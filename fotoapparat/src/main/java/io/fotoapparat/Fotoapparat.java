@@ -96,6 +96,7 @@ public class Fotoapparat {
         StartCameraRoutine startCameraRoutine = new StartCameraRoutine(
                 cameraDevice,
                 builder.renderer,
+                builder.scaleType,
                 builder.lensPositionSelector,
                 screenOrientationProvider,
                 initialParametersProvider,

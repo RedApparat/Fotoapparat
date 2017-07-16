@@ -11,6 +11,7 @@ import io.fotoapparat.log.Loggers;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.FlashSelectors;
 import io.fotoapparat.parameter.selector.SelectorFunction;
@@ -51,6 +52,8 @@ public class FotoapparatBuilder {
     );
     SelectorFunction<Flash> flashSelector = FlashSelectors.off();
 
+    ScaleType scaleType = ScaleType.CENTER_CROP;
+
     FrameProcessor frameProcessor = null;
 
     Logger logger = Loggers.none();
@@ -82,6 +85,14 @@ public class FotoapparatBuilder {
      */
     public FotoapparatBuilder previewSize(@NonNull SelectorFunction<Size> selector) {
         previewSizeSelector = selector;
+        return this;
+    }
+
+    /**
+     * @param scaleType of preview inside the view.
+     */
+    public FotoapparatBuilder previewScaleType(ScaleType scaleType) {
+        this.scaleType = scaleType;
         return this;
     }
 

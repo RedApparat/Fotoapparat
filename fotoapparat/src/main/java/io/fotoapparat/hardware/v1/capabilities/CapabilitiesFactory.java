@@ -84,7 +84,6 @@ public class CapabilitiesFactory {
         }
 
         result.add(FocusMode.FIXED);
-
         return result;
     }
 
