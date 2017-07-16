@@ -8,21 +8,20 @@ import io.fotoapparat.parameter.ScaleType;
 public class ScaleTypeSelectors {
 
     /**
-     * @return {@link SelectorFunction} which provides a preview style which will be scaled so as
-     * it's one dimensions will be equal and the other equal or larger than the corresponding
-     * dimension of the view.
+     * @return {@link ScaleType} which will make the preview to be scaled so as its one dimensions
+     * will be equal and the other one equal or larger than the corresponding dimension of the
+     * view.
      */
-    public static SelectorFunction<ScaleType> centerCropped() {
-        return Selectors.single(ScaleType.CENTER_CROP);
+    public static ScaleType centerCropped() {
+        return ScaleType.CENTER_CROP;
     }
 
     /**
-     * @return {@link SelectorFunction} which provides a preview style which will be scaled so as
-     * it's one dimensions will be equal and the other equal or smaller than the corresponding
-     * dimension of the view.
+     * @return {@link ScaleType} which will make the preview to so as its one dimensions will be
+     * equal and the other one equal or smaller than the corresponding dimension of the view
      */
-    public static SelectorFunction<ScaleType> centerInside() {
-        return Selectors.single(ScaleType.CENTER_INSIDE);
+    public static ScaleType centerInside() {
+        return ScaleType.CENTER_INSIDE;
     }
 
 }

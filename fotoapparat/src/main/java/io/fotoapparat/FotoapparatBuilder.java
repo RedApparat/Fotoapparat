@@ -45,13 +45,14 @@ public class FotoapparatBuilder {
     );
     SelectorFunction<Size> photoSizeSelector = biggestSize();
     SelectorFunction<Size> previewSizeSelector = biggestSize();
-    SelectorFunction<ScaleType> previewScaleTypeSelector = centerCropped();
     SelectorFunction<FocusMode> focusModeSelector = firstAvailable(
             continuousFocus(),
             autoFocus(),
             fixed()
     );
     SelectorFunction<Flash> flashSelector = FlashSelectors.off();
+
+    ScaleType scaleType = centerCropped();
 
     FrameProcessor frameProcessor = null;
 
@@ -86,10 +87,10 @@ public class FotoapparatBuilder {
     }
 
     /**
-     * @param selector selects scale type of preview inside the view.
+     * @param scaleType of preview inside the view.
      */
-    public FotoapparatBuilder previewScaleType(SelectorFunction<ScaleType> selector) {
-        previewScaleTypeSelector = selector;
+    public FotoapparatBuilder previewScaleType(ScaleType scaleType) {
+        this.scaleType = scaleType;
         return this;
     }
 

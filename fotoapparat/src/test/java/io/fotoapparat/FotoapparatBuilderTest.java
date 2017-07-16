@@ -41,8 +41,6 @@ public class FotoapparatBuilderTest {
     @Mock
     SelectorFunction<Size> previewSizeSelector;
     @Mock
-    SelectorFunction<ScaleType> previewScaleTypeSelector;
-    @Mock
     SelectorFunction<LensPosition> lensPositionSelector;
     @Mock
     SelectorFunction<FocusMode> focusModeSelector;
@@ -215,19 +213,19 @@ public class FotoapparatBuilderTest {
         FotoapparatBuilder builder = builderWithMandatoryArguments();
 
         // Then
-        assertNotNull(builder.previewScaleTypeSelector);
+        assertNotNull(builder.scaleType);
     }
 
     @Test
     public void previewStyle_IsConfigurable() throws Exception {
         // When
         FotoapparatBuilder builder = builderWithMandatoryArguments()
-                .previewScaleType(previewScaleTypeSelector);
+                .previewScaleType(ScaleType.CENTER_INSIDE);
 
         // Then
         assertEquals(
-                previewScaleTypeSelector,
-                builder.previewScaleTypeSelector
+                ScaleType.CENTER_INSIDE,
+                builder.scaleType
         );
     }
 

@@ -7,7 +7,6 @@ import java.util.Set;
 
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
-import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 
 /**
@@ -20,20 +19,16 @@ public class Capabilities {
     @NonNull
     private final Set<Size> previewSizes;
     @NonNull
-    private Set<ScaleType> previewScaleTypes;
-    @NonNull
     private final Set<FocusMode> focusModes;
     @NonNull
     private final Set<Flash> flashModes;
 
     public Capabilities(@NonNull Set<Size> photoSizes,
                         @NonNull Set<Size> previewSizes,
-                        @NonNull Set<ScaleType> previewScaleTypes,
                         @NonNull Set<FocusMode> focusModes,
                         @NonNull Set<Flash> flashModes) {
         this.photoSizes = photoSizes;
         this.previewSizes = previewSizes;
-        this.previewScaleTypes = previewScaleTypes;
         this.focusModes = focusModes;
         this.flashModes = flashModes;
     }
@@ -45,7 +40,6 @@ public class Capabilities {
         return new Capabilities(
                 Collections.<Size>emptySet(),
                 Collections.<Size>emptySet(),
-                Collections.<ScaleType>emptySet(),
                 Collections.<FocusMode>emptySet(),
                 Collections.<Flash>emptySet()
         );
@@ -63,13 +57,6 @@ public class Capabilities {
      */
     public Set<Size> supportedPreviewSizes() {
         return previewSizes;
-    }
-
-    /**
-     * @return list of supported preview scale types;
-     */
-    public Set<ScaleType> supportedPreviewScaleTypes() {
-        return previewScaleTypes;
     }
 
     /**

@@ -19,18 +19,10 @@ public class RendererParameters {
      */
     public final int frameRotation;
 
-
-    /**
-     * The type of the scaling the preview.
-     */
-    public final ScaleType scaleType;
-
     public RendererParameters(Size previewSize,
-                              int frameRotation,
-                              ScaleType scaleType) {
+                              int frameRotation) {
         this.previewSize = previewSize;
         this.frameRotation = frameRotation;
-        this.scaleType = scaleType;
     }
 
     @Override
@@ -40,17 +32,13 @@ public class RendererParameters {
 
         RendererParameters that = (RendererParameters) o;
 
-        if (frameRotation != that.frameRotation) return false;
-        if (previewSize != null ? !previewSize.equals(that.previewSize) : that.previewSize != null)
-            return false;
-        return scaleType == that.scaleType;
+        return frameRotation == that.frameRotation && (previewSize != null ? previewSize.equals(that.previewSize) : that.previewSize == null);
     }
 
     @Override
     public int hashCode() {
         int result = previewSize != null ? previewSize.hashCode() : 0;
         result = 31 * result + frameRotation;
-        result = 31 * result + (scaleType != null ? scaleType.hashCode() : 0);
         return result;
     }
 }

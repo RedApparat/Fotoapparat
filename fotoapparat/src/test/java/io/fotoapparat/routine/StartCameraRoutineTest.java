@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -14,6 +13,7 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.view.CameraRenderer;
@@ -25,74 +25,83 @@ import static org.mockito.Mockito.inOrder;
 @RunWith(MockitoJUnitRunner.class)
 public class StartCameraRoutineTest {
 
-	static final int SCREEN_ROTATION_DEGREES = 90;
-	static final Parameters INITIAL_PARAMETERS = new Parameters();
+    static final int SCREEN_ROTATION_DEGREES = 90;
+    static final Parameters INITIAL_PARAMETERS = new Parameters();
 
-	@Mock
-	CameraDevice cameraDevice;
-	@Mock
-	CameraRenderer cameraRenderer;
-	@Mock
-	SelectorFunction<LensPosition> lensPositionSelector;
-	@Mock
-	ScreenOrientationProvider screenOrientationProvider;
-	@Mock
-	InitialParametersProvider initialParametersProvider;
+    @Mock
+    CameraDevice cameraDevice;
+    @Mock
+    CameraRenderer cameraRenderer;
+    @Mock
+    SelectorFunction<LensPosition> lensPositionSelector;
+    @Mock
+    ScreenOrientationProvider screenOrientationProvider;
+    @Mock
+    InitialParametersProvider initialParametersProvider;
 
-	@InjectMocks
-	StartCameraRoutine testee;
+    @Test
+    public void routine() throws Exception {
+        // Given
+        StartCameraRoutine testee = new StartCameraRoutine(
+                cameraDevice,
+                cameraRenderer,
+                ScaleType.CENTER_INSIDE,
+                lensPositionSelector,
+                screenOrientationProvider,
+                initialParametersProvider
+        );
 
-	@Test
-	public void routine() throws Exception {
-		// Given
-		List<LensPosition> availableLensPositions = asList(
-				LensPosition.FRONT,
-				LensPosition.BACK
-		);
 
-		LensPosition preferredLensPosition = LensPosition.FRONT;
+        List<LensPosition> availableLensPositions = asList(
+                LensPosition.FRONT,
+                LensPosition.BACK
+        );
 
-		givenLensPositionsAvailable(availableLensPositions);
-		givenPositionSelected(preferredLensPosition);
-		givenScreenRotation();
-		givenInitialParametersAvailable();
+        LensPosition preferredLensPosition = LensPosition.FRONT;
+        ScaleType scaleType = ScaleType.CENTER_INSIDE;
 
-		// When
-		testee.run();
+        givenLensPositionsAvailable(availableLensPositions);
+        givenPositionSelected(preferredLensPosition);
+        givenScreenRotation();
+        givenInitialParametersAvailable();
 
-		// Then
-		InOrder inOrder = inOrder(
-				cameraDevice,
-				cameraRenderer,
-				lensPositionSelector
-		);
+        // When
+        testee.run();
 
-		inOrder.verify(lensPositionSelector).select(availableLensPositions);
-		inOrder.verify(cameraDevice).open(preferredLensPosition);
-		inOrder.verify(cameraDevice).updateParameters(INITIAL_PARAMETERS);
-		inOrder.verify(cameraDevice).setDisplayOrientation(SCREEN_ROTATION_DEGREES);
-		inOrder.verify(cameraRenderer).attachCamera(cameraDevice);
-		inOrder.verify(cameraDevice).startPreview();
-	}
+        // Then
+        InOrder inOrder = inOrder(
+                cameraDevice,
+                cameraRenderer,
+                lensPositionSelector
+        );
 
-	private void givenInitialParametersAvailable() {
-		given(initialParametersProvider.initialParameters())
-				.willReturn(INITIAL_PARAMETERS);
-	}
+        inOrder.verify(lensPositionSelector).select(availableLensPositions);
+        inOrder.verify(cameraDevice).open(preferredLensPosition);
+        inOrder.verify(cameraDevice).updateParameters(INITIAL_PARAMETERS);
+        inOrder.verify(cameraDevice).setDisplayOrientation(SCREEN_ROTATION_DEGREES);
+        inOrder.verify(cameraRenderer).setScaleType(scaleType);
+        inOrder.verify(cameraRenderer).attachCamera(cameraDevice);
+        inOrder.verify(cameraDevice).startPreview();
+    }
 
-	private void givenScreenRotation() {
-		given(screenOrientationProvider.getScreenRotation())
-				.willReturn(SCREEN_ROTATION_DEGREES);
-	}
+    private void givenInitialParametersAvailable() {
+        given(initialParametersProvider.initialParameters())
+                .willReturn(INITIAL_PARAMETERS);
+    }
 
-	private void givenPositionSelected(LensPosition lensPosition) {
-		given(lensPositionSelector.select(ArgumentMatchers.<LensPosition>anyCollection()))
-				.willReturn(lensPosition);
-	}
+    private void givenScreenRotation() {
+        given(screenOrientationProvider.getScreenRotation())
+                .willReturn(SCREEN_ROTATION_DEGREES);
+    }
 
-	private void givenLensPositionsAvailable(List<LensPosition> lensPositions) {
-		given(cameraDevice.getAvailableLensPositions())
-				.willReturn(lensPositions);
-	}
+    private void givenPositionSelected(LensPosition lensPosition) {
+        given(lensPositionSelector.select(ArgumentMatchers.<LensPosition>anyCollection()))
+                .willReturn(lensPosition);
+    }
+
+    private void givenLensPositionsAvailable(List<LensPosition> lensPositions) {
+        given(cameraDevice.getAvailableLensPositions())
+                .willReturn(lensPositions);
+    }
 
 }

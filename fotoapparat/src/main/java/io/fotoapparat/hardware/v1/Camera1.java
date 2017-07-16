@@ -254,8 +254,7 @@ public class Camera1 implements CameraDevice {
 
         return new RendererParameters(
                 previewSize(),
-                imageRotation,
-                previewScaleType
+                imageRotation
         );
     }
 

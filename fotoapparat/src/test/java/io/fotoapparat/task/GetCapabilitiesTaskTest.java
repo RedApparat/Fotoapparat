@@ -13,7 +13,6 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
-import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.provider.GetCapabilitiesTask;
 
@@ -28,7 +27,6 @@ public class GetCapabilitiesTaskTest {
     private static final Capabilities CAPABILITIES = new Capabilities(
             Collections.singleton(new Size(1400, 1080)),
             Collections.singleton(new Size(1400, 1080)),
-            Collections.singleton(ScaleType.CENTER_CROP),
             Collections.singleton(FocusMode.CONTINUOUS_FOCUS),
             Collections.singleton(Flash.OFF)
     );

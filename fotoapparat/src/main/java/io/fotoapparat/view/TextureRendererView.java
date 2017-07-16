@@ -29,7 +29,8 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
     private SurfaceTexture surfaceTexture;
     private TextureView textureView;
 
-    private RendererParameters rendererParameters = null;
+    private Size previewSize = null;
+    private ScaleType scaleType;
 
     public TextureRendererView(@NonNull Context context) {
         super(context);
@@ -76,6 +77,11 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
     }
 
     @Override
+    public void setScaleType(ScaleType scaleType) {
+        this.scaleType = scaleType;
+    }
+
+    @Override
     public void attachCamera(CameraDevice camera) {
         awaitSurfaceTexture();
         updateLayout(camera);
@@ -84,10 +90,14 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
     }
 
     private void updateLayout(final CameraDevice camera) {
+        final Size previewSize = toPreviewSize(
+                camera.getRendererParameters()
+        );
+
         post(new Runnable() {
             @Override
             public void run() {
-                rendererParameters = camera.getRendererParameters();
+                TextureRendererView.this.previewSize = previewSize;
 
                 requestLayout();
             }
@@ -114,14 +124,12 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        if (rendererParameters == null) {
+        if (previewSize == null || scaleType == null) {
             super.onLayout(changed, left, top, right, bottom);
             return;
         }
 
-        Size previewSize = toPreviewSize(rendererParameters);
-
-        if (rendererParameters.scaleType == ScaleType.CENTER_INSIDE) {
+        if (scaleType == ScaleType.CENTER_INSIDE) {
             centerInside(previewSize);
         } else {
             centerCrop(previewSize);

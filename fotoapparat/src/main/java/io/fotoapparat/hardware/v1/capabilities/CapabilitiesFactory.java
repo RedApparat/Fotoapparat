@@ -13,7 +13,6 @@ import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.v1.Camera1;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
-import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 
 /**
@@ -29,7 +28,6 @@ public class CapabilitiesFactory {
         return new Capabilities(
                 extractPictureSizes(parameters),
                 extractPreviewSizes(parameters),
-                setPreviewScaleTypes(),
                 extractFocusModes(parameters),
                 extractFlashModes(parameters)
         );
@@ -86,13 +84,6 @@ public class CapabilitiesFactory {
         }
 
         return result;
-    }
-
-    private Set<ScaleType> setPreviewScaleTypes() {
-        HashSet<ScaleType> previewScaleTypes = new HashSet<>();
-        previewScaleTypes.add(ScaleType.CENTER_CROP);
-        previewScaleTypes.add(ScaleType.CENTER_INSIDE);
-        return previewScaleTypes;
     }
 
 }

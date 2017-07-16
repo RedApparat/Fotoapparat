@@ -80,7 +80,6 @@ public class Fotoapparat {
                 cameraDevice,
                 builder.photoSizeSelector,
                 builder.previewSizeSelector,
-                builder.previewScaleTypeSelector,
                 builder.focusModeSelector,
                 builder.flashSelector,
                 parametersValidator
@@ -89,6 +88,7 @@ public class Fotoapparat {
         StartCameraRoutine startCameraRoutine = new StartCameraRoutine(
                 cameraDevice,
                 builder.renderer,
+                builder.scaleType,
                 builder.lensPositionSelector,
                 screenOrientationProvider,
                 initialParametersProvider

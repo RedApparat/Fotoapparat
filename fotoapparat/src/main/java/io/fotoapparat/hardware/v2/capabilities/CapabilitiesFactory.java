@@ -13,11 +13,9 @@ import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.hardware.v2.parameters.converters.FocusConverter;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
-import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 
 import static io.fotoapparat.hardware.v2.parameters.converters.FlashConverter.exposureModeToFlash;
-import static java.util.Arrays.asList;
 
 /**
  * Creates the {@link Capabilities} of a {@link io.fotoapparat.hardware.v2.Camera2}.
@@ -36,17 +34,9 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
         return new Capabilities(
                 availableJpegSizes(),
                 availablePreviewSizes(),
-                availablePreviewScaleTypes(),
                 availableFocusModes(),
                 availableFlashModes()
         );
-    }
-
-    private Set<ScaleType> availablePreviewScaleTypes() {
-        return new HashSet<>(asList(
-                ScaleType.CENTER_INSIDE,
-                ScaleType.CENTER_CROP
-        ));
     }
 
     @SuppressWarnings("ConstantConditions")
