@@ -26,7 +26,6 @@ import static io.fotoapparat.parameter.selector.FocusModeSelectors.fixed;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.back;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.external;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.front;
-import static io.fotoapparat.parameter.selector.ScaleTypeSelectors.centerCropped;
 import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 
@@ -53,7 +52,7 @@ public class FotoapparatBuilder {
     );
     SelectorFunction<Flash> flashSelector = FlashSelectors.off();
 
-    ScaleType scaleType = centerCropped();
+    ScaleType scaleType = ScaleType.CENTER_CROP;
 
     FrameProcessor frameProcessor = null;
 
