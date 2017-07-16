@@ -136,6 +136,9 @@ compile 'io.fotoapparat.fotoapparat:library:1.1.0'
 
 Camera permission will be automatically added to your `AndroidManifest.xml`. Do not forget to request this permission on Marshmallow and higher.
 
+## Face detection
+
+Optionally, you can check out our other library which adds face detection capabilities - [FaceDetector](https://github.com/Fotoapparat/FaceDetector).
 
 ## Credits
 
