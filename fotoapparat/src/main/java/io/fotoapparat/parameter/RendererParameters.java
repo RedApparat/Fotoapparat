@@ -33,7 +33,6 @@ public class RendererParameters {
         RendererParameters that = (RendererParameters) o;
 
         return frameRotation == that.frameRotation && (previewSize != null ? previewSize.equals(that.previewSize) : that.previewSize == null);
-
     }
 
     @Override

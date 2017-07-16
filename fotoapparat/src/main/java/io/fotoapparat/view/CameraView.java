@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 import io.fotoapparat.hardware.CameraDevice;
+import io.fotoapparat.parameter.ScaleType;
 
 /**
  * Displays stream from camera.
@@ -53,6 +54,11 @@ public class CameraView extends FrameLayout implements CameraRenderer {
         rendererView = new TextureRendererView(getContext());
 
         addView(rendererView);
+    }
+
+    @Override
+    public void setScaleType(ScaleType scaleType) {
+        rendererView.setScaleType(scaleType);
     }
 
     @Override

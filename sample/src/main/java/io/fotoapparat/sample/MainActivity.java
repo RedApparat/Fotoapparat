@@ -14,6 +14,7 @@ import io.fotoapparat.FotoapparatSwitcher;
 import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.parameter.LensPosition;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
@@ -122,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         return Fotoapparat
                 .with(this)
                 .into(cameraView)
+                .previewScaleType(ScaleType.CENTER_CROP)
                 .photoSize(standardRatio(biggestSize()))
                 .lensPosition(lensPosition(position))
                 .focusMode(firstAvailable(

@@ -50,6 +50,7 @@ Fotoapparat
     .with(context)  
     .into(cameraView)           // view which will draw the camera preview
     .photoSize(biggestSize())   // we want to have the biggest photo possible
+    .previewScaleType(centerCropped())  // we want the preview to fill the view  
     .lensPosition(back())       // we want back camera
     .focusMode(firstAvailable(  // (optional) use the first focus mode which is supported by device
             continuousFocus(),
