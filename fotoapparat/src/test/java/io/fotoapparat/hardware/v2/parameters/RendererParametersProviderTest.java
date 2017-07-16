@@ -8,6 +8,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.parameter.RendererParameters;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 
 import static junit.framework.Assert.assertEquals;
@@ -43,7 +44,8 @@ public class RendererParametersProviderTest {
                 new RendererParameters(
                         size,
                         sensorOrientation,
-                        scaleType),
+                        ScaleType.CENTER_CROP
+                ),
                 rendererParameters
         );
 

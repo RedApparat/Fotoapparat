@@ -31,6 +31,7 @@ import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.RendererParameters;
+import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
@@ -155,7 +156,7 @@ public class Camera2Test {
         Capabilities capabilities = new Capabilities(
                 Collections.<Size>emptySet(),
                 Collections.<Size>emptySet(),
-                previewScaleTypes,
+                Collections.<ScaleType>emptySet(),
                 singleton(FocusMode.MACRO),
                 Collections.<Flash>emptySet()
         );
@@ -226,7 +227,7 @@ public class Camera2Test {
     @Test
     public void getRendererParameters() throws Exception {
         // Given
-        RendererParameters rendererParameters = new RendererParameters(new Size(1920, 1080), 0, scaleType);
+        RendererParameters rendererParameters = new RendererParameters(new Size(1920, 1080), 0, ScaleType.CENTER_CROP);
         given(rendererParametersOperator.getRendererParameters())
                 .willReturn(rendererParameters);
 
