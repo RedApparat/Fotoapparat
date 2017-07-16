@@ -49,6 +49,7 @@ Configure `Fotoapparat` instance
 Fotoapparat
     .with(context)  
     .into(cameraView)           // view which will draw the camera preview
+    .previewScaleType(ScaleType.CENTER_CROP)  // we want the preview to fill the view  
     .photoSize(biggestSize())   // we want to have the biggest photo possible
     .lensPosition(back())       // we want back camera
     .focusMode(firstAvailable(  // (optional) use the first focus mode which is supported by device
