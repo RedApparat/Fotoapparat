@@ -21,10 +21,12 @@ public class Parameters {
      * @param type  type of the parameter to store.
      * @param value value of the parameter.
      */
-    public void putValue(Type type, Object value) {
+    public Parameters putValue(Type type, Object value) {
         ensureType(type, value);
 
         values.put(type, value);
+
+        return this;
     }
 
     private void ensureType(Type type, Object value) {
@@ -62,6 +64,14 @@ public class Parameters {
         }
 
         return result;
+    }
+
+    /**
+     * Puts all parameters which are in input to current set of parameters. If there are duplicates,
+     * they are overwritten.
+     */
+    public void putAll(Parameters input) {
+        values.putAll(input.values);
     }
 
     @Override

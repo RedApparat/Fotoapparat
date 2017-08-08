@@ -110,4 +110,43 @@ public class ParametersTest {
         );
     }
 
+    @Test
+    public void putAll() throws Exception {
+        // Given
+        Parameters input = new Parameters();
+        input.putValue(Parameters.Type.FOCUS_MODE, FocusMode.AUTO);
+        input.putValue(Parameters.Type.PICTURE_SIZE, new Size(100, 100));
+
+        // When
+        testee.putAll(input);
+
+        // Then
+        assertEquals(
+                input,
+                testee
+        );
+    }
+
+    @Test
+    public void putAll_KeepOldValues() throws Exception {
+        // Given
+        Parameters input = new Parameters();
+        input.putValue(Parameters.Type.FOCUS_MODE, FocusMode.AUTO);
+
+        testee.putValue(Parameters.Type.PICTURE_SIZE, new Size(100, 100));
+
+        // When
+        testee.putAll(input);
+
+        // Then
+        Parameters expected = new Parameters();
+        expected.putValue(Parameters.Type.FOCUS_MODE, FocusMode.AUTO);
+        expected.putValue(Parameters.Type.PICTURE_SIZE, new Size(100, 100));
+
+        assertEquals(
+                expected,
+                testee
+        );
+    }
+
 }
