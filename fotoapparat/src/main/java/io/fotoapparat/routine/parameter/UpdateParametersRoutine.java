@@ -17,6 +17,7 @@ import static java.util.Arrays.asList;
 /**
  * Updates {@link CameraDevice} parameters.
  */
+// TODO write a proper test
 public class UpdateParametersRoutine {
 
     private final CameraDevice cameraDevice;

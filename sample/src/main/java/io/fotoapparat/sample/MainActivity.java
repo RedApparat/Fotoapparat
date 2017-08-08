@@ -3,7 +3,9 @@ package io.fotoapparat.sample;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.ScaleType;
+import io.fotoapparat.parameter.update.UpdateRequest;
 import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
@@ -64,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
 
         setupFotoapparat();
 
-        takePictureOnClick(cameraView);
-        focusOnLongClick(cameraView);
-
-        setupSwitchCameraButton();
+        takePictureOnClick();
+        focusOnLongClick();
+        switchCameraOnClick();
+        toggleTorchOnSwitch();
     }
 
     private void setupFotoapparat() {
@@ -76,7 +79,28 @@ public class MainActivity extends AppCompatActivity {
         fotoapparatSwitcher = FotoapparatSwitcher.withDefault(backFotoapparat);
     }
 
-    private void setupSwitchCameraButton() {
+    private void toggleTorchOnSwitch() {
+        SwitchCompat torchSwitch = (SwitchCompat) findViewById(R.id.torchSwitch);
+
+        torchSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                fotoapparatSwitcher
+                        .getCurrentFotoapparat()
+                        .updateParameters(
+                                UpdateRequest.builder()
+                                        .flash(
+                                                isChecked
+                                                        ? torch()
+                                                        : off()
+                                        )
+                                        .build()
+                        );
+            }
+        });
+    }
+
+    private void switchCameraOnClick() {
         View switchCameraButton = findViewById(R.id.switchCamera);
         switchCameraButton.setVisibility(
                 canSwitchCameras()
@@ -95,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void focusOnLongClick(View view) {
-        view.setOnLongClickListener(new View.OnLongClickListener() {
+    private void focusOnLongClick() {
+        cameraView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 fotoapparatSwitcher.getCurrentFotoapparat().autoFocus();
@@ -106,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void takePictureOnClick(View view) {
-        view.setOnClickListener(new View.OnClickListener() {
+    private void takePictureOnClick() {
+        cameraView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePicture();
