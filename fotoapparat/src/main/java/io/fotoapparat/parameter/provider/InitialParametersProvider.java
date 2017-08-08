@@ -1,7 +1,5 @@
 package io.fotoapparat.parameter.provider;
 
-import java.util.Collection;
-
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
@@ -13,6 +11,7 @@ import io.fotoapparat.parameter.factory.ParametersFactory;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.selector.Selectors;
 
+import static io.fotoapparat.parameter.Parameters.combineParameters;
 import static io.fotoapparat.parameter.selector.AspectRatioSelectors.aspectRatio;
 import static java.util.Arrays.asList;
 
@@ -63,16 +62,6 @@ public class InitialParametersProvider {
                 photoSize.getAspectRatio(),
                 original
         );
-    }
-
-    static Parameters combineParameters(Collection<Parameters> parametersList) {
-        Parameters result = new Parameters();
-
-        for (Parameters parameters : parametersList) {
-            result.putAll(parameters);
-        }
-
-        return result;
     }
 
     /**

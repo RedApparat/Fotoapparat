@@ -1,5 +1,6 @@
 package io.fotoapparat.parameter;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,6 +14,20 @@ import io.fotoapparat.hardware.CameraDevice;
 public class Parameters {
 
     private final Map<Type, Object> values = new HashMap<>();
+
+    /**
+     * @return single {@link Parameters} which is a result of adding up all parameters in the list
+     * using {@link Parameters#putAll(Parameters)}.
+     */
+    public static Parameters combineParameters(Collection<Parameters> parametersList) {
+        Parameters result = new Parameters();
+
+        for (Parameters parameters : parametersList) {
+            result.putAll(parameters);
+        }
+
+        return result;
+    }
 
     /**
      * Puts value of given type, rewriting existing one (if any). Note that given value must be of

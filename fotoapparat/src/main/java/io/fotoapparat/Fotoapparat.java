@@ -90,9 +90,11 @@ public class Fotoapparat {
         ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
         RotationListener rotationListener = new RotationListener(builder.context);
 
+        ParametersFactory parametersFactory = new ParametersFactory();
+
         InitialParametersValidator parametersValidator = new InitialParametersValidator();
         InitialParametersProvider initialParametersProvider = new InitialParametersProvider(
-                new ParametersFactory(),
+                parametersFactory,
                 cameraDevice,
                 builder.photoSizeSelector,
                 builder.previewSizeSelector,
@@ -150,7 +152,8 @@ public class Fotoapparat {
         );
 
         UpdateParametersRoutine updateParametersRoutine = new UpdateParametersRoutine(
-                cameraDevice
+                cameraDevice,
+                parametersFactory
         );
 
         return new Fotoapparat(
