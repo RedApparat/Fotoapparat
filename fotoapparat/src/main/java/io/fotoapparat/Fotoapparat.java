@@ -1,6 +1,7 @@
 package io.fotoapparat;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -14,6 +15,7 @@ import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
 import io.fotoapparat.parameter.provider.CapabilitiesProvider;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.parameter.provider.InitialParametersValidator;
+import io.fotoapparat.parameter.update.UpdateRequest;
 import io.fotoapparat.result.CapabilitiesResult;
 import io.fotoapparat.result.FocusResult;
 import io.fotoapparat.result.PendingResult;
@@ -24,6 +26,7 @@ import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
 import io.fotoapparat.routine.UpdateOrientationRoutine;
 import io.fotoapparat.routine.focus.AutoFocusRoutine;
+import io.fotoapparat.routine.parameter.UpdateParametersRoutine;
 import io.fotoapparat.routine.picture.TakePictureRoutine;
 
 /**
@@ -41,6 +44,7 @@ public class Fotoapparat {
     private final TakePictureRoutine takePictureRoutine;
     private final AutoFocusRoutine autoFocusRoutine;
     private final CheckAvailabilityRoutine checkAvailabilityRoutine;
+    private final UpdateParametersRoutine updateParametersRoutine;
     private final Executor executor;
 
     private boolean started = false;
@@ -53,6 +57,7 @@ public class Fotoapparat {
                 TakePictureRoutine takePictureRoutine,
                 AutoFocusRoutine autoFocusRoutine,
                 CheckAvailabilityRoutine checkAvailabilityRoutine,
+                UpdateParametersRoutine updateParametersRoutine,
                 Executor executor) {
         this.startCameraRoutine = startCameraRoutine;
         this.stopCameraRoutine = stopCameraRoutine;
@@ -62,6 +67,7 @@ public class Fotoapparat {
         this.takePictureRoutine = takePictureRoutine;
         this.autoFocusRoutine = autoFocusRoutine;
         this.checkAvailabilityRoutine = checkAvailabilityRoutine;
+        this.updateParametersRoutine = updateParametersRoutine;
         this.executor = executor;
     }
 
@@ -141,6 +147,10 @@ public class Fotoapparat {
                 builder.lensPositionSelector
         );
 
+        UpdateParametersRoutine updateParametersRoutine = new UpdateParametersRoutine(
+                cameraDevice
+        );
+
         return new Fotoapparat(
                 startCameraRoutine,
                 stopCameraRoutine,
@@ -150,6 +160,7 @@ public class Fotoapparat {
                 takePictureRoutine,
                 autoFocusRoutine,
                 checkAvailabilityRoutine,
+                updateParametersRoutine,
                 SERIAL_EXECUTOR
         );
     }
@@ -202,6 +213,21 @@ public class Fotoapparat {
         ensureStarted();
 
         return autoFocusRoutine.autoFocus();
+    }
+
+    /**
+     * Asynchronously updates parameters of the camera. Must be called only after
+     * {@link Fotoapparat#start()}.
+     */
+    public void updateParameters(@NonNull final UpdateRequest updateRequest) {
+        ensureStarted();
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                updateParametersRoutine.updateParameters(updateRequest);
+            }
+        });
     }
 
     /**

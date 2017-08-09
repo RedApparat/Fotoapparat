@@ -39,4 +39,11 @@
         android:layout_margin="8dp"
         android:text="Switch camera"/>
 
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/torchSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|left"
+        android:layout_margin="8dp"/>
+
 </FrameLayout>
