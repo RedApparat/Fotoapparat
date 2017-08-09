@@ -12,7 +12,6 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.orientation.OrientationSensor;
 import io.fotoapparat.hardware.orientation.RotationListener;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
-import io.fotoapparat.parameter.factory.ParametersFactory;
 import io.fotoapparat.parameter.provider.CapabilitiesProvider;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.parameter.provider.InitialParametersValidator;
@@ -90,11 +89,8 @@ public class Fotoapparat {
         ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
         RotationListener rotationListener = new RotationListener(builder.context);
 
-        ParametersFactory parametersFactory = new ParametersFactory();
-
         InitialParametersValidator parametersValidator = new InitialParametersValidator();
         InitialParametersProvider initialParametersProvider = new InitialParametersProvider(
-                parametersFactory,
                 cameraDevice,
                 builder.photoSizeSelector,
                 builder.previewSizeSelector,
@@ -152,8 +148,7 @@ public class Fotoapparat {
         );
 
         UpdateParametersRoutine updateParametersRoutine = new UpdateParametersRoutine(
-                cameraDevice,
-                parametersFactory
+                cameraDevice
         );
 
         return new Fotoapparat(

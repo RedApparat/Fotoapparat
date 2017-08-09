@@ -10,15 +10,15 @@ import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 
 /**
- * Builds {@link Parameters} from given {@link Capabilities} and selector functions.
+ * Functions which build {@link Parameters} from given {@link Capabilities} and selector functions.
  */
 public class ParametersFactory {
 
     /**
      * @return new parameters by selecting picture size from given capabilities.
      */
-    public Parameters selectPictureSize(@NonNull Capabilities capabilities,
-                                        @NonNull SelectorFunction<Size> selector) {
+    public static Parameters selectPictureSize(@NonNull Capabilities capabilities,
+                                               @NonNull SelectorFunction<Size> selector) {
         return new Parameters().putValue(
                 Parameters.Type.PICTURE_SIZE,
                 selector.select(
@@ -30,8 +30,8 @@ public class ParametersFactory {
     /**
      * @return new parameters by selecting preview size from given capabilities.
      */
-    public Parameters selectPreviewSize(@NonNull Capabilities capabilities,
-                                        @NonNull SelectorFunction<Size> selector) {
+    public static Parameters selectPreviewSize(@NonNull Capabilities capabilities,
+                                               @NonNull SelectorFunction<Size> selector) {
         return new Parameters().putValue(
                 Parameters.Type.PREVIEW_SIZE,
                 selector.select(
@@ -43,8 +43,8 @@ public class ParametersFactory {
     /**
      * @return new parameters by selecting focus mode from given capabilities.
      */
-    public Parameters selectFocusMode(@NonNull Capabilities capabilities,
-                                      @NonNull SelectorFunction<FocusMode> selector) {
+    public static Parameters selectFocusMode(@NonNull Capabilities capabilities,
+                                             @NonNull SelectorFunction<FocusMode> selector) {
         return new Parameters().putValue(
                 Parameters.Type.FOCUS_MODE,
                 selector.select(
@@ -56,8 +56,8 @@ public class ParametersFactory {
     /**
      * @return new parameters by selecting flash mode from given capabilities.
      */
-    public Parameters selectFlashMode(@NonNull Capabilities capabilities,
-                                      @NonNull SelectorFunction<Flash> selector) {
+    public static Parameters selectFlashMode(@NonNull Capabilities capabilities,
+                                             @NonNull SelectorFunction<Flash> selector) {
         return new Parameters().putValue(
                 Parameters.Type.FLASH,
                 selector.select(

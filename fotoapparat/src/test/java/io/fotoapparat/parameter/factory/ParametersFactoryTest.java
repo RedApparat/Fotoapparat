@@ -30,7 +30,7 @@ public class ParametersFactoryTest {
         Size size = new Size(100, 100);
 
         // When
-        Parameters result = testee.selectPictureSize(CAPABILITIES, select(size));
+        Parameters result = ParametersFactory.selectPictureSize(CAPABILITIES, select(size));
 
         // Then
         assertEquals(
@@ -45,7 +45,7 @@ public class ParametersFactoryTest {
         Size size = new Size(100, 100);
 
         // When
-        Parameters result = testee.selectPreviewSize(CAPABILITIES, select(size));
+        Parameters result = ParametersFactory.selectPreviewSize(CAPABILITIES, select(size));
 
         // Then
         assertEquals(
@@ -60,7 +60,7 @@ public class ParametersFactoryTest {
         FocusMode focusMode = FocusMode.AUTO;
 
         // When
-        Parameters result = testee.selectFocusMode(CAPABILITIES, select(focusMode));
+        Parameters result = ParametersFactory.selectFocusMode(CAPABILITIES, select(focusMode));
 
         // Then
         assertEquals(
@@ -75,7 +75,7 @@ public class ParametersFactoryTest {
         Flash flash = Flash.AUTO;
 
         // When
-        Parameters result = testee.selectFlashMode(CAPABILITIES, select(flash));
+        Parameters result = ParametersFactory.selectFlashMode(CAPABILITIES, select(flash));
 
         // Then
         assertEquals(

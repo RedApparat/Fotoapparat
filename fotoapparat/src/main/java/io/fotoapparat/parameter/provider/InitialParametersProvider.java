@@ -20,7 +20,6 @@ import static java.util.Arrays.asList;
  */
 public class InitialParametersProvider {
 
-    private final ParametersFactory parametersFactory;
     private final InitialParametersValidator parametersValidator;
     private final CapabilitiesOperator capabilitiesOperator;
     private final SelectorFunction<Size> photoSizeSelector;
@@ -28,14 +27,12 @@ public class InitialParametersProvider {
     private final SelectorFunction<FocusMode> focusModeSelector;
     private final SelectorFunction<Flash> flashSelector;
 
-    public InitialParametersProvider(ParametersFactory parametersFactory,
-                                     CapabilitiesOperator capabilitiesOperator,
+    public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
                                      SelectorFunction<Size> photoSizeSelector,
                                      SelectorFunction<Size> previewSizeSelector,
                                      SelectorFunction<FocusMode> focusModeSelector,
                                      SelectorFunction<Flash> flashSelector,
                                      InitialParametersValidator parametersValidator) {
-        this.parametersFactory = parametersFactory;
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
         this.previewSizeSelector = previewSizeSelector;
@@ -83,21 +80,21 @@ public class InitialParametersProvider {
     }
 
     private Parameters flashModeParameters(Capabilities capabilities) {
-        return parametersFactory.selectFlashMode(
+        return ParametersFactory.selectFlashMode(
                 capabilities,
                 flashSelector
         );
     }
 
     private Parameters focusModeParameters(Capabilities capabilities) {
-        return parametersFactory.selectFocusMode(
+        return ParametersFactory.selectFocusMode(
                 capabilities,
                 focusModeSelector
         );
     }
 
     private Parameters previewSizeParameters(Capabilities capabilities) {
-        return parametersFactory.selectPreviewSize(
+        return ParametersFactory.selectPreviewSize(
                 capabilities,
                 validPreviewSizeSelector(
                         photoSize(capabilities),
@@ -107,7 +104,7 @@ public class InitialParametersProvider {
     }
 
     private Parameters pictureSizeParameters(Capabilities capabilities) {
-        return parametersFactory.selectPictureSize(
+        return ParametersFactory.selectPictureSize(
                 capabilities,
                 photoSizeSelector
         );

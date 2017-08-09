@@ -17,16 +17,12 @@ import static java.util.Arrays.asList;
 /**
  * Updates {@link CameraDevice} parameters.
  */
-// TODO write a proper test
 public class UpdateParametersRoutine {
 
     private final CameraDevice cameraDevice;
-    private final ParametersFactory parametersFactory;
 
-    public UpdateParametersRoutine(CameraDevice cameraDevice,
-                                   ParametersFactory parametersFactory) {
+    public UpdateParametersRoutine(CameraDevice cameraDevice) {
         this.cameraDevice = cameraDevice;
-        this.parametersFactory = parametersFactory;
     }
 
     /**
@@ -44,14 +40,14 @@ public class UpdateParametersRoutine {
     }
 
     private Parameters focusModeParameters(@NonNull UpdateRequest request, Capabilities capabilities) {
-        return parametersFactory.selectFocusMode(
+        return ParametersFactory.selectFocusMode(
                 capabilities,
                 optional(request.focusModeSelector)
         );
     }
 
     private Parameters flashModeParameters(@NonNull UpdateRequest request, Capabilities capabilities) {
-        return parametersFactory.selectFlashMode(
+        return ParametersFactory.selectFlashMode(
                 capabilities,
                 optional(request.flashSelector)
         );
