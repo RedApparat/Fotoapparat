@@ -123,6 +123,22 @@ photoResult
         });
 ```
 
+## Update parameters
+
+It is also possible to update some parameters after `Fotoapparat` was already started.
+
+```java
+fotoapparat.updateParameters(
+        UpdateRequest.builder()
+                .flash(
+                    isTurnedOn 
+                        ? torch() 
+                        : off()
+                )
+                .build()
+)
+```
+
 ## Set up
 
 Add dependency to your `build.gradle`
