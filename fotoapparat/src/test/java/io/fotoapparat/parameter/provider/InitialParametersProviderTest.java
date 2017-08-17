@@ -177,6 +177,18 @@ public class InitialParametersProviderTest {
     }
 
     @Test
+    public void selectPreviewFpsRange() throws Exception {
+         // When
+        Parameters parameters = testee.initialParameters();
+
+        // Then
+        assertEquals(
+                PREVIEW_FPS_RANGE,
+                parameters.getValue(Parameters.Type.PREVIEW_FPS_RANGE)
+        );
+    }
+
+    @Test
     public void parameterValidation() throws Exception {
         // Given
 

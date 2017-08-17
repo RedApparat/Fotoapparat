@@ -3,6 +3,7 @@ package io.fotoapparat.hardware.v2.capabilities;
 import android.hardware.camera2.CameraMetadata;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Range;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -66,6 +67,8 @@ public class CapabilitiesFactoryTest {
 				.willReturn(new int[0]);
 		given(characteristics.autoFocusModes())
 				.willReturn(new int[0]);
+		given(characteristics.getTargetFpsRanges())
+				.willReturn(new Range[0]);
 	}
 
 	@Test
