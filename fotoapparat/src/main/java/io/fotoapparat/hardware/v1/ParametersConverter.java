@@ -8,6 +8,7 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
 
 /**
  * Converts {@link Parameters} to {@link Camera.Parameters}.
@@ -62,6 +63,12 @@ public class ParametersConverter {
                         output
                 );
                 break;
+            case PREVIEW_FPS_RANGE:
+                applyPreviewFpsRange(
+                        (Range<Integer>) input.getValue(type),
+                        output
+                );
+                break;
         }
     }
 
@@ -86,6 +93,13 @@ public class ParametersConverter {
                                 Camera.Parameters output) {
         output.setFocusMode(
                 FocusCapability.toCode(focusMode)
+        );
+    }
+
+    private void applyPreviewFpsRange(Range<Integer> fpsRange,
+                                      Camera.Parameters output) {
+        output.setPreviewFpsRange(
+                fpsRange.lowest(), fpsRange.highest()
         );
     }
 

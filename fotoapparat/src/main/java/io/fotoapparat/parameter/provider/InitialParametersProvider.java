@@ -7,6 +7,7 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.selector.Selectors;
 
@@ -23,18 +24,21 @@ public class InitialParametersProvider {
     private final SelectorFunction<Size> previewSizeSelector;
     private final SelectorFunction<FocusMode> focusModeSelector;
     private final SelectorFunction<Flash> flashSelector;
+    private final SelectorFunction<Range<Integer>> previewFpsRangeSelector;
 
     public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
                                      SelectorFunction<Size> photoSizeSelector,
                                      SelectorFunction<Size> previewSizeSelector,
                                      SelectorFunction<FocusMode> focusModeSelector,
                                      SelectorFunction<Flash> flashSelector,
+                                     SelectorFunction<Range<Integer>> previewFpsRangeSelector,
                                      InitialParametersValidator parametersValidator) {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
         this.previewSizeSelector = previewSizeSelector;
         this.focusModeSelector = focusModeSelector;
         this.flashSelector = flashSelector;
+        this.previewFpsRangeSelector = previewFpsRangeSelector;
         this.parametersValidator = parametersValidator;
     }
 
@@ -50,6 +54,7 @@ public class InitialParametersProvider {
         putPreviewSize(capabilities, parameters);
         putFocusMode(capabilities, parameters);
         putFlash(capabilities, parameters);
+        putPreviewFpsRange(capabilities, parameters);
 
         parametersValidator.validate(parameters);
 
@@ -104,6 +109,15 @@ public class InitialParametersProvider {
                 Parameters.Type.FLASH,
                 flashSelector.select(
                         capabilities.supportedFlashModes()
+                )
+        );
+    }
+
+    private void putPreviewFpsRange(Capabilities capabilities, Parameters parameters) {
+        parameters.putValue(
+                Parameters.Type.PREVIEW_FPS_RANGE,
+                previewFpsRangeSelector.select(
+                        capabilities.supportedPreviewFpsRanges()
                 )
         );
     }

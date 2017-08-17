@@ -3,6 +3,7 @@ package io.fotoapparat.hardware.v1.capabilities;
 import android.hardware.Camera;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,6 +15,8 @@ import io.fotoapparat.hardware.v1.Camera1;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.IntervalRange;
+import io.fotoapparat.parameter.range.Range;
 
 /**
  * {@link Capabilities} of {@link Camera1}.
@@ -29,7 +32,8 @@ public class CapabilitiesFactory {
                 extractPictureSizes(parameters),
                 extractPreviewSizes(parameters),
                 extractFocusModes(parameters),
-                extractFlashModes(parameters)
+                extractFlashModes(parameters),
+                extractPreviewFpsRanges(parameters)
         );
     }
 
@@ -85,6 +89,27 @@ public class CapabilitiesFactory {
 
         result.add(FocusMode.FIXED);
         return result;
+    }
+
+    private Set<Range<Integer>> extractPreviewFpsRanges(Camera.Parameters parameters) {
+        return new HashSet<>(supportedPreviewFpsRanges(parameters));
+    }
+
+	@NonNull
+	private List<Range<Integer>> supportedPreviewFpsRanges(Camera.Parameters parameters) {
+        List<int[]> fpsRanges = parameters.getSupportedPreviewFpsRange();
+        if (fpsRanges == null) {
+            return Collections.emptyList();
+        }
+
+        List<Range<Integer>> wrappedFpsRanges = new ArrayList<>(fpsRanges.size());
+        for (int[] range : fpsRanges) {
+            wrappedFpsRanges.add(new IntervalRange<>(
+                    range[Camera.Parameters.PREVIEW_FPS_MIN_INDEX],
+                    range[Camera.Parameters.PREVIEW_FPS_MAX_INDEX]
+            ));
+        }
+        return wrappedFpsRanges;
     }
 
 }

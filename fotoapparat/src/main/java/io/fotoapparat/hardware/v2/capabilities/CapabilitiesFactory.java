@@ -1,6 +1,7 @@
 package io.fotoapparat.hardware.v2.capabilities;
 
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
 import java.util.Collections;
@@ -14,8 +15,10 @@ import io.fotoapparat.hardware.v2.parameters.converters.FocusConverter;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
 
 import static io.fotoapparat.hardware.v2.parameters.converters.FlashConverter.exposureModeToFlash;
+import static io.fotoapparat.hardware.v2.parameters.converters.FpsRangeConverter.toFotoapparatRange;
 
 /**
  * Creates the {@link Capabilities} of a {@link io.fotoapparat.hardware.v2.Camera2}.
@@ -35,7 +38,8 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
                 availableJpegSizes(),
                 availablePreviewSizes(),
                 availableFocusModes(),
-                availableFlashModes()
+                availableFlashModes(),
+                availablePreviewFpsRanges()
         );
     }
 
@@ -91,6 +95,18 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
         }
 
         return flashes;
+    }
+
+    @NonNull
+	private Set<Range<Integer>> availablePreviewFpsRanges() {
+        android.util.Range<Integer>[] fpsRanges = characteristics().getTargetFpsRanges();
+
+        Set<Range<Integer>> wrappedFpsRanges = new HashSet<>(fpsRanges.length);
+        for (android.util.Range<Integer> range : fpsRanges) {
+            wrappedFpsRanges.add(toFotoapparatRange(range));
+        }
+
+        return wrappedFpsRanges;
     }
 
     private Characteristics characteristics() {

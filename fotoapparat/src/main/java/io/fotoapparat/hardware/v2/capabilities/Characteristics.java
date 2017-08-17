@@ -7,6 +7,7 @@ import android.hardware.camera2.CameraMetadata;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.util.Range;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -134,6 +135,10 @@ public class Characteristics {
                 .getOutputSizes(SurfaceTexture.class);
 
         return convertSizes(outputSizes);
+    }
+
+    public Range<Integer>[] getTargetFpsRanges() {
+        return cameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES);
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import io.fotoapparat.hardware.CameraDevice;
+import io.fotoapparat.parameter.range.Range;
 
 /**
  * Parameters of {@link CameraDevice}.
@@ -109,7 +110,12 @@ public class Parameters {
         /**
          * Flash firing mode of the camera. Expected type: {@link Flash}.
          */
-        FLASH(Flash.class);
+        FLASH(Flash.class),
+
+        /**
+         * Frames per second range for preview stream. Expected type: {@link io.fotoapparat.parameter.range.Range<Integer>}.
+         */
+        PREVIEW_FPS_RANGE(Range.class);
 
         private final Class<?> clazz;
 

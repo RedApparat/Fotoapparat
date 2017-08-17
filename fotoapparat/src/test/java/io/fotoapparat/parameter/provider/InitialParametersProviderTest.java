@@ -14,6 +14,8 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.IntervalRange;
+import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 
 import static io.fotoapparat.test.TestUtils.asSet;
@@ -30,6 +32,8 @@ public class InitialParametersProviderTest {
     static final Size PREVIEW_SIZE = new Size(2000, 1500);
     static final Size PREVIEW_SIZE_WRONG_ASPECT_RATIO = new Size(1000, 1000);
 
+    static final Range<Integer> PREVIEW_FPS_RANGE = new IntervalRange<>(30000, 30000);
+
     static final Set<FocusMode> FOCUS_MODES = asSet(FocusMode.FIXED);
     static final Set<Flash> FLASH = asSet(Flash.AUTO_RED_EYE);
 
@@ -39,6 +43,7 @@ public class InitialParametersProviderTest {
             PREVIEW_SIZE,
             PREVIEW_SIZE_WRONG_ASPECT_RATIO
     );
+    static final Set<Range<Integer>> PREVIEW_FPS_RANGES = asSet(PREVIEW_FPS_RANGE);
 
     @Mock
     CameraDevice cameraDevice;
@@ -50,6 +55,8 @@ public class InitialParametersProviderTest {
     SelectorFunction<FocusMode> focusModeSelector;
     @Mock
     SelectorFunction<Flash> flashModeSelector;
+    @Mock
+    SelectorFunction<Range<Integer>> previewFpsRangeSelector;
     @Mock
     InitialParametersValidator initialParametersValidator;
 
@@ -63,6 +70,7 @@ public class InitialParametersProviderTest {
                 previewSizeSelector,
                 focusModeSelector,
                 flashModeSelector,
+                previewFpsRangeSelector,
                 initialParametersValidator
         );
 
@@ -71,7 +79,8 @@ public class InitialParametersProviderTest {
                         PHOTO_SIZES,
                         ALL_PREVIEW_SIZES,
                         FOCUS_MODES,
-                        FLASH
+                        FLASH,
+                        PREVIEW_FPS_RANGES
                 ));
 
         given(photoSizeSelector.select(PHOTO_SIZES))
@@ -82,6 +91,8 @@ public class InitialParametersProviderTest {
                 .willReturn(FocusMode.FIXED);
         given(flashModeSelector.select(FLASH))
                 .willReturn(Flash.AUTO_RED_EYE);
+        given(previewFpsRangeSelector.select(PREVIEW_FPS_RANGES))
+                .willReturn(PREVIEW_FPS_RANGE);
     }
 
     @Test
@@ -148,7 +159,8 @@ public class InitialParametersProviderTest {
                         photoSizes,
                         ALL_PREVIEW_SIZES,
                         FOCUS_MODES,
-                        FLASH
+                        FLASH,
+                        PREVIEW_FPS_RANGES
                 ));
 
         given(previewSizeSelector.select(ALL_PREVIEW_SIZES))
