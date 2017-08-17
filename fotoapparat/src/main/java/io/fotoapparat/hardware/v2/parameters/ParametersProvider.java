@@ -90,6 +90,11 @@ public class ParametersProvider implements ParametersOperator {
     }
 
 
+    /**
+     * Returns the preview FPS range. Note that values in range multiplied by 1000.
+     *
+     * @return The preview FPS range.
+     */
     public Range<Integer> getPreviewFpsRange() {
         return getSelectedParameters().getValue(PREVIEW_FPS_RANGE);
     }

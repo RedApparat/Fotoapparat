@@ -123,6 +123,9 @@ public class FotoapparatBuilder {
         return this;
     }
 
+    /**
+     * @param selector selects preview FPS range from list of available ranges.
+     */
     public FotoapparatBuilder previewFpsRange(@NonNull SelectorFunction<Range<Integer>> selector) {
         previewFpsRangeSelector = selector;
         return this;

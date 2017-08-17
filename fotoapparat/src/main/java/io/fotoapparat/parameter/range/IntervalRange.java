@@ -2,6 +2,11 @@ package io.fotoapparat.parameter.range;
 
 import android.support.annotation.NonNull;
 
+/**
+ * Implementation of {@link Range} that represents numeric interval.
+ *
+ * @param <T> type of numbers in that interval.
+ */
 public class IntervalRange<T extends Number & Comparable<T>> implements Range<T> {
     @NonNull private final T lowerBound;
     @NonNull private final T upperBound;

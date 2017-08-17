@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.selector.Predicate;
 
+/**
+ * Predicate to filter ranges containing only given FPS.
+ */
 public class ExactFpsRangePredicate implements Predicate<Range<Integer>> {
 
     @NonNull private final Integer fpsBound;

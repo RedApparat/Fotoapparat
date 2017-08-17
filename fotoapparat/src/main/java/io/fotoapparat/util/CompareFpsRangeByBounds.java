@@ -4,6 +4,9 @@ import java.util.Comparator;
 
 import io.fotoapparat.parameter.range.Range;
 
+/**
+ * Comparator based on bounds check. Lower bound has higher priority.
+ */
 public class CompareFpsRangeByBounds implements Comparator<Range<Integer>> {
 
     @Override

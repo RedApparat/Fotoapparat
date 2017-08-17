@@ -1,7 +1,15 @@
 package io.fotoapparat.parameter.range;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 
+/**
+ * Implementation of {@link Range} that delegates all methods to {@link android.util.Range} class.
+ *
+ * @param <T> type of objects in that range.
+ */
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class ContinuousRange<T extends Comparable<? super T>> implements Range<T> {
     @NonNull private final android.util.Range<T> range;
 

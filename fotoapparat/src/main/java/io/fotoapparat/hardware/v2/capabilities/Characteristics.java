@@ -137,6 +137,11 @@ public class Characteristics {
         return convertSizes(outputSizes);
     }
 
+    /**
+     * List of FPS ranges that could be set for this camera device.
+     *
+     * @return The array of supported FPS ranges. Note that values in range multiplied by 1000.
+     */
     public Range<Integer>[] getTargetFpsRanges() {
         return cameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES);
     }
