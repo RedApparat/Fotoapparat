@@ -3,7 +3,6 @@ package io.fotoapparat.hardware.v1.capabilities;
 import android.hardware.Camera;
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -92,17 +91,12 @@ public class CapabilitiesFactory {
     }
 
     private Set<Range<Integer>> extractPreviewFpsRanges(Camera.Parameters parameters) {
-        return new HashSet<>(supportedPreviewFpsRanges(parameters));
-    }
-
-	@NonNull
-	private List<Range<Integer>> supportedPreviewFpsRanges(Camera.Parameters parameters) {
         List<int[]> fpsRanges = parameters.getSupportedPreviewFpsRange();
         if (fpsRanges == null) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
 
-        List<Range<Integer>> wrappedFpsRanges = new ArrayList<>(fpsRanges.size());
+        Set<Range<Integer>> wrappedFpsRanges = new HashSet<>(fpsRanges.size());
         for (int[] range : fpsRanges) {
             wrappedFpsRanges.add(new ContinuousRange<>(
                     range[Camera.Parameters.PREVIEW_FPS_MIN_INDEX],
