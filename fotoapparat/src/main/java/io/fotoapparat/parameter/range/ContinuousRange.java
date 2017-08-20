@@ -1,35 +1,36 @@
 package io.fotoapparat.parameter.range;
 
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 
 /**
- * Implementation of {@link Range} that delegates all methods to {@link android.util.Range} class.
+ * Implementation of {@link Range} that represents numeric interval.
  *
- * @param <T> type of objects in that range.
+ * @param <T> type of numbers in that interval.
  */
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class ContinuousRange<T extends Comparable<? super T>> implements Range<T> {
-    @NonNull private final android.util.Range<T> range;
+public class ContinuousRange<T extends Number & Comparable<T>> implements Range<T> {
+    @NonNull private final T lowerBound;
+    @NonNull private final T upperBound;
 
-    public ContinuousRange(@NonNull android.util.Range<T> range) {
-        this.range = range;
+    public ContinuousRange(@NonNull T lowerBound, @NonNull T upperBound) {
+        this.lowerBound = lowerBound;
+        this.upperBound = upperBound;
     }
 
     @Override
     public T highest() {
-        return range.getUpper();
+        return upperBound;
     }
 
     @Override
     public T lowest() {
-        return range.getLower();
+        return lowerBound;
     }
 
     @Override
     public boolean contains(T value) {
-        return range.contains(value);
+        boolean gteLower = value.compareTo(lowerBound) >= 0;
+        boolean lteUpper = value.compareTo(upperBound) <= 0;
+        return gteLower && lteUpper;
     }
 
     @Override
@@ -39,16 +40,19 @@ public class ContinuousRange<T extends Comparable<? super T>> implements Range<T
 
         ContinuousRange<?> that = (ContinuousRange<?>) o;
 
-        return range.equals(that.range);
+        if (!lowerBound.equals(that.lowerBound)) return false;
+        return upperBound.equals(that.upperBound);
     }
 
     @Override
     public int hashCode() {
-        return range.hashCode();
+        int result = lowerBound.hashCode();
+        result = 31 * result + upperBound.hashCode();
+        return result;
     }
 
     @Override
     public String toString() {
-        return String.format("[%s, %s]", range.getLower(), range.getUpper());
+        return String.format("[%s, %s]", lowerBound, upperBound);
     }
 }

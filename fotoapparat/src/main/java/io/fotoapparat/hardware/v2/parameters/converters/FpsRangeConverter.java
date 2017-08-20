@@ -20,8 +20,8 @@ public class FpsRangeConverter {
      * @param nativeRange The native Android {@link android.util.Range} value.
      * @return The {@link io.fotoapparat.Fotoapparat}'s {@link Range} value.
      */
-    public static <T extends Comparable<T>> Range<T> toFotoapparatRange(android.util.Range<T> nativeRange) {
-        return new ContinuousRange<>(nativeRange);
+    public static <T extends Number & Comparable<T>> Range<T> toFotoapparatRange(android.util.Range<T> nativeRange) {
+        return new ContinuousRange<T>(nativeRange.getLower(), nativeRange.getUpper());
     }
 
     /**

@@ -15,7 +15,7 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.provider.GetCapabilitiesTask;
-import io.fotoapparat.parameter.range.IntervalRange;
+import io.fotoapparat.parameter.range.ContinuousRange;
 import io.fotoapparat.parameter.range.Range;
 
 import static io.fotoapparat.test.TestUtils.resultOf;
@@ -31,7 +31,7 @@ public class GetCapabilitiesTaskTest {
             Collections.singleton(new Size(1400, 1080)),
             Collections.singleton(FocusMode.CONTINUOUS_FOCUS),
             Collections.singleton(Flash.OFF),
-            Collections.<Range<Integer>>singleton(new IntervalRange<>(30000, 30000))
+            Collections.<Range<Integer>>singleton(new ContinuousRange<>(30000, 30000))
     );
 
     @Mock

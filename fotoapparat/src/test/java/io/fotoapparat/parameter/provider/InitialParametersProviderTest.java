@@ -14,7 +14,7 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
-import io.fotoapparat.parameter.range.IntervalRange;
+import io.fotoapparat.parameter.range.ContinuousRange;
 import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 
@@ -32,7 +32,7 @@ public class InitialParametersProviderTest {
     static final Size PREVIEW_SIZE = new Size(2000, 1500);
     static final Size PREVIEW_SIZE_WRONG_ASPECT_RATIO = new Size(1000, 1000);
 
-    static final Range<Integer> PREVIEW_FPS_RANGE = new IntervalRange<>(30000, 30000);
+    static final Range<Integer> PREVIEW_FPS_RANGE = new ContinuousRange<>(30000, 30000);
 
     static final Set<FocusMode> FOCUS_MODES = asSet(FocusMode.FIXED);
     static final Set<Flash> FLASH = asSet(Flash.AUTO_RED_EYE);

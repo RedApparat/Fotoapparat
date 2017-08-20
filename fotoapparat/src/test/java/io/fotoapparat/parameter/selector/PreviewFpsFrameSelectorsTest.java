@@ -7,7 +7,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.List;
 
-import io.fotoapparat.parameter.range.IntervalRange;
+import io.fotoapparat.parameter.range.ContinuousRange;
 import io.fotoapparat.parameter.range.Range;
 
 import static org.junit.Assert.assertEquals;
@@ -20,9 +20,9 @@ public class PreviewFpsFrameSelectorsTest {
     public void fromExactFps_Available() throws Exception {
         // Given
         List<Range<Integer>> availableRanges = Arrays.<Range<Integer>>asList(
-                new IntervalRange<>(24000, 24000),
-                new IntervalRange<>(30000, 30000),
-                new IntervalRange<>(40000, 40000)
+                new ContinuousRange<>(24000, 24000),
+                new ContinuousRange<>(30000, 30000),
+                new ContinuousRange<>(40000, 40000)
         );
 
         // When
@@ -32,7 +32,7 @@ public class PreviewFpsFrameSelectorsTest {
 
         // Then
         assertEquals(
-                new IntervalRange<>(30000, 30000),
+                new ContinuousRange<>(30000, 30000),
                 result
         );
     }
@@ -41,9 +41,9 @@ public class PreviewFpsFrameSelectorsTest {
     public void fromExactFps_NotAvailable() throws Exception {
         // Given
         List<Range<Integer>> availableRanges = Arrays.<Range<Integer>>asList(
-                new IntervalRange<>(24000, 30000),
-                new IntervalRange<>(30000, 36000),
-                new IntervalRange<>(40000, 40000)
+                new ContinuousRange<>(24000, 30000),
+                new ContinuousRange<>(30000, 36000),
+                new ContinuousRange<>(40000, 40000)
         );
 
         // When
@@ -59,10 +59,10 @@ public class PreviewFpsFrameSelectorsTest {
     public void nearestToExactFps_ExactAvailable() throws Exception {
         // Given
         List<Range<Integer>> availableRanges = Arrays.<Range<Integer>>asList(
-                new IntervalRange<>(24000, 30000),
-                new IntervalRange<>(30000, 30000),
-                new IntervalRange<>(30000, 34000),
-                new IntervalRange<>(30000, 36000)
+                new ContinuousRange<>(24000, 30000),
+                new ContinuousRange<>(30000, 30000),
+                new ContinuousRange<>(30000, 34000),
+                new ContinuousRange<>(30000, 36000)
         );
 
         // When
@@ -72,7 +72,7 @@ public class PreviewFpsFrameSelectorsTest {
 
         // Then
         assertEquals(
-                new IntervalRange<>(30000, 30000),
+                new ContinuousRange<>(30000, 30000),
                 result
         );
     }
@@ -81,9 +81,9 @@ public class PreviewFpsFrameSelectorsTest {
     public void nearestToExactFps_NoExactAvailable() throws Exception {
         // Given
         List<Range<Integer>> availableRanges = Arrays.<Range<Integer>>asList(
-                new IntervalRange<>(24000, 30000),
-                new IntervalRange<>(30000, 34000),
-                new IntervalRange<>(30000, 36000)
+                new ContinuousRange<>(24000, 30000),
+                new ContinuousRange<>(30000, 34000),
+                new ContinuousRange<>(30000, 36000)
         );
 
         // When
@@ -93,7 +93,7 @@ public class PreviewFpsFrameSelectorsTest {
 
         // Then
         assertEquals(
-                new IntervalRange<>(30000, 36000),
+                new ContinuousRange<>(30000, 36000),
                 result
         );
     }
@@ -102,9 +102,9 @@ public class PreviewFpsFrameSelectorsTest {
     public void biggestFpsRange() throws Exception {
         // Given
         List<Range<Integer>> availableRanges = Arrays.<Range<Integer>>asList(
-                new IntervalRange<>(24000, 30000),
-                new IntervalRange<>(30000, 34000),
-                new IntervalRange<>(30000, 36000)
+                new ContinuousRange<>(24000, 30000),
+                new ContinuousRange<>(30000, 34000),
+                new ContinuousRange<>(30000, 36000)
         );
 
         // When
@@ -114,7 +114,7 @@ public class PreviewFpsFrameSelectorsTest {
 
         // Then
         assertEquals(
-                new IntervalRange<>(30000, 36000),
+                new ContinuousRange<>(30000, 36000),
                 result
         );
     }
@@ -123,9 +123,9 @@ public class PreviewFpsFrameSelectorsTest {
     public void lowestFpsRange() throws Exception {
         // Given
         List<Range<Integer>> availableRanges = Arrays.<Range<Integer>>asList(
-                new IntervalRange<>(24000, 30000),
-                new IntervalRange<>(30000, 34000),
-                new IntervalRange<>(30000, 36000)
+                new ContinuousRange<>(24000, 30000),
+                new ContinuousRange<>(30000, 34000),
+                new ContinuousRange<>(30000, 36000)
         );
 
         // When
@@ -135,7 +135,7 @@ public class PreviewFpsFrameSelectorsTest {
 
         // Then
         assertEquals(
-                new IntervalRange<>(24000, 30000),
+                new ContinuousRange<>(24000, 30000),
                 result
         );
     }
