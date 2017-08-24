@@ -28,7 +28,7 @@ public class PreviewFpsRangeSelectors {
      * @param fps the specified FPS
      * @return {@link SelectorFunction} which selects FPS range that contains only the specified FPS.
      */
-    public static SelectorFunction<Range<Integer>> fromExactFps(Integer fps) {
+    public static SelectorFunction<Range<Integer>> fromExactFps(int fps) {
         return filtered(biggestFpsRange(),
                 new ExactFpsRangePredicate(fps * FPS_RANGE_BOUNDS_SCALE));
     }
@@ -37,7 +37,7 @@ public class PreviewFpsRangeSelectors {
      * @param fps the specified FPS
      * @return {@link SelectorFunction} which selects FPS range that contains the specified FPS.
      */
-    public static SelectorFunction<Range<Integer>> nearestToExactFps(Integer fps) {
+    public static SelectorFunction<Range<Integer>> nearestToExactFps(int fps) {
         return firstAvailable(fromExactFps(fps),
                 filtered(biggestFpsRange(), new InBoundsFpsRangePredicate(fps * FPS_RANGE_BOUNDS_SCALE)));
     }
