@@ -96,7 +96,7 @@ public class PreviewFpsRangeSelectorsTest {
     }
 
     @Test
-    public void biggestFpsRange() throws Exception {
+    public void rangeWithHighestFps() throws Exception {
         // Given
         List<Range<Integer>> availableRanges = Arrays.<Range<Integer>>asList(
                 new ContinuousRange<>(24000, 30000),
@@ -106,7 +106,7 @@ public class PreviewFpsRangeSelectorsTest {
 
         // When
         Range<Integer> result = PreviewFpsRangeSelectors
-                .biggestFpsRange()
+                .rangeWithHighestFps()
                 .select(availableRanges);
 
         // Then
@@ -117,7 +117,7 @@ public class PreviewFpsRangeSelectorsTest {
     }
 
     @Test
-    public void lowestFpsRange() throws Exception {
+    public void rangeWithLowestFps() throws Exception {
         // Given
         List<Range<Integer>> availableRanges = Arrays.<Range<Integer>>asList(
                 new ContinuousRange<>(24000, 30000),
@@ -127,7 +127,7 @@ public class PreviewFpsRangeSelectorsTest {
 
         // When
         Range<Integer> result = PreviewFpsRangeSelectors
-                .lowestFpsRange()
+                .rangeWithLowestFps()
                 .select(availableRanges);
 
         // Then

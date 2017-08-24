@@ -29,7 +29,7 @@ public class PreviewFpsRangeSelectors {
      * @return {@link SelectorFunction} which selects FPS range that contains only the specified FPS.
      */
     public static SelectorFunction<Range<Integer>> fromExactFps(int fps) {
-        return filtered(biggestFpsRange(),
+        return filtered(rangeWithHighestFps(),
                 new ExactFpsRangePredicate(fps * FPS_RANGE_BOUNDS_SCALE));
     }
 
@@ -39,13 +39,13 @@ public class PreviewFpsRangeSelectors {
      */
     public static SelectorFunction<Range<Integer>> nearestToExactFps(int fps) {
         return firstAvailable(fromExactFps(fps),
-                filtered(biggestFpsRange(), new InBoundsFpsRangePredicate(fps * FPS_RANGE_BOUNDS_SCALE)));
+                filtered(rangeWithHighestFps(), new InBoundsFpsRangePredicate(fps * FPS_RANGE_BOUNDS_SCALE)));
     }
 
     /**
      * @return {@link SelectorFunction} which selects FPS range with max FPS.
      */
-    public static SelectorFunction<Range<Integer>> biggestFpsRange() {
+    public static SelectorFunction<Range<Integer>> rangeWithHighestFps() {
         return new SelectorFunction<Range<Integer>>() {
             @Override
             public Range<Integer> select(Collection<Range<Integer>> items) {
@@ -61,7 +61,7 @@ public class PreviewFpsRangeSelectors {
     /**
      * @return {@link SelectorFunction} which selects FPS range with min FPS.
      */
-    public static SelectorFunction<Range<Integer>> lowestFpsRange() {
+    public static SelectorFunction<Range<Integer>> rangeWithLowestFps() {
         return new SelectorFunction<Range<Integer>>() {
             @Override
             public Range<Integer> select(Collection<Range<Integer>> items) {
