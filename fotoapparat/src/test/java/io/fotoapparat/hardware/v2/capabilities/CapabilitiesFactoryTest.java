@@ -19,9 +19,8 @@ import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
-import io.fotoapparat.parameter.range.ContinuousRange;
 import io.fotoapparat.parameter.range.Range;
-import io.fotoapparat.test.TestUtils;
+import io.fotoapparat.parameter.range.Ranges;
 
 import static io.fotoapparat.test.TestUtils.asSet;
 import static junit.framework.Assert.assertEquals;
@@ -48,11 +47,10 @@ public class CapabilitiesFactoryTest {
 	static final Set<Size> SIZE_SET = asSet(
 			new Size(10, 20)
 	);
-    static final Set<Range<Integer>> PREVIEW_FPS_RANGE_SET =
-            TestUtils.<Range<Integer>>asSet(
-                    new ContinuousRange<>(24000, 24000),
-                    new ContinuousRange<>(30000, 30000)
-            );
+    static final Set<Range<Integer>> PREVIEW_FPS_RANGE_SET = asSet(
+            Ranges.range(24000, 24000),
+            Ranges.range(30000, 30000)
+    );
 
 	@Mock
 	CameraConnection cameraConnection;

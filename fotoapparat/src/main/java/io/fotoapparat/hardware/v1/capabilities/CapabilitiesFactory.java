@@ -14,8 +14,8 @@ import io.fotoapparat.hardware.v1.Camera1;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
-import io.fotoapparat.parameter.range.ContinuousRange;
 import io.fotoapparat.parameter.range.Range;
+import io.fotoapparat.parameter.range.Ranges;
 
 /**
  * {@link Capabilities} of {@link Camera1}.
@@ -98,7 +98,7 @@ public class CapabilitiesFactory {
 
         Set<Range<Integer>> wrappedFpsRanges = new HashSet<>(fpsRanges.size());
         for (int[] range : fpsRanges) {
-            wrappedFpsRanges.add(new ContinuousRange<>(
+            wrappedFpsRanges.add(Ranges.range(
                     range[Camera.Parameters.PREVIEW_FPS_MIN_INDEX],
                     range[Camera.Parameters.PREVIEW_FPS_MAX_INDEX]
             ));

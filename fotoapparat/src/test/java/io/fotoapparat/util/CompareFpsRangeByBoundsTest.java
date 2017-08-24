@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.fotoapparat.parameter.range.ContinuousRange;
 import io.fotoapparat.parameter.range.Range;
+import io.fotoapparat.parameter.range.Ranges;
 
 public class CompareFpsRangeByBoundsTest {
 
@@ -18,11 +18,11 @@ public class CompareFpsRangeByBoundsTest {
     public void findMaxFpsRange() throws Exception {
         // Given
         List<Range<Integer>> fpsRangesList = Arrays.<Range<Integer>>asList(
-                new ContinuousRange<>(24000, 24000),
-                new ContinuousRange<>(24000, 30000),
-                new ContinuousRange<>(30000, 30000),
-                new ContinuousRange<>(30000, 36000),
-                new ContinuousRange<>(30000, 34000)
+                Ranges.range(24000, 24000),
+                Ranges.range(24000, 30000),
+                Ranges.range(30000, 30000),
+                Ranges.range(30000, 36000),
+                Ranges.range(30000, 34000)
         );
 
         // When
@@ -31,7 +31,7 @@ public class CompareFpsRangeByBoundsTest {
         // Then
         Assert.assertEquals(
                 maxRange,
-                new ContinuousRange<>(30000, 36000)
+                Ranges.range(30000, 36000)
         );
     }
 
@@ -39,11 +39,11 @@ public class CompareFpsRangeByBoundsTest {
     public void findMinFpsRange() throws Exception {
         // Given
         List<Range<Integer>> fpsRangesList = Arrays.<Range<Integer>>asList(
-                new ContinuousRange<>(24000, 24000),
-                new ContinuousRange<>(24000, 30000),
-                new ContinuousRange<>(30000, 30000),
-                new ContinuousRange<>(20000, 26000),
-                new ContinuousRange<>(20000, 28000)
+                Ranges.range(24000, 24000),
+                Ranges.range(24000, 30000),
+                Ranges.range(30000, 30000),
+                Ranges.range(20000, 26000),
+                Ranges.range(20000, 28000)
         );
 
         // When
@@ -52,7 +52,7 @@ public class CompareFpsRangeByBoundsTest {
         // Then
         Assert.assertEquals(
                 minRange,
-                new ContinuousRange<>(20000, 26000)
+                Ranges.range(20000, 26000)
         );
     }
 }

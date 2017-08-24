@@ -7,11 +7,11 @@ import android.support.annotation.NonNull;
  *
  * @param <T> type of numbers in that interval.
  */
-public class ContinuousRange<T extends Number & Comparable<T>> implements Range<T> {
+class ContinuousRange<T extends Comparable<T>> implements Range<T> {
     @NonNull private final T lowerBound;
     @NonNull private final T upperBound;
 
-    public ContinuousRange(@NonNull T lowerBound, @NonNull T upperBound) {
+    ContinuousRange(@NonNull T lowerBound, @NonNull T upperBound) {
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
     }

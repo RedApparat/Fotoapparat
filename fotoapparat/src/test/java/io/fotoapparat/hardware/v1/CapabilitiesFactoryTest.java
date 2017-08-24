@@ -16,7 +16,7 @@ import io.fotoapparat.hardware.v1.capabilities.CapabilitiesFactory;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
-import io.fotoapparat.parameter.range.ContinuousRange;
+import io.fotoapparat.parameter.range.Ranges;
 
 import static io.fotoapparat.test.TestUtils.asSet;
 import static java.util.Arrays.asList;
@@ -199,8 +199,8 @@ public class CapabilitiesFactoryTest {
         // Then
         assertEquals(
                 asSet(
-                        new ContinuousRange<>(24000, 24000),
-                        new ContinuousRange<>(30000, 30000)
+                        Ranges.range(24000, 24000),
+                        Ranges.range(30000, 30000)
                 ),
                 capabilities.supportedPreviewFpsRanges()
         );
