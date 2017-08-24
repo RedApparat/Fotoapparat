@@ -18,7 +18,6 @@ import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.range.Range;
 
 import static io.fotoapparat.hardware.v2.parameters.converters.FlashConverter.exposureModeToFlash;
-import static io.fotoapparat.hardware.v2.parameters.converters.FpsRangeConverter.toFotoapparatRange;
 
 /**
  * Creates the {@link Capabilities} of a {@link io.fotoapparat.hardware.v2.Camera2}.
@@ -99,14 +98,7 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
 
     @NonNull
 	private Set<Range<Integer>> availablePreviewFpsRanges() {
-        android.util.Range<Integer>[] fpsRanges = characteristics().getTargetFpsRanges();
-
-        Set<Range<Integer>> wrappedFpsRanges = new HashSet<>(fpsRanges.length);
-        for (android.util.Range<Integer> range : fpsRanges) {
-            wrappedFpsRanges.add(toFotoapparatRange(range));
-        }
-
-        return wrappedFpsRanges;
+        return characteristics().getTargetFpsRanges();
     }
 
     private Characteristics characteristics() {

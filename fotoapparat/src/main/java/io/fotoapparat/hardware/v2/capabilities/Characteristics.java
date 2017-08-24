@@ -7,12 +7,14 @@ import android.hardware.camera2.CameraMetadata;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.util.Range;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
+
+import static io.fotoapparat.hardware.v2.parameters.converters.FpsRangeConverter.toFotoapparatRange;
 
 /**
  * Wrapper around api's {@link CameraCharacteristics}
@@ -36,6 +38,17 @@ public class Characteristics {
         }
 
         return sizesSet;
+    }
+
+    @NonNull
+    private static Set<Range<Integer>> convertFpsRanges(android.util.Range<Integer>[] availableRanges) {
+        Set<Range<Integer>> rangesSet = new HashSet<>(availableRanges.length);
+
+        for (android.util.Range<Integer> range : availableRanges) {
+            rangesSet.add(toFotoapparatRange(range));
+        }
+
+        return rangesSet;
     }
 
     /**
@@ -142,8 +155,11 @@ public class Characteristics {
      *
      * @return The array of supported FPS ranges. Note that values in range multiplied by 1000.
      */
-    public Range<Integer>[] getTargetFpsRanges() {
-        return cameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES);
+    public Set<Range<Integer>> getTargetFpsRanges() {
+        android.util.Range<Integer>[] fpsRanges = cameraCharacteristics
+                .get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES);
+
+        return convertFpsRanges(fpsRanges);
     }
 
 }
