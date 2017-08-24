@@ -3,7 +3,6 @@ package io.fotoapparat.hardware.v2.capabilities;
 import android.hardware.camera2.CameraMetadata;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Range;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +19,9 @@ import io.fotoapparat.hardware.v2.connection.CameraConnection;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.ContinuousRange;
+import io.fotoapparat.parameter.range.Range;
+import io.fotoapparat.test.TestUtils;
 
 import static io.fotoapparat.test.TestUtils.asSet;
 import static junit.framework.Assert.assertEquals;
@@ -46,6 +48,11 @@ public class CapabilitiesFactoryTest {
 	static final Set<Size> SIZE_SET = asSet(
 			new Size(10, 20)
 	);
+    static final Set<Range<Integer>> PREVIEW_FPS_RANGE_SET =
+            TestUtils.<Range<Integer>>asSet(
+                    new ContinuousRange<>(24000, 24000),
+                    new ContinuousRange<>(30000, 30000)
+            );
 
 	@Mock
 	CameraConnection cameraConnection;
@@ -68,7 +75,7 @@ public class CapabilitiesFactoryTest {
 		given(characteristics.autoFocusModes())
 				.willReturn(new int[0]);
 		given(characteristics.getTargetFpsRanges())
-				.willReturn(new Range[0]);
+				.willReturn(Collections.<Range<Integer>>emptySet());
 	}
 
 	@Test
@@ -165,4 +172,21 @@ public class CapabilitiesFactoryTest {
 				capabilities.supportedPreviewSizes()
 		);
 	}
+
+	@Test
+	public void supportedPreviewFpsRanges() throws Exception {
+		// Given
+		given(characteristics.getTargetFpsRanges())
+				.willReturn(PREVIEW_FPS_RANGE_SET);
+
+        // When
+		Capabilities capabilities = testee.getCapabilities();
+
+		// Then
+		assertEquals(
+		        PREVIEW_FPS_RANGE_SET,
+                capabilities.supportedPreviewFpsRanges()
+		);
+	}
+
 }

@@ -1,8 +1,6 @@
 package io.fotoapparat.parameter.selector;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,8 +11,7 @@ import io.fotoapparat.parameter.range.Range;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PreviewFpsFrameSelectorsTest {
+public class PreviewFpsRangeSelectorsTest {
 
     @Test
     public void fromExactFps_Available() throws Exception {
