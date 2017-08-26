@@ -46,4 +46,12 @@
         android:layout_gravity="top|left"
         android:layout_margin="8dp"/>
 
+    <SeekBar
+        android:id="@+id/zoomSeekBar"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:max="30"/>
+
 </FrameLayout>
