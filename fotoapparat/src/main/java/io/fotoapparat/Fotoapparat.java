@@ -1,6 +1,7 @@
 package io.fotoapparat;
 
 import android.content.Context;
+import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 
 import java.util.concurrent.Executor;
@@ -28,6 +29,7 @@ import io.fotoapparat.routine.UpdateOrientationRoutine;
 import io.fotoapparat.routine.focus.AutoFocusRoutine;
 import io.fotoapparat.routine.parameter.UpdateParametersRoutine;
 import io.fotoapparat.routine.picture.TakePictureRoutine;
+import io.fotoapparat.routine.zoom.UpdateZoomLevelRoutine;
 
 /**
  * Camera. Takes pictures.
@@ -45,6 +47,7 @@ public class Fotoapparat {
     private final AutoFocusRoutine autoFocusRoutine;
     private final CheckAvailabilityRoutine checkAvailabilityRoutine;
     private final UpdateParametersRoutine updateParametersRoutine;
+    private final UpdateZoomLevelRoutine updateZoomLevelRoutine;
     private final Executor executor;
 
     private boolean started = false;
@@ -58,6 +61,7 @@ public class Fotoapparat {
                 AutoFocusRoutine autoFocusRoutine,
                 CheckAvailabilityRoutine checkAvailabilityRoutine,
                 UpdateParametersRoutine updateParametersRoutine,
+                UpdateZoomLevelRoutine updateZoomLevelRoutine,
                 Executor executor) {
         this.startCameraRoutine = startCameraRoutine;
         this.stopCameraRoutine = stopCameraRoutine;
@@ -68,6 +72,7 @@ public class Fotoapparat {
         this.autoFocusRoutine = autoFocusRoutine;
         this.checkAvailabilityRoutine = checkAvailabilityRoutine;
         this.updateParametersRoutine = updateParametersRoutine;
+        this.updateZoomLevelRoutine = updateZoomLevelRoutine;
         this.executor = executor;
     }
 
@@ -151,6 +156,10 @@ public class Fotoapparat {
                 cameraDevice
         );
 
+        UpdateZoomLevelRoutine updateZoomLevelRoutine = new UpdateZoomLevelRoutine(
+                cameraDevice
+        );
+
         return new Fotoapparat(
                 startCameraRoutine,
                 stopCameraRoutine,
@@ -161,6 +170,7 @@ public class Fotoapparat {
                 autoFocusRoutine,
                 checkAvailabilityRoutine,
                 updateParametersRoutine,
+                updateZoomLevelRoutine,
                 SERIAL_EXECUTOR
         );
     }
@@ -216,8 +226,7 @@ public class Fotoapparat {
     }
 
     /**
-     * Asynchronously updates parameters of the camera. Must be called only after
-     * {@link Fotoapparat#start()}.
+     * Asynchronously updates parameters of the camera. Must be called only after {@link #start()}.
      */
     public void updateParameters(@NonNull final UpdateRequest updateRequest) {
         ensureStarted();
@@ -226,6 +235,24 @@ public class Fotoapparat {
             @Override
             public void run() {
                 updateParametersRoutine.updateParameters(updateRequest);
+            }
+        });
+    }
+
+    /**
+     * Asynchronously updates zoom level of the camera. Must be called only after {@link #start()}.
+     * <p>
+     * If zoom is not supported by the device - does nothing.
+     *
+     * @param zoomLevel zoom level of the camera. A value between 0 and 1.
+     */
+    public void setZoom(@FloatRange(from = 0f, to = 1f) final float zoomLevel) {
+        ensureStarted();
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                updateZoomLevelRoutine.updateZoomLevel(zoomLevel);
             }
         });
     }
