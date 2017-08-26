@@ -3,6 +3,7 @@ package io.fotoapparat.hardware.v1;
 import android.hardware.Camera;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.SurfaceView;
 import android.view.TextureView;
 
@@ -52,6 +53,9 @@ public class Camera1 implements CameraDevice {
 
     private Throwable lastStacktrace;
     private int imageRotation;
+
+    @Nullable
+    private Capabilities cachedCapabilities = null;
 
     public Camera1(Logger logger) {
         this.capabilitiesFactory = new CapabilitiesFactory();
@@ -123,6 +127,8 @@ public class Camera1 implements CameraDevice {
     @Override
     public void close() {
         recordMethod();
+
+        cachedCapabilities = null;
 
         if (isCameraOpened()) {
             camera.release();
@@ -234,9 +240,17 @@ public class Camera1 implements CameraDevice {
     public Capabilities getCapabilities() {
         recordMethod();
 
-        return capabilitiesFactory.fromParameters(
+        if (cachedCapabilities != null) {
+            return cachedCapabilities;
+        }
+
+        Capabilities capabilities = capabilitiesFactory.fromParameters(
                 camera.getParameters()
         );
+
+        cachedCapabilities = capabilities;
+
+        return capabilities;
     }
 
     private void trySetDisplaySurface(Object displaySurface) throws IOException {
