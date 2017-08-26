@@ -1,5 +1,7 @@
 package io.fotoapparat.hardware;
 
+import android.support.annotation.FloatRange;
+
 import java.util.List;
 
 import io.fotoapparat.hardware.operators.AutoFocusOperator;
@@ -13,13 +15,14 @@ import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.operators.PreviewStreamOperator;
 import io.fotoapparat.hardware.operators.RendererParametersOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
+import io.fotoapparat.hardware.operators.ZoomOperator;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
+import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.RendererParameters;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
-import io.fotoapparat.lens.FocusResult;
 
 /**
  * Abstraction for camera hardware.
@@ -27,7 +30,8 @@ import io.fotoapparat.lens.FocusResult;
 public interface CameraDevice extends CaptureOperator,
         PreviewOperator, CapabilitiesOperator, OrientationOperator, ParametersOperator,
         ConnectionOperator, SurfaceOperator, PreviewStreamOperator, RendererParametersOperator,
-        ExposureMeasurementOperator, AutoFocusOperator, AvailableLensPositionsProvider {
+        ExposureMeasurementOperator, AutoFocusOperator, AvailableLensPositionsProvider,
+        ZoomOperator {
 
     @Override
     void open(LensPosition lensPosition);
@@ -70,5 +74,8 @@ public interface CameraDevice extends CaptureOperator,
 
     @Override
     List<LensPosition> getAvailableLensPositions();
+
+    @Override
+    void setZoom(@FloatRange(from = 0f, to = 1f) float level);
 
 }

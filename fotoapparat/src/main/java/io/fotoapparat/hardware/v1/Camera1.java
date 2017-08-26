@@ -1,6 +1,7 @@
 package io.fotoapparat.hardware.v1;
 
 import android.hardware.Camera;
+import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.view.SurfaceView;
 import android.view.TextureView;
@@ -351,6 +352,31 @@ public class Camera1 implements CameraDevice {
     @Override
     public List<LensPosition> getAvailableLensPositions() {
         return availableLensPositionsProvider.getAvailableLensPositions();
+    }
+
+    @Override
+    public void setZoom(@FloatRange(from = 0f, to = 1f) float level) {
+        recordMethod();
+
+        try {
+            setZoomUnsafe(level);
+        } catch (Exception e) {
+            logFailedZoomUpdate(level, e);
+        }
+    }
+
+    private void setZoomUnsafe(@FloatRange(from = 0f, to = 1f) float level) {
+        Camera.Parameters parameters = camera.getParameters();
+
+        parameters.setZoom(
+                (int) (parameters.getMaxZoom() * level)
+        );
+
+        camera.setParameters(parameters);
+    }
+
+    private void logFailedZoomUpdate(float level, Exception e) {
+        logger.log("Unable to change zoom level to " + level + " e: " + e.getMessage());
     }
 
     private Size previewSize() {
