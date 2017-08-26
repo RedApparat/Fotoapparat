@@ -35,7 +35,8 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
                 availableJpegSizes(),
                 availablePreviewSizes(),
                 availableFocusModes(),
-                availableFlashModes()
+                availableFlashModes(),
+                false
         );
     }
 

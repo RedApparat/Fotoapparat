@@ -29,7 +29,8 @@ public class CapabilitiesFactory {
                 extractPictureSizes(parameters),
                 extractPreviewSizes(parameters),
                 extractFocusModes(parameters),
-                extractFlashModes(parameters)
+                extractFlashModes(parameters),
+                parameters.isZoomSupported()
         );
     }
 
