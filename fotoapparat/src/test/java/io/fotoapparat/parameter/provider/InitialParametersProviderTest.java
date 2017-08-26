@@ -85,7 +85,8 @@ public class InitialParametersProviderTest {
                         asSet(PHOTO_SIZE),
                         ALL_PREVIEW_SIZES,
                         asSet(FocusMode.AUTO),
-                        asSet(Flash.TORCH)
+                        asSet(Flash.TORCH),
+                        true
                 ));
 
         InitialParametersProvider testee = new InitialParametersProvider(
