@@ -56,6 +56,8 @@ public class Camera1 implements CameraDevice {
 
     @Nullable
     private Capabilities cachedCapabilities = null;
+    @Nullable
+    private Camera.Parameters cachedZoomParameters = null;
 
     public Camera1(Logger logger) {
         this.capabilitiesFactory = new CapabilitiesFactory();
@@ -214,6 +216,8 @@ public class Camera1 implements CameraDevice {
         recordMethod();
 
         parametersOperator().updateParameters(parameters);
+
+        cachedZoomParameters = null;
     }
 
     @NonNull
@@ -238,11 +242,11 @@ public class Camera1 implements CameraDevice {
 
     @Override
     public Capabilities getCapabilities() {
-        recordMethod();
-
         if (cachedCapabilities != null) {
             return cachedCapabilities;
         }
+
+        recordMethod();
 
         Capabilities capabilities = capabilitiesFactory.fromParameters(
                 camera.getParameters()
@@ -370,8 +374,6 @@ public class Camera1 implements CameraDevice {
 
     @Override
     public void setZoom(@FloatRange(from = 0f, to = 1f) float level) {
-        recordMethod();
-
         try {
             setZoomUnsafe(level);
         } catch (Exception e) {
@@ -380,13 +382,15 @@ public class Camera1 implements CameraDevice {
     }
 
     private void setZoomUnsafe(@FloatRange(from = 0f, to = 1f) float level) {
-        Camera.Parameters parameters = camera.getParameters();
+        if (cachedZoomParameters == null) {
+            cachedZoomParameters = camera.getParameters();
+        }
 
-        parameters.setZoom(
-                (int) (parameters.getMaxZoom() * level)
+        cachedZoomParameters.setZoom(
+                (int) (cachedZoomParameters.getMaxZoom() * level)
         );
 
-        camera.setParameters(parameters);
+        camera.setParameters(cachedZoomParameters);
     }
 
     private void logFailedZoomUpdate(float level, Exception e) {
