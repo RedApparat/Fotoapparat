@@ -8,8 +8,10 @@
 Camera API in Android is hard. Having 2 different API for new and old Camera does not make things any easier. But fret not, that is your lucky day! After several years of working with Camera we came up with Fotoapparat.
 
 What it provides:
-- Simple, yet powerful API for working with Camera.
-- Support of Camera1 as well as Camera2.
+- Camera API which does not allow you to shoot yourself in the foot.
+- Simple yet powerful parameters customization.
+- Standalone custom `CameraView` which can be integrated into any `Activity`.
+- Fixes and workarounds for device-specific problems.
 - Last, but not least, non 0% test coverage. 
 
 
