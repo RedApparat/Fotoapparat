@@ -22,15 +22,18 @@ public class Capabilities {
     private final Set<FocusMode> focusModes;
     @NonNull
     private final Set<Flash> flashModes;
+    private final boolean zoomSupported;
 
     public Capabilities(@NonNull Set<Size> photoSizes,
                         @NonNull Set<Size> previewSizes,
                         @NonNull Set<FocusMode> focusModes,
-                        @NonNull Set<Flash> flashModes) {
+                        @NonNull Set<Flash> flashModes,
+                        boolean zoomSupported) {
         this.photoSizes = photoSizes;
         this.previewSizes = previewSizes;
         this.focusModes = focusModes;
         this.flashModes = flashModes;
+        this.zoomSupported = zoomSupported;
     }
 
     /**
@@ -41,7 +44,8 @@ public class Capabilities {
                 Collections.<Size>emptySet(),
                 Collections.<Size>emptySet(),
                 Collections.<FocusMode>emptySet(),
-                Collections.<Flash>emptySet()
+                Collections.<Flash>emptySet(),
+                false
         );
     }
 
@@ -73,6 +77,13 @@ public class Capabilities {
         return flashModes;
     }
 
+    /**
+     * @return {@code true} if zoom feature is supported. {@code false} if it is not supported.
+     */
+    public boolean isZoomSupported() {
+        return zoomSupported;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,7 +91,8 @@ public class Capabilities {
 
         Capabilities that = (Capabilities) o;
 
-        return photoSizes.equals(that.photoSizes)
+        return zoomSupported == that.zoomSupported
+                && photoSizes.equals(that.photoSizes)
                 && previewSizes.equals(that.previewSizes)
                 && focusModes.equals(that.focusModes)
                 && flashModes.equals(that.flashModes);
@@ -93,6 +105,7 @@ public class Capabilities {
         result = 31 * result + previewSizes.hashCode();
         result = 31 * result + focusModes.hashCode();
         result = 31 * result + flashModes.hashCode();
+        result = 31 * result + (zoomSupported ? 1 : 0);
         return result;
     }
 
@@ -103,6 +116,7 @@ public class Capabilities {
                 ", previewSizes=" + previewSizes +
                 ", focusModes=" + focusModes +
                 ", flashModes=" + flashModes +
+                ", zoomSupported=" + zoomSupported +
                 '}';
     }
 
