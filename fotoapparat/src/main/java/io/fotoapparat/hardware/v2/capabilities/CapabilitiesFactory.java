@@ -38,7 +38,8 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
                 availablePreviewSizes(),
                 availableFocusModes(),
                 availableFlashModes(),
-                availablePreviewFpsRanges()
+                availablePreviewFpsRanges(),
+                false
         );
     }
 

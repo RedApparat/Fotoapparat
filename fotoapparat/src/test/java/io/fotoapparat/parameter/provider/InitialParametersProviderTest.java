@@ -35,14 +35,7 @@ public class InitialParametersProviderTest {
     static final Size PHOTO_SIZE = new Size(4000, 3000);
     static final Size PREVIEW_SIZE = new Size(2000, 1500);
     static final Size PREVIEW_SIZE_WRONG_ASPECT_RATIO = new Size(1000, 1000);
-
     static final Range<Integer> PREVIEW_FPS_RANGE = Ranges.range(30000, 30000);
-
-    static final Set<FocusMode> FOCUS_MODES = asSet(FocusMode.FIXED);
-    static final Set<Flash> FLASH = asSet(Flash.AUTO_RED_EYE);
-
-    static final Set<Size> PHOTO_SIZES = asSet(PHOTO_SIZE);
-    static final Set<Size> VALID_PREVIEW_SIZES = asSet(PREVIEW_SIZE);
 
     static final Set<Size> ALL_PREVIEW_SIZES = asSet(
             PREVIEW_SIZE,
@@ -51,68 +44,9 @@ public class InitialParametersProviderTest {
     static final Set<Range<Integer>> PREVIEW_FPS_RANGES = asSet(PREVIEW_FPS_RANGE);
 
     @Mock
-    CameraDevice cameraDevice;
-    @Mock
-    SelectorFunction<Size> photoSizeSelector;
-    @Mock
-    SelectorFunction<Size> previewSizeSelector;
-    @Mock
-    SelectorFunction<FocusMode> focusModeSelector;
-    @Mock
-    SelectorFunction<Flash> flashModeSelector;
-    @Mock
-    SelectorFunction<Range<Integer>> previewFpsRangeSelector;
-    @Mock
     InitialParametersValidator initialParametersValidator;
     @Mock
     CapabilitiesOperator capabilitiesOperator;
-
-    InitialParametersProvider testee;
-
-    @Before
-    public void setUp() throws Exception {
-        testee = new InitialParametersProvider(
-                cameraDevice,
-                photoSizeSelector,
-                previewSizeSelector,
-                focusModeSelector,
-                flashModeSelector,
-                previewFpsRangeSelector,
-                initialParametersValidator
-        );
-
-        given(cameraDevice.getCapabilities())
-                .willReturn(new Capabilities(
-                        PHOTO_SIZES,
-                        ALL_PREVIEW_SIZES,
-                        FOCUS_MODES,
-                        FLASH,
-                        PREVIEW_FPS_RANGES
-                ));
-
-        given(photoSizeSelector.select(PHOTO_SIZES))
-                .willReturn(PHOTO_SIZE);
-        given(previewSizeSelector.select(VALID_PREVIEW_SIZES))
-                .willReturn(PREVIEW_SIZE);
-        given(focusModeSelector.select(FOCUS_MODES))
-                .willReturn(FocusMode.FIXED);
-        given(flashModeSelector.select(FLASH))
-                .willReturn(Flash.AUTO_RED_EYE);
-        given(previewFpsRangeSelector.select(PREVIEW_FPS_RANGES))
-                .willReturn(PREVIEW_FPS_RANGE);
-    }
-
-    @Test
-    public void selectFocusMode() throws Exception {
-        // When
-        Parameters parameters = testee.initialParameters();
-
-        // Then
-        assertEquals(
-                FocusMode.FIXED,
-                parameters.getValue(Parameters.Type.FOCUS_MODE)
-        );
-    }
 
     @Test
     public void validPreviewSizeSelector_WithValidAspectRatio() throws Exception {
@@ -160,7 +94,8 @@ public class InitialParametersProviderTest {
                         ALL_PREVIEW_SIZES,
                         asSet(FocusMode.AUTO),
                         asSet(Flash.TORCH),
-                        PREVIEW_FPS_RANGES
+                        PREVIEW_FPS_RANGES,
+                        true
                 ));
 
         InitialParametersProvider testee = new InitialParametersProvider(
@@ -203,18 +138,6 @@ public class InitialParametersProviderTest {
         );
 
         verify(initialParametersValidator).validate(parameters);
-    }
-
-    @Test
-    public void selectPreviewFpsRange() throws Exception {
-         // When
-        Parameters parameters = testee.initialParameters();
-
-        // Then
-        assertEquals(
-                PREVIEW_FPS_RANGE,
-                parameters.getValue(Parameters.Type.PREVIEW_FPS_RANGE)
-        );
     }
 
 }

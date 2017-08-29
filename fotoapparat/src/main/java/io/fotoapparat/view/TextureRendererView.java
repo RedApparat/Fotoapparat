@@ -77,16 +77,27 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
     }
 
     @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        textureLatch.countDown();
+    }
+
+    @Override
     public void setScaleType(ScaleType scaleType) {
         this.scaleType = scaleType;
     }
 
     @Override
     public void attachCamera(CameraDevice camera) {
-        awaitSurfaceTexture();
-        updateLayout(camera);
+        try {
+            awaitSurfaceTexture();
+            updateLayout(camera);
 
-        camera.setDisplaySurface(textureView);
+            camera.setDisplaySurface(textureView);
+        } catch (InterruptedException e) {
+            // Do nothing
+        }
     }
 
     private void updateLayout(final CameraDevice camera) {
@@ -110,15 +121,15 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
                 : rendererParameters.previewSize.flip();
     }
 
-    private void awaitSurfaceTexture() {
+    private void awaitSurfaceTexture() throws InterruptedException {
         if (surfaceTexture != null) {
             return;
         }
 
-        try {
-            textureLatch.await();
-        } catch (InterruptedException e) {
-            // Do nothing
+        textureLatch.await();
+
+        if (surfaceTexture == null) {
+            throw new InterruptedException("No surface became available.");
         }
     }
 
@@ -192,7 +203,6 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
             // Do nothing
-
             return true;
         }
 

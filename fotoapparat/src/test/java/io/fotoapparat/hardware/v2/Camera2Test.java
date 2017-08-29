@@ -158,7 +158,8 @@ public class Camera2Test {
                 Collections.<Size>emptySet(),
                 singleton(FocusMode.MACRO),
                 Collections.<Flash>emptySet(),
-                Collections.<Range<Integer>>emptySet()
+                Collections.<Range<Integer>>emptySet(),
+                false
         );
         given(capabilitiesOperator.getCapabilities())
                 .willReturn(capabilities);

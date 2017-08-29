@@ -22,6 +22,7 @@ import static io.fotoapparat.test.TestUtils.asSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -47,6 +48,8 @@ public class CapabilitiesFactoryTest {
                 .willReturn(Collections.<Camera.Size>emptyList());
         given(parameters.getSupportedPreviewFpsRange())
                 .willReturn(Collections.<int[]>emptyList());
+        given(parameters.isZoomSupported())
+                .willReturn(false);
 
         testee = new CapabilitiesFactory();
     }
@@ -204,6 +207,18 @@ public class CapabilitiesFactoryTest {
                 ),
                 capabilities.supportedPreviewFpsRanges()
         );
+    }
+
+    @Test
+    public void zoomSupported() throws Exception {
+        // Given
+        given(parameters.isZoomSupported())
+                .willReturn(true);
+
+        // When
+        Capabilities capabilities = testee.fromParameters(parameters);
+
+        assertTrue(capabilities.isZoomSupported());
     }
 
     @NonNull

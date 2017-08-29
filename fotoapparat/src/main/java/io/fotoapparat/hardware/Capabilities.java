@@ -26,16 +26,20 @@ public class Capabilities {
     @NonNull
     private final Set<Range<Integer>> previewFpsRanges;
 
+    private final boolean zoomSupported;
+
     public Capabilities(@NonNull Set<Size> photoSizes,
                         @NonNull Set<Size> previewSizes,
                         @NonNull Set<FocusMode> focusModes,
                         @NonNull Set<Flash> flashModes,
-                        @NonNull Set<Range<Integer>> previewFpsRanges) {
+                        @NonNull Set<Range<Integer>> previewFpsRanges,
+                        boolean zoomSupported) {
         this.photoSizes = photoSizes;
         this.previewSizes = previewSizes;
         this.focusModes = focusModes;
         this.flashModes = flashModes;
         this.previewFpsRanges = previewFpsRanges;
+        this.zoomSupported = zoomSupported;
     }
 
     /**
@@ -47,7 +51,8 @@ public class Capabilities {
                 Collections.<Size>emptySet(),
                 Collections.<FocusMode>emptySet(),
                 Collections.<Flash>emptySet(),
-                Collections.<Range<Integer>>emptySet()
+                Collections.<Range<Integer>>emptySet(),
+                false
         );
     }
 
@@ -86,6 +91,13 @@ public class Capabilities {
         return previewFpsRanges;
     }
 
+    /**
+     * @return {@code true} if zoom feature is supported. {@code false} if it is not supported.
+     */
+    public boolean isZoomSupported() {
+        return zoomSupported;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -93,7 +105,8 @@ public class Capabilities {
 
         Capabilities that = (Capabilities) o;
 
-        return photoSizes.equals(that.photoSizes)
+        return zoomSupported == that.zoomSupported
+                && photoSizes.equals(that.photoSizes)
                 && previewSizes.equals(that.previewSizes)
                 && focusModes.equals(that.focusModes)
                 && flashModes.equals(that.flashModes);
@@ -106,6 +119,7 @@ public class Capabilities {
         result = 31 * result + previewSizes.hashCode();
         result = 31 * result + focusModes.hashCode();
         result = 31 * result + flashModes.hashCode();
+        result = 31 * result + (zoomSupported ? 1 : 0);
         return result;
     }
 
@@ -117,6 +131,7 @@ public class Capabilities {
                 ", focusModes=" + focusModes +
                 ", flashModes=" + flashModes +
                 ", previewFpsRanges=" + previewFpsRanges +
+                ", zoomSupported=" + zoomSupported +
                 '}';
     }
 
