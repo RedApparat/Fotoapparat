@@ -8,8 +8,10 @@
 Camera API in Android is hard. Having 2 different API for new and old Camera does not make things any easier. But fret not, that is your lucky day! After several years of working with Camera we came up with Fotoapparat.
 
 What it provides:
-- Simple, yet powerful API for working with Camera.
-- Support of Camera1 as well as Camera2.
+- Camera API which does not allow you to shoot yourself in the foot.
+- Simple yet powerful parameters customization.
+- Standalone custom `CameraView` which can be integrated into any `Activity`.
+- Fixes and workarounds for device-specific problems.
 - Last, but not least, non 0% test coverage. 
 
 
@@ -148,7 +150,7 @@ repositories {
   maven { url 'https://jitpack.io' }
 }
  
-compile 'io.fotoapparat.fotoapparat:library:1.2.0'
+compile 'io.fotoapparat.fotoapparat:library:1.3.0'
 ```
 
 Camera permission will be automatically added to your `AndroidManifest.xml`. Do not forget to request this permission on Marshmallow and higher.

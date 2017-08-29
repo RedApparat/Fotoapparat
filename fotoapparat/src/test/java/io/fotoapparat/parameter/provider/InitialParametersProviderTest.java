@@ -1,5 +1,6 @@
 package io.fotoapparat.parameter.provider;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -7,12 +8,17 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Set;
 
+import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
+import io.fotoapparat.parameter.range.Ranges;
+import io.fotoapparat.parameter.selector.PreviewFpsRangeSelectors;
+import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.selector.SizeSelectors;
 
 import static io.fotoapparat.parameter.selector.FlashSelectors.torch;
@@ -29,11 +35,13 @@ public class InitialParametersProviderTest {
     static final Size PHOTO_SIZE = new Size(4000, 3000);
     static final Size PREVIEW_SIZE = new Size(2000, 1500);
     static final Size PREVIEW_SIZE_WRONG_ASPECT_RATIO = new Size(1000, 1000);
+    static final Range<Integer> PREVIEW_FPS_RANGE = Ranges.range(30000, 30000);
 
     static final Set<Size> ALL_PREVIEW_SIZES = asSet(
             PREVIEW_SIZE,
             PREVIEW_SIZE_WRONG_ASPECT_RATIO
     );
+    static final Set<Range<Integer>> PREVIEW_FPS_RANGES = asSet(PREVIEW_FPS_RANGE);
 
     @Mock
     InitialParametersValidator initialParametersValidator;
@@ -86,6 +94,7 @@ public class InitialParametersProviderTest {
                         ALL_PREVIEW_SIZES,
                         asSet(FocusMode.AUTO),
                         asSet(Flash.TORCH),
+                        PREVIEW_FPS_RANGES,
                         true
                 ));
 
@@ -95,6 +104,7 @@ public class InitialParametersProviderTest {
                 SizeSelectors.biggestSize(),
                 autoFocus(),
                 torch(),
+                PreviewFpsRangeSelectors.rangeWithHighestFps(),
                 initialParametersValidator
         );
 
@@ -119,6 +129,10 @@ public class InitialParametersProviderTest {
                         .putValue(
                                 Parameters.Type.FLASH,
                                 Flash.TORCH
+                        )
+                        .putValue(
+                                Parameters.Type.PREVIEW_FPS_RANGE,
+                                PREVIEW_FPS_RANGE
                         ),
                 parameters
         );

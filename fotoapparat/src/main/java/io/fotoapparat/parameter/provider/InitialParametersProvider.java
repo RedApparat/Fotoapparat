@@ -7,6 +7,7 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.factory.ParametersFactory;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.selector.Selectors;
@@ -26,18 +27,21 @@ public class InitialParametersProvider {
     private final SelectorFunction<Size> previewSizeSelector;
     private final SelectorFunction<FocusMode> focusModeSelector;
     private final SelectorFunction<Flash> flashSelector;
+    private final SelectorFunction<Range<Integer>> previewFpsRangeSelector;
 
     public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
                                      SelectorFunction<Size> photoSizeSelector,
                                      SelectorFunction<Size> previewSizeSelector,
                                      SelectorFunction<FocusMode> focusModeSelector,
                                      SelectorFunction<Flash> flashSelector,
+                                     SelectorFunction<Range<Integer>> previewFpsRangeSelector,
                                      InitialParametersValidator parametersValidator) {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
         this.previewSizeSelector = previewSizeSelector;
         this.focusModeSelector = focusModeSelector;
         this.flashSelector = flashSelector;
+        this.previewFpsRangeSelector = previewFpsRangeSelector;
         this.parametersValidator = parametersValidator;
     }
 
@@ -71,7 +75,8 @@ public class InitialParametersProvider {
                 pictureSizeParameters(capabilities),
                 previewSizeParameters(capabilities),
                 focusModeParameters(capabilities),
-                flashModeParameters(capabilities)
+                flashModeParameters(capabilities),
+                previewFpsRange(capabilities)
         ));
 
         parametersValidator.validate(parameters);
@@ -113,6 +118,13 @@ public class InitialParametersProvider {
     private Size photoSize(Capabilities capabilities) {
         return photoSizeSelector.select(
                 capabilities.supportedPictureSizes()
+        );
+    }
+
+    private Parameters previewFpsRange(Capabilities capabilities) {
+        return ParametersFactory.selectPreviewFpsRange(
+                capabilities,
+                previewFpsRangeSelector
         );
     }
 

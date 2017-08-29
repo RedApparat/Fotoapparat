@@ -8,6 +8,7 @@ import java.util.Set;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
 
 /**
  * Capabilities of camera hardware.
@@ -22,17 +23,22 @@ public class Capabilities {
     private final Set<FocusMode> focusModes;
     @NonNull
     private final Set<Flash> flashModes;
+    @NonNull
+    private final Set<Range<Integer>> previewFpsRanges;
+
     private final boolean zoomSupported;
 
     public Capabilities(@NonNull Set<Size> photoSizes,
                         @NonNull Set<Size> previewSizes,
                         @NonNull Set<FocusMode> focusModes,
                         @NonNull Set<Flash> flashModes,
+                        @NonNull Set<Range<Integer>> previewFpsRanges,
                         boolean zoomSupported) {
         this.photoSizes = photoSizes;
         this.previewSizes = previewSizes;
         this.focusModes = focusModes;
         this.flashModes = flashModes;
+        this.previewFpsRanges = previewFpsRanges;
         this.zoomSupported = zoomSupported;
     }
 
@@ -45,6 +51,7 @@ public class Capabilities {
                 Collections.<Size>emptySet(),
                 Collections.<FocusMode>emptySet(),
                 Collections.<Flash>emptySet(),
+                Collections.<Range<Integer>>emptySet(),
                 false
         );
     }
@@ -75,6 +82,13 @@ public class Capabilities {
      */
     public Set<Flash> supportedFlashModes() {
         return flashModes;
+    }
+
+    /**
+     * @return list of supported preview fps ranges.
+     */
+    public Set<Range<Integer>> supportedPreviewFpsRanges() {
+        return previewFpsRanges;
     }
 
     /**
@@ -116,6 +130,7 @@ public class Capabilities {
                 ", previewSizes=" + previewSizes +
                 ", focusModes=" + focusModes +
                 ", flashModes=" + flashModes +
+                ", previewFpsRanges=" + previewFpsRanges +
                 ", zoomSupported=" + zoomSupported +
                 '}';
     }

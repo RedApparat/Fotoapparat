@@ -7,6 +7,7 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 
 /**
@@ -62,6 +63,19 @@ public class ParametersFactory {
                 Parameters.Type.FLASH,
                 selector.select(
                         capabilities.supportedFlashModes()
+                )
+        );
+    }
+
+    /**
+     * @return new parameters by selecting preview FPS range from given capabilities.
+     */
+    public static Parameters selectPreviewFpsRange(@NonNull Capabilities capabilities,
+                                                    @NonNull SelectorFunction<Range<Integer>> selector) {
+        return new Parameters().putValue(
+                Parameters.Type.PREVIEW_FPS_RANGE,
+                selector.select(
+                        capabilities.supportedPreviewFpsRanges()
                 )
         );
     }

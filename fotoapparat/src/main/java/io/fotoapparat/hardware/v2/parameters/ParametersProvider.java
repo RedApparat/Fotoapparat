@@ -7,10 +7,12 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
 
 import static io.fotoapparat.parameter.Parameters.Type.FLASH;
 import static io.fotoapparat.parameter.Parameters.Type.FOCUS_MODE;
 import static io.fotoapparat.parameter.Parameters.Type.PICTURE_SIZE;
+import static io.fotoapparat.parameter.Parameters.Type.PREVIEW_FPS_RANGE;
 import static io.fotoapparat.parameter.Parameters.Type.PREVIEW_SIZE;
 
 /**
@@ -87,4 +89,13 @@ public class ParametersProvider implements ParametersOperator {
         return getStillCaptureSize().getAspectRatio();
     }
 
+
+    /**
+     * Returns the preview FPS range. Note that values in range multiplied by 1000.
+     *
+     * @return The preview FPS range.
+     */
+    public Range<Integer> getPreviewFpsRange() {
+        return getSelectedParameters().getValue(PREVIEW_FPS_RANGE);
+    }
 }

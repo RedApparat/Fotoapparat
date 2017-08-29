@@ -13,8 +13,10 @@ import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.selector.FlashSelectors;
 import io.fotoapparat.parameter.selector.SelectorFunction;
+import io.fotoapparat.parameter.selector.Selectors;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.view.CameraRenderer;
 import io.fotoapparat.view.CameraView;
@@ -51,6 +53,7 @@ public class FotoapparatBuilder {
             fixed()
     );
     SelectorFunction<Flash> flashSelector = FlashSelectors.off();
+    SelectorFunction<Range<Integer>> previewFpsRangeSelector = Selectors.nothing();
 
     ScaleType scaleType = ScaleType.CENTER_CROP;
 
@@ -117,6 +120,14 @@ public class FotoapparatBuilder {
      */
     public FotoapparatBuilder lensPosition(@NonNull SelectorFunction<LensPosition> selector) {
         lensPositionSelector = selector;
+        return this;
+    }
+
+    /**
+     * @param selector selects preview FPS range from list of available ranges.
+     */
+    public FotoapparatBuilder previewFpsRange(@NonNull SelectorFunction<Range<Integer>> selector) {
+        previewFpsRangeSelector = selector;
         return this;
     }
 

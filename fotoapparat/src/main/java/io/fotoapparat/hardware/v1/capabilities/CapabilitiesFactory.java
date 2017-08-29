@@ -14,6 +14,8 @@ import io.fotoapparat.hardware.v1.Camera1;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
+import io.fotoapparat.parameter.range.Ranges;
 
 /**
  * {@link Capabilities} of {@link Camera1}.
@@ -30,6 +32,7 @@ public class CapabilitiesFactory {
                 extractPreviewSizes(parameters),
                 extractFocusModes(parameters),
                 extractFlashModes(parameters),
+                extractPreviewFpsRanges(parameters),
                 parameters.isZoomSupported()
         );
     }
@@ -86,6 +89,22 @@ public class CapabilitiesFactory {
 
         result.add(FocusMode.FIXED);
         return result;
+    }
+
+    private Set<Range<Integer>> extractPreviewFpsRanges(Camera.Parameters parameters) {
+        List<int[]> fpsRanges = parameters.getSupportedPreviewFpsRange();
+        if (fpsRanges == null) {
+            return Collections.emptySet();
+        }
+
+        Set<Range<Integer>> wrappedFpsRanges = new HashSet<>(fpsRanges.size());
+        for (int[] range : fpsRanges) {
+            wrappedFpsRanges.add(Ranges.range(
+                    range[Camera.Parameters.PREVIEW_FPS_MIN_INDEX],
+                    range[Camera.Parameters.PREVIEW_FPS_MAX_INDEX]
+            ));
+        }
+        return wrappedFpsRanges;
     }
 
 }

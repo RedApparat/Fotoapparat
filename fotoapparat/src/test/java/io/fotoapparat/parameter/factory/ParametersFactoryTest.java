@@ -7,6 +7,8 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
+import io.fotoapparat.parameter.range.Ranges;
 
 import static io.fotoapparat.util.TestSelectors.select;
 import static junit.framework.Assert.assertEquals;
@@ -71,6 +73,21 @@ public class ParametersFactoryTest {
         // Then
         assertEquals(
                 new Parameters().putValue(Parameters.Type.FLASH, flash),
+                result
+        );
+    }
+
+    @Test
+    public void selectPreviewFpsRange() throws Exception {
+        // Given
+        Range<Integer> range = Ranges.range(30000, 30000);
+
+        // When
+        Parameters result = ParametersFactory.selectPreviewFpsRange(CAPABILITIES, select(range));
+
+        // Then
+        assertEquals(
+                new Parameters().putValue(Parameters.Type.PREVIEW_FPS_RANGE, range),
                 result
         );
     }

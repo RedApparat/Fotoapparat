@@ -13,6 +13,7 @@ import java.util.List;
 
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
+import io.fotoapparat.parameter.range.Range;
 
 /**
  * Constructs a {@link CaptureRequest} in a sane way.
@@ -25,6 +26,7 @@ class CaptureRequestBuilder {
     List<Surface> surfaces;
     Flash flash;
     FocusMode focus;
+    Range<Integer> previewFpsRange;
     boolean shouldTriggerAutoFocus;
     boolean triggerPrecaptureExposure;
     boolean cancelPrecaptureExposure;
@@ -64,6 +66,11 @@ class CaptureRequestBuilder {
 
     CaptureRequestBuilder focus(FocusMode focus) {
         this.focus = focus;
+        return this;
+    }
+
+    CaptureRequestBuilder previewFpsRange(Range<Integer> previewFpsRange) {
+        this.previewFpsRange = previewFpsRange;
         return this;
     }
 
