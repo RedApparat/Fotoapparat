@@ -1,5 +1,6 @@
 package io.fotoapparat.parameter;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,16 +17,32 @@ public class Parameters {
     private final Map<Type, Object> values = new HashMap<>();
 
     /**
+     * @return single {@link Parameters} which is a result of adding up all parameters in the list
+     * using {@link Parameters#putAll(Parameters)}.
+     */
+    public static Parameters combineParameters(Collection<Parameters> parametersList) {
+        Parameters result = new Parameters();
+
+        for (Parameters parameters : parametersList) {
+            result.putAll(parameters);
+        }
+
+        return result;
+    }
+
+    /**
      * Puts value of given type, rewriting existing one (if any). Note that given value must be of
      * the type specified by {@link Type}.
      *
      * @param type  type of the parameter to store.
      * @param value value of the parameter.
      */
-    public void putValue(Type type, Object value) {
+    public Parameters putValue(Type type, Object value) {
         ensureType(type, value);
 
         values.put(type, value);
+
+        return this;
     }
 
     private void ensureType(Type type, Object value) {
@@ -63,6 +80,14 @@ public class Parameters {
         }
 
         return result;
+    }
+
+    /**
+     * Puts all parameters which are in input to current set of parameters. If there are duplicates,
+     * they are overwritten.
+     */
+    public void putAll(Parameters input) {
+        values.putAll(input.values);
     }
 
     @Override

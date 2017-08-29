@@ -26,10 +26,9 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:${project.appCompatVersion}"
+    compile "com.android.support:support-annotations:${project.appCompatVersion}"
 
     testCompile "junit:junit:${project.junitVersion}"
     testCompile "org.mockito:mockito-core:${project.mockitoVersion}"
     testCompile 'commons-io:commons-io:2.5'
-
 }

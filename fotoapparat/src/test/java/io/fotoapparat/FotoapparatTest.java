@@ -9,6 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.parameter.provider.CapabilitiesProvider;
+import io.fotoapparat.parameter.update.UpdateRequest;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.result.CapabilitiesResult;
 import io.fotoapparat.result.FocusResult;
@@ -20,6 +21,7 @@ import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
 import io.fotoapparat.routine.UpdateOrientationRoutine;
 import io.fotoapparat.routine.focus.AutoFocusRoutine;
+import io.fotoapparat.routine.parameter.UpdateParametersRoutine;
 import io.fotoapparat.routine.picture.TakePictureRoutine;
 import io.fotoapparat.test.ImmediateExecutor;
 
@@ -68,6 +70,8 @@ public class FotoapparatTest {
     AutoFocusRoutine autoFocusRoutine;
     @Mock
     CheckAvailabilityRoutine checkAvailabilityRoutine;
+    @Mock
+    UpdateParametersRoutine updateParametersRoutine;
 
     Fotoapparat testee;
 
@@ -82,6 +86,7 @@ public class FotoapparatTest {
                 takePictureRoutine,
                 autoFocusRoutine,
                 checkAvailabilityRoutine,
+                updateParametersRoutine,
                 new ImmediateExecutor()
         );
     }
@@ -280,6 +285,34 @@ public class FotoapparatTest {
 
         // Then
         assertFalse(result);
+    }
+
+    @Test
+    public void updateParameters() throws Exception {
+        // Given
+        UpdateRequest updateRequest = UpdateRequest.builder()
+                .build();
+
+        testee.start();
+
+        // When
+        testee.updateParameters(updateRequest);
+
+        // Then
+        verify(updateParametersRoutine).updateParameters(updateRequest);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void updateParameters_NotStartedYet() throws Exception {
+        // Given
+        UpdateRequest updateRequest = UpdateRequest.builder()
+                .build();
+
+        // When
+        testee.updateParameters(updateRequest);
+
+        // Then
+        // Expect exception
     }
 
 }

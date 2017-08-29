@@ -10,18 +10,22 @@ import java.util.Set;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.hardware.operators.CapabilitiesOperator;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.range.Ranges;
+import io.fotoapparat.parameter.selector.PreviewFpsRangeSelectors;
 import io.fotoapparat.parameter.selector.SelectorFunction;
+import io.fotoapparat.parameter.selector.SizeSelectors;
 
+import static io.fotoapparat.parameter.selector.FlashSelectors.torch;
+import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.test.TestUtils.asSet;
-import static java.util.Collections.singleton;
+import static io.fotoapparat.util.TestSelectors.select;
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -39,6 +43,7 @@ public class InitialParametersProviderTest {
 
     static final Set<Size> PHOTO_SIZES = asSet(PHOTO_SIZE);
     static final Set<Size> VALID_PREVIEW_SIZES = asSet(PREVIEW_SIZE);
+
     static final Set<Size> ALL_PREVIEW_SIZES = asSet(
             PREVIEW_SIZE,
             PREVIEW_SIZE_WRONG_ASPECT_RATIO
@@ -59,6 +64,8 @@ public class InitialParametersProviderTest {
     SelectorFunction<Range<Integer>> previewFpsRangeSelector;
     @Mock
     InitialParametersValidator initialParametersValidator;
+    @Mock
+    CapabilitiesOperator capabilitiesOperator;
 
     InitialParametersProvider testee;
 
@@ -108,72 +115,94 @@ public class InitialParametersProviderTest {
     }
 
     @Test
-    public void selectFlashMode() throws Exception {
+    public void validPreviewSizeSelector_WithValidAspectRatio() throws Exception {
         // When
-        Parameters parameters = testee.initialParameters();
+        Size result = InitialParametersProvider
+                .validPreviewSizeSelector(
+                        PHOTO_SIZE,
+                        select(PREVIEW_SIZE)
+                )
+                .select(ALL_PREVIEW_SIZES);
 
         // Then
-        assertEquals(
-                Flash.AUTO_RED_EYE,
-                parameters.getValue(Parameters.Type.FLASH)
-        );
-    }
-
-    @Test
-    public void selectPhotoSize() throws Exception {
-        // When
-        Parameters parameters = testee.initialParameters();
-
-        // Then
-        assertEquals(
-                PHOTO_SIZE,
-                parameters.getValue(Parameters.Type.PICTURE_SIZE)
-        );
-    }
-
-    @Test
-    public void selectPreviewSize_WithValidAspectRatio() throws Exception {
-        // When
-        Parameters parameters = testee.initialParameters();
-
-        // Then
-        verify(previewSizeSelector).select(VALID_PREVIEW_SIZES);
-
         assertEquals(
                 PREVIEW_SIZE,
-                parameters.getValue(Parameters.Type.PREVIEW_SIZE)
+                result
         );
     }
 
     @Test
-    public void selectPreviewSize_SameAspectRatioNotAvailable() throws Exception {
+    public void validPreviewSizeSelector_NoPreviewSizeWithSameAspectRatio() throws Exception {
         // Given
         Size photoSize = new Size(10000, 100);
-        Set<Size> photoSizes = singleton(photoSize);
 
-        given(photoSizeSelector.select(photoSizes))
-                .willReturn(photoSize);
+        // When
+        Size result = InitialParametersProvider
+                .validPreviewSizeSelector(
+                        photoSize,
+                        select(PREVIEW_SIZE)
+                )
+                .select(ALL_PREVIEW_SIZES);
 
-        given(cameraDevice.getCapabilities())
+        // Then
+        assertEquals(
+                PREVIEW_SIZE,
+                result
+        );
+    }
+
+    @Test
+    public void initialParameters() throws Exception {
+        // Given
+        given(capabilitiesOperator.getCapabilities())
                 .willReturn(new Capabilities(
-                        photoSizes,
+                        asSet(PHOTO_SIZE),
                         ALL_PREVIEW_SIZES,
-                        FOCUS_MODES,
-                        FLASH,
+                        asSet(FocusMode.AUTO),
+                        asSet(Flash.TORCH),
                         PREVIEW_FPS_RANGES
                 ));
 
-        given(previewSizeSelector.select(ALL_PREVIEW_SIZES))
-                .willReturn(PREVIEW_SIZE);
+        InitialParametersProvider testee = new InitialParametersProvider(
+                capabilitiesOperator,
+                SizeSelectors.biggestSize(),
+                SizeSelectors.biggestSize(),
+                autoFocus(),
+                torch(),
+                PreviewFpsRangeSelectors.rangeWithHighestFps(),
+                initialParametersValidator
+        );
 
         // When
         Parameters parameters = testee.initialParameters();
 
         // Then
         assertEquals(
-                PREVIEW_SIZE,
-                parameters.getValue(Parameters.Type.PREVIEW_SIZE)
+                new Parameters()
+                        .putValue(
+                                Parameters.Type.PICTURE_SIZE,
+                                PHOTO_SIZE
+                        )
+                        .putValue(
+                                Parameters.Type.PREVIEW_SIZE,
+                                PREVIEW_SIZE
+                        )
+                        .putValue(
+                                Parameters.Type.FOCUS_MODE,
+                                FocusMode.AUTO
+                        )
+                        .putValue(
+                                Parameters.Type.FLASH,
+                                Flash.TORCH
+                        )
+                        .putValue(
+                                Parameters.Type.PREVIEW_FPS_RANGE,
+                                PREVIEW_FPS_RANGE
+                        ),
+                parameters
         );
+
+        verify(initialParametersValidator).validate(parameters);
     }
 
     @Test
@@ -188,14 +217,4 @@ public class InitialParametersProviderTest {
         );
     }
 
-    @Test
-    public void parameterValidation() throws Exception {
-        // Given
-
-        // When
-        testee.initialParameters();
-
-        // Then
-        verify(initialParametersValidator).validate(any(Parameters.class));
-    }
 }

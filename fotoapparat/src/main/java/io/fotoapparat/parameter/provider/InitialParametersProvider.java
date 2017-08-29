@@ -8,10 +8,13 @@ import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.range.Range;
+import io.fotoapparat.parameter.factory.ParametersFactory;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.selector.Selectors;
 
+import static io.fotoapparat.parameter.Parameters.combineParameters;
 import static io.fotoapparat.parameter.selector.AspectRatioSelectors.aspectRatio;
+import static java.util.Arrays.asList;
 
 /**
  * Provides initial {@link Parameters} for {@link CameraDevice}.
@@ -43,49 +46,72 @@ public class InitialParametersProvider {
     }
 
     /**
+     * @return function which selects a valid preview size based on current picture size.
+     */
+    static SelectorFunction<Size> validPreviewSizeSelector(Size photoSize,
+                                                           SelectorFunction<Size> original) {
+        return Selectors
+                .firstAvailable(
+                        previewWithSameAspectRatio(photoSize, original),
+                        original
+                );
+    }
+
+    private static SelectorFunction<Size> previewWithSameAspectRatio(Size photoSize,
+                                                                     SelectorFunction<Size> original) {
+        return aspectRatio(
+                photoSize.getAspectRatio(),
+                original
+        );
+    }
+
+    /**
      * @return {@link Parameters} which will be used by {@link CameraDevice} on start-up.
      */
     public Parameters initialParameters() {
         Capabilities capabilities = capabilitiesOperator.getCapabilities();
 
-        Parameters parameters = new Parameters();
-
-        putPictureSize(capabilities, parameters);
-        putPreviewSize(capabilities, parameters);
-        putFocusMode(capabilities, parameters);
-        putFlash(capabilities, parameters);
-        putPreviewFpsRange(capabilities, parameters);
+        Parameters parameters = combineParameters(asList(
+                pictureSizeParameters(capabilities),
+                previewSizeParameters(capabilities),
+                focusModeParameters(capabilities),
+                flashModeParameters(capabilities),
+                previewFpsRange(capabilities)
+        ));
 
         parametersValidator.validate(parameters);
 
         return parameters;
     }
 
-    private void putPreviewSize(Capabilities capabilities, Parameters parameters) {
-        Size photoSize = photoSize(capabilities);
-
-        parameters.putValue(
-                Parameters.Type.PREVIEW_SIZE,
-                Selectors
-                        .firstAvailable(
-                                previewWithSameAspectRatio(photoSize),
-                                previewSizeSelector
-                        )
-                        .select(capabilities.supportedPreviewSizes())
+    private Parameters flashModeParameters(Capabilities capabilities) {
+        return ParametersFactory.selectFlashMode(
+                capabilities,
+                flashSelector
         );
     }
 
-    private SelectorFunction<Size> previewWithSameAspectRatio(Size photoSize) {
-        return aspectRatio(
-                photoSize.getAspectRatio(),
-                previewSizeSelector
+    private Parameters focusModeParameters(Capabilities capabilities) {
+        return ParametersFactory.selectFocusMode(
+                capabilities,
+                focusModeSelector
         );
     }
 
-    private void putPictureSize(Capabilities capabilities, Parameters parameters) {
-        parameters.putValue(
-                Parameters.Type.PICTURE_SIZE,
-                photoSize(capabilities)
+    private Parameters previewSizeParameters(Capabilities capabilities) {
+        return ParametersFactory.selectPreviewSize(
+                capabilities,
+                validPreviewSizeSelector(
+                        photoSize(capabilities),
+                        previewSizeSelector
+                )
+        );
+    }
+
+    private Parameters pictureSizeParameters(Capabilities capabilities) {
+        return ParametersFactory.selectPictureSize(
+                capabilities,
+                photoSizeSelector
         );
     }
 
@@ -95,30 +121,10 @@ public class InitialParametersProvider {
         );
     }
 
-    private void putFocusMode(Capabilities capabilities, Parameters parameters) {
-        parameters.putValue(
-                Parameters.Type.FOCUS_MODE,
-                focusModeSelector.select(
-                        capabilities.supportedFocusModes()
-                )
-        );
-    }
-
-    private void putFlash(Capabilities capabilities, Parameters parameters) {
-        parameters.putValue(
-                Parameters.Type.FLASH,
-                flashSelector.select(
-                        capabilities.supportedFlashModes()
-                )
-        );
-    }
-
-    private void putPreviewFpsRange(Capabilities capabilities, Parameters parameters) {
-        parameters.putValue(
-                Parameters.Type.PREVIEW_FPS_RANGE,
-                previewFpsRangeSelector.select(
-                        capabilities.supportedPreviewFpsRanges()
-                )
+    private Parameters previewFpsRange(Capabilities capabilities) {
+        return ParametersFactory.selectPreviewFpsRange(
+                capabilities,
+                previewFpsRangeSelector
         );
     }
 
