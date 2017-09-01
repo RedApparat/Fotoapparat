@@ -1,6 +1,7 @@
 package io.fotoapparat.hardware.v2;
 
 import android.os.Build;
+import android.support.annotation.FloatRange;
 import android.support.annotation.RequiresApi;
 
 import java.util.List;
@@ -170,6 +171,11 @@ public class Camera2 implements CameraDevice {
         recordMethod();
 
         return availableLensPositionsProvider.getAvailableLensPositions();
+    }
+
+    @Override
+    public void setZoom(@FloatRange(from = 0f, to = 1f) float level) {
+        throw new UnsupportedOperationException("Not implemented. We do not actively support Camera2 at the moment.");
     }
 
     private void recordMethod() {

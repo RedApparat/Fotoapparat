@@ -10,8 +10,10 @@ import android.view.Surface;
 
 import java.util.List;
 
+import io.fotoapparat.hardware.v2.parameters.converters.FpsRangeConverter;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
+import io.fotoapparat.parameter.range.Range;
 
 import static io.fotoapparat.hardware.v2.parameters.converters.FlashConverter.flashToAutoExposureMode;
 import static io.fotoapparat.hardware.v2.parameters.converters.FlashConverter.flashToFiringMode;
@@ -32,6 +34,7 @@ class Request {
     private final boolean shouldSetExposureMode;
     private final Flash flash;
     private final FocusMode focus;
+    private final Range<Integer> previewFpsRange;
     private CaptureRequest.Builder captureRequest;
 
     private Request(CameraDevice cameraDevice,
@@ -41,7 +44,8 @@ class Request {
                     boolean triggerPrecaptureExposure,
                     boolean cancelPrecaptureExposure,
                     Flash flash, boolean shouldSetExposureMode,
-                    FocusMode focus) {
+                    FocusMode focus,
+                    Range<Integer> previewFpsRange) {
         this.cameraDevice = cameraDevice;
         this.requestTemplate = requestTemplate;
         this.surfaces = surfaces;
@@ -51,6 +55,7 @@ class Request {
         this.shouldSetExposureMode = shouldSetExposureMode;
         this.flash = flash;
         this.focus = focus;
+        this.previewFpsRange = previewFpsRange;
     }
 
     static CaptureRequest create(CaptureRequestBuilder builder) throws CameraAccessException {
@@ -63,7 +68,8 @@ class Request {
                 builder.cancelPrecaptureExposure,
                 builder.flash,
                 builder.shouldSetExposureMode,
-                builder.focus
+                builder.focus,
+                builder.previewFpsRange
         )
                 .build();
     }
@@ -88,6 +94,7 @@ class Request {
         setFlash();
         setExposure();
         setFocus();
+        setPreviewFpsRange();
 
         return captureRequest.build();
     }
@@ -175,6 +182,14 @@ class Request {
 
         int focusMode = focusToAfMode(focus);
         captureRequest.set(CaptureRequest.CONTROL_AF_MODE, focusMode);
+    }
+
+    private void setPreviewFpsRange() {
+        if (previewFpsRange == null) {
+            return;
+        }
+
+        captureRequest.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, FpsRangeConverter.toNativeRange(previewFpsRange));
     }
 
 }

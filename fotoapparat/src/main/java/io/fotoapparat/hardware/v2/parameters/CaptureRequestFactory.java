@@ -12,6 +12,7 @@ import io.fotoapparat.hardware.v2.readers.StillSurfaceReader;
 import io.fotoapparat.hardware.v2.surface.TextureManager;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
+import io.fotoapparat.parameter.range.Range;
 
 /**
  * Creates {@link CaptureRequest}s for a {@link android.hardware.camera2.CameraCaptureSession}.
@@ -45,11 +46,13 @@ public class CaptureRequestFactory {
         CameraDevice camera = cameraConnection.getCamera();
         Surface viewSurface = textureManager.getSurface();
         Flash flash = parametersProvider.getFlash();
+        Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_PREVIEW)
                 .into(viewSurface)
                 .flash(flash)
+                .previewFpsRange(previewFpsRange)
                 .build();
     }
 
@@ -64,12 +67,14 @@ public class CaptureRequestFactory {
         CameraDevice camera = cameraConnection.getCamera();
         Surface surface = textureManager.getSurface();
         Flash flash = parametersProvider.getFlash();
+        Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
         boolean triggerAutoExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
                 .into(surface)
                 .flash(flash)
+                .previewFpsRange(previewFpsRange)
                 .triggerAutoFocus(true)
                 .triggerPrecaptureExposure(triggerAutoExposure)
                 .build();
@@ -87,6 +92,7 @@ public class CaptureRequestFactory {
         Surface surface = textureManager.getSurface();
         Flash flash = parametersProvider.getFlash();
         FocusMode focus = parametersProvider.getFocus();
+        Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
 
         boolean triggerPrecaptureExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
 
@@ -96,6 +102,7 @@ public class CaptureRequestFactory {
                 .triggerPrecaptureExposure(triggerPrecaptureExposure)
                 .flash(flash)
                 .focus(focus)
+                .previewFpsRange(previewFpsRange)
                 .setExposureMode(true)
                 .build();
     }
@@ -110,6 +117,7 @@ public class CaptureRequestFactory {
         Surface surface = surfaceReader.getSurface();
         Flash flash = parametersProvider.getFlash();
         FocusMode focus = parametersProvider.getFocus();
+        Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
@@ -117,6 +125,7 @@ public class CaptureRequestFactory {
                 .cancelPrecaptureExposure(true)
                 .flash(flash)
                 .focus(focus)
+                .previewFpsRange(previewFpsRange)
                 .setExposureMode(true)
                 .build();
     }

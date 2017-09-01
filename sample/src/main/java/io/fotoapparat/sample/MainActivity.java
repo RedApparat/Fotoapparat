@@ -7,6 +7,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.io.File;
@@ -37,6 +38,7 @@ import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.continuousFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.fixed;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.lensPosition;
+import static io.fotoapparat.parameter.selector.PreviewFpsRangeSelectors.rangeWithHighestFps;
 import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 import static io.fotoapparat.result.transformer.SizeTransformers.scaled;
@@ -71,12 +73,36 @@ public class MainActivity extends AppCompatActivity {
         focusOnLongClick();
         switchCameraOnClick();
         toggleTorchOnSwitch();
+        zoomSeekBar();
     }
 
     private void setupFotoapparat() {
         frontFotoapparat = createFotoapparat(LensPosition.FRONT);
         backFotoapparat = createFotoapparat(LensPosition.BACK);
         fotoapparatSwitcher = FotoapparatSwitcher.withDefault(backFotoapparat);
+    }
+
+    private void zoomSeekBar() {
+        SeekBar seekBar = (SeekBar) findViewById(R.id.zoomSeekBar);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                fotoapparatSwitcher
+                        .getCurrentFotoapparat()
+                        .setZoom(progress / (float) seekBar.getMax());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Do nothing
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Do nothing
+            }
+        });
     }
 
     private void toggleTorchOnSwitch() {
@@ -161,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
                         torch(),
                         off()
                 ))
+                .previewFpsRange(rangeWithHighestFps())
                 .frameProcessor(new SampleFrameProcessor())
                 .logger(loggers(
                         logcat(),

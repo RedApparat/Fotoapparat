@@ -23,6 +23,7 @@ import io.fotoapparat.routine.UpdateOrientationRoutine;
 import io.fotoapparat.routine.focus.AutoFocusRoutine;
 import io.fotoapparat.routine.parameter.UpdateParametersRoutine;
 import io.fotoapparat.routine.picture.TakePictureRoutine;
+import io.fotoapparat.routine.zoom.UpdateZoomLevelRoutine;
 import io.fotoapparat.test.ImmediateExecutor;
 
 import static io.fotoapparat.test.TestUtils.immediateFuture;
@@ -72,6 +73,8 @@ public class FotoapparatTest {
     CheckAvailabilityRoutine checkAvailabilityRoutine;
     @Mock
     UpdateParametersRoutine updateParametersRoutine;
+    @Mock
+    UpdateZoomLevelRoutine updateZoomLevelRoutine;
 
     Fotoapparat testee;
 
@@ -87,6 +90,7 @@ public class FotoapparatTest {
                 autoFocusRoutine,
                 checkAvailabilityRoutine,
                 updateParametersRoutine,
+                updateZoomLevelRoutine,
                 new ImmediateExecutor()
         );
     }
@@ -310,6 +314,27 @@ public class FotoapparatTest {
 
         // When
         testee.updateParameters(updateRequest);
+
+        // Then
+        // Expect exception
+    }
+
+    @Test
+    public void setZoom() throws Exception {
+        // Given
+        testee.start();
+
+        // When
+        testee.setZoom(0.5f);
+
+        // Then
+        verify(updateZoomLevelRoutine).updateZoomLevel(0.5f);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void setZoom_NotStartedYet() throws Exception {
+        // When
+        testee.setZoom(1f);
 
         // Then
         // Expect exception

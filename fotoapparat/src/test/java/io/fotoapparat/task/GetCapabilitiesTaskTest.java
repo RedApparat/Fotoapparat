@@ -15,6 +15,7 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.provider.GetCapabilitiesTask;
+import io.fotoapparat.parameter.range.Ranges;
 
 import static io.fotoapparat.test.TestUtils.resultOf;
 import static junit.framework.Assert.assertEquals;
@@ -28,7 +29,9 @@ public class GetCapabilitiesTaskTest {
             Collections.singleton(new Size(1400, 1080)),
             Collections.singleton(new Size(1400, 1080)),
             Collections.singleton(FocusMode.CONTINUOUS_FOCUS),
-            Collections.singleton(Flash.OFF)
+            Collections.singleton(Flash.OFF),
+            Collections.singleton(Ranges.range(30000, 30000)),
+            false
     );
 
     @Mock

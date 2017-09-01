@@ -16,11 +16,13 @@ import io.fotoapparat.hardware.v1.capabilities.CapabilitiesFactory;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Ranges;
 
 import static io.fotoapparat.test.TestUtils.asSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -44,6 +46,10 @@ public class CapabilitiesFactoryTest {
                 .willReturn(Collections.<Camera.Size>emptyList());
         given(parameters.getSupportedPreviewSizes())
                 .willReturn(Collections.<Camera.Size>emptyList());
+        given(parameters.getSupportedPreviewFpsRange())
+                .willReturn(Collections.<int[]>emptyList());
+        given(parameters.isZoomSupported())
+                .willReturn(false);
 
         testee = new CapabilitiesFactory();
     }
@@ -179,6 +185,40 @@ public class CapabilitiesFactoryTest {
                 ),
                 capabilities.supportedPreviewSizes()
         );
+    }
+
+    @Test
+    public void mapPreviewFpsRanges() throws Exception {
+        // Given
+        given(parameters.getSupportedPreviewFpsRange())
+                .willReturn(asList(
+                        new int[] {24000, 24000},
+                        new int[] {30000, 30000}
+                ));
+
+        // When
+        Capabilities capabilities = testee.fromParameters(parameters);
+
+        // Then
+        assertEquals(
+                asSet(
+                        Ranges.range(24000, 24000),
+                        Ranges.range(30000, 30000)
+                ),
+                capabilities.supportedPreviewFpsRanges()
+        );
+    }
+
+    @Test
+    public void zoomSupported() throws Exception {
+        // Given
+        given(parameters.isZoomSupported())
+                .willReturn(true);
+
+        // When
+        Capabilities capabilities = testee.fromParameters(parameters);
+
+        assertTrue(capabilities.isZoomSupported());
     }
 
     @NonNull

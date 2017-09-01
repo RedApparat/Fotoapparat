@@ -15,6 +15,7 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Ranges;
 import io.fotoapparat.parameter.update.UpdateRequest;
 
 import static io.fotoapparat.parameter.selector.FlashSelectors.torch;
@@ -39,7 +40,9 @@ public class UpdateParametersRoutineTest {
                         Collections.<Size>emptySet(),
                         Collections.<Size>emptySet(),
                         asSet(FocusMode.AUTO),
-                        asSet(Flash.TORCH)
+                        asSet(Flash.TORCH),
+                        asSet(Ranges.range(30000, 30000)),
+                        false
                 ));
     }
 

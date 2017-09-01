@@ -18,6 +18,7 @@ import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.Size;
+import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.view.CameraRenderer;
@@ -47,6 +48,8 @@ public class FotoapparatBuilderTest {
     SelectorFunction<FocusMode> focusModeSelector;
     @Mock
     SelectorFunction<Flash> flashSelector;
+    @Mock
+    SelectorFunction<Range<Integer>> previewFpsRangeSelector;
 
     @Mock
     FrameProcessor frameProcessor;
@@ -138,6 +141,28 @@ public class FotoapparatBuilderTest {
         assertEquals(
                 focusModeSelector,
                 builder.focusModeSelector
+        );
+    }
+
+    @Test
+    public void previewFpsRange_HasDefault() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments();
+
+        // Then
+        assertNotNull(builder.previewFpsRangeSelector);
+    }
+
+    @Test
+    public void previewFpsRange_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .previewFpsRange(previewFpsRangeSelector);
+
+        // Then
+        assertEquals(
+                previewFpsRangeSelector,
+                builder.previewFpsRangeSelector
         );
     }
 
