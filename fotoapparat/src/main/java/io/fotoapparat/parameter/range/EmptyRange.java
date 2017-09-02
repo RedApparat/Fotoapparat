@@ -1,6 +1,9 @@
 package io.fotoapparat.parameter.range;
 
-class EmptyRange<T> implements Range<T> {
+/**
+ * Null object for {@link Range}.
+ */
+final class EmptyRange<T> implements Range<T> {
 
     @Override
     public boolean contains(T value) {
@@ -15,5 +18,10 @@ class EmptyRange<T> implements Range<T> {
     @Override
     public T lowest() {
         return null;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof EmptyRange;
     }
 }

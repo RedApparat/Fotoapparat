@@ -1,14 +1,21 @@
 package io.fotoapparat.parameter.range;
 
+import android.support.annotation.NonNull;
+
 import java.util.Collection;
 import java.util.Collections;
 
+import io.fotoapparat.util.StringUtils;
+
 /**
- * Created by ychen on 5/25/2017.
+ * Implementation of {@link Range} that represents set of given values.
+ *
+ * @param <T> type of objects in that set.
  */
 class DiscreteRange<T extends Comparable<? super T>> implements Range<T> {
-    Collection<T> values;
-    public DiscreteRange(Collection<T> values) {
+    @NonNull private final Collection<T> values;
+
+    public DiscreteRange(@NonNull Collection<T> values) {
         this.values = values;
     }
 
@@ -31,5 +38,25 @@ class DiscreteRange<T extends Comparable<? super T>> implements Range<T> {
             return null;
         }
         return Collections.min(values);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DiscreteRange)) return false;
+
+        DiscreteRange<?> that = (DiscreteRange<?>) o;
+
+        return values.equals(that.values);
+    }
+
+    @Override
+    public int hashCode() {
+        return values.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("{%s}", StringUtils.join(", ", values));
     }
 }

@@ -2,8 +2,10 @@ package io.fotoapparat.parameter.range;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Class with factory and utility methods for {@link Range}.
@@ -20,7 +22,11 @@ public class Ranges {
     }
 
     public static <T extends Comparable<T>> Range<T> discreteRange(@NonNull Collection<T> collection) {
-        return new DiscreteRange<>(collection);
+        List<T> list = (collection instanceof List)
+                ? (List<T>) collection
+                : new ArrayList<>(collection);
+        Collections.sort(list);
+        return new DiscreteRange<>(list);
     }
 
     public static <T extends Comparable<T>> Range<T> emptyRange() {
