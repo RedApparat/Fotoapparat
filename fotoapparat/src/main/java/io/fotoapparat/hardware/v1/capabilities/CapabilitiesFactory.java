@@ -149,7 +149,11 @@ public class CapabilitiesFactory {
 
             isoValues = iso.split(",");
             for (String value : isoValues) {
-                isoValuesSet.add(Integer.valueOf(value));
+                try {
+                    isoValuesSet.add(Integer.valueOf(value));
+                } catch (NumberFormatException e) {
+                    // Found not number option. Skip it.
+                }
             }
 
         }
