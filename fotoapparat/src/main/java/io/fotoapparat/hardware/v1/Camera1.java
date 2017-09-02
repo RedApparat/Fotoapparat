@@ -249,7 +249,7 @@ public class Camera1 implements CameraDevice {
         recordMethod();
 
         Capabilities capabilities = capabilitiesFactory.fromParameters(
-                camera.getParameters()
+                new RawCameraParametersProvider(camera.getParameters())
         );
 
         cachedCapabilities = capabilities;

@@ -33,6 +33,8 @@ public class CapabilitiesFactoryTest {
     Camera camera;
     @Mock
     Camera.Parameters parameters;
+    @Mock
+    RawCameraParametersProvider parametersProvider;
 
     CapabilitiesFactory testee;
 
@@ -51,6 +53,11 @@ public class CapabilitiesFactoryTest {
         given(parameters.isZoomSupported())
                 .willReturn(false);
 
+        given(parametersProvider.getCameraParameters())
+                .willReturn(parameters);
+        given(parametersProvider.getSensorSensitivityValues())
+            .willReturn(Collections.<Integer>emptySet());
+
         testee = new CapabilitiesFactory();
     }
 
@@ -68,7 +75,7 @@ public class CapabilitiesFactoryTest {
                 ));
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
@@ -90,7 +97,7 @@ public class CapabilitiesFactoryTest {
                 .willReturn(Collections.<String>emptyList());
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
@@ -112,7 +119,7 @@ public class CapabilitiesFactoryTest {
                 ));
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
@@ -134,7 +141,7 @@ public class CapabilitiesFactoryTest {
                 .willReturn(null);    // because why the fuck not, right Google?
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
@@ -153,7 +160,7 @@ public class CapabilitiesFactoryTest {
                 ));
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
@@ -175,7 +182,7 @@ public class CapabilitiesFactoryTest {
                 ));
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
@@ -197,7 +204,7 @@ public class CapabilitiesFactoryTest {
                 ));
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
@@ -210,13 +217,29 @@ public class CapabilitiesFactoryTest {
     }
 
     @Test
+    public void mapSensorSensitivityRange() throws Exception {
+        // Given
+        given(parametersProvider.getSensorSensitivityValues())
+                .willReturn(asSet(200, 400));
+
+        // When
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
+
+        // Then
+        assertEquals(
+                Ranges.discreteRange(asList(200, 400)),
+                capabilities.supportedSensorSensitivityRange()
+        );
+    }
+
+    @Test
     public void zoomSupported() throws Exception {
         // Given
         given(parameters.isZoomSupported())
                 .willReturn(true);
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         assertTrue(capabilities.isZoomSupported());
     }

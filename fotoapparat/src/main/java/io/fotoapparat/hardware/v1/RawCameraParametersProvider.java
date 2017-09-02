@@ -13,7 +13,7 @@ import io.fotoapparat.parameter.Parameters;
  * Converts {@link Camera.Parameters} to {@link Parameters}.
  */
 @SuppressWarnings("deprecation")
-public class CameraParametersConverter {
+public class RawCameraParametersProvider {
 
     /* Raw camera params keys */
     private static final String[] RAW_ISO_SUPPORTED_VALUES_KEYS = {
@@ -25,8 +25,32 @@ public class CameraParametersConverter {
 
     private Camera.Parameters cameraParameters;
 
-    public CameraParametersConverter(Camera.Parameters cameraParameters) {
+    public RawCameraParametersProvider(Camera.Parameters cameraParameters) {
         this.cameraParameters = cameraParameters;
+    }
+
+    public Camera.Parameters getCameraParameters() {
+        return cameraParameters;
+    }
+
+    @NonNull
+    public Set<Integer> getSensorSensitivityValues() {
+        final Set<Integer> isoValuesSet = new HashSet<>();
+
+        String[] rawValues = extractRawCameraValues(RAW_ISO_SUPPORTED_VALUES_KEYS);
+
+        // Should log that result is nullable or not?
+        if (rawValues != null) {
+            for (String value : rawValues) {
+                try {
+                    isoValuesSet.add(Integer.valueOf(value.trim()));
+                } catch (NumberFormatException e) {
+                    // Found not number option. Skip it.
+                }
+            }
+        }
+
+        return isoValuesSet;
     }
 
     @Nullable
@@ -51,24 +75,5 @@ public class CameraParametersConverter {
         } else {
             return null;
         }
-    }
-
-    public Set<Integer> getSensorSensitivityValues() {
-        final Set<Integer> isoValuesSet = new HashSet<>();
-
-        String[] rawValues = extractRawCameraValues(RAW_ISO_SUPPORTED_VALUES_KEYS);
-
-        // Should log that result is nullable or not?
-        if (rawValues != null) {
-            for (String value : rawValues) {
-                try {
-                    isoValuesSet.add(Integer.valueOf(value));
-                } catch (NumberFormatException e) {
-                    // Found not number option. Skip it.
-                }
-            }
-        }
-
-        return isoValuesSet;
     }
 }
