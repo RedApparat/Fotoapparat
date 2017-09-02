@@ -40,6 +40,7 @@ import static io.fotoapparat.parameter.selector.FocusModeSelectors.fixed;
 import static io.fotoapparat.parameter.selector.LensPositionSelectors.lensPosition;
 import static io.fotoapparat.parameter.selector.PreviewFpsRangeSelectors.rangeWithHighestFps;
 import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
+import static io.fotoapparat.parameter.selector.SensorSensitivitySelectors.highestSensorSensitivity;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 import static io.fotoapparat.result.transformer.SizeTransformers.scaled;
 
@@ -188,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
                         off()
                 ))
                 .previewFpsRange(rangeWithHighestFps())
+                .sensorSensitivity(highestSensorSensitivity())
                 .frameProcessor(new SampleFrameProcessor())
                 .logger(loggers(
                         logcat(),
