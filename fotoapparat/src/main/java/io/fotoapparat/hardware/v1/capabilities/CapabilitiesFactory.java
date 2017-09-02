@@ -120,12 +120,7 @@ public class CapabilitiesFactory {
     @NonNull
 	private Range<Integer> extractSensorSensitivityRange(RawCameraParametersProvider parametersProvider) {
 		final Set<Integer> isoValuesSet = parametersProvider.getSensorSensitivityValues();
-
-        if (isoValuesSet == null) {
-			return Ranges.discreteRange(Collections.<Integer>emptySet());
-		} else {
-		    return Ranges.discreteRange(isoValuesSet);
-        }
+        return Ranges.discreteRange(isoValuesSet);
 	}
 
 }
