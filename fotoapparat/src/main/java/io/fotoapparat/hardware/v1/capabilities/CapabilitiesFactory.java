@@ -11,6 +11,7 @@ import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.v1.Camera1;
+import io.fotoapparat.hardware.v1.CameraParametersConverter;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
@@ -110,55 +111,14 @@ public class CapabilitiesFactory {
 
     @NonNull
 	private Range<Integer> extractSensorSensitivityRange(Camera.Parameters parameters) {
-		final Set<Integer> isoValuesSet = new HashSet<>();
+		final Set<Integer> isoValuesSet = new CameraParametersConverter(parameters)
+                .getSensorSensitivityValues();
 
-		// Based on https://stackoverflow.com/a/23567103/791323
-		String flat = parameters.flatten();
-		String[] isoValues = null;
-		String values_keyword=null;
-		String iso_keyword=null;
-
-		if (flat == null) {
+        if (isoValuesSet == null) {
 			return Ranges.discreteRange(Collections.<Integer>emptySet());
-		}
-
-		if (flat.contains("iso-values")) {
-            // most used keywords
-            values_keyword = "iso-values";
-            iso_keyword = "iso";
-        } else if (flat.contains("iso-mode-values")) {
-            // google galaxy nexus keywords
-            values_keyword = "iso-mode-values";
-            iso_keyword = "iso";
-        } else if (flat.contains("iso-speed-values")) {
-            // micromax a101 keywords
-            values_keyword = "iso-speed-values";
-            iso_keyword = "iso-speed";
-        } else if (flat.contains("nv-picture-iso-values")) {
-            // LG dual p990 keywords
-            values_keyword = "nv-picture-iso-values";
-            iso_keyword = "nv-picture-iso";
+		} else {
+		    return Ranges.discreteRange(isoValuesSet);
         }
-		// add other eventual keywords here...
-		if (iso_keyword != null) {
-            // flatten contains the iso key!!
-            String iso = flat.substring(flat.indexOf(values_keyword));
-            iso = iso.substring(iso.indexOf("=") + 1);
-
-            if (iso.contains(";")) iso = iso.substring(0, iso.indexOf(";"));
-
-            isoValues = iso.split(",");
-            for (String value : isoValues) {
-                try {
-                    isoValuesSet.add(Integer.valueOf(value));
-                } catch (NumberFormatException e) {
-                    // Found not number option. Skip it.
-                }
-            }
-
-        }
-
-		return Ranges.discreteRange(isoValuesSet);
 	}
 
 }
