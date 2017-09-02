@@ -9,8 +9,9 @@ import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.range.Ranges;
+import io.fotoapparat.util.TestSelectors;
 
-import static io.fotoapparat.util.TestSelectors.select;
+import static io.fotoapparat.util.TestSelectors.selectFromCollection;
 import static junit.framework.Assert.assertEquals;
 
 public class ParametersFactoryTest {
@@ -23,7 +24,8 @@ public class ParametersFactoryTest {
         Size size = new Size(100, 100);
 
         // When
-        Parameters result = ParametersFactory.selectPictureSize(CAPABILITIES, select(size));
+        Parameters result = ParametersFactory.selectPictureSize(CAPABILITIES,
+                selectFromCollection(size));
 
         // Then
         assertEquals(
@@ -38,7 +40,8 @@ public class ParametersFactoryTest {
         Size size = new Size(100, 100);
 
         // When
-        Parameters result = ParametersFactory.selectPreviewSize(CAPABILITIES, select(size));
+        Parameters result = ParametersFactory.selectPreviewSize(CAPABILITIES,
+                selectFromCollection(size));
 
         // Then
         assertEquals(
@@ -53,7 +56,8 @@ public class ParametersFactoryTest {
         FocusMode focusMode = FocusMode.AUTO;
 
         // When
-        Parameters result = ParametersFactory.selectFocusMode(CAPABILITIES, select(focusMode));
+        Parameters result = ParametersFactory.selectFocusMode(CAPABILITIES,
+                selectFromCollection(focusMode));
 
         // Then
         assertEquals(
@@ -68,7 +72,8 @@ public class ParametersFactoryTest {
         Flash flash = Flash.AUTO;
 
         // When
-        Parameters result = ParametersFactory.selectFlashMode(CAPABILITIES, select(flash));
+        Parameters result = ParametersFactory.selectFlashMode(CAPABILITIES,
+                selectFromCollection(flash));
 
         // Then
         assertEquals(
@@ -83,11 +88,27 @@ public class ParametersFactoryTest {
         Range<Integer> range = Ranges.range(30000, 30000);
 
         // When
-        Parameters result = ParametersFactory.selectPreviewFpsRange(CAPABILITIES, select(range));
+        Parameters result = ParametersFactory.selectPreviewFpsRange(CAPABILITIES,
+                selectFromCollection(range));
 
         // Then
         assertEquals(
                 new Parameters().putValue(Parameters.Type.PREVIEW_FPS_RANGE, range),
+                result
+        );
+    }
+
+    @Test
+    public void selectSensorSensitivity() throws Exception {
+        // When
+        Integer isoValue = 1200;
+
+        // Then
+        Parameters result = ParametersFactory.selectSensorSensitivity(CAPABILITIES,
+                TestSelectors.<Range<Integer>, Integer>select(isoValue));
+
+        assertEquals(
+                new Parameters().putValue(Parameters.Type.SENSOR_SENSITIVITY, isoValue),
                 result
         );
     }

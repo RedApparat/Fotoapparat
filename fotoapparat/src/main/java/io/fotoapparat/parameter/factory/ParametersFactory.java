@@ -2,6 +2,8 @@ package io.fotoapparat.parameter.factory;
 
 import android.support.annotation.NonNull;
 
+import java.util.Collection;
+
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
@@ -19,7 +21,7 @@ public class ParametersFactory {
      * @return new parameters by selecting picture size from given capabilities.
      */
     public static Parameters selectPictureSize(@NonNull Capabilities capabilities,
-                                               @NonNull SelectorFunction<Size> selector) {
+                                               @NonNull SelectorFunction<Collection<Size>, Size> selector) {
         return new Parameters().putValue(
                 Parameters.Type.PICTURE_SIZE,
                 selector.select(
@@ -32,7 +34,7 @@ public class ParametersFactory {
      * @return new parameters by selecting preview size from given capabilities.
      */
     public static Parameters selectPreviewSize(@NonNull Capabilities capabilities,
-                                               @NonNull SelectorFunction<Size> selector) {
+                                               @NonNull SelectorFunction<Collection<Size>, Size> selector) {
         return new Parameters().putValue(
                 Parameters.Type.PREVIEW_SIZE,
                 selector.select(
@@ -45,7 +47,7 @@ public class ParametersFactory {
      * @return new parameters by selecting focus mode from given capabilities.
      */
     public static Parameters selectFocusMode(@NonNull Capabilities capabilities,
-                                             @NonNull SelectorFunction<FocusMode> selector) {
+                                             @NonNull SelectorFunction<Collection<FocusMode>, FocusMode> selector) {
         return new Parameters().putValue(
                 Parameters.Type.FOCUS_MODE,
                 selector.select(
@@ -58,7 +60,7 @@ public class ParametersFactory {
      * @return new parameters by selecting flash mode from given capabilities.
      */
     public static Parameters selectFlashMode(@NonNull Capabilities capabilities,
-                                             @NonNull SelectorFunction<Flash> selector) {
+                                             @NonNull SelectorFunction<Collection<Flash>, Flash> selector) {
         return new Parameters().putValue(
                 Parameters.Type.FLASH,
                 selector.select(
@@ -71,11 +73,21 @@ public class ParametersFactory {
      * @return new parameters by selecting preview FPS range from given capabilities.
      */
     public static Parameters selectPreviewFpsRange(@NonNull Capabilities capabilities,
-                                                    @NonNull SelectorFunction<Range<Integer>> selector) {
+                                                   @NonNull SelectorFunction<Collection<Range<Integer>>, Range<Integer>> selector) {
         return new Parameters().putValue(
                 Parameters.Type.PREVIEW_FPS_RANGE,
                 selector.select(
                         capabilities.supportedPreviewFpsRanges()
+                )
+        );
+    }
+
+    public static Parameters selectSensorSensitivity(@NonNull Capabilities capabilities,
+                                                     @NonNull SelectorFunction<Range<Integer>, Integer> selector) {
+        return new Parameters().putValue(
+                Parameters.Type.SENSOR_SENSITIVITY,
+                selector.select(
+                        capabilities.supportedSensorSensitivityRange()
                 )
         );
     }

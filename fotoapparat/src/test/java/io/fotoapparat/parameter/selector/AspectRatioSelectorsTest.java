@@ -6,6 +6,8 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collection;
+
 import io.fotoapparat.parameter.Size;
 
 import static io.fotoapparat.test.TestUtils.asSet;
@@ -18,7 +20,7 @@ import static org.mockito.Mockito.verify;
 public class AspectRatioSelectorsTest {
 
     @Mock
-    SelectorFunction<Size> sizeSelector;
+    SelectorFunction<Collection<Size>, Size> sizeSelector;
 
     @Test
     public void standardRatio() throws Exception {

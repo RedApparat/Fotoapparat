@@ -2,6 +2,8 @@ package io.fotoapparat.parameter.selector;
 
 import android.support.annotation.Nullable;
 
+import java.util.Collection;
+
 import io.fotoapparat.parameter.Size;
 
 /**
@@ -14,22 +16,22 @@ public class AspectRatioSelectors {
     /**
      * @return {@link SelectorFunction} which selects some size of standard aspect ratio (4:3).
      */
-    public static SelectorFunction<Size> standardRatio(SelectorFunction<Size> selector) {
+    public static SelectorFunction<Collection<Size>, Size> standardRatio(SelectorFunction<Collection<Size>, Size> selector) {
         return aspectRatio(4f / 3f, selector);
     }
 
     /**
      * @return {@link SelectorFunction} which selects some size of wide aspect ratio (16:9).
      */
-    public static SelectorFunction<Size> wideRatio(SelectorFunction<Size> selector) {
+    public static SelectorFunction<Collection<Size>, Size> wideRatio(SelectorFunction<Collection<Size>, Size> selector) {
         return aspectRatio(16f / 9f, selector);
     }
 
     /**
      * @return {@link SelectorFunction} which selects some size of given aspect ratio.
      */
-    public static SelectorFunction<Size> aspectRatio(float aspectRatio,
-                                                     SelectorFunction<Size> selector) {
+    public static SelectorFunction<Collection<Size>, Size> aspectRatio(float aspectRatio,
+                                                     SelectorFunction<Collection<Size>, Size> selector) {
         return Selectors.filtered(
                 selector,
                 new AspectRatioPredicate(aspectRatio)

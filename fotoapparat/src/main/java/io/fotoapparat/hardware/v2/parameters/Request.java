@@ -10,7 +10,7 @@ import android.view.Surface;
 
 import java.util.List;
 
-import io.fotoapparat.hardware.v2.parameters.converters.FpsRangeConverter;
+import io.fotoapparat.hardware.v2.parameters.converters.RangeConverter;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.range.Range;
@@ -35,6 +35,7 @@ class Request {
     private final Flash flash;
     private final FocusMode focus;
     private final Range<Integer> previewFpsRange;
+    private final Integer sensorSensitivity;
     private CaptureRequest.Builder captureRequest;
 
     private Request(CameraDevice cameraDevice,
@@ -45,7 +46,8 @@ class Request {
                     boolean cancelPrecaptureExposure,
                     Flash flash, boolean shouldSetExposureMode,
                     FocusMode focus,
-                    Range<Integer> previewFpsRange) {
+                    Range<Integer> previewFpsRange,
+                    Integer sensorSensitivity) {
         this.cameraDevice = cameraDevice;
         this.requestTemplate = requestTemplate;
         this.surfaces = surfaces;
@@ -56,6 +58,7 @@ class Request {
         this.flash = flash;
         this.focus = focus;
         this.previewFpsRange = previewFpsRange;
+        this.sensorSensitivity = sensorSensitivity;
     }
 
     static CaptureRequest create(CaptureRequestBuilder builder) throws CameraAccessException {
@@ -69,7 +72,8 @@ class Request {
                 builder.flash,
                 builder.shouldSetExposureMode,
                 builder.focus,
-                builder.previewFpsRange
+                builder.previewFpsRange,
+                builder.sensorSensitivity
         )
                 .build();
     }
@@ -95,6 +99,7 @@ class Request {
         setExposure();
         setFocus();
         setPreviewFpsRange();
+        setSensorSensitivity();
 
         return captureRequest.build();
     }
@@ -189,7 +194,14 @@ class Request {
             return;
         }
 
-        captureRequest.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, FpsRangeConverter.toNativeRange(previewFpsRange));
+        captureRequest.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, RangeConverter.toNativeRange(previewFpsRange));
+    }
+
+    private void setSensorSensitivity() {
+        if (sensorSensitivity == null) {
+            return;
+        }
+        captureRequest.set(CaptureRequest.SENSOR_SENSITIVITY, sensorSensitivity);
     }
 
 }

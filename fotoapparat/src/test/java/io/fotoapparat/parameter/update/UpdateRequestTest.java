@@ -5,6 +5,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collection;
+
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.selector.SelectorFunction;
@@ -15,9 +17,9 @@ import static org.junit.Assert.assertSame;
 public class UpdateRequestTest {
 
     @Mock
-    SelectorFunction<Flash> flashSelector;
+    SelectorFunction<Collection<Flash>, Flash> flashSelector;
     @Mock
-    SelectorFunction<FocusMode> focusModeSelector;
+    SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector;
 
     @Test
     public void build() throws Exception {

@@ -1,6 +1,8 @@
 package io.fotoapparat.hardware.v2.parameters.converters;
 
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 
 import io.fotoapparat.parameter.range.Range;
@@ -11,7 +13,7 @@ import io.fotoapparat.parameter.range.Ranges;
  * and {@link io.fotoapparat.Fotoapparat}'s {@link Range}.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class FpsRangeConverter {
+public class RangeConverter {
 
     /**
      * Converts an Android native {@link android.util.Range} to
@@ -20,8 +22,13 @@ public class FpsRangeConverter {
      * @param nativeRange The native Android {@link android.util.Range} value.
      * @return The {@link io.fotoapparat.Fotoapparat}'s {@link Range} value.
      */
-    public static <T extends Number & Comparable<T>> Range<T> toFotoapparatRange(android.util.Range<T> nativeRange) {
-        return Ranges.range(nativeRange.getLower(), nativeRange.getUpper());
+    @NonNull
+    public static <T extends Number & Comparable<T>> Range<T> toFotoapparatRange(@Nullable android.util.Range<T> nativeRange) {
+        if (nativeRange != null) {
+            return Ranges.range(nativeRange.getLower(), nativeRange.getUpper());
+        } else  {
+            return Ranges.emptyRange();
+        }
     }
 
     /**
@@ -31,7 +38,12 @@ public class FpsRangeConverter {
      * @param fotoapparatRange The {@link io.fotoapparat.Fotoapparat}'s {@link Range} value.
      * @return The native Android {@link android.util.Range} value.
      */
-    public static <T extends Comparable<T>> android.util.Range<T> toNativeRange(Range<T> fotoapparatRange) {
-        return new android.util.Range<>(fotoapparatRange.lowest(), fotoapparatRange.highest());
+    @Nullable
+    public static <T extends Comparable<T>> android.util.Range<T> toNativeRange(@NonNull Range<T> fotoapparatRange) {
+        if (Ranges.isEmpty(fotoapparatRange)) {
+            return null;
+        } else {
+            return new android.util.Range<>(fotoapparatRange.lowest(), fotoapparatRange.highest());
+        }
     }
 }

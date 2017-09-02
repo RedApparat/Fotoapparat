@@ -69,6 +69,12 @@ public class ParametersConverter {
                         output
                 );
                 break;
+            case SENSOR_SENSITIVITY:
+                applySensorSensitivity(
+                        (Integer) input.getValue(type),
+                        output
+                );
+                break;
         }
     }
 
@@ -101,6 +107,10 @@ public class ParametersConverter {
         output.setPreviewFpsRange(
                 fpsRange.lowest(), fpsRange.highest()
         );
+    }
+
+    private void applySensorSensitivity(Integer value, Camera.Parameters output) {
+        output.set("iso", value.toString());
     }
 
 }
