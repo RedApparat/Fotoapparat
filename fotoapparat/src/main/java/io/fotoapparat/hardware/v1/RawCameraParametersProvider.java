@@ -7,10 +7,8 @@ import android.support.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-import io.fotoapparat.parameter.Parameters;
-
 /**
- * Converts {@link Camera.Parameters} to {@link Parameters}.
+ * Provides {@link Camera.Parameters} with methods to extract additional camera parameters.
  */
 @SuppressWarnings("deprecation")
 public class RawCameraParametersProvider {
@@ -33,6 +31,11 @@ public class RawCameraParametersProvider {
         return cameraParameters;
     }
 
+    /**
+     * Returns set of ISO values, that camera supports.
+     *
+     * @return the set of supported ISO values.
+     */
     @NonNull
     public Set<Integer> getSensorSensitivityValues() {
         final Set<Integer> isoValuesSet = new HashSet<>();

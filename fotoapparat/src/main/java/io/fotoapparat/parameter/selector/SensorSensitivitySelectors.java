@@ -3,17 +3,21 @@ package io.fotoapparat.parameter.selector;
 import io.fotoapparat.parameter.range.Range;
 
 /**
- * Created by ychen on 5/24/2017.
+ * Selector functions for sensor sensitivity (ISO).
  */
-
 public class SensorSensitivitySelectors {
 
-    public static SelectorFunction<Range<Integer>, Integer> manualSensorSensitivity(final Integer value) {
+    /**
+     * @param iso the specified ISO value
+     * @return {@link SelectorFunction} which selects the specified ISO value.
+     *         If there is no specified value - selects default ISO value.
+     */
+    public static SelectorFunction<Range<Integer>, Integer> manualSensorSensitivity(final int iso) {
         return new SelectorFunction<Range<Integer>, Integer>() {
             @Override
             public Integer select(Range<Integer> sensorSensitivityCapability) {
-                if(sensorSensitivityCapability.contains(value)) {
-                    return value;
+                if(sensorSensitivityCapability.contains(iso)) {
+                    return iso;
                 } else {
                     return null;
                 }
@@ -21,6 +25,9 @@ public class SensorSensitivitySelectors {
         };
     }
 
+    /**
+     * @return {@link SelectorFunction} which selects highest ISO value.
+     */
     public static SelectorFunction<Range<Integer>, Integer> highestSensorSensitivity() {
         return new SelectorFunction<Range<Integer>, Integer>() {
             @Override
@@ -30,6 +37,9 @@ public class SensorSensitivitySelectors {
         };
     }
 
+    /**
+     * @return {@link SelectorFunction} which selects lowest ISO value.
+     */
     public static SelectorFunction<Range<Integer>, Integer> lowestSensorSensitivity() {
         return new SelectorFunction<Range<Integer>, Integer>() {
             @Override
@@ -39,6 +49,9 @@ public class SensorSensitivitySelectors {
         };
     }
 
+    /**
+     * @return {@link SelectorFunction} which selects default ISO value.
+     */
     public static SelectorFunction<Range<Integer>,Integer> automaticSensorSensitivity() {
         return new SelectorFunction<Range<Integer>, Integer>() {
             @Override

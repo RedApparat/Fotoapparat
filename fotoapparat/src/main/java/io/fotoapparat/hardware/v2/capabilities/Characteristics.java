@@ -6,7 +6,6 @@ import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraMetadata;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 
 import java.util.HashSet;
@@ -167,7 +166,7 @@ public class Characteristics {
     /**
      * Range of sensitivities supported by this camera device.
      *
-     * @return Range of sensitivities.
+     * @return The range of ISO values.
      */
     public Range<Integer> getSensorSensitivityRange() {
         android.util.Range<Integer> sensitivityRange = cameraCharacteristics
