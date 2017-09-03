@@ -32,7 +32,7 @@ public class CapabilitiesFactoryTest {
     @Mock
     Camera camera;
     @Mock
-    CameraParametersProvider parametersProvider;
+    CameraParametersDecorator parametersProvider;
 
     CapabilitiesFactory testee;
 

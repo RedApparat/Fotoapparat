@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 public class ParametersConverterTest {
 
     @Mock
-    Camera.Parameters outputParameters;
+    CameraParametersDecorator outputParameters;
 
     ParametersConverter testee;
 
@@ -36,7 +36,7 @@ public class ParametersConverterTest {
         Parameters input = new Parameters();
 
         // When
-        Camera.Parameters result = testee.convert(
+        CameraParametersDecorator result = testee.convert(
                 input,
                 outputParameters
         );

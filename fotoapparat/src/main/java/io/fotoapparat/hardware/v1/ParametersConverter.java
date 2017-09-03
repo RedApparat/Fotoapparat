@@ -1,7 +1,5 @@
 package io.fotoapparat.hardware.v1;
 
-import android.hardware.Camera;
-
 import io.fotoapparat.hardware.v1.capabilities.FlashCapability;
 import io.fotoapparat.hardware.v1.capabilities.FocusCapability;
 import io.fotoapparat.parameter.Flash;
@@ -11,19 +9,20 @@ import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.range.Range;
 
 /**
- * Converts {@link Parameters} to {@link Camera.Parameters}.
+ * Converts {@link Parameters} to {@link CameraParametersDecorator}.
  */
 @SuppressWarnings("deprecation")
 public class ParametersConverter {
 
     /**
-     * Converts {@link Parameters} to {@link Camera.Parameters}.
+     * Converts {@link Parameters} to {@link CameraParametersDecorator}.
      *
      * @param parameters parameters which should be converted.
      * @param output     output value. It is required because of C-style API in Camera v1.
      * @return same object which was passed as {@code output}, but filled with new parameters.
      */
-    public Camera.Parameters convert(Parameters parameters, Camera.Parameters output) {
+    public CameraParametersDecorator convert(Parameters parameters,
+                                             CameraParametersDecorator output) {
         for (Parameters.Type storedType : parameters.storedTypes()) {
             applyParameter(
                     storedType,
@@ -37,7 +36,7 @@ public class ParametersConverter {
 
     private void applyParameter(Parameters.Type type,
                                 Parameters input,
-                                Camera.Parameters output) {
+                                CameraParametersDecorator output) {
         switch (type) {
             case FOCUS_MODE:
                 applyFocusMode(
@@ -79,38 +78,39 @@ public class ParametersConverter {
     }
 
     private void applyPreviewSize(Size size,
-                                  Camera.Parameters output) {
+                                  CameraParametersDecorator output) {
         output.setPreviewSize(size.width, size.height);
     }
 
     private void applyPictureSize(Size size,
-                                  Camera.Parameters output) {
+                                  CameraParametersDecorator output) {
         output.setPictureSize(size.width, size.height);
     }
 
     private void applyFlash(Flash flash,
-                            Camera.Parameters output) {
+                            CameraParametersDecorator output) {
         output.setFlashMode(
                 FlashCapability.toCode(flash)
         );
     }
 
     private void applyFocusMode(FocusMode focusMode,
-                                Camera.Parameters output) {
+                                CameraParametersDecorator output) {
         output.setFocusMode(
                 FocusCapability.toCode(focusMode)
         );
     }
 
     private void applyPreviewFpsRange(Range<Integer> fpsRange,
-                                      Camera.Parameters output) {
+                                      CameraParametersDecorator output) {
         output.setPreviewFpsRange(
                 fpsRange.lowest(), fpsRange.highest()
         );
     }
 
-    private void applySensorSensitivity(Integer value, Camera.Parameters output) {
-        output.set("iso", value.toString());
+    private void applySensorSensitivity(Integer value,
+                                        CameraParametersDecorator output) {
+        output.setSensorSensitivityValue(value);
     }
 
 }

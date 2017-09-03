@@ -10,10 +10,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Provides {@link Camera.Parameters} with methods to extract additional camera parameters.
+ * Decorator for {@link Camera.Parameters} with methods
+ * for getting and settings additional camera parameters.
  */
 @SuppressWarnings("deprecation")
-public class CameraParametersProvider {
+public class CameraParametersDecorator {
 
     /* Raw camera params keys */
     private static final String[] RAW_ISO_SUPPORTED_VALUES_KEYS = {
@@ -25,7 +26,11 @@ public class CameraParametersProvider {
 
     private Camera.Parameters cameraParameters;
 
-    public CameraParametersProvider(Camera.Parameters cameraParameters) {
+    public Camera.Parameters getCameraParameters() {
+        return cameraParameters;
+    }
+
+    public CameraParametersDecorator(Camera.Parameters cameraParameters) {
         this.cameraParameters = cameraParameters;
     }
 
@@ -53,6 +58,26 @@ public class CameraParametersProvider {
         return cameraParameters.getSupportedPreviewFpsRange();
     }
 
+    public void setPreviewSize(int width, int height) {
+        cameraParameters.setPreviewSize(width, height);
+    }
+
+    public void setPictureSize(int width, int height) {
+        cameraParameters.setPictureSize(width, height);
+    }
+
+    public void setFlashMode(String flash) {
+        cameraParameters.setFlashMode(flash);
+    }
+
+    public void setFocusMode(String focusMode) {
+        cameraParameters.setFocusMode(focusMode);
+    }
+
+    public void setPreviewFpsRange(int min, int max) {
+        cameraParameters.setPreviewFpsRange(min, max);
+    }
+
     /**
      * Returns set of ISO values, that camera supports.
      *
@@ -60,28 +85,36 @@ public class CameraParametersProvider {
      */
     @NonNull
     public Set<Integer> getSensorSensitivityValues() {
-        final Set<Integer> isoValuesSet = new HashSet<>();
-
         String[] rawValues = extractRawCameraValues(RAW_ISO_SUPPORTED_VALUES_KEYS);
+        return convertParamsToInts(rawValues);
+    }
 
-        // Should log that result is nullable or not?
-        if (rawValues != null) {
-            for (String value : rawValues) {
-                try {
-                    isoValuesSet.add(Integer.valueOf(value.trim()));
-                } catch (NumberFormatException e) {
-                    // Found not number option. Skip it.
-                }
+    /**
+     * Sets ISO value for camera.
+     */
+    @NonNull
+    public void setSensorSensitivityValue(int isoValue) {
+        String isoKey = findExistingKey(RAW_ISO_CURRENT_VALUE_KEYS);
+        if (isoKey != null) {
+            cameraParameters.set(isoKey, isoValue);
+        }
+    }
+
+    @Nullable
+    private String findExistingKey(@NonNull String[] keys) {
+        for (String key: keys) {
+            if (cameraParameters.get(key) != null) {
+                return key;
             }
         }
 
-        return isoValuesSet;
+        return null;
     }
 
     @Nullable
     private String[] extractRawCameraValues(@NonNull String[] keys) {
         for (String key: keys) {
-            String[] rawValues  = extractRawCameraValues(key);
+            String[] rawValues  = extractStringValuesFromParams(key);
             if (rawValues != null) {
                 return rawValues;
             }
@@ -91,12 +124,27 @@ public class CameraParametersProvider {
     }
 
     @Nullable
-    private String[] extractRawCameraValues(@NonNull String key) {
+    private String[] extractStringValuesFromParams(@NonNull String key) {
         String rawValues = cameraParameters.get(key);
         if (rawValues != null) {
             return rawValues.split(",");
         } else {
             return null;
         }
+    }
+
+    @NonNull
+    private Set<Integer> convertParamsToInts(@Nullable String[] values) {
+        Set<Integer> integerValues = new HashSet<>();
+        if (values != null) {
+            for (String value : values) {
+                try {
+                    integerValues.add(Integer.valueOf(value.trim()));
+                } catch (NumberFormatException e) {
+                    // Found not number option. Skip it.
+                }
+            }
+        }
+        return integerValues;
     }
 }
