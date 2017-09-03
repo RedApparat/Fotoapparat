@@ -17,12 +17,12 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RawCameraParametersProviderTest {
+public class CameraParametersProviderTest {
 
     @Mock
     Camera.Parameters parameters;
     @InjectMocks
-    RawCameraParametersProvider parametersProvider;
+    CameraParametersProvider parametersProvider;
 
     @Test
     public void sensorSensitivityValues_Available() throws Exception {

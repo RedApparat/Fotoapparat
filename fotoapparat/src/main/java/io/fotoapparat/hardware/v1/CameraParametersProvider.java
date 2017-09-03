@@ -1,17 +1,19 @@
 package io.fotoapparat.hardware.v1;
 
 import android.hardware.Camera;
+import android.hardware.Camera.Size;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Provides {@link Camera.Parameters} with methods to extract additional camera parameters.
  */
 @SuppressWarnings("deprecation")
-public class RawCameraParametersProvider {
+public class CameraParametersProvider {
 
     /* Raw camera params keys */
     private static final String[] RAW_ISO_SUPPORTED_VALUES_KEYS = {
@@ -23,12 +25,32 @@ public class RawCameraParametersProvider {
 
     private Camera.Parameters cameraParameters;
 
-    public RawCameraParametersProvider(Camera.Parameters cameraParameters) {
+    public CameraParametersProvider(Camera.Parameters cameraParameters) {
         this.cameraParameters = cameraParameters;
     }
 
-    public Camera.Parameters getCameraParameters() {
-        return cameraParameters;
+    public boolean isZoomSupported() {
+        return cameraParameters.isZoomSupported();
+    }
+
+    public List<Size> getSupportedPreviewSizes() {
+        return cameraParameters.getSupportedPreviewSizes();
+    }
+
+    public List<Size> getSupportedPictureSizes() {
+        return cameraParameters.getSupportedPictureSizes();
+    }
+
+    public List<String> getSupportedFlashModes() {
+        return cameraParameters.getSupportedFlashModes();
+    }
+
+    public List<String> getSupportedFocusModes() {
+        return cameraParameters.getSupportedFocusModes();
+    }
+
+    public List<int[]> getSupportedPreviewFpsRange() {
+        return cameraParameters.getSupportedPreviewFpsRange();
     }
 
     /**
@@ -58,16 +80,14 @@ public class RawCameraParametersProvider {
 
     @Nullable
     private String[] extractRawCameraValues(@NonNull String[] keys) {
-        String[] rawValues = null;
-
         for (String key: keys) {
-            rawValues  = extractRawCameraValues(key);
+            String[] rawValues  = extractRawCameraValues(key);
             if (rawValues != null) {
-                break;
+                return rawValues;
             }
         }
 
-        return rawValues;
+        return null;
     }
 
     @Nullable
