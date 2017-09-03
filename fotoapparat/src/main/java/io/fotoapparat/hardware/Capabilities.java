@@ -98,7 +98,7 @@ public class Capabilities {
     }
 
     /**
-     * @return the sensor sensitivity capability.
+     * @return supported range of the sensor's sensitivity.
      */
     public Range<Integer> supportedSensorSensitivityRange() {
         return sensorSensitivityRange;
@@ -118,7 +118,7 @@ public class Capabilities {
 
         Capabilities that = (Capabilities) o;
 
-        return isZoomSupported() == that.isZoomSupported()
+        return zoomSupported == that.zoomSupported
                 && photoSizes.equals(that.photoSizes)
                 && previewSizes.equals(that.previewSizes)
                 && focusModes.equals(that.focusModes)
