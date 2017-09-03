@@ -17,8 +17,8 @@ public class Ranges {
         return new ContinuousRange<>(lowerBound, upperBound);
     }
 
-    public static <T extends Comparable<T>> Range<T> discreteRange(@NonNull T value) {
-        return discreteRange(Collections.singletonList(value));
+    public static <T extends Comparable<T>> Range<T> range(@NonNull T value) {
+        return new ContinuousRange<>(value, value);
     }
 
     public static <T extends Comparable<T>> Range<T> discreteRange(@NonNull Collection<T> collection) {

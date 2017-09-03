@@ -2,8 +2,10 @@ package io.fotoapparat.parameter.range;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import io.fotoapparat.util.StringUtils;
 
@@ -13,10 +15,14 @@ import io.fotoapparat.util.StringUtils;
  * @param <T> type of objects in that set.
  */
 class DiscreteRange<T extends Comparable<? super T>> implements Range<T> {
-    @NonNull private final Collection<T> values;
+    @NonNull private final List<T> values;
 
     public DiscreteRange(@NonNull Collection<T> values) {
-        this.values = values;
+        List<T> valuesList = (values instanceof List)
+                ? (List<T>) values
+                : new ArrayList<>(values);
+        Collections.sort(valuesList);
+        this.values = valuesList;
     }
 
     @Override

@@ -1,15 +1,12 @@
 package io.fotoapparat.parameter.provider;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Collection;
 import java.util.Set;
 
-import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
 import io.fotoapparat.parameter.Flash;
@@ -19,14 +16,12 @@ import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.range.Ranges;
 import io.fotoapparat.parameter.selector.PreviewFpsRangeSelectors;
-import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.selector.SensorSensitivitySelectors;
 import io.fotoapparat.parameter.selector.SizeSelectors;
 
 import static io.fotoapparat.parameter.selector.FlashSelectors.torch;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.test.TestUtils.asSet;
-import static io.fotoapparat.util.TestSelectors.select;
 import static io.fotoapparat.util.TestSelectors.selectFromCollection;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -40,7 +35,7 @@ public class InitialParametersProviderTest {
     static final Size PREVIEW_SIZE_WRONG_ASPECT_RATIO = new Size(1000, 1000);
     static final Range<Integer> PREVIEW_FPS_RANGE = Ranges.range(30000, 30000);
     static final Integer SENSOR_SENSITIVITY = 1000;
-    static final Range<Integer> SENSOR_SENSITIVITY_RANGE = Ranges.discreteRange(SENSOR_SENSITIVITY);
+    static final Range<Integer> SENSOR_SENSITIVITY_RANGE = Ranges.range(SENSOR_SENSITIVITY);
 
     static final Set<Size> ALL_PREVIEW_SIZES = asSet(
             PREVIEW_SIZE,

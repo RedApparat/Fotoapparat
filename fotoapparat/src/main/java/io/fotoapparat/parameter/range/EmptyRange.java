@@ -1,7 +1,7 @@
 package io.fotoapparat.parameter.range;
 
 /**
- * Null object for {@link Range}.
+ * {@link Range} with no values in it.
  */
 final class EmptyRange<T> implements Range<T> {
 
