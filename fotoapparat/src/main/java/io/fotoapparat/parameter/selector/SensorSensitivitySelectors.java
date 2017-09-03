@@ -48,16 +48,4 @@ public class SensorSensitivitySelectors {
             }
         };
     }
-
-    /**
-     * @return {@link SelectorFunction} which selects default ISO value.
-     */
-    public static SelectorFunction<Range<Integer>,Integer> automaticSensorSensitivity() {
-        return new SelectorFunction<Range<Integer>, Integer>() {
-            @Override
-            public Integer select(Range<Integer> integerRange) {
-                return null;
-            }
-        };
-    }
 }
