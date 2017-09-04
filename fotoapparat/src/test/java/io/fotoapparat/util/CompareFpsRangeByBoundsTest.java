@@ -18,11 +18,11 @@ public class CompareFpsRangeByBoundsTest {
     public void findMaxFpsRange() throws Exception {
         // Given
         List<Range<Integer>> fpsRangesList = Arrays.<Range<Integer>>asList(
-                Ranges.range(24000, 24000),
-                Ranges.range(24000, 30000),
-                Ranges.range(30000, 30000),
-                Ranges.range(30000, 36000),
-                Ranges.range(30000, 34000)
+                Ranges.continuousRange(24000, 24000),
+                Ranges.continuousRange(24000, 30000),
+                Ranges.continuousRange(30000, 30000),
+                Ranges.continuousRange(30000, 36000),
+                Ranges.continuousRange(30000, 34000)
         );
 
         // When
@@ -31,7 +31,7 @@ public class CompareFpsRangeByBoundsTest {
         // Then
         Assert.assertEquals(
                 maxRange,
-                Ranges.range(30000, 36000)
+                Ranges.continuousRange(30000, 36000)
         );
     }
 
@@ -39,11 +39,11 @@ public class CompareFpsRangeByBoundsTest {
     public void findMinFpsRange() throws Exception {
         // Given
         List<Range<Integer>> fpsRangesList = Arrays.<Range<Integer>>asList(
-                Ranges.range(24000, 24000),
-                Ranges.range(24000, 30000),
-                Ranges.range(30000, 30000),
-                Ranges.range(20000, 26000),
-                Ranges.range(20000, 28000)
+                Ranges.continuousRange(24000, 24000),
+                Ranges.continuousRange(24000, 30000),
+                Ranges.continuousRange(30000, 30000),
+                Ranges.continuousRange(20000, 26000),
+                Ranges.continuousRange(20000, 28000)
         );
 
         // When
@@ -52,7 +52,7 @@ public class CompareFpsRangeByBoundsTest {
         // Then
         Assert.assertEquals(
                 minRange,
-                Ranges.range(20000, 26000)
+                Ranges.continuousRange(20000, 26000)
         );
     }
 }

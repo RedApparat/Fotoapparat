@@ -33,9 +33,9 @@ public class InitialParametersProviderTest {
     static final Size PHOTO_SIZE = new Size(4000, 3000);
     static final Size PREVIEW_SIZE = new Size(2000, 1500);
     static final Size PREVIEW_SIZE_WRONG_ASPECT_RATIO = new Size(1000, 1000);
-    static final Range<Integer> PREVIEW_FPS_RANGE = Ranges.range(30000, 30000);
+    static final Range<Integer> PREVIEW_FPS_RANGE = Ranges.continuousRange(30000, 30000);
     static final Integer SENSOR_SENSITIVITY = 1000;
-    static final Range<Integer> SENSOR_SENSITIVITY_RANGE = Ranges.range(SENSOR_SENSITIVITY);
+    static final Range<Integer> SENSOR_SENSITIVITY_RANGE = Ranges.continuousRange(SENSOR_SENSITIVITY);
 
     static final Set<Size> ALL_PREVIEW_SIZES = asSet(
             PREVIEW_SIZE,

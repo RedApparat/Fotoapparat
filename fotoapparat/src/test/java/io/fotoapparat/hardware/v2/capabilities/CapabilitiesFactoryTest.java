@@ -48,8 +48,8 @@ public class CapabilitiesFactoryTest {
 			new Size(10, 20)
 	);
     static final Set<Range<Integer>> PREVIEW_FPS_RANGE_SET = asSet(
-            Ranges.range(24000, 24000),
-            Ranges.range(30000, 30000)
+            Ranges.continuousRange(24000, 24000),
+            Ranges.continuousRange(30000, 30000)
     );
 
 	@Mock

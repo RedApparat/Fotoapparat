@@ -25,7 +25,7 @@ public class RangeConverter {
     @NonNull
     public static <T extends Number & Comparable<T>> Range<T> toFotoapparatRange(@Nullable android.util.Range<T> nativeRange) {
         if (nativeRange != null) {
-            return Ranges.range(nativeRange.getLower(), nativeRange.getUpper());
+            return Ranges.continuousRange(nativeRange.getLower(), nativeRange.getUpper());
         } else  {
             return Ranges.emptyRange();
         }

@@ -85,7 +85,7 @@ public class ParametersFactoryTest {
     @Test
     public void selectPreviewFpsRange() throws Exception {
         // Given
-        Range<Integer> range = Ranges.range(30000, 30000);
+        Range<Integer> range = Ranges.continuousRange(30000, 30000);
 
         // When
         Parameters result = ParametersFactory.selectPreviewFpsRange(CAPABILITIES,

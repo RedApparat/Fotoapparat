@@ -41,8 +41,8 @@ public class UpdateParametersRoutineTest {
                         Collections.<Size>emptySet(),
                         asSet(FocusMode.AUTO),
                         asSet(Flash.TORCH),
-                        asSet(Ranges.range(30000, 30000)),
-                        Ranges.range(1200),
+                        asSet(Ranges.continuousRange(30000, 30000)),
+                        Ranges.continuousRange(1200),
                         false
                 ));
     }

@@ -204,8 +204,8 @@ public class CapabilitiesFactoryTest {
         // Then
         assertEquals(
                 asSet(
-                        Ranges.range(24000, 24000),
-                        Ranges.range(30000, 30000)
+                        Ranges.continuousRange(24000, 24000),
+                        Ranges.continuousRange(30000, 30000)
                 ),
                 capabilities.supportedPreviewFpsRanges()
         );

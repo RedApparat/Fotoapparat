@@ -30,8 +30,8 @@ public class GetCapabilitiesTaskTest {
             Collections.singleton(new Size(1400, 1080)),
             Collections.singleton(FocusMode.CONTINUOUS_FOCUS),
             Collections.singleton(Flash.OFF),
-            Collections.singleton(Ranges.range(30000, 30000)),
-            Ranges.range(1000),
+            Collections.singleton(Ranges.continuousRange(30000, 30000)),
+            Ranges.continuousRange(1000),
             false
     );
 

@@ -106,7 +106,7 @@ public class CapabilitiesFactory {
 
         Set<Range<Integer>> wrappedFpsRanges = new HashSet<>(fpsRanges.size());
         for (int[] range : fpsRanges) {
-            wrappedFpsRanges.add(Ranges.range(
+            wrappedFpsRanges.add(Ranges.continuousRange(
                     range[Camera.Parameters.PREVIEW_FPS_MIN_INDEX],
                     range[Camera.Parameters.PREVIEW_FPS_MAX_INDEX]
             ));
