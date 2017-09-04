@@ -1,6 +1,7 @@
 package io.fotoapparat.parameter.range;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +32,7 @@ class DiscreteRange<T extends Comparable<? super T>> implements Range<T> {
     }
 
     @Override
+    @Nullable
     public T highest() {
         if(values.isEmpty()) {
             return null;
@@ -39,6 +41,7 @@ class DiscreteRange<T extends Comparable<? super T>> implements Range<T> {
     }
 
     @Override
+    @Nullable
     public T lowest() {
         if(values.isEmpty()) {
             return null;

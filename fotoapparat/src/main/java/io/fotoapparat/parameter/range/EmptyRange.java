@@ -1,5 +1,7 @@
 package io.fotoapparat.parameter.range;
 
+import android.support.annotation.Nullable;
+
 /**
  * {@link Range} with no values in it.
  */
@@ -11,11 +13,13 @@ final class EmptyRange<T> implements Range<T> {
     }
 
     @Override
+    @Nullable
     public T highest() {
         return null;
     }
 
     @Override
+    @Nullable
     public T lowest() {
         return null;
     }
