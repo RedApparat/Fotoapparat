@@ -2,6 +2,8 @@ package io.fotoapparat.parameter.update;
 
 import android.support.annotation.Nullable;
 
+import java.util.Collection;
+
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.selector.SelectorFunction;
@@ -21,7 +23,7 @@ public class UpdateRequest {
      * {@code null} if no update is required.
      */
     @Nullable
-    public final SelectorFunction<Flash> flashSelector;
+    public final SelectorFunction<Collection<Flash>, Flash> flashSelector;
 
     /**
      * Selects focus mode from list of available modes.
@@ -29,7 +31,7 @@ public class UpdateRequest {
      * {@code null} if no update is required.
      */
     @Nullable
-    public final SelectorFunction<FocusMode> focusModeSelector;
+    public final SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector;
 
     private UpdateRequest(Builder builder) {
         this.flashSelector = builder.flashSelector;
@@ -48,13 +50,13 @@ public class UpdateRequest {
      */
     public static class Builder {
 
-        SelectorFunction<Flash> flashSelector = null;
-        SelectorFunction<FocusMode> focusModeSelector = null;
+        SelectorFunction<Collection<Flash>, Flash> flashSelector = null;
+        SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector = null;
 
         /**
          * @param selector selects focus mode from list of available modes.
          */
-        public Builder focusMode(@Nullable SelectorFunction<FocusMode> selector) {
+        public Builder focusMode(@Nullable SelectorFunction<Collection<FocusMode>, FocusMode> selector) {
             this.focusModeSelector = selector;
             return this;
         }
@@ -62,7 +64,7 @@ public class UpdateRequest {
         /**
          * @param selector selects flash mode from list of available modes.
          */
-        public Builder flash(@Nullable SelectorFunction<Flash> selector) {
+        public Builder flash(@Nullable SelectorFunction<Collection<Flash>, Flash> selector) {
             this.flashSelector = selector;
             return this;
         }

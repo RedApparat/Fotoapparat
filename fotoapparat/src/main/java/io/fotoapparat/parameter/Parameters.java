@@ -140,7 +140,12 @@ public class Parameters {
         /**
          * Frames per second range for preview stream. Expected type: {@link io.fotoapparat.parameter.range.Range<Integer>}.
          */
-        PREVIEW_FPS_RANGE(Range.class);
+        PREVIEW_FPS_RANGE(Range.class),
+
+        /**
+         * Sensor sensitivity (ISO). Expected type: {@link Integer}.
+         */
+        SENSOR_SENSITIVITY(Integer.class);
 
         private final Class<?> clazz;
 

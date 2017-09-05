@@ -8,6 +8,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collection;
 import java.util.List;
 
 import io.fotoapparat.error.CameraErrorCallback;
@@ -43,7 +44,7 @@ public class StartCameraRoutineTest {
     @Mock
     CameraRenderer cameraRenderer;
     @Mock
-    SelectorFunction<LensPosition> lensPositionSelector;
+    SelectorFunction<Collection<LensPosition>, LensPosition> lensPositionSelector;
     @Mock
     ScreenOrientationProvider screenOrientationProvider;
     @Mock

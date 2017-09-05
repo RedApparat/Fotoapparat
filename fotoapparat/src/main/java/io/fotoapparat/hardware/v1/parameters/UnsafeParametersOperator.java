@@ -3,6 +3,7 @@ package io.fotoapparat.hardware.v1.parameters;
 import android.hardware.Camera;
 
 import io.fotoapparat.hardware.operators.ParametersOperator;
+import io.fotoapparat.hardware.v1.CameraParametersDecorator;
 import io.fotoapparat.hardware.v1.ParametersConverter;
 import io.fotoapparat.parameter.Parameters;
 
@@ -24,12 +25,12 @@ public class UnsafeParametersOperator implements ParametersOperator {
 
     @Override
     public void updateParameters(Parameters parameters) {
-        Camera.Parameters cameraParameters = parametersConverter.convert(
+        CameraParametersDecorator parametersProvider = parametersConverter.convert(
                 parameters,
-                camera.getParameters()
+                new CameraParametersDecorator(camera.getParameters())
         );
 
-        camera.setParameters(cameraParameters);
+        camera.setParameters(parametersProvider.getCameraParameters());
     }
 
 }

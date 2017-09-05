@@ -31,6 +31,7 @@ class CaptureRequestBuilder {
     boolean triggerPrecaptureExposure;
     boolean cancelPrecaptureExposure;
     boolean shouldSetExposureMode;
+    Integer sensorSensitivity;
 
     private CaptureRequestBuilder(CameraDevice cameraDevice, @RequestTemplate int requestTemplate) {
         this.cameraDevice = cameraDevice;
@@ -91,6 +92,11 @@ class CaptureRequestBuilder {
 
     CaptureRequestBuilder cancelPrecaptureExposure(boolean cancelPrecaptureExposure) {
         this.cancelPrecaptureExposure = cancelPrecaptureExposure;
+        return this;
+    }
+
+    CaptureRequestBuilder sensorSensitivity(Integer sensorSensitivity) {
+        this.sensorSensitivity = sensorSensitivity;
         return this;
     }
 

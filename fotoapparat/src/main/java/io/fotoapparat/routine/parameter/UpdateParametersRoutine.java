@@ -54,10 +54,10 @@ public class UpdateParametersRoutine {
     }
 
     @NonNull
-    private <T> SelectorFunction<T> optional(@Nullable SelectorFunction<T> selector) {
+    private <Input, Output> SelectorFunction<Input, Output> optional(@Nullable SelectorFunction<Input, Output> selector) {
         return selector != null
                 ? selector
-                : Selectors.<T>nothing();
+                : Selectors.<Input, Output>nothing();
     }
 
 }

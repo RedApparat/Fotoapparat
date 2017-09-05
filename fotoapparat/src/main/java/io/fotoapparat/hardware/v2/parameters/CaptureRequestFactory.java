@@ -47,12 +47,14 @@ public class CaptureRequestFactory {
         Surface viewSurface = textureManager.getSurface();
         Flash flash = parametersProvider.getFlash();
         Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
+        Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_PREVIEW)
                 .into(viewSurface)
                 .flash(flash)
                 .previewFpsRange(previewFpsRange)
+                .sensorSensitivity(sensorSensitivity)
                 .build();
     }
 
@@ -69,6 +71,7 @@ public class CaptureRequestFactory {
         Flash flash = parametersProvider.getFlash();
         Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
         boolean triggerAutoExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
+        Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
@@ -77,6 +80,7 @@ public class CaptureRequestFactory {
                 .previewFpsRange(previewFpsRange)
                 .triggerAutoFocus(true)
                 .triggerPrecaptureExposure(triggerAutoExposure)
+                .sensorSensitivity(sensorSensitivity)
                 .build();
     }
 
@@ -93,6 +97,7 @@ public class CaptureRequestFactory {
         Flash flash = parametersProvider.getFlash();
         FocusMode focus = parametersProvider.getFocus();
         Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
+        Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
 
         boolean triggerPrecaptureExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
 
@@ -104,6 +109,7 @@ public class CaptureRequestFactory {
                 .focus(focus)
                 .previewFpsRange(previewFpsRange)
                 .setExposureMode(true)
+                .sensorSensitivity(sensorSensitivity)
                 .build();
     }
 
@@ -118,6 +124,7 @@ public class CaptureRequestFactory {
         Flash flash = parametersProvider.getFlash();
         FocusMode focus = parametersProvider.getFocus();
         Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
+        Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
@@ -126,6 +133,7 @@ public class CaptureRequestFactory {
                 .flash(flash)
                 .focus(focus)
                 .previewFpsRange(previewFpsRange)
+                .sensorSensitivity(sensorSensitivity)
                 .setExposureMode(true)
                 .build();
     }

@@ -1,6 +1,8 @@
 package io.fotoapparat.routine;
 
 import io.fotoapparat.error.CameraErrorCallback;
+import java.util.Collection;
+
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
@@ -18,7 +20,7 @@ public class StartCameraRoutine implements Runnable {
     private final CameraDevice cameraDevice;
     private final CameraRenderer cameraRenderer;
     private final ScaleType scaleType;
-    private final SelectorFunction<LensPosition> lensPositionSelector;
+    private final SelectorFunction<Collection<LensPosition>, LensPosition> lensPositionSelector;
     private final ScreenOrientationProvider screenOrientationProvider;
     private final InitialParametersProvider initialParametersProvider;
     private final CameraErrorCallback cameraErrorCallback;
@@ -26,7 +28,7 @@ public class StartCameraRoutine implements Runnable {
     public StartCameraRoutine(CameraDevice cameraDevice,
                               CameraRenderer cameraRenderer,
                               ScaleType scaleType,
-                              SelectorFunction<LensPosition> lensPositionSelector,
+                              SelectorFunction<Collection<LensPosition>, LensPosition> lensPositionSelector,
                               ScreenOrientationProvider screenOrientationProvider,
                               InitialParametersProvider initialParametersProvider,
                               CameraErrorCallback cameraErrorCallback) {

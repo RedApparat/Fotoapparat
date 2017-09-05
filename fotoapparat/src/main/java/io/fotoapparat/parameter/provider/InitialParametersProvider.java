@@ -1,5 +1,7 @@
 package io.fotoapparat.parameter.provider;
 
+import java.util.Collection;
+
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
@@ -10,6 +12,7 @@ import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.factory.ParametersFactory;
 import io.fotoapparat.parameter.selector.SelectorFunction;
+import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.selector.Selectors;
 
 import static io.fotoapparat.parameter.Parameters.combineParameters;
@@ -23,18 +26,20 @@ public class InitialParametersProvider {
 
     private final InitialParametersValidator parametersValidator;
     private final CapabilitiesOperator capabilitiesOperator;
-    private final SelectorFunction<Size> photoSizeSelector;
-    private final SelectorFunction<Size> previewSizeSelector;
-    private final SelectorFunction<FocusMode> focusModeSelector;
-    private final SelectorFunction<Flash> flashSelector;
-    private final SelectorFunction<Range<Integer>> previewFpsRangeSelector;
+    private final SelectorFunction<Collection<Size>, Size> photoSizeSelector;
+    private final SelectorFunction<Collection<Size>, Size> previewSizeSelector;
+    private final SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector;
+    private final SelectorFunction<Collection<Flash>, Flash> flashSelector;
+    private final SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector;
+    private final SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector;
 
     public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
-                                     SelectorFunction<Size> photoSizeSelector,
-                                     SelectorFunction<Size> previewSizeSelector,
-                                     SelectorFunction<FocusMode> focusModeSelector,
-                                     SelectorFunction<Flash> flashSelector,
-                                     SelectorFunction<Range<Integer>> previewFpsRangeSelector,
+                                     SelectorFunction<Collection<Size>, Size> photoSizeSelector,
+                                     SelectorFunction<Collection<Size>, Size> previewSizeSelector,
+                                     SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector,
+                                     SelectorFunction<Collection<Flash>, Flash> flashSelector,
+                                     SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector,
+                                     SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector,
                                      InitialParametersValidator parametersValidator) {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
@@ -42,14 +47,15 @@ public class InitialParametersProvider {
         this.focusModeSelector = focusModeSelector;
         this.flashSelector = flashSelector;
         this.previewFpsRangeSelector = previewFpsRangeSelector;
+        this.sensorSensitivitySelector = sensorSensitivitySelector;
         this.parametersValidator = parametersValidator;
     }
 
     /**
      * @return function which selects a valid preview size based on current picture size.
      */
-    static SelectorFunction<Size> validPreviewSizeSelector(Size photoSize,
-                                                           SelectorFunction<Size> original) {
+    static SelectorFunction<Collection<Size>, Size> validPreviewSizeSelector(Size photoSize,
+                                                                             SelectorFunction<Collection<Size>, Size> original) {
         return Selectors
                 .firstAvailable(
                         previewWithSameAspectRatio(photoSize, original),
@@ -57,8 +63,8 @@ public class InitialParametersProvider {
                 );
     }
 
-    private static SelectorFunction<Size> previewWithSameAspectRatio(Size photoSize,
-                                                                     SelectorFunction<Size> original) {
+    private static SelectorFunction<Collection<Size>, Size> previewWithSameAspectRatio(Size photoSize,
+                                                                                       SelectorFunction<Collection<Size>, Size> original) {
         return aspectRatio(
                 photoSize.getAspectRatio(),
                 original
@@ -76,7 +82,8 @@ public class InitialParametersProvider {
                 previewSizeParameters(capabilities),
                 focusModeParameters(capabilities),
                 flashModeParameters(capabilities),
-                previewFpsRange(capabilities)
+                previewFpsRange(capabilities),
+                sensorSensitivity(capabilities)
         ));
 
         parametersValidator.validate(parameters);
@@ -95,6 +102,13 @@ public class InitialParametersProvider {
         return ParametersFactory.selectFocusMode(
                 capabilities,
                 focusModeSelector
+        );
+    }
+
+    private SelectorFunction<Collection<Size>, Size> previewWithSameAspectRatio(Size photoSize) {
+        return aspectRatio(
+                photoSize.getAspectRatio(),
+                previewSizeSelector
         );
     }
 
@@ -125,6 +139,13 @@ public class InitialParametersProvider {
         return ParametersFactory.selectPreviewFpsRange(
                 capabilities,
                 previewFpsRangeSelector
+        );
+    }
+
+    private Parameters sensorSensitivity(Capabilities capabilities) {
+        return ParametersFactory.selectSensorSensitivity(
+                capabilities,
+                sensorSensitivitySelector
         );
     }
 

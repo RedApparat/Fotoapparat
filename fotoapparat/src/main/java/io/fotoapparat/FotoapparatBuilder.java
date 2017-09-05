@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import io.fotoapparat.error.CameraErrorCallback;
+import java.util.Collection;
+
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.log.Logger;
@@ -17,6 +19,7 @@ import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.selector.FlashSelectors;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.selector.Selectors;
+import io.fotoapparat.parameter.selector.SensorSensitivitySelectors;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.view.CameraRenderer;
 import io.fotoapparat.view.CameraView;
@@ -40,20 +43,21 @@ public class FotoapparatBuilder {
     CameraProvider cameraProvider = v1();
     CameraRenderer renderer;
 
-    SelectorFunction<LensPosition> lensPositionSelector = firstAvailable(
+    SelectorFunction<Collection<LensPosition>, LensPosition> lensPositionSelector = firstAvailable(
             back(),
             front(),
             external()
     );
-    SelectorFunction<Size> photoSizeSelector = biggestSize();
-    SelectorFunction<Size> previewSizeSelector = biggestSize();
-    SelectorFunction<FocusMode> focusModeSelector = firstAvailable(
+    SelectorFunction<Collection<Size>, Size> photoSizeSelector = biggestSize();
+    SelectorFunction<Collection<Size>, Size> previewSizeSelector = biggestSize();
+    SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector = firstAvailable(
             continuousFocus(),
             autoFocus(),
             fixed()
     );
-    SelectorFunction<Flash> flashSelector = FlashSelectors.off();
-    SelectorFunction<Range<Integer>> previewFpsRangeSelector = Selectors.nothing();
+    SelectorFunction<Collection<Flash>, Flash> flashSelector = FlashSelectors.off();
+    SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector = Selectors.nothing();
+    SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector = Selectors.nothing();
 
     ScaleType scaleType = ScaleType.CENTER_CROP;
 
@@ -78,7 +82,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector selects size of the photo (in pixels) from list of available sizes.
      */
-    public FotoapparatBuilder photoSize(@NonNull SelectorFunction<Size> selector) {
+    public FotoapparatBuilder photoSize(@NonNull SelectorFunction<Collection<Size>, Size> selector) {
         photoSizeSelector = selector;
         return this;
     }
@@ -86,7 +90,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector selects size of preview stream (in pixels) from list of available sizes.
      */
-    public FotoapparatBuilder previewSize(@NonNull SelectorFunction<Size> selector) {
+    public FotoapparatBuilder previewSize(@NonNull SelectorFunction<Collection<Size>, Size> selector) {
         previewSizeSelector = selector;
         return this;
     }
@@ -102,7 +106,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector selects focus mode from list of available modes.
      */
-    public FotoapparatBuilder focusMode(@NonNull SelectorFunction<FocusMode> selector) {
+    public FotoapparatBuilder focusMode(@NonNull SelectorFunction<Collection<FocusMode>, FocusMode> selector) {
         focusModeSelector = selector;
         return this;
     }
@@ -110,7 +114,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector selects flash mode from list of available modes.
      */
-    public FotoapparatBuilder flash(@NonNull SelectorFunction<Flash> selector) {
+    public FotoapparatBuilder flash(@NonNull SelectorFunction<Collection<Flash>, Flash> selector) {
         flashSelector = selector;
         return this;
     }
@@ -118,7 +122,7 @@ public class FotoapparatBuilder {
     /**
      * @param selector camera sensor position from list of available positions.
      */
-    public FotoapparatBuilder lensPosition(@NonNull SelectorFunction<LensPosition> selector) {
+    public FotoapparatBuilder lensPosition(@NonNull SelectorFunction<Collection<LensPosition>, LensPosition> selector) {
         lensPositionSelector = selector;
         return this;
     }
@@ -126,8 +130,16 @@ public class FotoapparatBuilder {
     /**
      * @param selector selects preview FPS range from list of available ranges.
      */
-    public FotoapparatBuilder previewFpsRange(@NonNull SelectorFunction<Range<Integer>> selector) {
+    public FotoapparatBuilder previewFpsRange(@NonNull SelectorFunction<Collection<Range<Integer>>, Range<Integer>> selector) {
         previewFpsRangeSelector = selector;
+        return this;
+    }
+
+    /**
+     * @param selector selects ISO value from range of available values.
+     */
+    public FotoapparatBuilder sensorSensitivity(@NonNull SelectorFunction<Range<Integer>, Integer> selector) {
+        sensorSensitivitySelector = selector;
         return this;
     }
 

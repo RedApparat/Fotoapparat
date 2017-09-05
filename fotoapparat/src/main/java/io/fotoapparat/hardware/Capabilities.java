@@ -9,6 +9,7 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.range.Range;
+import io.fotoapparat.parameter.range.Ranges;
 
 /**
  * Capabilities of camera hardware.
@@ -25,6 +26,8 @@ public class Capabilities {
     private final Set<Flash> flashModes;
     @NonNull
     private final Set<Range<Integer>> previewFpsRanges;
+    @NonNull
+    private final Range<Integer> sensorSensitivityRange;
 
     private final boolean zoomSupported;
 
@@ -33,12 +36,14 @@ public class Capabilities {
                         @NonNull Set<FocusMode> focusModes,
                         @NonNull Set<Flash> flashModes,
                         @NonNull Set<Range<Integer>> previewFpsRanges,
+                        @NonNull Range<Integer> sensorSensitivityRange,
                         boolean zoomSupported) {
         this.photoSizes = photoSizes;
         this.previewSizes = previewSizes;
         this.focusModes = focusModes;
         this.flashModes = flashModes;
         this.previewFpsRanges = previewFpsRanges;
+        this.sensorSensitivityRange = sensorSensitivityRange;
         this.zoomSupported = zoomSupported;
     }
 
@@ -52,6 +57,7 @@ public class Capabilities {
                 Collections.<FocusMode>emptySet(),
                 Collections.<Flash>emptySet(),
                 Collections.<Range<Integer>>emptySet(),
+                Ranges.<Integer>emptyRange(),
                 false
         );
     }
@@ -92,6 +98,13 @@ public class Capabilities {
     }
 
     /**
+     * @return supported range of the sensor's sensitivity.
+     */
+    public Range<Integer> supportedSensorSensitivityRange() {
+        return sensorSensitivityRange;
+    }
+
+    /**
      * @return {@code true} if zoom feature is supported. {@code false} if it is not supported.
      */
     public boolean isZoomSupported() {
@@ -101,7 +114,7 @@ public class Capabilities {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Capabilities)) return false;
 
         Capabilities that = (Capabilities) o;
 
@@ -109,8 +122,9 @@ public class Capabilities {
                 && photoSizes.equals(that.photoSizes)
                 && previewSizes.equals(that.previewSizes)
                 && focusModes.equals(that.focusModes)
-                && flashModes.equals(that.flashModes);
-
+                && flashModes.equals(that.flashModes)
+                && previewFpsRanges.equals(that.previewFpsRanges)
+                && sensorSensitivityRange.equals(that.sensorSensitivityRange);
     }
 
     @Override
@@ -119,7 +133,9 @@ public class Capabilities {
         result = 31 * result + previewSizes.hashCode();
         result = 31 * result + focusModes.hashCode();
         result = 31 * result + flashModes.hashCode();
-        result = 31 * result + (zoomSupported ? 1 : 0);
+        result = 31 * result + previewFpsRanges.hashCode();
+        result = 31 * result + sensorSensitivityRange.hashCode();
+        result = 31 * result + (isZoomSupported() ? 1 : 0);
         return result;
     }
 
@@ -131,6 +147,7 @@ public class Capabilities {
                 ", focusModes=" + focusModes +
                 ", flashModes=" + flashModes +
                 ", previewFpsRanges=" + previewFpsRanges +
+                ", supportedSensorSensitivityRange=" + sensorSensitivityRange +
                 ", zoomSupported=" + zoomSupported +
                 '}';
     }

@@ -32,24 +32,26 @@ public class CapabilitiesFactoryTest {
     @Mock
     Camera camera;
     @Mock
-    Camera.Parameters parameters;
+    CameraParametersDecorator parametersProvider;
 
     CapabilitiesFactory testee;
 
     @Before
     public void setUp() throws Exception {
-        given(parameters.getSupportedFocusModes())
+        given(parametersProvider.getSupportedFocusModes())
                 .willReturn(Collections.<String>emptyList());
-        given(parameters.getSupportedFlashModes())
+        given(parametersProvider.getSupportedFlashModes())
                 .willReturn(Collections.<String>emptyList());
-        given(parameters.getSupportedPictureSizes())
+        given(parametersProvider.getSupportedPictureSizes())
                 .willReturn(Collections.<Camera.Size>emptyList());
-        given(parameters.getSupportedPreviewSizes())
+        given(parametersProvider.getSupportedPreviewSizes())
                 .willReturn(Collections.<Camera.Size>emptyList());
-        given(parameters.getSupportedPreviewFpsRange())
+        given(parametersProvider.getSupportedPreviewFpsRange())
                 .willReturn(Collections.<int[]>emptyList());
-        given(parameters.isZoomSupported())
+        given(parametersProvider.isZoomSupported())
                 .willReturn(false);
+        given(parametersProvider.getSensorSensitivityValues())
+            .willReturn(Collections.<Integer>emptySet());
 
         testee = new CapabilitiesFactory();
     }
@@ -57,7 +59,7 @@ public class CapabilitiesFactoryTest {
     @Test
     public void mapFocusModes() throws Exception {
         // Given
-        given(parameters.getSupportedFocusModes())
+        given(parametersProvider.getSupportedFocusModes())
                 .willReturn(asList(
                         Camera.Parameters.FOCUS_MODE_AUTO,
                         Camera.Parameters.FOCUS_MODE_FIXED,
@@ -68,7 +70,7 @@ public class CapabilitiesFactoryTest {
                 ));
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
@@ -86,11 +88,11 @@ public class CapabilitiesFactoryTest {
     @Test
     public void mapFocusModes_EmptyList_AlwaysIncludeFixed() throws Exception {
         // Given
-        given(parameters.getSupportedFocusModes())
+        given(parametersProvider.getSupportedFocusModes())
                 .willReturn(Collections.<String>emptyList());
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
@@ -102,7 +104,7 @@ public class CapabilitiesFactoryTest {
     @Test
     public void mapFlashModes() throws Exception {
         // Given
-        given(parameters.getSupportedFlashModes())
+        given(parametersProvider.getSupportedFlashModes())
                 .willReturn(asList(
                         Camera.Parameters.FLASH_MODE_AUTO,
                         Camera.Parameters.FLASH_MODE_ON,
@@ -112,7 +114,7 @@ public class CapabilitiesFactoryTest {
                 ));
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
@@ -130,11 +132,11 @@ public class CapabilitiesFactoryTest {
     @Test
     public void mapFlashModes_Null() throws Exception {
         // Given
-        given(parameters.getSupportedFlashModes())
+        given(parametersProvider.getSupportedFlashModes())
                 .willReturn(null);    // because why the fuck not, right Google?
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
@@ -146,14 +148,14 @@ public class CapabilitiesFactoryTest {
     @Test
     public void mapPictureSizes() throws Exception {
         // Given
-        given(parameters.getSupportedPictureSizes())
+        given(parametersProvider.getSupportedPictureSizes())
                 .willReturn(asList(
                         makeSize(10, 10),
                         makeSize(20, 20)
                 ));
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
@@ -168,14 +170,14 @@ public class CapabilitiesFactoryTest {
     @Test
     public void mapPreviewSizes() throws Exception {
         // Given
-        given(parameters.getSupportedPreviewSizes())
+        given(parametersProvider.getSupportedPreviewSizes())
                 .willReturn(asList(
                         makeSize(10, 10),
                         makeSize(20, 20)
                 ));
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
@@ -190,33 +192,49 @@ public class CapabilitiesFactoryTest {
     @Test
     public void mapPreviewFpsRanges() throws Exception {
         // Given
-        given(parameters.getSupportedPreviewFpsRange())
+        given(parametersProvider.getSupportedPreviewFpsRange())
                 .willReturn(asList(
                         new int[] {24000, 24000},
                         new int[] {30000, 30000}
                 ));
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         // Then
         assertEquals(
                 asSet(
-                        Ranges.range(24000, 24000),
-                        Ranges.range(30000, 30000)
+                        Ranges.continuousRange(24000, 24000),
+                        Ranges.continuousRange(30000, 30000)
                 ),
                 capabilities.supportedPreviewFpsRanges()
         );
     }
 
     @Test
+    public void mapSensorSensitivityRange() throws Exception {
+        // Given
+        given(parametersProvider.getSensorSensitivityValues())
+                .willReturn(asSet(200, 400));
+
+        // When
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
+
+        // Then
+        assertEquals(
+                Ranges.discreteRange(asList(200, 400)),
+                capabilities.supportedSensorSensitivityRange()
+        );
+    }
+
+    @Test
     public void zoomSupported() throws Exception {
         // Given
-        given(parameters.isZoomSupported())
+        given(parametersProvider.isZoomSupported())
                 .willReturn(true);
 
         // When
-        Capabilities capabilities = testee.fromParameters(parameters);
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
 
         assertTrue(capabilities.isZoomSupported());
     }

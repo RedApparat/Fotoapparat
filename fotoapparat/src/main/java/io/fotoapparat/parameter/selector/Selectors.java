@@ -16,20 +16,20 @@ public class Selectors {
      * If there are no non-null results, returns {@code null}.
      */
     @SafeVarargs
-    public static <T> SelectorFunction<T> firstAvailable(@NonNull final SelectorFunction<T> function,
-                                                         final SelectorFunction<T>... functions) {
-        return new SelectorFunction<T>() {
+    public static <Input, Output> SelectorFunction<Input, Output> firstAvailable(@NonNull final SelectorFunction<Input, Output> function,
+                                                         final SelectorFunction<Input, Output>... functions) {
+        return new SelectorFunction<Input, Output>() {
 
             @SuppressWarnings("unchecked")
             @Override
-            public T select(Collection<T> items) {
-                T result = function.select(items);
+            public Output select(Input input) {
+                Output result = function.select(input);
                 if (result != null) {
                     return result;
                 }
 
-                for (SelectorFunction selectorFunction : functions) {
-                    result = (T) selectorFunction.select(items);
+                for (SelectorFunction<Input, Output> selectorFunction : functions) {
+                    result = selectorFunction.select(input);
 
                     if (result != null) {
                         return result;
@@ -48,9 +48,9 @@ public class Selectors {
      * @return {@link SelectorFunction} which is called with values which are matching given
      * condition.
      */
-    public static <T> SelectorFunction<T> filtered(@NonNull final SelectorFunction<T> selector,
+    public static <T> SelectorFunction<Collection<T>, T> filtered(@NonNull final SelectorFunction<Collection<T>, T> selector,
                                                    @NonNull final Predicate<T> predicate) {
-        return new SelectorFunction<T>() {
+        return new SelectorFunction<Collection<T>, T>() {
             @Override
             public T select(Collection<T> items) {
                 return selector.select(
@@ -77,8 +77,8 @@ public class Selectors {
      * @return function which returns a result if available. If the result is not available returns
      * {@code null}.
      */
-    public static <T> SelectorFunction<T> single(final T preference) {
-        return new SelectorFunction<T>() {
+    public static <T> SelectorFunction<Collection<T>, T> single(final T preference) {
+        return new SelectorFunction<Collection<T>, T>() {
             @Override
             public T select(Collection<T> items) {
                 return items.contains(preference)
@@ -91,10 +91,10 @@ public class Selectors {
     /**
      * @return function which always returns {@code null}.
      */
-    public static <T> SelectorFunction<T> nothing() {
-        return new SelectorFunction<T>() {
+    public static <Input, Output> SelectorFunction<Input, Output> nothing() {
+        return new SelectorFunction<Input, Output>() {
             @Override
-            public T select(Collection<T> items) {
+            public Output select(Input input) {
                 return null;
             }
         };

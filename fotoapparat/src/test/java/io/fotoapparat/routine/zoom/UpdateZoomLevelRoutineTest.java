@@ -14,6 +14,7 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.range.Range;
+import io.fotoapparat.parameter.range.Ranges;
 import io.fotoapparat.routine.zoom.UpdateZoomLevelRoutine.LevelOutOfRangeException;
 
 import static org.mockito.ArgumentMatchers.anyFloat;
@@ -90,6 +91,7 @@ public class UpdateZoomLevelRoutineTest {
                         Collections.<FocusMode>emptySet(),
                         Collections.<Flash>emptySet(),
                         Collections.<Range<Integer>>emptySet(),
+                        Ranges.<Integer>emptyRange(),
                         supported
                 ));
     }

@@ -28,7 +28,7 @@ public class PreviewFpsRangeSelectors {
      * @param fps the specified FPS
      * @return {@link SelectorFunction} which selects FPS range that contains only the specified FPS.
      */
-    public static SelectorFunction<Range<Integer>> fromExactFps(int fps) {
+    public static SelectorFunction<Collection<Range<Integer>>, Range<Integer>> fromExactFps(int fps) {
         return filtered(rangeWithHighestFps(),
                 new ExactFpsRangePredicate(fps * FPS_RANGE_BOUNDS_SCALE));
     }
@@ -37,7 +37,7 @@ public class PreviewFpsRangeSelectors {
      * @param fps the specified FPS
      * @return {@link SelectorFunction} which selects FPS range that contains the specified FPS.
      */
-    public static SelectorFunction<Range<Integer>> nearestToExactFps(int fps) {
+    public static SelectorFunction<Collection<Range<Integer>>, Range<Integer>> nearestToExactFps(int fps) {
         return firstAvailable(fromExactFps(fps),
                 filtered(rangeWithHighestFps(), new InBoundsFpsRangePredicate(fps * FPS_RANGE_BOUNDS_SCALE)));
     }
@@ -45,8 +45,8 @@ public class PreviewFpsRangeSelectors {
     /**
      * @return {@link SelectorFunction} which selects FPS range with max FPS.
      */
-    public static SelectorFunction<Range<Integer>> rangeWithHighestFps() {
-        return new SelectorFunction<Range<Integer>>() {
+    public static SelectorFunction<Collection<Range<Integer>>, Range<Integer>> rangeWithHighestFps() {
+        return new SelectorFunction<Collection<Range<Integer>>, Range<Integer>>() {
             @Override
             public Range<Integer> select(Collection<Range<Integer>> items) {
                 if (items.isEmpty()) {
@@ -61,8 +61,8 @@ public class PreviewFpsRangeSelectors {
     /**
      * @return {@link SelectorFunction} which selects FPS range with min FPS.
      */
-    public static SelectorFunction<Range<Integer>> rangeWithLowestFps() {
-        return new SelectorFunction<Range<Integer>>() {
+    public static SelectorFunction<Collection<Range<Integer>>, Range<Integer>> rangeWithLowestFps() {
+        return new SelectorFunction<Collection<Range<Integer>>, Range<Integer>>() {
             @Override
             public Range<Integer> select(Collection<Range<Integer>> items) {
                 if (items.isEmpty()) {
