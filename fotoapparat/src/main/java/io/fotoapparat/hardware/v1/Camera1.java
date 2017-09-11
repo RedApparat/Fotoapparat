@@ -53,6 +53,7 @@ public class Camera1 implements CameraDevice {
 
     private Throwable lastStacktrace;
     private int imageRotation;
+    private int previewRotation;
 
     @Nullable
     private Capabilities cachedCapabilities = null;
@@ -176,7 +177,7 @@ public class Camera1 implements CameraDevice {
     }
 
     @Override
-    public void setDisplayOrientation(int degrees) {
+    public void setDisplayOrientation(int degrees, int orientation) {
         recordMethod();
 
         if (!isCameraOpened()) {
@@ -185,13 +186,16 @@ public class Camera1 implements CameraDevice {
 
         Camera.CameraInfo info = getCameraInfo(cameraId);
 
-        imageRotation = computeImageOrientation(degrees, info);
+        previewRotation = computePreviewOrientation(degrees, info);
+        imageRotation = computeImageOrientation(orientation, info);
 
         camera.setDisplayOrientation(
                 computeDisplayOrientation(degrees, info)
         );
-        previewStream.setFrameOrientation(imageRotation);
+        previewStream.setFrameOrientation(previewRotation);
     }
+
+
 
     private int computeDisplayOrientation(int screenRotationDegrees,
                                           Camera.CameraInfo info) {
@@ -202,9 +206,18 @@ public class Camera1 implements CameraDevice {
         );
     }
 
-    private int computeImageOrientation(int screenRotationDegrees,
-                                        Camera.CameraInfo info) {
+    private int computeImageOrientation(int screenOrientationDegrees,
+                                          Camera.CameraInfo info) {
         return OrientationUtils.computeImageOrientation(
+                screenOrientationDegrees,
+                info.orientation,
+                info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT
+        );
+    }
+
+    private int computePreviewOrientation(int screenRotationDegrees,
+                                        Camera.CameraInfo info) {
+        return OrientationUtils.computePreviewOrientation(
                 screenRotationDegrees,
                 info.orientation,
                 info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT
@@ -318,7 +331,7 @@ public class Camera1 implements CameraDevice {
 
         RendererParameters rendererParameters = new RendererParameters(
                 previewSize(),
-                imageRotation
+                previewRotation
         );
 
         logRendererParameters(rendererParameters);

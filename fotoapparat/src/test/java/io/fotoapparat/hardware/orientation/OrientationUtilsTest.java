@@ -121,7 +121,7 @@ public class OrientationUtilsTest {
         int cameraOrientation = 270;
 
         // When
-        int result = OrientationUtils.computeImageOrientation(
+        int result = OrientationUtils.computePreviewOrientation(
                 screenOrientation,
                 cameraOrientation,
                 true
@@ -138,7 +138,7 @@ public class OrientationUtilsTest {
         int cameraOrientation = 270;
 
         // When
-        int result = OrientationUtils.computeImageOrientation(
+        int result = OrientationUtils.computePreviewOrientation(
                 screenOrientation,
                 cameraOrientation,
                 true
@@ -155,7 +155,7 @@ public class OrientationUtilsTest {
         int cameraOrientation = 90;
 
         // When
-        int result = OrientationUtils.computeImageOrientation(
+        int result = OrientationUtils.computePreviewOrientation(
                 screenOrientation,
                 cameraOrientation,
                 false
@@ -172,7 +172,7 @@ public class OrientationUtilsTest {
         int cameraOrientation = 90;
 
         // When
-        int result = OrientationUtils.computeImageOrientation(
+        int result = OrientationUtils.computePreviewOrientation(
                 screenOrientation,
                 cameraOrientation,
                 false

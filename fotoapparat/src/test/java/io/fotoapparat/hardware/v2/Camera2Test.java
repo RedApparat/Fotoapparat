@@ -131,11 +131,11 @@ public class Camera2Test {
     @Test
     public void setDisplayOrientation() throws Exception {
         // When
-        testee.setDisplayOrientation(90);
+        testee.setDisplayOrientation(90, 90);
 
         // Then
         verify(logger).log(anyString());
-        verify(orientationOperator).setDisplayOrientation(90);
+        verify(orientationOperator).setDisplayOrientation(90, 90);
     }
 
     @Test

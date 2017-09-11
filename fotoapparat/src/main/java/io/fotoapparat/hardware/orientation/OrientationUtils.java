@@ -1,5 +1,7 @@
 package io.fotoapparat.hardware.orientation;
 
+import static android.view.OrientationEventListener.ORIENTATION_UNKNOWN;
+
 /**
  * Utilities for working with device orientation.
  */
@@ -47,7 +49,7 @@ public class OrientationUtils {
      *                              for front cameras). {@code false} if it is not mirrored.
      * @return clockwise rotation of the image relatively to current device orientation.
      */
-    public static int computeImageOrientation(int screenRotationDegrees,
+    public static int computePreviewOrientation(int screenRotationDegrees,
                                               int cameraRotationDegrees,
                                               boolean cameraIsMirrored) {
         int rotation;
@@ -61,4 +63,25 @@ public class OrientationUtils {
         return (rotation + 360 + 360) % 360;
     }
 
+    /**
+     * Copied from {@link android.hardware.Camera.Parameters#setRotation(int)}
+     * @param screenOrientationDegrees rotation of the display (as provided by an {@link android.view.OrientationEventListener}) in degrees.
+     * @param cameraRotationDegrees rotation of the camera sensor relatively to device natural
+     *                              orientation.
+     * @param cameraIsMirrored      {@code true} if camera is mirrored (typically that is the case
+     *                              for front cameras). {@code false} if it is not mirrored.
+     * @return clockwise rotation of the image relatively to current device orientation.
+     */
+    public static int computeImageOrientation(int screenOrientationDegrees,
+                                                int cameraRotationDegrees,
+                                                boolean cameraIsMirrored) {
+        if (screenOrientationDegrees == ORIENTATION_UNKNOWN) return screenOrientationDegrees;
+        int rotation = 0;
+        if (cameraIsMirrored) {
+            rotation = (cameraRotationDegrees - screenOrientationDegrees + 360) % 360;
+        } else {  // back-facing camera
+            rotation = (cameraRotationDegrees + screenOrientationDegrees) % 360;
+        }
+        return rotation;
+    }
 }

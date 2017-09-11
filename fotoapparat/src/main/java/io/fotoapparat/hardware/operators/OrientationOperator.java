@@ -9,5 +9,5 @@ public interface OrientationOperator {
     /**
      * Sets the current orientation of the display.
      */
-    void setDisplayOrientation(int degrees);
+    void setDisplayOrientation(int degrees, int orientation);
 }

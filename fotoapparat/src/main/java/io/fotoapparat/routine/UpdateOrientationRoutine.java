@@ -37,11 +37,11 @@ public class UpdateOrientationRoutine implements OrientationSensor.Listener {
     }
 
     @Override
-    public void onOrientationChanged(final int degrees) {
+    public void onOrientationChanged(final int degrees, final int orientation) {
         cameraExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                cameraDevice.setDisplayOrientation(degrees);
+                cameraDevice.setDisplayOrientation(degrees, orientation);
             }
         });
     }

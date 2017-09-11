@@ -1,5 +1,7 @@
 package io.fotoapparat.routine;
 
+import android.view.OrientationEventListener;
+
 import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
@@ -9,6 +11,8 @@ import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.view.CameraRenderer;
+
+import static android.view.OrientationEventListener.ORIENTATION_UNKNOWN;
 
 /**
  * Opens camera and starts preview.
@@ -58,7 +62,7 @@ public class StartCameraRoutine implements Runnable {
                 initialParametersProvider.initialParameters()
         );
         cameraDevice.setDisplayOrientation(
-                screenOrientationProvider.getScreenRotation()
+                screenOrientationProvider.getScreenRotation(), ORIENTATION_UNKNOWN
         );
         cameraRenderer.setScaleType(scaleType);
         cameraRenderer.attachCamera(cameraDevice);

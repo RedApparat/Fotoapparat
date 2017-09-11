@@ -19,7 +19,7 @@ public class OrientationManager implements OrientationOperator {
 
     private final List<Listener> listeners = new ArrayList<>();
     private final CameraConnection cameraConnection;
-    private int orientation;
+    private int rotation;
 
     public OrientationManager(CameraConnection cameraConnection) {
         this.cameraConnection = cameraConnection;
@@ -28,13 +28,13 @@ public class OrientationManager implements OrientationOperator {
     /**
      * Notifies that the display orientation has changed.
      *
-     * @param orientation the display orientation in degrees. One of: 0, 90, 180 and 270
+     * @param rotation the display rotation in degrees. One of: 0, 90, 180 and 270
      */
     @Override
-    public void setDisplayOrientation(int orientation) {
-        this.orientation = orientation;
+    public void setDisplayOrientation(int rotation, int orientation) {
+        this.rotation = rotation;
         for (Listener listener : listeners) {
-            listener.onDisplayOrientationChanged(orientation);
+            listener.onDisplayOrientationChanged(rotation, orientation);
         }
     }
 
@@ -45,8 +45,8 @@ public class OrientationManager implements OrientationOperator {
     public int getPhotoOrientation() {
         Characteristics characteristics = cameraConnection.getCharacteristics();
 
-        return OrientationUtils.computeImageOrientation(
-                orientation,
+        return OrientationUtils.computePreviewOrientation(
+                rotation,
                 characteristics.getSensorOrientation(),
                 characteristics.isFrontFacingLens()
         );
@@ -72,8 +72,8 @@ public class OrientationManager implements OrientationOperator {
         /**
          * Called when the display orientation has changed.
          *
-         * @param orientation the display orientation in degrees. One of: 0, 90, 180 and 270
+         * @param rotation the display orientation in degrees. One of: 0, 90, 180 and 270
          */
-        void onDisplayOrientationChanged(int orientation);
+        void onDisplayOrientationChanged(int rotation, int orientation);
     }
 }

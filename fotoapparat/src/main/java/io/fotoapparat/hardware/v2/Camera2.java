@@ -111,10 +111,10 @@ public class Camera2 implements CameraDevice {
     }
 
     @Override
-    public void setDisplayOrientation(int degrees) {
+    public void setDisplayOrientation(int degrees, int orientation) {
         recordMethod();
 
-        orientationOperator.setDisplayOrientation(degrees);
+        orientationOperator.setDisplayOrientation(degrees, orientation);
     }
 
     @Override

@@ -48,18 +48,21 @@ public class OrientationSensorTest {
         // Given
         given(screenOrientationProvider.getScreenRotation())
                 .willReturn(90);
-        final AtomicInteger atomicInteger = new AtomicInteger();
+        final AtomicInteger atomicDegrees = new AtomicInteger();
+        final AtomicInteger atomicOrientation = new AtomicInteger();
         testee.start(new OrientationSensor.Listener() {
             @Override
-            public void onOrientationChanged(int degrees) {
-                atomicInteger.set(degrees);
+            public void onOrientationChanged(int degrees, int orientation) {
+                atomicDegrees.set(degrees);
+                atomicOrientation.set(orientation);
             }
         });
 
         // When
-        testee.onRotationChanged();
+        testee.onRotationChanged(180);
 
         // Then
-        assertEquals(90, atomicInteger.get());
+        assertEquals(90, atomicDegrees.get());
+        assertEquals(180, atomicOrientation.get());
     }
 }

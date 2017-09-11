@@ -11,6 +11,7 @@ public class OrientationSensor implements RotationListener.Listener {
     private final ScreenOrientationProvider screenOrientationProvider;
 
     private int lastKnownRotation;
+    private int lastKnownOrientation;
     private Listener listener;
 
     public OrientationSensor(@NonNull final RotationListener rotationListener,
@@ -38,12 +39,15 @@ public class OrientationSensor implements RotationListener.Listener {
     }
 
     @Override
-    public void onRotationChanged() {
+    public void onRotationChanged(int newOrientation) {
         if (listener != null) {
-            int rotation = screenOrientationProvider.getScreenRotation();
-            if (rotation != lastKnownRotation) {
-                listener.onOrientationChanged(rotation);
+            // reduce orientation to multiple of 90
+            int orientation = ((newOrientation + 45) / 90 * 90) % 360;
+            int rotation = this.screenOrientationProvider.getScreenRotation();
+            if (rotation != lastKnownRotation || orientation != lastKnownOrientation) {
+                listener.onOrientationChanged(rotation, orientation);
                 lastKnownRotation = rotation;
+                lastKnownOrientation = orientation;
             }
         }
     }
@@ -56,6 +60,6 @@ public class OrientationSensor implements RotationListener.Listener {
         /**
          * Called when orientation of the device is updated.
          */
-        void onOrientationChanged(int degrees);
+        void onOrientationChanged(int degrees, int orientation);
     }
 }
