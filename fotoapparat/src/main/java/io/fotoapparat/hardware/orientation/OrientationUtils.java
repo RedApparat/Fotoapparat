@@ -75,13 +75,13 @@ public class OrientationUtils {
     public static int computeImageOrientation(int screenOrientationDegrees,
                                                 int cameraRotationDegrees,
                                                 boolean cameraIsMirrored) {
-        if (screenOrientationDegrees == ORIENTATION_UNKNOWN) return screenOrientationDegrees;
-        int rotation = 0;
+        if (screenOrientationDegrees == ORIENTATION_UNKNOWN) return 360 - screenOrientationDegrees;
+        int rotation;
         if (cameraIsMirrored) {
             rotation = (cameraRotationDegrees - screenOrientationDegrees + 360) % 360;
         } else {  // back-facing camera
             rotation = (cameraRotationDegrees + screenOrientationDegrees) % 360;
         }
-        return rotation;
+        return 360 - rotation;
     }
 }
