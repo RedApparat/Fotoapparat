@@ -1,6 +1,7 @@
 package io.fotoapparat.hardware.orientation;
 
 import android.support.annotation.NonNull;
+import android.view.OrientationEventListener;
 
 /**
  * Monitors orientation of the device.
@@ -11,14 +12,14 @@ public class OrientationSensor implements RotationListener.Listener {
     private final ScreenOrientationProvider screenOrientationProvider;
 
     private int lastKnownRotation;
-    private int lastKnownOrientation;
+    private int lastKnownOrientation = OrientationEventListener.ORIENTATION_UNKNOWN;
     private Listener listener;
 
     public OrientationSensor(@NonNull final RotationListener rotationListener,
                              @NonNull final ScreenOrientationProvider screenOrientationProvider) {
         this.rotationListener = rotationListener;
         this.screenOrientationProvider = screenOrientationProvider;
-
+        this.lastKnownRotation = screenOrientationProvider.getScreenRotation();
         rotationListener.setRotationListener(this);
     }
 
