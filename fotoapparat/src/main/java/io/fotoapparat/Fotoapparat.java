@@ -284,6 +284,15 @@ public class Fotoapparat {
         stopCamera();
     }
 
+    /**
+     * Gets the status of the camera, if it is started or not.
+     *
+     * @return the status of the camera.
+     */
+    public boolean isStarted() {
+        return this.started;
+    }
+
     private void startCamera() {
         executor.execute(
                 startCameraRoutine
