@@ -54,7 +54,7 @@ public class Frame {
     public String toString() {
         return "Frame{" +
                 "size=" + size +
-                ", image=" + Arrays.toString(image) +
+                ", image= array(" + image.length + ")" +
                 ", rotation=" + rotation +
                 '}';
     }
