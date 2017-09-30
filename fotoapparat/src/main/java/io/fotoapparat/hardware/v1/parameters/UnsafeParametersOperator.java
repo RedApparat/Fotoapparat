@@ -28,8 +28,6 @@ public class UnsafeParametersOperator implements ParametersOperator {
                 parameters,
                 camera.getParameters()
         );
-
         camera.setParameters(cameraParameters);
     }
-
 }

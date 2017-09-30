@@ -19,6 +19,7 @@ import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.operators.RendererParametersOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
+import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
@@ -46,6 +47,7 @@ public class Camera2 implements CameraDevice {
     private final RendererParametersOperator rendererParametersOperator;
     private final AutoFocusOperator autoFocusOperator;
     private final AvailableLensPositionsProvider availableLensPositionsProvider;
+    private Parameters currentParameters;
 
     public Camera2(Logger logger,
                    ConnectionOperator connectionOperator,
@@ -73,6 +75,7 @@ public class Camera2 implements CameraDevice {
         this.rendererParametersOperator = rendererParametersOperator;
         this.autoFocusOperator = autoFocusOperator;
         this.availableLensPositionsProvider = availableLensPositionsProvider;
+        this.currentParameters = null;
     }
 
     @Override
@@ -118,10 +121,11 @@ public class Camera2 implements CameraDevice {
     }
 
     @Override
-    public void updateParameters(Parameters parameters) {
+    public synchronized void updateParameters(Parameters parameters) {
         recordMethod();
 
         parametersOperator.updateParameters(parameters);
+        currentParameters = parameters;
     }
 
     @Override
@@ -176,6 +180,11 @@ public class Camera2 implements CameraDevice {
     @Override
     public void setZoom(@FloatRange(from = 0f, to = 1f) float level) {
         throw new UnsupportedOperationException("Not implemented. We do not actively support Camera2 at the moment.");
+    }
+
+    @Override
+    public synchronized Parameters getCurrentParameters() {
+        return currentParameters;
     }
 
     private void recordMethod() {

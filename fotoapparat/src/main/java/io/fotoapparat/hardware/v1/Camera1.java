@@ -53,6 +53,7 @@ public class Camera1 implements CameraDevice {
 
     private Throwable lastStacktrace;
     private int imageRotation;
+    private Parameters currentParameters;
 
     @Nullable
     private Capabilities cachedCapabilities = null;
@@ -212,12 +213,18 @@ public class Camera1 implements CameraDevice {
     }
 
     @Override
-    public void updateParameters(Parameters parameters) {
+    public synchronized void updateParameters(Parameters parameters) {
         recordMethod();
 
         parametersOperator().updateParameters(parameters);
 
         cachedZoomParameters = null;
+        currentParameters = parameters;
+    }
+
+    @Override
+    public synchronized Parameters getCurrentParameters() {
+        return currentParameters;
     }
 
     @NonNull

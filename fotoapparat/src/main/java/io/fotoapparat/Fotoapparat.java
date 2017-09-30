@@ -13,6 +13,7 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.orientation.OrientationSensor;
 import io.fotoapparat.hardware.orientation.RotationListener;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.provider.CapabilitiesProvider;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.parameter.provider.InitialParametersValidator;
@@ -38,6 +39,7 @@ public class Fotoapparat {
 
     private static final Executor SERIAL_EXECUTOR = Executors.newSingleThreadExecutor();
 
+    private final CameraDevice cameraDevice;
     private final StartCameraRoutine startCameraRoutine;
     private final StopCameraRoutine stopCameraRoutine;
     private final UpdateOrientationRoutine updateOrientationRoutine;
@@ -52,7 +54,8 @@ public class Fotoapparat {
 
     private boolean started = false;
 
-    Fotoapparat(StartCameraRoutine startCameraRoutine,
+    Fotoapparat(CameraDevice cameraDevice,
+                StartCameraRoutine startCameraRoutine,
                 StopCameraRoutine stopCameraRoutine,
                 UpdateOrientationRoutine updateOrientationRoutine,
                 ConfigurePreviewStreamRoutine configurePreviewStreamRoutine,
@@ -63,6 +66,7 @@ public class Fotoapparat {
                 UpdateParametersRoutine updateParametersRoutine,
                 UpdateZoomLevelRoutine updateZoomLevelRoutine,
                 Executor executor) {
+        this.cameraDevice = cameraDevice;
         this.startCameraRoutine = startCameraRoutine;
         this.stopCameraRoutine = stopCameraRoutine;
         this.updateOrientationRoutine = updateOrientationRoutine;
@@ -161,6 +165,7 @@ public class Fotoapparat {
         );
 
         return new Fotoapparat(
+                cameraDevice,
                 startCameraRoutine,
                 stopCameraRoutine,
                 updateOrientationRoutine,
@@ -192,6 +197,18 @@ public class Fotoapparat {
         ensureStarted();
 
         return capabilitiesProvider.getCapabilities();
+    }
+
+    /**
+     * Returns current camera parameters. This method is safe to be called
+     * on main thread.
+     *
+     * @return Current camera parameters or null, if not available
+     */
+    public Parameters getCurrentParameters() {
+        ensureStarted();
+
+        return cameraDevice.getCurrentParameters();
     }
 
     /**

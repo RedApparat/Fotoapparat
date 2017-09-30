@@ -78,4 +78,6 @@ public interface CameraDevice extends CaptureOperator,
     @Override
     void setZoom(@FloatRange(from = 0f, to = 1f) float level);
 
+    Parameters getCurrentParameters();
+
 }
