@@ -7,7 +7,9 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.provider.CapabilitiesProvider;
 import io.fotoapparat.parameter.update.UpdateRequest;
 import io.fotoapparat.photo.Photo;
@@ -29,7 +31,9 @@ import io.fotoapparat.test.ImmediateExecutor;
 import static io.fotoapparat.test.TestUtils.immediateFuture;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -56,6 +60,8 @@ public class FotoapparatTest {
     );
 
     @Mock
+    CameraDevice cameraDevice;
+    @Mock
     StartCameraRoutine startCameraRoutine;
     @Mock
     StopCameraRoutine stopCameraRoutine;
@@ -81,6 +87,7 @@ public class FotoapparatTest {
     @Before
     public void setUp() throws Exception {
         testee = new Fotoapparat(
+                cameraDevice,
                 startCameraRoutine,
                 stopCameraRoutine,
                 updateOrientationRoutine,
@@ -314,6 +321,34 @@ public class FotoapparatTest {
 
         // When
         testee.updateParameters(updateRequest);
+
+        // Then
+        // Expect exception
+    }
+
+    @Test
+    public void getCurrentParameters() throws Exception {
+        // Given
+        Parameters params = new Parameters();
+        given(cameraDevice.getCurrentParameters())
+                .willReturn(params);
+
+        testee.start();
+
+        // When
+        Parameters retrievedParams = testee.getCurrentParameters();
+
+        // Then
+        assertSame(params, retrievedParams);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getCurrentParameters_NotStartedYet() throws Exception {
+        // Given
+        // testee not started
+
+        // When
+        testee.getCurrentParameters();
 
         // Then
         // Expect exception
