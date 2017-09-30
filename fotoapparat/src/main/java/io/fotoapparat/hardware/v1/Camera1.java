@@ -53,7 +53,8 @@ public class Camera1 implements CameraDevice {
 
     private Throwable lastStacktrace;
     private int imageRotation;
-    private Parameters currentParameters;
+    private CountDownLatch currentParametersLatch = new CountDownLatch(1);
+    private Parameters currentParameters = null;
 
     @Nullable
     private Capabilities cachedCapabilities = null;
@@ -213,17 +214,23 @@ public class Camera1 implements CameraDevice {
     }
 
     @Override
-    public synchronized void updateParameters(Parameters parameters) {
+    public void updateParameters(Parameters parameters) {
         recordMethod();
 
         parametersOperator().updateParameters(parameters);
 
         cachedZoomParameters = null;
         currentParameters = parameters;
+        currentParametersLatch.countDown();
     }
 
     @Override
-    public synchronized Parameters getCurrentParameters() {
+    public Parameters getCurrentParameters() {
+        try {
+            currentParametersLatch.await();
+        } catch (InterruptedException ex) {
+            // ignore
+        }
         return currentParameters;
     }
 

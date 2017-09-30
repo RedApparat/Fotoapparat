@@ -11,10 +11,12 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.provider.CapabilitiesProvider;
+import io.fotoapparat.parameter.provider.CurrentParametersProvider;
 import io.fotoapparat.parameter.update.UpdateRequest;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.result.CapabilitiesResult;
 import io.fotoapparat.result.FocusResult;
+import io.fotoapparat.result.ParametersResult;
 import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.routine.CheckAvailabilityRoutine;
@@ -59,8 +61,14 @@ public class FotoapparatTest {
             )
     );
 
-    @Mock
-    CameraDevice cameraDevice;
+
+    static final Parameters EMPTY_PARAMETERS = new Parameters();
+    static final ParametersResult PARAMETERS_RESULT = ParametersResult.fromFuture(
+            immediateFuture(
+                    EMPTY_PARAMETERS
+            )
+    );
+
     @Mock
     StartCameraRoutine startCameraRoutine;
     @Mock
@@ -71,6 +79,8 @@ public class FotoapparatTest {
     ConfigurePreviewStreamRoutine configurePreviewStreamRoutine;
     @Mock
     CapabilitiesProvider capabilitiesProvider;
+    @Mock
+    CurrentParametersProvider currentParametersProvider;
     @Mock
     TakePictureRoutine takePictureRoutine;
     @Mock
@@ -87,12 +97,12 @@ public class FotoapparatTest {
     @Before
     public void setUp() throws Exception {
         testee = new Fotoapparat(
-                cameraDevice,
                 startCameraRoutine,
                 stopCameraRoutine,
                 updateOrientationRoutine,
                 configurePreviewStreamRoutine,
                 capabilitiesProvider,
+                currentParametersProvider,
                 takePictureRoutine,
                 autoFocusRoutine,
                 checkAvailabilityRoutine,
@@ -329,17 +339,16 @@ public class FotoapparatTest {
     @Test
     public void getCurrentParameters() throws Exception {
         // Given
-        Parameters params = new Parameters();
-        given(cameraDevice.getCurrentParameters())
-                .willReturn(params);
+        given(currentParametersProvider.getParameters())
+                .willReturn(PARAMETERS_RESULT);
 
         testee.start();
 
         // When
-        Parameters retrievedParams = testee.getCurrentParameters();
+        ParametersResult retrievedParams = testee.getCurrentParameters();
 
         // Then
-        assertSame(params, retrievedParams);
+        assertEquals(PARAMETERS_RESULT, retrievedParams);
     }
 
     @Test(expected = IllegalStateException.class)

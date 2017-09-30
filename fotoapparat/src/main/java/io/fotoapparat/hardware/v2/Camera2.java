@@ -5,6 +5,7 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.RequiresApi;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
@@ -47,6 +48,8 @@ public class Camera2 implements CameraDevice {
     private final RendererParametersOperator rendererParametersOperator;
     private final AutoFocusOperator autoFocusOperator;
     private final AvailableLensPositionsProvider availableLensPositionsProvider;
+
+    private CountDownLatch currentParametersLatch;
     private Parameters currentParameters;
 
     public Camera2(Logger logger,
@@ -75,6 +78,7 @@ public class Camera2 implements CameraDevice {
         this.rendererParametersOperator = rendererParametersOperator;
         this.autoFocusOperator = autoFocusOperator;
         this.availableLensPositionsProvider = availableLensPositionsProvider;
+        this.currentParametersLatch = new CountDownLatch(1);
         this.currentParameters = null;
     }
 
@@ -121,11 +125,12 @@ public class Camera2 implements CameraDevice {
     }
 
     @Override
-    public synchronized void updateParameters(Parameters parameters) {
+    public void updateParameters(Parameters parameters) {
         recordMethod();
 
         parametersOperator.updateParameters(parameters);
         currentParameters = parameters;
+        currentParametersLatch.countDown();
     }
 
     @Override
@@ -133,6 +138,16 @@ public class Camera2 implements CameraDevice {
         recordMethod();
 
         return capabilitiesOperator.getCapabilities();
+    }
+
+    @Override
+    public Parameters getCurrentParameters() {
+        try {
+            currentParametersLatch.await();
+        } catch (InterruptedException ex) {
+            // ignore
+        }
+        return currentParameters;
     }
 
     @Override
@@ -180,11 +195,6 @@ public class Camera2 implements CameraDevice {
     @Override
     public void setZoom(@FloatRange(from = 0f, to = 1f) float level) {
         throw new UnsupportedOperationException("Not implemented. We do not actively support Camera2 at the moment.");
-    }
-
-    @Override
-    public synchronized Parameters getCurrentParameters() {
-        return currentParameters;
     }
 
     private void recordMethod() {
