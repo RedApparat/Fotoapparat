@@ -22,7 +22,7 @@ public class ParametersConverter {
      * @param output     output value. It is required because of C-style API in Camera v1.
      * @return same object which was passed as {@code output}, but filled with new parameters.
      */
-    public Camera.Parameters convert(Parameters parameters, Camera.Parameters output) {
+    public Camera.Parameters toPlatformParameters(Parameters parameters, Camera.Parameters output) {
         for (Parameters.Type storedType : parameters.storedTypes()) {
             applyParameter(
                     storedType,
@@ -32,6 +32,32 @@ public class ParametersConverter {
         }
 
         return output;
+    }
+
+    /**
+     * Converts {@link Camera.Parameters} to {@link Parameters}.
+     *
+     * @param platformParameters parameters which should be converted.
+     * @return Converted parameters object
+     */
+    public Parameters fromPlatformParameters(Camera.Parameters platformParameters) {
+        Parameters parameters = new Parameters();
+
+        FocusMode focusMode = FocusCapability.toFocusMode(platformParameters.getFocusMode());
+        parameters.putValue(Parameters.Type.FOCUS_MODE, focusMode);
+
+        Flash flash = FlashCapability.toFlash(platformParameters.getFlashMode());
+        parameters.putValue(Parameters.Type.FLASH, flash);
+
+        Camera.Size platformSize = platformParameters.getPictureSize();
+        Size pictureSize = new Size(platformSize.width, platformSize.height);
+        parameters.putValue(Parameters.Type.PICTURE_SIZE, pictureSize);
+
+        Camera.Size platformPreviewSize = platformParameters.getPreviewSize();
+        Size previewSize = new Size(platformPreviewSize.width, platformPreviewSize.height);
+        parameters.putValue(Parameters.Type.PREVIEW_SIZE, previewSize);
+
+        return parameters;
     }
 
     private void applyParameter(Parameters.Type type,

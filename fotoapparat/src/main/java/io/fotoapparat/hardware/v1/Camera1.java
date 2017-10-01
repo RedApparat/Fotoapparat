@@ -53,8 +53,6 @@ public class Camera1 implements CameraDevice {
 
     private Throwable lastStacktrace;
     private int imageRotation;
-    private CountDownLatch currentParametersLatch = new CountDownLatch(1);
-    private Parameters currentParameters = null;
 
     @Nullable
     private Capabilities cachedCapabilities = null;
@@ -220,18 +218,13 @@ public class Camera1 implements CameraDevice {
         parametersOperator().updateParameters(parameters);
 
         cachedZoomParameters = null;
-        currentParameters = parameters;
-        currentParametersLatch.countDown();
     }
 
     @Override
     public Parameters getCurrentParameters() {
-        try {
-            currentParametersLatch.await();
-        } catch (InterruptedException ex) {
-            // ignore
-        }
-        return currentParameters;
+        Camera.Parameters platformParameters = camera.getParameters();
+        Parameters parameters = parametersConverter.fromPlatformParameters(platformParameters);
+        return parameters;
     }
 
     @NonNull
