@@ -7,12 +7,16 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.provider.CapabilitiesProvider;
+import io.fotoapparat.parameter.provider.CurrentParametersProvider;
 import io.fotoapparat.parameter.update.UpdateRequest;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.result.CapabilitiesResult;
 import io.fotoapparat.result.FocusResult;
+import io.fotoapparat.result.ParametersResult;
 import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.routine.CheckAvailabilityRoutine;
@@ -29,7 +33,9 @@ import io.fotoapparat.test.ImmediateExecutor;
 import static io.fotoapparat.test.TestUtils.immediateFuture;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -55,6 +61,14 @@ public class FotoapparatTest {
             )
     );
 
+
+    static final Parameters EMPTY_PARAMETERS = new Parameters();
+    static final ParametersResult PARAMETERS_RESULT = ParametersResult.fromFuture(
+            immediateFuture(
+                    EMPTY_PARAMETERS
+            )
+    );
+
     @Mock
     StartCameraRoutine startCameraRoutine;
     @Mock
@@ -65,6 +79,8 @@ public class FotoapparatTest {
     ConfigurePreviewStreamRoutine configurePreviewStreamRoutine;
     @Mock
     CapabilitiesProvider capabilitiesProvider;
+    @Mock
+    CurrentParametersProvider currentParametersProvider;
     @Mock
     TakePictureRoutine takePictureRoutine;
     @Mock
@@ -86,6 +102,7 @@ public class FotoapparatTest {
                 updateOrientationRoutine,
                 configurePreviewStreamRoutine,
                 capabilitiesProvider,
+                currentParametersProvider,
                 takePictureRoutine,
                 autoFocusRoutine,
                 checkAvailabilityRoutine,
@@ -314,6 +331,33 @@ public class FotoapparatTest {
 
         // When
         testee.updateParameters(updateRequest);
+
+        // Then
+        // Expect exception
+    }
+
+    @Test
+    public void getCurrentParameters() throws Exception {
+        // Given
+        given(currentParametersProvider.getParameters())
+                .willReturn(PARAMETERS_RESULT);
+
+        testee.start();
+
+        // When
+        ParametersResult retrievedParams = testee.getCurrentParameters();
+
+        // Then
+        assertEquals(PARAMETERS_RESULT, retrievedParams);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getCurrentParameters_NotStartedYet() throws Exception {
+        // Given
+        // testee not started
+
+        // When
+        testee.getCurrentParameters();
 
         // Then
         // Expect exception

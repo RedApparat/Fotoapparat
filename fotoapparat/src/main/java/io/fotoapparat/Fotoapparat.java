@@ -13,12 +13,15 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.orientation.OrientationSensor;
 import io.fotoapparat.hardware.orientation.RotationListener;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.provider.CapabilitiesProvider;
+import io.fotoapparat.parameter.provider.CurrentParametersProvider;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.parameter.provider.InitialParametersValidator;
 import io.fotoapparat.parameter.update.UpdateRequest;
 import io.fotoapparat.result.CapabilitiesResult;
 import io.fotoapparat.result.FocusResult;
+import io.fotoapparat.result.ParametersResult;
 import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.routine.CheckAvailabilityRoutine;
@@ -43,6 +46,7 @@ public class Fotoapparat {
     private final UpdateOrientationRoutine updateOrientationRoutine;
     private final ConfigurePreviewStreamRoutine configurePreviewStreamRoutine;
     private final CapabilitiesProvider capabilitiesProvider;
+    private final CurrentParametersProvider currentParametersProvider;
     private final TakePictureRoutine takePictureRoutine;
     private final AutoFocusRoutine autoFocusRoutine;
     private final CheckAvailabilityRoutine checkAvailabilityRoutine;
@@ -57,6 +61,7 @@ public class Fotoapparat {
                 UpdateOrientationRoutine updateOrientationRoutine,
                 ConfigurePreviewStreamRoutine configurePreviewStreamRoutine,
                 CapabilitiesProvider capabilitiesProvider,
+                CurrentParametersProvider parametersProvider,
                 TakePictureRoutine takePictureRoutine,
                 AutoFocusRoutine autoFocusRoutine,
                 CheckAvailabilityRoutine checkAvailabilityRoutine,
@@ -68,6 +73,7 @@ public class Fotoapparat {
         this.updateOrientationRoutine = updateOrientationRoutine;
         this.configurePreviewStreamRoutine = configurePreviewStreamRoutine;
         this.capabilitiesProvider = capabilitiesProvider;
+        this.currentParametersProvider = parametersProvider;
         this.takePictureRoutine = takePictureRoutine;
         this.autoFocusRoutine = autoFocusRoutine;
         this.checkAvailabilityRoutine = checkAvailabilityRoutine;
@@ -137,6 +143,11 @@ public class Fotoapparat {
                 SERIAL_EXECUTOR
         );
 
+        CurrentParametersProvider currentParametersProvider = new CurrentParametersProvider(
+                cameraDevice,
+                SERIAL_EXECUTOR
+        );
+
         TakePictureRoutine takePictureRoutine = new TakePictureRoutine(
                 cameraDevice,
                 SERIAL_EXECUTOR
@@ -166,6 +177,7 @@ public class Fotoapparat {
                 updateOrientationRoutine,
                 configurePreviewStreamRoutine,
                 capabilitiesProvider,
+                currentParametersProvider,
                 takePictureRoutine,
                 autoFocusRoutine,
                 checkAvailabilityRoutine,
@@ -192,6 +204,17 @@ public class Fotoapparat {
         ensureStarted();
 
         return capabilitiesProvider.getCapabilities();
+    }
+
+    /**
+     * Provides current camera parameters asynchronously, returns immediately.
+     *
+     * @return {@link ParametersResult} which will deliver result asynchronously.
+     */
+    public ParametersResult getCurrentParameters() {
+        ensureStarted();
+
+        return currentParametersProvider.getParameters();
     }
 
     /**

@@ -25,5 +25,4 @@ public class SwitchOnFailureParametersOperator implements ParametersOperator {
             second.updateParameters(parameters);
         }
     }
-
 }

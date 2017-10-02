@@ -5,6 +5,7 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.RequiresApi;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
@@ -19,6 +20,7 @@ import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.operators.RendererParametersOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
+import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
@@ -47,6 +49,9 @@ public class Camera2 implements CameraDevice {
     private final AutoFocusOperator autoFocusOperator;
     private final AvailableLensPositionsProvider availableLensPositionsProvider;
 
+    private CountDownLatch currentParametersLatch;
+    private Parameters currentParameters;
+
     public Camera2(Logger logger,
                    ConnectionOperator connectionOperator,
                    PreviewOperator previewOperator,
@@ -73,6 +78,8 @@ public class Camera2 implements CameraDevice {
         this.rendererParametersOperator = rendererParametersOperator;
         this.autoFocusOperator = autoFocusOperator;
         this.availableLensPositionsProvider = availableLensPositionsProvider;
+        this.currentParametersLatch = new CountDownLatch(1);
+        this.currentParameters = null;
     }
 
     @Override
@@ -122,6 +129,8 @@ public class Camera2 implements CameraDevice {
         recordMethod();
 
         parametersOperator.updateParameters(parameters);
+        currentParameters = parameters;
+        currentParametersLatch.countDown();
     }
 
     @Override
@@ -129,6 +138,16 @@ public class Camera2 implements CameraDevice {
         recordMethod();
 
         return capabilitiesOperator.getCapabilities();
+    }
+
+    @Override
+    public Parameters getCurrentParameters() {
+        try {
+            currentParametersLatch.await();
+        } catch (InterruptedException ex) {
+            // ignore
+        }
+        return currentParameters;
     }
 
     @Override

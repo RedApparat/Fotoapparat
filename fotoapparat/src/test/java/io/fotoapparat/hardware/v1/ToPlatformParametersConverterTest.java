@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("deprecation")
-public class ParametersConverterTest {
+public class ToPlatformParametersConverterTest {
 
     @Mock
     Camera.Parameters outputParameters;
@@ -36,7 +36,7 @@ public class ParametersConverterTest {
         Parameters input = new Parameters();
 
         // When
-        Camera.Parameters result = testee.convert(
+        Camera.Parameters result = testee.toPlatformParameters(
                 input,
                 outputParameters
         );
@@ -58,7 +58,7 @@ public class ParametersConverterTest {
         );
 
         // When
-        testee.convert(
+        testee.toPlatformParameters(
                 input,
                 outputParameters
         );
@@ -77,7 +77,7 @@ public class ParametersConverterTest {
         );
 
         // When
-        testee.convert(
+        testee.toPlatformParameters(
                 input,
                 outputParameters
         );
@@ -96,7 +96,7 @@ public class ParametersConverterTest {
         );
 
         // When
-        testee.convert(
+        testee.toPlatformParameters(
                 input,
                 outputParameters
         );
@@ -115,7 +115,7 @@ public class ParametersConverterTest {
         );
 
         // When
-        testee.convert(
+        testee.toPlatformParameters(
                 input,
                 outputParameters
         );
