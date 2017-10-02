@@ -16,6 +16,7 @@ import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.FotoapparatSwitcher;
 import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.CameraException;
+import io.fotoapparat.hardware.provider.CameraProviders;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.update.UpdateRequest;
@@ -173,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
     private Fotoapparat createFotoapparat(LensPosition position) {
         return Fotoapparat
                 .with(this)
+                .cameraProvider(CameraProviders.v1()) // change this to v2 to test Camera2 API
                 .into(cameraView)
                 .previewScaleType(ScaleType.CENTER_CROP)
                 .photoSize(standardRatio(biggestSize()))

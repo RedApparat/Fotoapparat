@@ -26,54 +26,118 @@ public class CameraParametersDecorator {
 
     private Camera.Parameters cameraParameters;
 
-    public Camera.Parameters getCameraParameters() {
-        return cameraParameters;
-    }
-
     public CameraParametersDecorator(Camera.Parameters cameraParameters) {
         this.cameraParameters = cameraParameters;
     }
 
+    /**
+     * @return {@link Camera.Parameters} view of this decorator.
+     */
+    public Camera.Parameters asCameraParameters() {
+        return cameraParameters;
+    }
+
+    /**
+     * @see Camera.Parameters#isZoomSupported()
+     */
     public boolean isZoomSupported() {
         return cameraParameters.isZoomSupported();
     }
 
+    /**
+     * @see Camera.Parameters#getSupportedPreviewSizes()
+     */
     public List<Size> getSupportedPreviewSizes() {
         return cameraParameters.getSupportedPreviewSizes();
     }
 
+    /**
+     * @see Camera.Parameters#getSupportedPictureSizes()
+     */
     public List<Size> getSupportedPictureSizes() {
         return cameraParameters.getSupportedPictureSizes();
     }
 
+    /**
+     * @see Camera.Parameters#getSupportedFlashModes()
+     */
     public List<String> getSupportedFlashModes() {
         return cameraParameters.getSupportedFlashModes();
     }
 
+    /**
+     * @see Camera.Parameters#getSupportedFocusModes()
+     */
     public List<String> getSupportedFocusModes() {
         return cameraParameters.getSupportedFocusModes();
     }
 
+    /**
+     * @see Camera.Parameters#getSupportedPreviewFpsRange()
+     */
     public List<int[]> getSupportedPreviewFpsRange() {
         return cameraParameters.getSupportedPreviewFpsRange();
     }
 
-    public void setPreviewSize(int width, int height) {
-        cameraParameters.setPreviewSize(width, height);
+    /**
+     * @see Camera.Parameters#getFocusMode()
+     */
+    public String getFocusMode() {
+        return cameraParameters.getFocusMode();
     }
 
-    public void setPictureSize(int width, int height) {
-        cameraParameters.setPictureSize(width, height);
-    }
-
-    public void setFlashMode(String flash) {
-        cameraParameters.setFlashMode(flash);
-    }
-
+    /**
+     * @see Camera.Parameters#setFocusMode(String)
+     */
     public void setFocusMode(String focusMode) {
         cameraParameters.setFocusMode(focusMode);
     }
 
+    /**
+     * @see Camera.Parameters#getFlashMode()
+     */
+    public String getFlashMode() {
+        return cameraParameters.getFlashMode();
+    }
+
+    /**
+     * @see Camera.Parameters#setFlashMode(String)
+     */
+    public void setFlashMode(String flash) {
+        cameraParameters.setFlashMode(flash);
+    }
+
+    /**
+     * @see Camera.Parameters#getPictureSize()
+     */
+    public Camera.Size getPictureSize() {
+        return cameraParameters.getPictureSize();
+    }
+
+    /**
+     * @see Camera.Parameters#getPreviewSize()
+     */
+    public Camera.Size getPreviewSize() {
+        return cameraParameters.getPreviewSize();
+    }
+
+    /**
+     * @see Camera.Parameters#setPreviewSize(int, int)
+     */
+    public void setPreviewSize(int width, int height) {
+        cameraParameters.setPreviewSize(width, height);
+    }
+
+    /**
+     * @see Camera.Parameters#setPictureSize(int, int)
+     */
+    public void setPictureSize(int width, int height) {
+        cameraParameters.setPictureSize(width, height);
+    }
+
+    /**
+     * @see Camera.Parameters#setPreviewFpsRange(int, int)
+     */
     public void setPreviewFpsRange(int min, int max) {
         cameraParameters.setPreviewFpsRange(min, max);
     }
@@ -92,7 +156,6 @@ public class CameraParametersDecorator {
     /**
      * Sets ISO value for camera.
      */
-    @NonNull
     public void setSensorSensitivityValue(int isoValue) {
         String isoKey = findExistingKey(RAW_ISO_CURRENT_VALUE_KEYS);
         if (isoKey != null) {
@@ -102,7 +165,7 @@ public class CameraParametersDecorator {
 
     @Nullable
     private String findExistingKey(@NonNull String[] keys) {
-        for (String key: keys) {
+        for (String key : keys) {
             if (cameraParameters.get(key) != null) {
                 return key;
             }
@@ -113,8 +176,8 @@ public class CameraParametersDecorator {
 
     @Nullable
     private String[] extractRawCameraValues(@NonNull String[] keys) {
-        for (String key: keys) {
-            String[] rawValues  = extractStringValuesFromParams(key);
+        for (String key : keys) {
+            String[] rawValues = extractStringValuesFromParams(key);
             if (rawValues != null) {
                 return rawValues;
             }

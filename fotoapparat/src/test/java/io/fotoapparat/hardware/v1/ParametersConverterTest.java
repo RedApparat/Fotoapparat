@@ -36,7 +36,7 @@ public class ParametersConverterTest {
         Parameters input = new Parameters();
 
         // When
-        CameraParametersDecorator result = testee.convert(
+        CameraParametersDecorator result = testee.toPlatformParameters(
                 input,
                 outputParameters
         );
@@ -58,7 +58,7 @@ public class ParametersConverterTest {
         );
 
         // When
-        testee.convert(
+        testee.toPlatformParameters(
                 input,
                 outputParameters
         );
@@ -77,7 +77,7 @@ public class ParametersConverterTest {
         );
 
         // When
-        testee.convert(
+        testee.toPlatformParameters(
                 input,
                 outputParameters
         );
@@ -96,7 +96,7 @@ public class ParametersConverterTest {
         );
 
         // When
-        testee.convert(
+        testee.toPlatformParameters(
                 input,
                 outputParameters
         );
@@ -115,7 +115,7 @@ public class ParametersConverterTest {
         );
 
         // When
-        testee.convert(
+        testee.toPlatformParameters(
                 input,
                 outputParameters
         );

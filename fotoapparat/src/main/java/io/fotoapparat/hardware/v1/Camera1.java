@@ -220,6 +220,14 @@ public class Camera1 implements CameraDevice {
         cachedZoomParameters = null;
     }
 
+    @Override
+    public Parameters getCurrentParameters() {
+        Camera.Parameters platformParameters = camera.getParameters();
+        return parametersConverter.fromPlatformParameters(
+                new CameraParametersDecorator(platformParameters)
+        );
+    }
+
     @NonNull
     private SwitchOnFailureParametersOperator parametersOperator() {
         ParametersOperator unsafeParametersOperator = new UnsafeParametersOperator(

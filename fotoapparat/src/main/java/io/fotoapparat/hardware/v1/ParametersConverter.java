@@ -1,5 +1,7 @@
 package io.fotoapparat.hardware.v1;
 
+import android.hardware.Camera;
+
 import io.fotoapparat.hardware.v1.capabilities.FlashCapability;
 import io.fotoapparat.hardware.v1.capabilities.FocusCapability;
 import io.fotoapparat.parameter.Flash;
@@ -21,8 +23,8 @@ public class ParametersConverter {
      * @param output     output value. It is required because of C-style API in Camera v1.
      * @return same object which was passed as {@code output}, but filled with new parameters.
      */
-    public CameraParametersDecorator convert(Parameters parameters,
-                                             CameraParametersDecorator output) {
+    public CameraParametersDecorator toPlatformParameters(Parameters parameters,
+                                                          CameraParametersDecorator output) {
         for (Parameters.Type storedType : parameters.storedTypes()) {
             applyParameter(
                     storedType,
@@ -32,6 +34,32 @@ public class ParametersConverter {
         }
 
         return output;
+    }
+
+    /**
+     * Converts {@link Camera.Parameters} to {@link Parameters}.
+     *
+     * @param platformParameters parameters which should be converted.
+     * @return Converted parameters object
+     */
+    public Parameters fromPlatformParameters(CameraParametersDecorator platformParameters) {
+        Parameters parameters = new Parameters();
+
+        FocusMode focusMode = FocusCapability.toFocusMode(platformParameters.getFocusMode());
+        parameters.putValue(Parameters.Type.FOCUS_MODE, focusMode);
+
+        Flash flash = FlashCapability.toFlash(platformParameters.getFlashMode());
+        parameters.putValue(Parameters.Type.FLASH, flash);
+
+        Camera.Size platformSize = platformParameters.getPictureSize();
+        Size pictureSize = new Size(platformSize.width, platformSize.height);
+        parameters.putValue(Parameters.Type.PICTURE_SIZE, pictureSize);
+
+        Camera.Size platformPreviewSize = platformParameters.getPreviewSize();
+        Size previewSize = new Size(platformPreviewSize.width, platformPreviewSize.height);
+        parameters.putValue(Parameters.Type.PREVIEW_SIZE, previewSize);
+
+        return parameters;
     }
 
     private void applyParameter(Parameters.Type type,
@@ -64,7 +92,7 @@ public class ParametersConverter {
                 break;
             case PREVIEW_FPS_RANGE:
                 applyPreviewFpsRange(
-                        (Range<Integer>) input.getValue(type),
+                        getRange(type, input),
                         output
                 );
                 break;
@@ -75,6 +103,11 @@ public class ParametersConverter {
                 );
                 break;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Range<Integer> getRange(Parameters.Type type, Parameters input) {
+        return (Range<Integer>) input.getValue(type);
     }
 
     private void applyPreviewSize(Size size,

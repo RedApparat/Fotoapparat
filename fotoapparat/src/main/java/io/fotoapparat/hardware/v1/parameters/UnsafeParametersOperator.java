@@ -25,12 +25,11 @@ public class UnsafeParametersOperator implements ParametersOperator {
 
     @Override
     public void updateParameters(Parameters parameters) {
-        CameraParametersDecorator parametersProvider = parametersConverter.convert(
+        CameraParametersDecorator parametersProvider = parametersConverter.toPlatformParameters(
                 parameters,
                 new CameraParametersDecorator(camera.getParameters())
         );
 
-        camera.setParameters(parametersProvider.getCameraParameters());
+        camera.setParameters(parametersProvider.asCameraParameters());
     }
-
 }
