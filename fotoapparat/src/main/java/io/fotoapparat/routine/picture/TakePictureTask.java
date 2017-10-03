@@ -6,6 +6,8 @@ import java.util.concurrent.FutureTask;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.lens.FocusResult;
+import io.fotoapparat.parameter.FocusMode;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.photo.Photo;
 
 /**
@@ -25,17 +27,28 @@ class TakePictureTask extends FutureTask<Photo> {
 
                 startPreviewSafe(cameraDevice);
 
+
                 return photo;
             }
         });
     }
 
     private static void adjustCameraForBestShot(CameraDevice cameraDevice) {
-        FocusResult focusResult = autoFocus(cameraDevice);
+        if (shouldFocus(cameraDevice)) {
+            FocusResult focusResult = autoFocus(cameraDevice);
 
-        if (focusResult.needsExposureMeasurement) {
-            cameraDevice.measureExposure();
+            if (focusResult.needsExposureMeasurement) {
+                cameraDevice.measureExposure();
+            }
         }
+    }
+
+    private static boolean shouldFocus(CameraDevice cameraDevice) {
+        return currentFocusMode(cameraDevice) != FocusMode.CONTINUOUS_FOCUS;
+    }
+
+    private static Object currentFocusMode(CameraDevice cameraDevice) {
+        return cameraDevice.getCurrentParameters().getValue(Parameters.Type.FOCUS_MODE);
     }
 
     private static FocusResult autoFocus(CameraDevice cameraDevice) {

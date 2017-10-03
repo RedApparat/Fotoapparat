@@ -11,6 +11,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.lens.FocusResult;
+import io.fotoapparat.parameter.FocusMode;
+import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.photo.Photo;
 
 import static io.fotoapparat.test.TestUtils.resultOf;
@@ -18,6 +20,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -25,6 +28,12 @@ import static org.mockito.Mockito.verify;
 public class TakePictureTaskTest {
 
     static final Photo PHOTO = Photo.empty();
+
+    static final Parameters PARAMETERS_WITH_AUTO_FOCUS = new Parameters()
+            .putValue(Parameters.Type.FOCUS_MODE, FocusMode.AUTO);
+
+    static final Parameters PARAMETERS_WITH_CONTINUOUS_FOCUS = new Parameters()
+            .putValue(Parameters.Type.FOCUS_MODE, FocusMode.CONTINUOUS_FOCUS);
 
     @Mock
     CameraDevice cameraDevice;
@@ -36,6 +45,9 @@ public class TakePictureTaskTest {
     public void setUp() throws Exception {
         given(cameraDevice.takePicture())
                 .willReturn(PHOTO);
+
+        given(cameraDevice.getCurrentParameters())
+                .willReturn(PARAMETERS_WITH_AUTO_FOCUS);
     }
 
     @Test
@@ -89,6 +101,21 @@ public class TakePictureTaskTest {
         inOrder.verify(cameraDevice).autoFocus();
         inOrder.verify(cameraDevice).takePicture();
         inOrder.verify(cameraDevice).startPreview();
+
+        assertEquals(result, PHOTO);
+    }
+
+    @Test
+    public void doNotFocusInContinuousFocusMode() throws Exception {
+        // Given
+        given(cameraDevice.getCurrentParameters())
+                .willReturn(PARAMETERS_WITH_CONTINUOUS_FOCUS);
+
+        // When
+        Photo result = resultOf(testee);
+
+        // Then
+        verify(cameraDevice, never()).autoFocus();
 
         assertEquals(result, PHOTO);
     }
