@@ -13,6 +13,7 @@ import io.fotoapparat.parameter.Size;
 import static io.fotoapparat.test.TestUtils.asSet;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -172,4 +173,35 @@ public class AspectRatioSelectorsTest {
         ));
     }
 
+    @Test
+    public void ratioWithNegativeToleranceThrows() throws Exception {
+        // Given
+        final double NEGATIVE_TOLERANCE = -0.1;
+        final double ABOVE_RANGE_TOLERANCE = 1.1;
+
+        try {
+            // When
+            AspectRatioSelectors
+                    .aspectRatio(1.0f, sizeSelector, NEGATIVE_TOLERANCE)
+                    .select(asList(
+                            new Size(16, 9),
+                            new Size(16, 10)));
+            fail("Negative aspect ratio tolerance is illegal");
+        } catch (IllegalArgumentException ex) {
+            // Then exception is throws
+        }
+
+
+        try {
+            // When
+            AspectRatioSelectors
+                    .aspectRatio(1.0f, sizeSelector, ABOVE_RANGE_TOLERANCE)
+                    .select(asList(
+                            new Size(16, 9),
+                            new Size(16, 10)));
+            fail("Aspect ratio tolerance >1.0 is illegal");
+        } catch (IllegalArgumentException ex) {
+            // Then exception is throws
+        }
+    }
 }
