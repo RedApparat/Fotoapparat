@@ -1,6 +1,7 @@
 package io.fotoapparat;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 
@@ -13,7 +14,6 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.orientation.OrientationSensor;
 import io.fotoapparat.hardware.orientation.RotationListener;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
-import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.provider.CapabilitiesProvider;
 import io.fotoapparat.parameter.provider.CurrentParametersProvider;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
@@ -33,6 +33,7 @@ import io.fotoapparat.routine.focus.AutoFocusRoutine;
 import io.fotoapparat.routine.parameter.UpdateParametersRoutine;
 import io.fotoapparat.routine.picture.TakePictureRoutine;
 import io.fotoapparat.routine.zoom.UpdateZoomLevelRoutine;
+import io.fotoapparat.view.TapToFocusSupporter;
 
 /**
  * Camera. Takes pictures.
@@ -90,12 +91,12 @@ public class Fotoapparat {
         return new FotoapparatBuilder(context);
     }
 
-    static Fotoapparat create(FotoapparatBuilder builder) {
+    static Fotoapparat create(final FotoapparatBuilder builder) {
         CameraErrorCallback cameraErrorCallback = Callbacks.onMainThread(
                 builder.cameraErrorCallback
         );
 
-        CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
+        final CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
 
         ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
         RotationListener rotationListener = new RotationListener(builder.context);
@@ -112,6 +113,11 @@ public class Fotoapparat {
                 parametersValidator
         );
 
+        final AutoFocusRoutine autoFocusRoutine = new AutoFocusRoutine(
+                cameraDevice,
+                SERIAL_EXECUTOR
+        );
+
         StartCameraRoutine startCameraRoutine = new StartCameraRoutine(
                 cameraDevice,
                 builder.renderer,
@@ -119,7 +125,27 @@ public class Fotoapparat {
                 builder.lensPositionSelector,
                 screenOrientationProvider,
                 initialParametersProvider,
-                cameraErrorCallback
+                cameraErrorCallback,
+                builder.tapProvider,
+                new TapToFocusSupporter.FocusCallback() { // TODO: Move to another class
+                    private PendingResult autoFocusResult;
+
+                    @Override
+                    public void onManualFocus(final Rect cameraViewRect, final float focusX, final float focusY) {
+                        cameraDevice.setFocusArea(cameraViewRect, focusX, focusY);
+                        if (autoFocusResult != null) {
+                            autoFocusResult.cancel();
+                        }
+                        autoFocusResult = autoFocusRoutine.autoFocus();
+                        autoFocusResult.whenDone(new PendingResult.Callback() {
+                            @Override
+                            public void onResult(Object result) {
+                                cameraDevice.cancelAutoFocus();
+                            }
+                        });
+                    }
+                },
+                builder.allowTapToFocus
         );
 
         StopCameraRoutine stopCameraRoutine = new StopCameraRoutine(cameraDevice);
@@ -151,11 +177,6 @@ public class Fotoapparat {
         );
 
         TakePictureRoutine takePictureRoutine = new TakePictureRoutine(
-                cameraDevice,
-                SERIAL_EXECUTOR
-        );
-
-        AutoFocusRoutine autoFocusRoutine = new AutoFocusRoutine(
                 cameraDevice,
                 SERIAL_EXECUTOR
         );

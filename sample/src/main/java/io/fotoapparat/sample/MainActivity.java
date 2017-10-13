@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupFotoapparat();
 
-        takePictureOnClick();
+        //takePictureOnClick();
         focusOnLongClick();
         switchCameraOnClick();
         toggleTorchOnSwitch();
@@ -176,6 +176,8 @@ public class MainActivity extends AppCompatActivity {
                 .with(this)
                 .cameraProvider(CameraProviders.v1()) // change this to v2 to test Camera2 API
                 .into(cameraView)
+                .tapProvider(cameraView)
+                .setAllowTapToFocus(true)
                 .previewScaleType(ScaleType.CENTER_CROP)
                 .photoSize(standardRatio(biggestSize()))
                 .lensPosition(lensPosition(position))

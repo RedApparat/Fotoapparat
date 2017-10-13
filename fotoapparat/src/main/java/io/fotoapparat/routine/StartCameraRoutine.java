@@ -1,8 +1,8 @@
 package io.fotoapparat.routine;
 
-import io.fotoapparat.error.CameraErrorCallback;
 import java.util.Collection;
 
+import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
@@ -11,6 +11,7 @@ import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.view.CameraRenderer;
+import io.fotoapparat.view.TapToFocusSupporter;
 
 /**
  * Opens camera and starts preview.
@@ -24,6 +25,10 @@ public class StartCameraRoutine implements Runnable {
     private final ScreenOrientationProvider screenOrientationProvider;
     private final InitialParametersProvider initialParametersProvider;
     private final CameraErrorCallback cameraErrorCallback;
+    private final TapToFocusSupporter tapToFocusSupporter;
+    private final TapToFocusSupporter.FocusCallback tapToFocusCallback;
+
+    private final boolean isTapToFocusAllowed;
 
     public StartCameraRoutine(CameraDevice cameraDevice,
                               CameraRenderer cameraRenderer,
@@ -31,7 +36,10 @@ public class StartCameraRoutine implements Runnable {
                               SelectorFunction<Collection<LensPosition>, LensPosition> lensPositionSelector,
                               ScreenOrientationProvider screenOrientationProvider,
                               InitialParametersProvider initialParametersProvider,
-                              CameraErrorCallback cameraErrorCallback) {
+                              CameraErrorCallback cameraErrorCallback,
+                              TapToFocusSupporter tapToFocusSupporter,
+                              TapToFocusSupporter.FocusCallback tapToFocusCallback,
+                              boolean isTapToFocusAllowed) {
         this.cameraDevice = cameraDevice;
         this.cameraRenderer = cameraRenderer;
         this.scaleType = scaleType;
@@ -39,6 +47,9 @@ public class StartCameraRoutine implements Runnable {
         this.screenOrientationProvider = screenOrientationProvider;
         this.initialParametersProvider = initialParametersProvider;
         this.cameraErrorCallback = cameraErrorCallback;
+        this.tapToFocusSupporter = tapToFocusSupporter;
+        this.isTapToFocusAllowed = isTapToFocusAllowed;
+        this.tapToFocusCallback = tapToFocusCallback;
     }
 
     @Override
@@ -64,6 +75,13 @@ public class StartCameraRoutine implements Runnable {
         );
         cameraRenderer.setScaleType(scaleType);
         cameraRenderer.attachCamera(cameraDevice);
+
+        if (isTapToFocusAllowed) {
+            tapToFocusSupporter.enableTapToFocus(tapToFocusCallback);
+        } else {
+            tapToFocusSupporter.disableTapToFocus();
+        }
+
         cameraDevice.startPreview();
     }
 }
