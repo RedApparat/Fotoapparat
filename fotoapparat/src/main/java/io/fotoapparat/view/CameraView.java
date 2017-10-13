@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import io.fotoapparat.hardware.CameraDevice;
@@ -16,9 +18,12 @@ import io.fotoapparat.parameter.ScaleType;
 /**
  * Displays stream from camera.
  */
-public class CameraView extends FrameLayout implements CameraRenderer {
+public class CameraView extends FrameLayout implements CameraRenderer, TapToFocusSupporter {
 
     private TextureRendererView rendererView;
+    private FocusMarkerLayout focusMarkerLayout;
+
+    private boolean isTapToFocusEnabled = false;
 
     public CameraView(@NonNull Context context) {
         super(context);
@@ -52,8 +57,20 @@ public class CameraView extends FrameLayout implements CameraRenderer {
 
     private void init() {
         rendererView = new TextureRendererView(getContext());
-
         addView(rendererView);
+
+        focusMarkerLayout = new FocusMarkerLayout(getContext());
+        focusMarkerLayout.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP && isTapToFocusEnabled) {
+                    focusMarkerLayout.showAt(motionEvent.getX(), motionEvent.getY());
+                }
+                rendererView.dispatchTouchEvent(motionEvent);
+                return true;
+            }
+        });
+        addView(focusMarkerLayout);
     }
 
     @Override
@@ -66,4 +83,15 @@ public class CameraView extends FrameLayout implements CameraRenderer {
         rendererView.attachCamera(camera);
     }
 
+    @Override
+    public void enableTapToFocus(FocusCallback callback) {
+        isTapToFocusEnabled = true;
+        rendererView.enableTapToFocus(callback);
+    }
+
+    @Override
+    public void disableTapToFocus() {
+        rendererView.disableTapToFocus();
+        isTapToFocusEnabled = false;
+    }
 }
