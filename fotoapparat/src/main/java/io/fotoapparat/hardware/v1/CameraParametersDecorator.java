@@ -16,6 +16,10 @@ import java.util.Set;
 @SuppressWarnings("deprecation")
 public class CameraParametersDecorator {
 
+    public static CameraParametersDecorator from(Camera camera) {
+        return new CameraParametersDecorator(camera.getParameters());
+    }
+
     /* Raw camera params keys */
     private static final String[] RAW_ISO_SUPPORTED_VALUES_KEYS = {
             "iso-values", "iso-mode-values", "iso-speed-values", "nv-picture-iso-values"
@@ -128,6 +132,14 @@ public class CameraParametersDecorator {
         cameraParameters.setPreviewSize(width, height);
     }
 
+    public int getMaxNumFocusAreas() {
+        return cameraParameters.getMaxNumFocusAreas();
+    }
+
+    public int getMaxNumMeteringAreas() {
+        return cameraParameters.getMaxNumMeteringAreas();
+    }
+
     /**
      * @see Camera.Parameters#setPictureSize(int, int)
      */
@@ -140,6 +152,16 @@ public class CameraParametersDecorator {
      */
     public void setPreviewFpsRange(int min, int max) {
         cameraParameters.setPreviewFpsRange(min, max);
+    }
+
+    // TODO: Wrap Camera.Area to run from explicit dependencies
+    public void setFocusAreas(List<Camera.Area> focusAreas) {
+        cameraParameters.setFocusAreas(focusAreas);
+    }
+
+    // TODO: Wrap Camera.Area to run from explicit dependencies
+    public void setMeteringAreas(List<Camera.Area> meteringAreas) {
+        cameraParameters.setMeteringAreas(meteringAreas);
     }
 
     /**

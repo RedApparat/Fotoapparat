@@ -1,5 +1,6 @@
 package io.fotoapparat.hardware.v2;
 
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.FloatRange;
 import android.support.annotation.RequiresApi;
@@ -20,7 +21,6 @@ import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.operators.RendererParametersOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
-import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
@@ -158,6 +158,11 @@ public class Camera2 implements CameraDevice {
     }
 
     @Override
+    public void cancelAutoFocus() {
+        throw new UnsupportedOperationException("Not implemented. We do not actively support Camera2 at the moment.");
+    }
+
+    @Override
     public void measureExposure() {
         recordMethod();
 
@@ -203,5 +208,10 @@ public class Camera2 implements CameraDevice {
         logger.log(
                 lastStacktrace.getStackTrace()[1].getMethodName()
         );
+    }
+
+    @Override
+    public void setFocusArea(Rect cameraViewRect, float x, float y) {
+        throw new UnsupportedOperationException("Not implemented. We do not actively support Camera2 at the moment.");
     }
 }

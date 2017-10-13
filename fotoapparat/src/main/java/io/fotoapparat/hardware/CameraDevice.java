@@ -1,10 +1,12 @@
 package io.fotoapparat.hardware;
 
+import android.graphics.Rect;
 import android.support.annotation.FloatRange;
 
 import java.util.List;
 
 import io.fotoapparat.hardware.operators.AutoFocusOperator;
+import io.fotoapparat.hardware.operators.CancelAutoFocusOperator;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
 import io.fotoapparat.hardware.operators.CaptureOperator;
 import io.fotoapparat.hardware.operators.ConnectionOperator;
@@ -30,8 +32,8 @@ import io.fotoapparat.preview.PreviewStream;
 public interface CameraDevice extends CaptureOperator,
         PreviewOperator, CapabilitiesOperator, OrientationOperator, ParametersOperator,
         ConnectionOperator, SurfaceOperator, PreviewStreamOperator, RendererParametersOperator,
-        ExposureMeasurementOperator, AutoFocusOperator, AvailableLensPositionsProvider,
-        ZoomOperator {
+        ExposureMeasurementOperator, AutoFocusOperator, CancelAutoFocusOperator,
+        AvailableLensPositionsProvider, ZoomOperator {
 
     @Override
     void open(LensPosition lensPosition);
@@ -61,6 +63,9 @@ public interface CameraDevice extends CaptureOperator,
     FocusResult autoFocus();
 
     @Override
+    void cancelAutoFocus();
+
+    @Override
     void measureExposure();
 
     @Override
@@ -80,4 +85,5 @@ public interface CameraDevice extends CaptureOperator,
 
     Parameters getCurrentParameters();
 
+    void setFocusArea(Rect cameraViewRect, float x, float y);
 }
