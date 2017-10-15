@@ -1,7 +1,6 @@
 package io.fotoapparat;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 
@@ -30,10 +29,10 @@ import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
 import io.fotoapparat.routine.UpdateOrientationRoutine;
 import io.fotoapparat.routine.focus.AutoFocusRoutine;
+import io.fotoapparat.routine.focus.ManualFocusRoutine;
 import io.fotoapparat.routine.parameter.UpdateParametersRoutine;
 import io.fotoapparat.routine.picture.TakePictureRoutine;
 import io.fotoapparat.routine.zoom.UpdateZoomLevelRoutine;
-import io.fotoapparat.view.TapToFocusSupporter;
 
 /**
  * Camera. Takes pictures.
@@ -113,7 +112,7 @@ public class Fotoapparat {
                 parametersValidator
         );
 
-        final AutoFocusRoutine autoFocusRoutine = new AutoFocusRoutine(
+        ManualFocusRoutine manualFocusRoutine = new ManualFocusRoutine(
                 cameraDevice,
                 SERIAL_EXECUTOR
         );
@@ -127,24 +126,7 @@ public class Fotoapparat {
                 initialParametersProvider,
                 cameraErrorCallback,
                 builder.tapProvider,
-                new TapToFocusSupporter.FocusCallback() { // TODO: Move to another class
-                    private PendingResult autoFocusResult;
-
-                    @Override
-                    public void onManualFocus(final Rect cameraViewRect, final float focusX, final float focusY) {
-                        cameraDevice.setFocusArea(cameraViewRect, focusX, focusY);
-                        if (autoFocusResult != null) {
-                            autoFocusResult.cancel();
-                        }
-                        autoFocusResult = autoFocusRoutine.autoFocus();
-                        autoFocusResult.whenDone(new PendingResult.Callback() {
-                            @Override
-                            public void onResult(Object result) {
-                                cameraDevice.cancelAutoFocus();
-                            }
-                        });
-                    }
-                },
+                manualFocusRoutine,
                 builder.allowTapToFocus
         );
 
@@ -177,6 +159,11 @@ public class Fotoapparat {
         );
 
         TakePictureRoutine takePictureRoutine = new TakePictureRoutine(
+                cameraDevice,
+                SERIAL_EXECUTOR
+        );
+
+        AutoFocusRoutine autoFocusRoutine = new AutoFocusRoutine(
                 cameraDevice,
                 SERIAL_EXECUTOR
         );
