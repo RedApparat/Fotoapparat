@@ -2,7 +2,6 @@ package io.fotoapparat.hardware.v1;
 
 import android.graphics.Rect;
 import android.hardware.Camera;
-import android.os.Handler;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -59,8 +58,6 @@ public class Camera1 implements CameraDevice {
     private Throwable lastStacktrace;
     private int imageRotation;
     private int displayOrientationDegrees;
-
-    private Handler handler = new Handler();
 
     @Nullable
     private Capabilities cachedCapabilities = null;
@@ -139,9 +136,6 @@ public class Camera1 implements CameraDevice {
         recordMethod();
 
         cachedCapabilities = null;
-
-        camera.cancelAutoFocus();
-        handler.removeCallbacksAndMessages(null);
 
         if (isCameraOpened()) {
             camera.release();
