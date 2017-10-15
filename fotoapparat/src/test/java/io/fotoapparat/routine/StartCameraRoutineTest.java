@@ -21,6 +21,7 @@ import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.view.CameraRenderer;
+import io.fotoapparat.view.TapToFocusSupporter;
 
 import static java.util.Arrays.asList;
 import static org.mockito.BDDMockito.given;
@@ -50,6 +51,10 @@ public class StartCameraRoutineTest {
     @Mock
     InitialParametersProvider initialParametersProvider;
     @Mock
+    TapToFocusSupporter tapToFocusSupporter;
+    @Mock
+    TapToFocusSupporter.FocusCallback manualFocusCallback;
+    @Mock
     CameraErrorCallback cameraErrorCallback;
 
     StartCameraRoutine testee;
@@ -63,7 +68,10 @@ public class StartCameraRoutineTest {
                 lensPositionSelector,
                 screenOrientationProvider,
                 initialParametersProvider,
-                cameraErrorCallback
+                cameraErrorCallback,
+                tapToFocusSupporter,
+                manualFocusCallback,
+                false
         );
     }
 
@@ -77,7 +85,10 @@ public class StartCameraRoutineTest {
                 lensPositionSelector,
                 screenOrientationProvider,
                 initialParametersProvider,
-                cameraErrorCallback
+                cameraErrorCallback,
+                tapToFocusSupporter,
+                manualFocusCallback,
+                false
         );
         List<LensPosition> availableLensPositions = asList(
                 LensPosition.FRONT,
