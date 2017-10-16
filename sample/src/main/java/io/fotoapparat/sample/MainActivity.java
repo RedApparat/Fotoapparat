@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupFotoapparat();
 
-        //takePictureOnClick();
+        takePictureOnClick();
         focusOnLongClick();
         switchCameraOnClick();
         toggleTorchOnSwitch();
