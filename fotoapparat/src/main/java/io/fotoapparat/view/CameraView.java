@@ -63,7 +63,7 @@ public class CameraView extends FrameLayout implements CameraRenderer, TapToFocu
         focusMarkerLayout.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP && isTapToFocusEnabled) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN && isTapToFocusEnabled) {
                     focusMarkerLayout.showAt(motionEvent.getX(), motionEvent.getY());
                     rendererView.dispatchTouchEvent(motionEvent);
                     return true;
