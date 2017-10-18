@@ -22,6 +22,7 @@ import io.fotoapparat.parameter.provider.InitialParametersProvider;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.view.CameraRenderer;
 
+import static android.view.OrientationEventListener.ORIENTATION_UNKNOWN;
 import static java.util.Arrays.asList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
@@ -105,7 +106,7 @@ public class StartCameraRoutineTest {
         inOrder.verify(lensPositionSelector).select(availableLensPositions);
         inOrder.verify(cameraDevice).open(preferredLensPosition);
         inOrder.verify(cameraDevice).updateParameters(INITIAL_PARAMETERS);
-        inOrder.verify(cameraDevice).setDisplayOrientation(SCREEN_ROTATION_DEGREES);
+        inOrder.verify(cameraDevice).setDisplayOrientation(SCREEN_ROTATION_DEGREES, ORIENTATION_UNKNOWN);
         inOrder.verify(cameraRenderer).setScaleType(scaleType);
         inOrder.verify(cameraRenderer).attachCamera(cameraDevice);
         inOrder.verify(cameraDevice).startPreview();

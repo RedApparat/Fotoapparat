@@ -49,7 +49,7 @@ public interface CameraDevice extends CaptureOperator,
     void setDisplaySurface(Object displaySurface);
 
     @Override
-    void setDisplayOrientation(int degrees);
+    void setDisplayOrientation(int degrees, int orientation);
 
     @Override
     void updateParameters(Parameters parameters);

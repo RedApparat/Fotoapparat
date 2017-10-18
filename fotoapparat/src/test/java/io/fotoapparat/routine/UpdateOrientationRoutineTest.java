@@ -52,9 +52,9 @@ public class UpdateOrientationRoutineTest {
     @Test
     public void onOrientationChanged() throws Exception {
         // When
-        testee.onOrientationChanged(90);
+        testee.onOrientationChanged(90, 90);
 
         // Then
-        verify(cameraDevice).setDisplayOrientation(90);
+        verify(cameraDevice).setDisplayOrientation(90, 90);
     }
 }

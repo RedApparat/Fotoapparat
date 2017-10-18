@@ -30,8 +30,8 @@ public class TextureManager
     }
 
     @Override
-    public void onDisplayOrientationChanged(int orientation) {
-        screenOrientation = orientation;
+    public void onDisplayOrientationChanged(int rotation, int orientation) {
+        screenOrientation = rotation;
 
         if (textureView == null) {
             return;

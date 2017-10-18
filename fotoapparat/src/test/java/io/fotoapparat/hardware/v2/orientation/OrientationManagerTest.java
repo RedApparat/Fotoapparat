@@ -9,6 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 
+import static android.view.OrientationEventListener.ORIENTATION_UNKNOWN;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 
@@ -145,18 +146,18 @@ public class OrientationManagerTest {
     }
 
     private void givenPortraitScreen() {
-        testee.setDisplayOrientation(PORTRAIT_DEGREES);
+        testee.setDisplayOrientation(PORTRAIT_DEGREES, ORIENTATION_UNKNOWN);
     }
 
     private void givenLandscapeScreen() {
-        testee.setDisplayOrientation(LANDSCAPE_DEGREES);
+        testee.setDisplayOrientation(LANDSCAPE_DEGREES, ORIENTATION_UNKNOWN);
     }
 
     private void givenReversePortraitScreen() {
-        testee.setDisplayOrientation(REVERSE_PORTRAIT_DEGREES);
+        testee.setDisplayOrientation(REVERSE_PORTRAIT_DEGREES, ORIENTATION_UNKNOWN);
     }
 
     private void givenReverseLandscapeScreen() {
-        testee.setDisplayOrientation(REVERSE_LANDSCAPE_DEGREES);
+        testee.setDisplayOrientation(REVERSE_LANDSCAPE_DEGREES, ORIENTATION_UNKNOWN);
     }
 }
