@@ -21,6 +21,7 @@ import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.parameter.update.UpdateRequest;
 import io.fotoapparat.photo.BitmapPhoto;
+import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.result.PendingResult;
@@ -190,6 +191,8 @@ public class MainActivity extends AppCompatActivity {
                         torch(),
                         off()
                 ))
+
+                .jpegQuality(95)
                 .previewFpsRange(rangeWithHighestFps())
                 .sensorSensitivity(highestSensorSensitivity())
                 .frameProcessor(new SampleFrameProcessor())
@@ -207,12 +210,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void takePicture() {
-        PhotoResult photoResult = fotoapparatSwitcher.getCurrentFotoapparat().takePicture();
+        final PhotoResult photoResult = fotoapparatSwitcher.getCurrentFotoapparat().takePicture();
 
         photoResult.saveToFile(new File(
                 getExternalFilesDir("photos"),
                 "photo.jpg"
         ));
+
+        photoResult
+                .toPendingResult().whenAvailable(new PendingResult.Callback<Photo>() {
+            @Override
+            public void onResult(Photo result) {
+                Toast.makeText(MainActivity.this, "size of jpeg: "+humanReadableByteCount(result.encodedImage.length, false), Toast.LENGTH_LONG).show();
+            }
+        });
 
         photoResult
                 .toBitmap(scaled(0.25f))
@@ -269,6 +280,15 @@ public class MainActivity extends AppCompatActivity {
             // Perform frame processing, if needed
         }
 
+    }
+
+    //https://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java
+    public static String humanReadableByteCount(int bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
 }

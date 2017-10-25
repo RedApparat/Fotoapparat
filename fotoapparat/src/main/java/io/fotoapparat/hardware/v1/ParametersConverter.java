@@ -59,6 +59,9 @@ public class ParametersConverter {
         Size previewSize = new Size(platformPreviewSize.width, platformPreviewSize.height);
         parameters.putValue(Parameters.Type.PREVIEW_SIZE, previewSize);
 
+        Integer jpegQuality = platformParameters.getJpegQuality();
+        parameters.putValue(Parameters.Type.JPEG_QUALITY, jpegQuality);
+
         return parameters;
     }
 
@@ -102,6 +105,10 @@ public class ParametersConverter {
                         output
                 );
                 break;
+            case JPEG_QUALITY:
+                applyJpegQuality(
+                        (Integer) input.getValue(type),
+                        output);
         }
     }
 
@@ -144,6 +151,11 @@ public class ParametersConverter {
     private void applySensorSensitivity(Integer value,
                                         CameraParametersDecorator output) {
         output.setSensorSensitivityValue(value);
+    }
+
+    private void applyJpegQuality(Integer value,
+                                  CameraParametersDecorator output){
+        output.setJpegQuality(value);
     }
 
 }

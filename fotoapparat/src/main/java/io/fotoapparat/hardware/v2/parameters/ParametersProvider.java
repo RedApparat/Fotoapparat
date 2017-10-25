@@ -11,6 +11,7 @@ import io.fotoapparat.parameter.range.Range;
 
 import static io.fotoapparat.parameter.Parameters.Type.FLASH;
 import static io.fotoapparat.parameter.Parameters.Type.FOCUS_MODE;
+import static io.fotoapparat.parameter.Parameters.Type.JPEG_QUALITY;
 import static io.fotoapparat.parameter.Parameters.Type.PICTURE_SIZE;
 import static io.fotoapparat.parameter.Parameters.Type.PREVIEW_FPS_RANGE;
 import static io.fotoapparat.parameter.Parameters.Type.PREVIEW_SIZE;
@@ -108,4 +109,12 @@ public class ParametersProvider implements ParametersOperator {
         return selectedParameters.getValue(SENSOR_SENSITIVITY);
     }
 
+    /**
+     * Returns the jpeg quality
+     *
+     * @return  The jpeg quality (1-100)
+     */
+    public Integer getJpegQuality() {
+        return selectedParameters.getValue(JPEG_QUALITY);
+    }
 }

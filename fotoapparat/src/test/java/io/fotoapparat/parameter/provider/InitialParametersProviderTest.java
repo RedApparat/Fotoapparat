@@ -36,6 +36,7 @@ public class InitialParametersProviderTest {
     static final Range<Integer> PREVIEW_FPS_RANGE = Ranges.continuousRange(30000, 30000);
     static final Integer SENSOR_SENSITIVITY = 1000;
     static final Range<Integer> SENSOR_SENSITIVITY_RANGE = Ranges.continuousRange(SENSOR_SENSITIVITY);
+    static final Integer JPEG_QUALITY = 95;
 
     static final Set<Size> ALL_PREVIEW_SIZES = asSet(
             PREVIEW_SIZE,
@@ -107,6 +108,7 @@ public class InitialParametersProviderTest {
                 torch(),
                 PreviewFpsRangeSelectors.rangeWithHighestFps(),
                 SensorSensitivitySelectors.highestSensorSensitivity(),
+                95,
                 initialParametersValidator
         );
 
@@ -139,6 +141,10 @@ public class InitialParametersProviderTest {
                         .putValue(
                                 Parameters.Type.SENSOR_SENSITIVITY,
                                 SENSOR_SENSITIVITY
+                        )
+                        .putValue(
+                                Parameters.Type.JPEG_QUALITY,
+                                JPEG_QUALITY
                         ),
                 parameters
         );
