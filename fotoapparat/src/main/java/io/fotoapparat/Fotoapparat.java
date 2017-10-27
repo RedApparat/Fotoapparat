@@ -132,7 +132,8 @@ public class Fotoapparat {
         UpdateOrientationRoutine updateOrientationRoutine = new UpdateOrientationRoutine(
                 cameraDevice,
                 orientationSensor,
-                SERIAL_EXECUTOR
+                SERIAL_EXECUTOR,
+                cameraErrorCallback
         );
 
         ConfigurePreviewStreamRoutine configurePreviewStreamRoutine = new ConfigurePreviewStreamRoutine(
