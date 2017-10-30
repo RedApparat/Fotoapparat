@@ -8,9 +8,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.orientation.OrientationSensor;
+import io.fotoapparat.log.Logger;
 import io.fotoapparat.test.ImmediateExecutor;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UpdateOrientationRoutineTest {
@@ -19,6 +24,8 @@ public class UpdateOrientationRoutineTest {
     CameraDevice cameraDevice;
     @Mock
     OrientationSensor orientationSensor;
+    @Mock
+    Logger logger;
 
     UpdateOrientationRoutine testee;
 
@@ -27,7 +34,8 @@ public class UpdateOrientationRoutineTest {
         testee = new UpdateOrientationRoutine(
                 cameraDevice,
                 orientationSensor,
-                new ImmediateExecutor()
+                new ImmediateExecutor(),
+                logger
         );
     }
 
@@ -38,6 +46,7 @@ public class UpdateOrientationRoutineTest {
 
         // Then
         verify(orientationSensor).start(testee);
+        verifyZeroInteractions(logger);
     }
 
     @Test
@@ -47,6 +56,7 @@ public class UpdateOrientationRoutineTest {
 
         // Then
         verify(orientationSensor).stop();
+        verifyZeroInteractions(logger);
     }
 
     @Test
@@ -56,5 +66,23 @@ public class UpdateOrientationRoutineTest {
 
         // Then
         verify(cameraDevice).setDisplayOrientation(90);
+        verifyZeroInteractions(logger);
     }
+
+    @Test
+    public void onOrientationChangedFailed() throws Exception {
+        // Given
+        RuntimeException exception = new RuntimeException("test");
+        doThrow(exception)
+                .when(cameraDevice)
+                .setDisplayOrientation(anyInt());
+
+        // When
+        testee.onOrientationChanged(90);
+
+        // Then
+        verify(cameraDevice).setDisplayOrientation(90);
+        verify(logger).log(anyString());
+    }
+
 }
