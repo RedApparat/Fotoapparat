@@ -1,6 +1,7 @@
 package io.fotoapparat;
 
 import android.content.Context;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 
 import io.fotoapparat.error.CameraErrorCallback;
@@ -147,7 +148,7 @@ public class FotoapparatBuilder {
     /**
      * @param jpegQuality of the picture (1-100)
      */
-    public FotoapparatBuilder jpegQuality(@NonNull Integer jpegQuality) {
+    public FotoapparatBuilder jpegQuality(@IntRange(from=0,to=100) @NonNull Integer jpegQuality) {
         this.jpegQuality = jpegQuality;
         return this;
     }
