@@ -145,7 +145,12 @@ public class Parameters {
         /**
          * Sensor sensitivity (ISO). Expected type: {@link Integer}.
          */
-        SENSOR_SENSITIVITY(Integer.class);
+        SENSOR_SENSITIVITY(Integer.class),
+
+        /**
+         * JPEG QUALITY. Expected type: {@link Integer}. from 1 to 100
+         */
+        JPEG_QUALITY(Integer.class);
 
         private final Class<?> clazz;
 

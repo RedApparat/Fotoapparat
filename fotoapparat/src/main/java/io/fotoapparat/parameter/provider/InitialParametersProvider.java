@@ -32,6 +32,7 @@ public class InitialParametersProvider {
     private final SelectorFunction<Collection<Flash>, Flash> flashSelector;
     private final SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector;
     private final SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector;
+    private final Integer jpegQuality;
 
     public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
                                      SelectorFunction<Collection<Size>, Size> photoSizeSelector,
@@ -40,6 +41,7 @@ public class InitialParametersProvider {
                                      SelectorFunction<Collection<Flash>, Flash> flashSelector,
                                      SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector,
                                      SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector,
+                                     Integer jpegQuality,
                                      InitialParametersValidator parametersValidator) {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
@@ -48,6 +50,7 @@ public class InitialParametersProvider {
         this.flashSelector = flashSelector;
         this.previewFpsRangeSelector = previewFpsRangeSelector;
         this.sensorSensitivitySelector = sensorSensitivitySelector;
+        this.jpegQuality = jpegQuality;
         this.parametersValidator = parametersValidator;
     }
 
@@ -83,7 +86,8 @@ public class InitialParametersProvider {
                 focusModeParameters(capabilities),
                 flashModeParameters(capabilities),
                 previewFpsRange(capabilities),
-                sensorSensitivity(capabilities)
+                sensorSensitivity(capabilities),
+                jpegQuality()
         ));
 
         parametersValidator.validate(parameters);
@@ -146,6 +150,12 @@ public class InitialParametersProvider {
         return ParametersFactory.selectSensorSensitivity(
                 capabilities,
                 sensorSensitivitySelector
+        );
+    }
+
+    private Parameters jpegQuality() {
+        return ParametersFactory.selectJpegQuality(
+                jpegQuality
         );
     }
 

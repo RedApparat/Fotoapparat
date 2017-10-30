@@ -1,6 +1,7 @@
 package io.fotoapparat;
 
 import android.content.Context;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 
 import io.fotoapparat.error.CameraErrorCallback;
@@ -19,7 +20,6 @@ import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.selector.FlashSelectors;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.selector.Selectors;
-import io.fotoapparat.parameter.selector.SensorSensitivitySelectors;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.view.CameraRenderer;
 import io.fotoapparat.view.CameraView;
@@ -58,6 +58,8 @@ public class FotoapparatBuilder {
     SelectorFunction<Collection<Flash>, Flash> flashSelector = FlashSelectors.off();
     SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector = Selectors.nothing();
     SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector = Selectors.nothing();
+
+    Integer jpegQuality;
 
     ScaleType scaleType = ScaleType.CENTER_CROP;
 
@@ -140,6 +142,14 @@ public class FotoapparatBuilder {
      */
     public FotoapparatBuilder sensorSensitivity(@NonNull SelectorFunction<Range<Integer>, Integer> selector) {
         sensorSensitivitySelector = selector;
+        return this;
+    }
+
+    /**
+     * @param jpegQuality of the picture (1-100)
+     */
+    public FotoapparatBuilder jpegQuality(@IntRange(from=0,to=100) @NonNull Integer jpegQuality) {
+        this.jpegQuality = jpegQuality;
         return this;
     }
 

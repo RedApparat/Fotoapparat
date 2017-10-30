@@ -82,6 +82,10 @@ public class ParametersFactory {
         );
     }
 
+
+    /**
+     * @return new parameters by selecting sensor sensitivity from given capabilities.
+     */
     public static Parameters selectSensorSensitivity(@NonNull Capabilities capabilities,
                                                      @NonNull SelectorFunction<Range<Integer>, Integer> selector) {
         return new Parameters().putValue(
@@ -91,5 +95,17 @@ public class ParametersFactory {
                 )
         );
     }
+
+    /**
+     * @param jpegQuality integer (1-100)
+     * @return new parameters with a set jpegQuality
+     */
+    public static Parameters selectJpegQuality(@NonNull Integer jpegQuality) {
+        return new Parameters().putValue(
+                Parameters.Type.JPEG_QUALITY,
+                jpegQuality
+        );
+    }
+
 
 }

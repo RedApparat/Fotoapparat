@@ -48,6 +48,7 @@ public class CaptureRequestFactory {
         Flash flash = parametersProvider.getFlash();
         Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
         Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
+        Integer jpegQuality = parametersProvider.getJpegQuality();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_PREVIEW)
@@ -55,6 +56,7 @@ public class CaptureRequestFactory {
                 .flash(flash)
                 .previewFpsRange(previewFpsRange)
                 .sensorSensitivity(sensorSensitivity)
+                .jpegQuality(jpegQuality)
                 .build();
     }
 
@@ -72,6 +74,7 @@ public class CaptureRequestFactory {
         Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
         boolean triggerAutoExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
         Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
+        Integer jpegQuality = parametersProvider.getJpegQuality();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
@@ -81,6 +84,7 @@ public class CaptureRequestFactory {
                 .triggerAutoFocus(true)
                 .triggerPrecaptureExposure(triggerAutoExposure)
                 .sensorSensitivity(sensorSensitivity)
+                .jpegQuality(jpegQuality)
                 .build();
     }
 
@@ -98,6 +102,7 @@ public class CaptureRequestFactory {
         FocusMode focus = parametersProvider.getFocus();
         Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
         Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
+        Integer jpegQuality = parametersProvider.getJpegQuality();
 
         boolean triggerPrecaptureExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
 
@@ -110,6 +115,7 @@ public class CaptureRequestFactory {
                 .previewFpsRange(previewFpsRange)
                 .setExposureMode(true)
                 .sensorSensitivity(sensorSensitivity)
+                .jpegQuality(jpegQuality)
                 .build();
     }
 
@@ -125,6 +131,7 @@ public class CaptureRequestFactory {
         FocusMode focus = parametersProvider.getFocus();
         Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
         Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
+        Integer jpegQuality = parametersProvider.getJpegQuality();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
@@ -134,6 +141,7 @@ public class CaptureRequestFactory {
                 .focus(focus)
                 .previewFpsRange(previewFpsRange)
                 .sensorSensitivity(sensorSensitivity)
+                .jpegQuality(jpegQuality)
                 .setExposureMode(true)
                 .build();
     }

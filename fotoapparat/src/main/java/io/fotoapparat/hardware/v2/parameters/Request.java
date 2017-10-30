@@ -36,6 +36,7 @@ class Request {
     private final FocusMode focus;
     private final Range<Integer> previewFpsRange;
     private final Integer sensorSensitivity;
+    private final Integer jpegQuality;
     private CaptureRequest.Builder captureRequest;
 
     private Request(CameraDevice cameraDevice,
@@ -47,7 +48,8 @@ class Request {
                     Flash flash, boolean shouldSetExposureMode,
                     FocusMode focus,
                     Range<Integer> previewFpsRange,
-                    Integer sensorSensitivity) {
+                    Integer sensorSensitivity,
+                    Integer jpegQuality) {
         this.cameraDevice = cameraDevice;
         this.requestTemplate = requestTemplate;
         this.surfaces = surfaces;
@@ -59,6 +61,7 @@ class Request {
         this.focus = focus;
         this.previewFpsRange = previewFpsRange;
         this.sensorSensitivity = sensorSensitivity;
+        this.jpegQuality = jpegQuality;
     }
 
     static CaptureRequest create(CaptureRequestBuilder builder) throws CameraAccessException {
@@ -73,7 +76,8 @@ class Request {
                 builder.shouldSetExposureMode,
                 builder.focus,
                 builder.previewFpsRange,
-                builder.sensorSensitivity
+                builder.sensorSensitivity,
+                builder.jpegQuality
         )
                 .build();
     }
@@ -100,6 +104,7 @@ class Request {
         setFocus();
         setPreviewFpsRange();
         setSensorSensitivity();
+        setJpegQuality();
 
         return captureRequest.build();
     }
@@ -202,6 +207,13 @@ class Request {
             return;
         }
         captureRequest.set(CaptureRequest.SENSOR_SENSITIVITY, sensorSensitivity);
+    }
+
+    private void setJpegQuality() {
+        if (jpegQuality == null){
+            return;
+        }
+        captureRequest.set(CaptureRequest.JPEG_QUALITY, jpegQuality.byteValue());
     }
 
 }

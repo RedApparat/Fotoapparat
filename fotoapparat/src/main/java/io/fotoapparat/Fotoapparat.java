@@ -13,7 +13,6 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.orientation.OrientationSensor;
 import io.fotoapparat.hardware.orientation.RotationListener;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
-import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.provider.CapabilitiesProvider;
 import io.fotoapparat.parameter.provider.CurrentParametersProvider;
 import io.fotoapparat.parameter.provider.InitialParametersProvider;
@@ -109,6 +108,7 @@ public class Fotoapparat {
                 builder.flashSelector,
                 builder.previewFpsRangeSelector,
                 builder.sensorSensitivitySelector,
+                builder.jpegQuality,
                 parametersValidator
         );
 
