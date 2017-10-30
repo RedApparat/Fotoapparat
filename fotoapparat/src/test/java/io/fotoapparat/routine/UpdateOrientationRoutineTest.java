@@ -3,21 +3,19 @@ package io.fotoapparat.routine;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.CameraDevice;
-import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.orientation.OrientationSensor;
+import io.fotoapparat.log.Logger;
 import io.fotoapparat.test.ImmediateExecutor;
 
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-import static junit.framework.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UpdateOrientationRoutineTest {
@@ -27,7 +25,7 @@ public class UpdateOrientationRoutineTest {
     @Mock
     OrientationSensor orientationSensor;
     @Mock
-    CameraErrorCallback cameraErrorCallback;
+    Logger logger;
 
     UpdateOrientationRoutine testee;
 
@@ -37,7 +35,7 @@ public class UpdateOrientationRoutineTest {
                 cameraDevice,
                 orientationSensor,
                 new ImmediateExecutor(),
-                cameraErrorCallback
+                logger
         );
     }
 
@@ -48,7 +46,7 @@ public class UpdateOrientationRoutineTest {
 
         // Then
         verify(orientationSensor).start(testee);
-        verifyZeroInteractions(cameraErrorCallback);
+        verifyZeroInteractions(logger);
     }
 
     @Test
@@ -58,7 +56,7 @@ public class UpdateOrientationRoutineTest {
 
         // Then
         verify(orientationSensor).stop();
-        verifyZeroInteractions(cameraErrorCallback);
+        verifyZeroInteractions(logger);
     }
 
     @Test
@@ -68,7 +66,7 @@ public class UpdateOrientationRoutineTest {
 
         // Then
         verify(cameraDevice).setDisplayOrientation(90);
-        verifyZeroInteractions(cameraErrorCallback);
+        verifyZeroInteractions(logger);
     }
 
     @Test
@@ -84,9 +82,7 @@ public class UpdateOrientationRoutineTest {
 
         // Then
         verify(cameraDevice).setDisplayOrientation(90);
-        ArgumentCaptor<CameraException> argumentCaptor = ArgumentCaptor.forClass(CameraException.class);
-        verify(cameraErrorCallback).onError(argumentCaptor.capture());
-        assertEquals(argumentCaptor.getValue().getCause(), exception);
+        verify(logger).log(anyString());
     }
 
 }
