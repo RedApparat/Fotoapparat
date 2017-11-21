@@ -2,10 +2,14 @@ package io.fotoapparat.parameter.range;
 
 import android.support.annotation.Nullable;
 
+import java.io.Serializable;
+
 /**
  * {@link Range} with no values in it.
  */
-final class EmptyRange<T> implements Range<T> {
+final class EmptyRange<T extends Serializable> implements Range<T> {
+
+    private static final long serialVersionUID = 1L;
 
     @Override
     public boolean contains(T value) {

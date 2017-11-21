@@ -3,6 +3,7 @@ package io.fotoapparat.parameter.range;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,11 +16,15 @@ import io.fotoapparat.util.StringUtils;
  *
  * @param <T> type of objects in that set.
  */
-class DiscreteRange<T extends Comparable<? super T>> implements Range<T> {
+class DiscreteRange<T extends Comparable<? super T> & Serializable> implements Range<T> {
+
+    private static final long serialVersionUID = 1L;
+
     @NonNull private final List<T> values;
 
     public DiscreteRange(@NonNull Collection<T> values) {
-        List<T> valuesList = (values instanceof List)
+        boolean isSerializableList = (values instanceof List && values instanceof Serializable);
+        List<T> valuesList = isSerializableList
                 ? (List<T>) values
                 : new ArrayList<>(values);
         Collections.sort(valuesList);
