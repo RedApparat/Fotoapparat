@@ -1,11 +1,13 @@
 package io.fotoapparat.parameter.range;
 
+import java.io.Serializable;
+
 /**
  * Interface for representing ranges of arbitrary object.
  *
  * @param <T> type of elements in that range.
  */
-public interface Range<T> {
+public interface Range<T extends Serializable> extends Serializable {
 
     /**
      * Returns highest value in this range.

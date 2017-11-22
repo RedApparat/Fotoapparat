@@ -2,12 +2,17 @@ package io.fotoapparat.parameter.range;
 
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 /**
  * Implementation of {@link Range} that represents numeric interval.
  *
  * @param <T> type of numbers in that interval.
  */
-class ContinuousRange<T extends Comparable<T>> implements Range<T> {
+class ContinuousRange<T extends Comparable<T> & Serializable> implements Range<T> {
+
+    private static final long serialVersionUID = 1L;
+
     @NonNull private final T lowerBound;
     @NonNull private final T upperBound;
 

@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 
+import java.io.Serializable;
+
 import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.range.Ranges;
 
@@ -39,7 +41,7 @@ public class RangeConverter {
      * @return The native Android {@link android.util.Range} value.
      */
     @Nullable
-    public static <T extends Comparable<T>> android.util.Range<T> toNativeRange(@NonNull Range<T> fotoapparatRange) {
+    public static <T extends Comparable<T> & Serializable> android.util.Range<T> toNativeRange(@NonNull Range<T> fotoapparatRange) {
         if (Ranges.isEmpty(fotoapparatRange)) {
             return null;
         } else {

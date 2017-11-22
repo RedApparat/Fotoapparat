@@ -1,9 +1,13 @@
 package io.fotoapparat.parameter;
 
+import java.io.Serializable;
+
 /**
  * Size in arbitrary units. Immutable.
  */
-public class Size {
+public class Size implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public final int width;
     public final int height;
