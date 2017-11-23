@@ -141,6 +141,15 @@ fotoapparat.updateParameters(
 )
 ```
 
+## Switch cameras
+
+In order to switch between multiple instances of Fotoapparat, for example an instance using the device's front camera and another using the back, `FotoapparatSwitcher` can be used:
+
+```java
+FotoapparatSwitcher fotoapparatSwitcher = FotoapparatSwitcher.withDefault(fotoapparatFront);
+fotoapparatSwitcher.switchTo(fotoapparatBack);
+```
+
 ## Set up
 
 Add dependency to your `build.gradle`
