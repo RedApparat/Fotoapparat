@@ -23,8 +23,12 @@ public class SessionManager implements PreviewOperator, CameraConnection.Listene
 
     @Override
     public void startPreview() {
-        session = sessionProvider.getPreviewSession();
-        session.startPreview();
+        try {
+            session = sessionProvider.getPreviewSession();
+            session.startPreview();
+        } catch (IllegalStateException e) {
+            throw new CameraException(e.getMessage());
+        }
     }
 
     @Override
