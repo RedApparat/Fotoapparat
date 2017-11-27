@@ -2,6 +2,7 @@ package io.fotoapparat.hardware.v2.session;
 
 import android.hardware.camera2.CameraCaptureSession;
 
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 
@@ -23,8 +24,12 @@ public class SessionManager implements PreviewOperator, CameraConnection.Listene
 
     @Override
     public void startPreview() {
-        session = sessionProvider.getPreviewSession();
-        session.startPreview();
+        try {
+            session = sessionProvider.getPreviewSession();
+            session.startPreview();
+        } catch (IllegalStateException e) {
+            throw new CameraException(e.getMessage());
+        }
     }
 
     @Override
