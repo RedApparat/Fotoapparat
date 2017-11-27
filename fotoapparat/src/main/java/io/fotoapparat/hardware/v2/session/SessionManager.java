@@ -2,6 +2,7 @@ package io.fotoapparat.hardware.v2.session;
 
 import android.hardware.camera2.CameraCaptureSession;
 
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
 
