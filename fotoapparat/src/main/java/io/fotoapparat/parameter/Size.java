@@ -29,6 +29,14 @@ public class Size implements Serializable {
         return (float) width / height;
     }
 
+    public int getPixels() {
+        return width * height;
+    }
+
+    public int getMegapixels() {
+        return getPixels()/1000000;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
