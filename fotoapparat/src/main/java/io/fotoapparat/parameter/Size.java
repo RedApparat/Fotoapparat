@@ -29,12 +29,8 @@ public class Size implements Serializable {
         return (float) width / height;
     }
 
-    public int getPixels() {
+    public int getArea() {
         return width * height;
-    }
-
-    public int getMegapixels() {
-        return getPixels()/1000000;
     }
 
     @Override
