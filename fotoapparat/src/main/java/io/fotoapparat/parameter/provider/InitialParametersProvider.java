@@ -9,10 +9,9 @@ import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
-import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.factory.ParametersFactory;
-import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.range.Range;
+import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.selector.Selectors;
 
 import static io.fotoapparat.parameter.Parameters.combineParameters;
@@ -106,13 +105,6 @@ public class InitialParametersProvider {
         return ParametersFactory.selectFocusMode(
                 capabilities,
                 focusModeSelector
-        );
-    }
-
-    private SelectorFunction<Collection<Size>, Size> previewWithSameAspectRatio(Size photoSize) {
-        return aspectRatio(
-                photoSize.getAspectRatio(),
-                previewSizeSelector
         );
     }
 
