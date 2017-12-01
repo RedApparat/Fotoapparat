@@ -29,6 +29,15 @@ public class Size implements Serializable {
         return (float) width / height;
     }
 
+    /**
+     * Returns the total area of this size.
+     *
+     * @return The area in arbitrary units.
+     */
+    public int getArea() {
+        return width * height;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
