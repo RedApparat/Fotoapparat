@@ -2,7 +2,9 @@ package io.fotoapparat.parameter.factory;
 
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.parameter.Flash;
@@ -24,7 +26,8 @@ public class ParametersFactory {
                                                @NonNull SelectorFunction<Collection<Size>, Size> selector) {
         return new Parameters().putValue(
                 Parameters.Type.PICTURE_SIZE,
-                selector.select(
+                selectSafely(
+                        selector,
                         capabilities.supportedPictureSizes()
                 )
         );
@@ -37,7 +40,8 @@ public class ParametersFactory {
                                                @NonNull SelectorFunction<Collection<Size>, Size> selector) {
         return new Parameters().putValue(
                 Parameters.Type.PREVIEW_SIZE,
-                selector.select(
+                selectSafely(
+                        selector,
                         capabilities.supportedPreviewSizes()
                 )
         );
@@ -50,7 +54,8 @@ public class ParametersFactory {
                                              @NonNull SelectorFunction<Collection<FocusMode>, FocusMode> selector) {
         return new Parameters().putValue(
                 Parameters.Type.FOCUS_MODE,
-                selector.select(
+                selectSafely(
+                        selector,
                         capabilities.supportedFocusModes()
                 )
         );
@@ -63,7 +68,8 @@ public class ParametersFactory {
                                              @NonNull SelectorFunction<Collection<Flash>, Flash> selector) {
         return new Parameters().putValue(
                 Parameters.Type.FLASH,
-                selector.select(
+                selectSafely(
+                        selector,
                         capabilities.supportedFlashModes()
                 )
         );
@@ -76,12 +82,12 @@ public class ParametersFactory {
                                                    @NonNull SelectorFunction<Collection<Range<Integer>>, Range<Integer>> selector) {
         return new Parameters().putValue(
                 Parameters.Type.PREVIEW_FPS_RANGE,
-                selector.select(
+                selectSafely(
+                        selector,
                         capabilities.supportedPreviewFpsRanges()
                 )
         );
     }
-
 
     /**
      * @return new parameters by selecting sensor sensitivity from given capabilities.
@@ -90,7 +96,8 @@ public class ParametersFactory {
                                                      @NonNull SelectorFunction<Range<Integer>, Integer> selector) {
         return new Parameters().putValue(
                 Parameters.Type.SENSOR_SENSITIVITY,
-                selector.select(
+                selectSafely(
+                        selector,
                         capabilities.supportedSensorSensitivityRange()
                 )
         );
@@ -103,9 +110,42 @@ public class ParametersFactory {
     public static Parameters selectJpegQuality(@NonNull Integer jpegQuality) {
         return new Parameters().putValue(
                 Parameters.Type.JPEG_QUALITY,
-                jpegQuality
+                ensureIntegerRange(jpegQuality)
         );
     }
 
+    private static Integer ensureIntegerRange(Integer jpegQuality) {
+        if (jpegQuality == null) {
+            throw new IllegalArgumentException("Jpeg quality was null");
+        }
+        if (jpegQuality < 1 || 100 < jpegQuality) {
+            throw new IllegalArgumentException("Jpeg quality was not in 0-100 range.");
+        }
+        return jpegQuality;
+    }
+
+    private static <T extends Serializable> T selectSafely(
+            SelectorFunction<Range<T>, T> selector,
+            Range<T> capabilities
+    ) {
+        T selectedParameter = selector.select(capabilities);
+        if (!capabilities.contains(selectedParameter)) {
+            throw new IllegalArgumentException(
+                    "The selected parameter is not in the supported set of values.");
+        }
+        return selectedParameter;
+    }
+
+    private static <T> T selectSafely(
+            SelectorFunction<Collection<T>, T> selector,
+            Set<T> capabilities
+    ) {
+        T selectedParameter = selector.select(capabilities);
+        if (!capabilities.contains(selectedParameter)) {
+            throw new IllegalArgumentException(
+                    "The selected parameter is not in the supported set of values.");
+        }
+        return selectedParameter;
+    }
 
 }
