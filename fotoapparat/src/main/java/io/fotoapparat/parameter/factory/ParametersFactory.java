@@ -107,7 +107,7 @@ public class ParametersFactory {
      * @param jpegQuality integer (1-100)
      * @return new parameters with a set jpegQuality
      */
-    public static Parameters selectJpegQuality(@NonNull Integer jpegQuality) {
+    public static Parameters selectJpegQuality(int jpegQuality) {
         return new Parameters().putValue(
                 Parameters.Type.JPEG_QUALITY,
                 ensureJpegQualityRange(jpegQuality)

@@ -31,7 +31,7 @@ public class InitialParametersProvider {
     private final SelectorFunction<Collection<Flash>, Flash> flashSelector;
     private final SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector;
     private final SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector;
-    private final Integer jpegQuality;
+    private final int jpegQuality;
 
     public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
                                      SelectorFunction<Collection<Size>, Size> photoSizeSelector,
@@ -40,7 +40,7 @@ public class InitialParametersProvider {
                                      SelectorFunction<Collection<Flash>, Flash> flashSelector,
                                      SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector,
                                      SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector,
-                                     Integer jpegQuality,
+                                     int jpegQuality,
                                      InitialParametersValidator parametersValidator) {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
