@@ -2,6 +2,8 @@ package io.fotoapparat.parameter.factory;
 
 import org.junit.Test;
 
+import java.util.Collections;
+
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
@@ -16,15 +18,25 @@ import static junit.framework.Assert.assertEquals;
 
 public class ParametersFactoryTest {
 
-    static final Capabilities CAPABILITIES = Capabilities.empty();
+    static final Capabilities EMPTY_CAPABILITIES = Capabilities.empty();
 
     @Test
     public void selectPictureSize() throws Exception {
         // Given
         Size size = new Size(100, 100);
 
+        Capabilities capabilities = new Capabilities(
+                Collections.singleton(size),
+                Collections.<Size>emptySet(),
+                Collections.<FocusMode>emptySet(),
+                Collections.<Flash>emptySet(),
+                Collections.<Range<Integer>>emptySet(),
+                Ranges.<Integer>emptyRange(),
+                false
+        );
+
         // When
-        Parameters result = ParametersFactory.selectPictureSize(CAPABILITIES,
+        Parameters result = ParametersFactory.selectPictureSize(capabilities,
                 selectFromCollection(size));
 
         // Then
@@ -39,8 +51,18 @@ public class ParametersFactoryTest {
         // Given
         Size size = new Size(100, 100);
 
+        Capabilities capabilities = new Capabilities(
+                Collections.<Size>emptySet(),
+                Collections.singleton(size),
+                Collections.<FocusMode>emptySet(),
+                Collections.<Flash>emptySet(),
+                Collections.<Range<Integer>>emptySet(),
+                Ranges.<Integer>emptyRange(),
+                false
+        );
+
         // When
-        Parameters result = ParametersFactory.selectPreviewSize(CAPABILITIES,
+        Parameters result = ParametersFactory.selectPreviewSize(capabilities,
                 selectFromCollection(size));
 
         // Then
@@ -55,8 +77,18 @@ public class ParametersFactoryTest {
         // Given
         FocusMode focusMode = FocusMode.AUTO;
 
+        Capabilities capabilities = new Capabilities(
+                Collections.<Size>emptySet(),
+                Collections.<Size>emptySet(),
+                Collections.singleton(focusMode),
+                Collections.<Flash>emptySet(),
+                Collections.<Range<Integer>>emptySet(),
+                Ranges.<Integer>emptyRange(),
+                false
+        );
+
         // When
-        Parameters result = ParametersFactory.selectFocusMode(CAPABILITIES,
+        Parameters result = ParametersFactory.selectFocusMode(capabilities,
                 selectFromCollection(focusMode));
 
         // Then
@@ -71,8 +103,18 @@ public class ParametersFactoryTest {
         // Given
         Flash flash = Flash.AUTO;
 
+        Capabilities capabilities = new Capabilities(
+                Collections.<Size>emptySet(),
+                Collections.<Size>emptySet(),
+                Collections.<FocusMode>emptySet(),
+                Collections.singleton(flash),
+                Collections.<Range<Integer>>emptySet(),
+                Ranges.<Integer>emptyRange(),
+                false
+        );
+
         // When
-        Parameters result = ParametersFactory.selectFlashMode(CAPABILITIES,
+        Parameters result = ParametersFactory.selectFlashMode(capabilities,
                 selectFromCollection(flash));
 
         // Then
@@ -87,8 +129,18 @@ public class ParametersFactoryTest {
         // Given
         Range<Integer> range = Ranges.continuousRange(30000, 30000);
 
+        Capabilities capabilities = new Capabilities(
+                Collections.<Size>emptySet(),
+                Collections.<Size>emptySet(),
+                Collections.<FocusMode>emptySet(),
+                Collections.<Flash>emptySet(),
+                Collections.singleton(range),
+                Ranges.<Integer>emptyRange(),
+                false
+        );
+
         // When
-        Parameters result = ParametersFactory.selectPreviewFpsRange(CAPABILITIES,
+        Parameters result = ParametersFactory.selectPreviewFpsRange(capabilities,
                 selectFromCollection(range));
 
         // Then
@@ -103,8 +155,18 @@ public class ParametersFactoryTest {
         // When
         Integer isoValue = 1200;
 
+        Capabilities capabilities = new Capabilities(
+                Collections.<Size>emptySet(),
+                Collections.<Size>emptySet(),
+                Collections.<FocusMode>emptySet(),
+                Collections.<Flash>emptySet(),
+                Collections.<Range<Integer>>emptySet(),
+                Ranges.continuousRange(isoValue),
+                false
+        );
+
         // Then
-        Parameters result = ParametersFactory.selectSensorSensitivity(CAPABILITIES,
+        Parameters result = ParametersFactory.selectSensorSensitivity(capabilities,
                 TestSelectors.<Range<Integer>, Integer>select(isoValue));
 
         assertEquals(
@@ -113,4 +175,67 @@ public class ParametersFactoryTest {
         );
     }
 
+    @Test
+    public void selectJpegQuality() throws Exception {
+        // Given
+        int quality = 100;
+
+        // When
+        Parameters result = ParametersFactory.selectJpegQuality(quality);
+
+        // Then
+        assertEquals(
+                new Parameters().putValue(Parameters.Type.JPEG_QUALITY, quality),
+                result
+        );
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidCollectionSelector() throws Exception {
+        // Given
+        Size size = new Size(100, 100);
+
+        // When
+        ParametersFactory.selectPictureSize(EMPTY_CAPABILITIES, selectFromCollection(size));
+
+        // Then
+        // Exception
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidRangeSelector() throws Exception {
+        // Given
+        Integer isoValue = 1200;
+
+        // When
+        ParametersFactory.selectSensorSensitivity(EMPTY_CAPABILITIES,
+                TestSelectors.<Range<Integer>, Integer>select(isoValue));
+
+        // Then
+        // Exception
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidSmallerJpegQuality() throws Exception {
+        // Given
+        int quality = -1;
+
+        // When
+        ParametersFactory.selectJpegQuality(quality);
+
+        // Then
+        // Exception
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidBiggerJpegQuality() throws Exception {
+        // Given
+        int quality = 101;
+
+        // When
+        ParametersFactory.selectJpegQuality(quality);
+
+        // Then
+        // Exception
+    }
 }

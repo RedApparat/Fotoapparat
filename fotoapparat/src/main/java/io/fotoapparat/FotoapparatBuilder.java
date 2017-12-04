@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 
-import io.fotoapparat.error.CameraErrorCallback;
 import java.util.Collection;
 
+import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.log.Logger;
@@ -59,7 +59,7 @@ public class FotoapparatBuilder {
     SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector = Selectors.nothing();
     SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector = Selectors.nothing();
 
-    Integer jpegQuality;
+    int jpegQuality;
 
     ScaleType scaleType = ScaleType.CENTER_CROP;
 
@@ -148,7 +148,7 @@ public class FotoapparatBuilder {
     /**
      * @param jpegQuality of the picture (1-100)
      */
-    public FotoapparatBuilder jpegQuality(@IntRange(from=0,to=100) @NonNull Integer jpegQuality) {
+    public FotoapparatBuilder jpegQuality(@IntRange(from = 0, to = 100) int jpegQuality) {
         this.jpegQuality = jpegQuality;
         return this;
     }
