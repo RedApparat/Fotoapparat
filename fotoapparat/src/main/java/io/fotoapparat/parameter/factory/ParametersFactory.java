@@ -110,11 +110,11 @@ public class ParametersFactory {
     public static Parameters selectJpegQuality(@NonNull Integer jpegQuality) {
         return new Parameters().putValue(
                 Parameters.Type.JPEG_QUALITY,
-                ensureIntegerRange(jpegQuality)
+                ensureJpegQualityRange(jpegQuality)
         );
     }
 
-    private static Integer ensureIntegerRange(Integer jpegQuality) {
+    private static Integer ensureJpegQualityRange(Integer jpegQuality) {
         if (jpegQuality == null) {
             throw new IllegalArgumentException("Jpeg quality was null");
         }
