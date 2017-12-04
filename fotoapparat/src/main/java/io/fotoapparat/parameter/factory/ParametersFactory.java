@@ -114,10 +114,7 @@ public class ParametersFactory {
         );
     }
 
-    private static Integer ensureJpegQualityRange(Integer jpegQuality) {
-        if (jpegQuality == null) {
-            throw new IllegalArgumentException("Jpeg quality was null");
-        }
+    private static Integer ensureJpegQualityRange(int jpegQuality) {
         if (jpegQuality < 1 || 100 < jpegQuality) {
             throw new IllegalArgumentException("Jpeg quality was not in 0-100 range.");
         }

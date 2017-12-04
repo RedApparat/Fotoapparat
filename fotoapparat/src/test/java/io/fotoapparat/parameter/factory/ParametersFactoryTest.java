@@ -205,10 +205,11 @@ public class ParametersFactoryTest {
     @Test(expected = IllegalArgumentException.class)
     public void invalidRangeSelector() throws Exception {
         // Given
-        Range<Integer> range = Ranges.continuousRange(30000, 30000);
+        Integer isoValue = 1200;
 
         // When
-        ParametersFactory.selectPreviewFpsRange(EMPTY_CAPABILITIES, selectFromCollection(range));
+        ParametersFactory.selectSensorSensitivity(EMPTY_CAPABILITIES,
+                TestSelectors.<Range<Integer>, Integer>select(isoValue));
 
         // Then
         // Exception
