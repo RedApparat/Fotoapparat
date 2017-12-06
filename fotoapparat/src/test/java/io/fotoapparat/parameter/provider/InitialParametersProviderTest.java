@@ -9,6 +9,7 @@ import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
+import io.fotoapparat.log.Loggers;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
@@ -109,6 +110,7 @@ public class InitialParametersProviderTest {
                 PreviewFpsRangeSelectors.rangeWithHighestFps(),
                 SensorSensitivitySelectors.highestSensorSensitivity(),
                 95,
+                Loggers.none(),
                 initialParametersValidator
         );
 

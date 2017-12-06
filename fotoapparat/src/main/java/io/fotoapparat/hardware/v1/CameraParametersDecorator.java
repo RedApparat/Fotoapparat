@@ -166,17 +166,16 @@ public class CameraParametersDecorator {
     /**
      * @see Camera.Parameters#getJpegQuality()
      */
-    public int getJpegQuality(){
+    public int getJpegQuality() {
         return cameraParameters.getJpegQuality();
     }
 
     /**
      * @see Camera.Parameters#setJpegQuality(int)
      */
-    public void setJpegQuality(int quality){
+    public void setJpegQuality(int quality) {
         cameraParameters.setJpegQuality(quality);
     }
-
 
     @Nullable
     private String findExistingKey(@NonNull String[] keys) {

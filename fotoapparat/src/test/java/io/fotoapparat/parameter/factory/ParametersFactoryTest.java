@@ -1,24 +1,35 @@
 package io.fotoapparat.parameter.factory;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Collection;
 import java.util.Collections;
 
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.range.Ranges;
+import io.fotoapparat.parameter.selector.Selectors;
 import io.fotoapparat.util.TestSelectors;
 
 import static io.fotoapparat.util.TestSelectors.selectFromCollection;
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ParametersFactoryTest {
 
     static final Capabilities EMPTY_CAPABILITIES = Capabilities.empty();
+    @Mock
+    Logger logger;
 
     @Test
     public void selectPictureSize() throws Exception {
@@ -141,7 +152,7 @@ public class ParametersFactoryTest {
 
         // When
         Parameters result = ParametersFactory.selectPreviewFpsRange(capabilities,
-                selectFromCollection(range));
+                selectFromCollection(range), logger);
 
         // Then
         assertEquals(
@@ -167,7 +178,7 @@ public class ParametersFactoryTest {
 
         // Then
         Parameters result = ParametersFactory.selectSensorSensitivity(capabilities,
-                TestSelectors.<Range<Integer>, Integer>select(isoValue));
+                TestSelectors.<Range<Integer>, Integer>select(isoValue), logger);
 
         assertEquals(
                 new Parameters().putValue(Parameters.Type.SENSOR_SENSITIVITY, isoValue),
@@ -190,6 +201,36 @@ public class ParametersFactoryTest {
         );
     }
 
+    @Test
+    public void emptyRangeSelector() throws Exception {
+        // Given
+
+        // When
+        ParametersFactory.selectSensorSensitivity(
+                EMPTY_CAPABILITIES,
+                Selectors.<Range<Integer>, Integer>nothing(),
+                logger
+        );
+
+        // Then
+        verify(logger).log(anyString());
+    }
+
+    @Test
+    public void emptyPreviewFpsRange() throws Exception {
+        // Given
+
+        // When
+        ParametersFactory.selectPreviewFpsRange(
+                EMPTY_CAPABILITIES,
+                Selectors.<Collection<Range<Integer>>, Range<Integer>>nothing(),
+                logger
+        );
+
+        // Then
+        verify(logger).log(anyString());
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void invalidCollectionSelector() throws Exception {
         // Given
@@ -197,19 +238,6 @@ public class ParametersFactoryTest {
 
         // When
         ParametersFactory.selectPictureSize(EMPTY_CAPABILITIES, selectFromCollection(size));
-
-        // Then
-        // Exception
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void invalidRangeSelector() throws Exception {
-        // Given
-        Integer isoValue = 1200;
-
-        // When
-        ParametersFactory.selectSensorSensitivity(EMPTY_CAPABILITIES,
-                TestSelectors.<Range<Integer>, Integer>select(isoValue));
 
         // Then
         // Exception

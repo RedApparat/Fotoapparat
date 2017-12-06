@@ -2,11 +2,11 @@ package io.fotoapparat.parameter.factory;
 
 import android.support.annotation.NonNull;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
@@ -79,13 +79,21 @@ public class ParametersFactory {
      * @return new parameters by selecting preview FPS range from given capabilities.
      */
     public static Parameters selectPreviewFpsRange(@NonNull Capabilities capabilities,
-                                                   @NonNull SelectorFunction<Collection<Range<Integer>>, Range<Integer>> selector) {
+                                                   @NonNull SelectorFunction<Collection<Range<Integer>>, Range<Integer>> selector,
+                                                   Logger logger) {
+        Range<Integer> selectedFpsRange = selector.select(
+                capabilities.supportedPreviewFpsRanges()
+        );
+
+        if (selectedFpsRange == null) {
+            logger.log(
+                    "No fps range has been selected. Will default to previously set one or default.");
+            return new Parameters();
+        }
+
         return new Parameters().putValue(
                 Parameters.Type.PREVIEW_FPS_RANGE,
-                selectSafely(
-                        selector,
-                        capabilities.supportedPreviewFpsRanges()
-                )
+                selectedFpsRange
         );
     }
 
@@ -93,13 +101,21 @@ public class ParametersFactory {
      * @return new parameters by selecting sensor sensitivity from given capabilities.
      */
     public static Parameters selectSensorSensitivity(@NonNull Capabilities capabilities,
-                                                     @NonNull SelectorFunction<Range<Integer>, Integer> selector) {
+                                                     @NonNull SelectorFunction<Range<Integer>, Integer> selector,
+                                                     Logger logger) {
+        Integer selectedSensorSensitivity = selector.select(
+                capabilities.supportedSensorSensitivityRange()
+        );
+
+        if (selectedSensorSensitivity == null) {
+            logger.log(
+                    "No sensor sensitivity has been selected. Will default to previously set one or default.");
+            return new Parameters();
+        }
+
         return new Parameters().putValue(
                 Parameters.Type.SENSOR_SENSITIVITY,
-                selectSafely(
-                        selector,
-                        capabilities.supportedSensorSensitivityRange()
-                )
+                selectedSensorSensitivity
         );
     }
 
@@ -119,18 +135,6 @@ public class ParametersFactory {
             throw new IllegalArgumentException("Jpeg quality was not in 0-100 range.");
         }
         return jpegQuality;
-    }
-
-    private static <T extends Serializable> T selectSafely(
-            SelectorFunction<Range<T>, T> selector,
-            Range<T> capabilities
-    ) {
-        T selectedParameter = selector.select(capabilities);
-        if (!capabilities.contains(selectedParameter)) {
-            throw new IllegalArgumentException(
-                    "The selected parameter is not in the supported set of values.");
-        }
-        return selectedParameter;
     }
 
     private static <T> T selectSafely(
