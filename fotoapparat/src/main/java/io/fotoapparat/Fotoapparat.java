@@ -199,6 +199,13 @@ public class Fotoapparat {
     }
 
     /**
+     * @return {@code true} if camera is started, {@code false} otherwise.
+     */
+    public boolean isStarted() {
+        return started;
+    }
+
+    /**
      * Provides camera capabilities asynchronously, returns immediately.
      *
      * @return {@link CapabilitiesResult} which will deliver result asynchronously.
