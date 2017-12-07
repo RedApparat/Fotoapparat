@@ -5,6 +5,7 @@ import java.util.Collection;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
+import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
@@ -23,6 +24,7 @@ import static java.util.Arrays.asList;
  */
 public class InitialParametersProvider {
 
+    private final Logger logger;
     private final InitialParametersValidator parametersValidator;
     private final CapabilitiesOperator capabilitiesOperator;
     private final SelectorFunction<Collection<Size>, Size> photoSizeSelector;
@@ -41,6 +43,7 @@ public class InitialParametersProvider {
                                      SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector,
                                      SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector,
                                      int jpegQuality,
+                                     Logger logger,
                                      InitialParametersValidator parametersValidator) {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
@@ -50,6 +53,7 @@ public class InitialParametersProvider {
         this.previewFpsRangeSelector = previewFpsRangeSelector;
         this.sensorSensitivitySelector = sensorSensitivitySelector;
         this.jpegQuality = jpegQuality;
+        this.logger = logger;
         this.parametersValidator = parametersValidator;
     }
 
@@ -134,14 +138,16 @@ public class InitialParametersProvider {
     private Parameters previewFpsRange(Capabilities capabilities) {
         return ParametersFactory.selectPreviewFpsRange(
                 capabilities,
-                previewFpsRangeSelector
+                previewFpsRangeSelector,
+                logger
         );
     }
 
     private Parameters sensorSensitivity(Capabilities capabilities) {
         return ParametersFactory.selectSensorSensitivity(
                 capabilities,
-                sensorSensitivitySelector
+                sensorSensitivitySelector,
+                logger
         );
     }
 

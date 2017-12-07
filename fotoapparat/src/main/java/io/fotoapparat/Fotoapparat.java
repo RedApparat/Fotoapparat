@@ -109,6 +109,7 @@ public class Fotoapparat {
                 builder.previewFpsRangeSelector,
                 builder.sensorSensitivitySelector,
                 builder.jpegQuality,
+                builder.logger,
                 parametersValidator
         );
 

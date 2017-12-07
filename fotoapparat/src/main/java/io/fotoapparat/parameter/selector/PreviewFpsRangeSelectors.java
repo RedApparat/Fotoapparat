@@ -1,5 +1,6 @@
 package io.fotoapparat.parameter.selector;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,4 +75,33 @@ public class PreviewFpsRangeSelectors {
         };
     }
 
+    public static SelectorFunction<Collection<Range<Integer>>, Range<Integer>> customFpsRange() {
+        return new SelectorFunction<Collection<Range<Integer>>, Range<Integer>>() {
+            @Override
+            public Range<Integer> select(Collection<Range<Integer>> items) {
+                if (items.isEmpty()) {
+                    return null;
+                }
+
+                ArrayList<Range<Integer>> rangeArraylist= new ArrayList<>();
+                for (Range<Integer> range : items) {
+
+                    if (range.highest().intValue() != range.lowest().intValue()) {
+
+                        rangeArraylist.add(range);
+                    }
+
+                }
+
+                if (!rangeArraylist.isEmpty()) {
+
+                    return Collections.max(rangeArraylist, COMPARATOR_BY_BOUNDS);
+                } else {
+
+                    return Collections.max(items, COMPARATOR_BY_BOUNDS);
+                }
+
+            }
+        };
+    }
 }
