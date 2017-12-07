@@ -124,6 +124,8 @@ public class FotoapparatTest {
                 configurePreviewStreamRoutine
         );
 
+        assertTrue(testee.isStarted());
+
         inOrder.verify(startCameraRoutine).run();
         inOrder.verify(configurePreviewStreamRoutine).run();
         inOrder.verify(updateOrientationRoutine).start();
@@ -150,6 +152,8 @@ public class FotoapparatTest {
         testee.stop();
 
         // Then
+        assertFalse(testee.isStarted());
+
         InOrder inOrder = inOrder(
                 stopCameraRoutine,
                 updateOrientationRoutine
