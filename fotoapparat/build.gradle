@@ -1,15 +1,16 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'kotlin-android'
 
 group = 'io.fotoapparat'
 
 android {
-    buildToolsVersion project.buildToolsVersion
-    compileSdkVersion Integer.parseInt(project.compileSdkVersion)
+    buildToolsVersion versions.android.buildTools
+    compileSdkVersion versions.sdk.target
 
     defaultConfig {
-        minSdkVersion Integer.parseInt(project.minSdkVersion)
-        targetSdkVersion Integer.parseInt(project.targetSdkVersion)
+        minSdkVersion versions.sdk.minimum
+        targetSdkVersion versions.sdk.target
 
         archivesBaseName = 'library'
     }
@@ -26,9 +27,9 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:support-annotations:${project.appCompatVersion}"
+    compile "com.android.support:support-annotations:${versions.android.support}"
 
-    testCompile "junit:junit:${project.junitVersion}"
-    testCompile "org.mockito:mockito-core:${project.mockitoVersion}"
-    testCompile 'commons-io:commons-io:2.5'
+    testCompile "junit:junit:${versions.test.junit}"
+    testCompile "org.mockito:mockito-core:${versions.test.mockito}"
+    testCompile "commons-io:commons-io:${versions.util.commons}"
 }
