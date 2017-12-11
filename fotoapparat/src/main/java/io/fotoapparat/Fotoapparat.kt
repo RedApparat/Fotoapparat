@@ -1,0 +1,236 @@
+package io.fotoapparat
+
+import android.content.Context
+import android.support.annotation.FloatRange
+import io.fotoapparat.capability.Capabilities
+import io.fotoapparat.characteristic.LensPosition
+import io.fotoapparat.configuration.Configuration
+import io.fotoapparat.configuration.default
+import io.fotoapparat.error.onMainThread
+import io.fotoapparat.exception.camera.CameraException
+import io.fotoapparat.hardware.Device
+import io.fotoapparat.hardware.display.Display
+import io.fotoapparat.hardware.execute
+import io.fotoapparat.hardware.orientation.OrientationSensor
+import io.fotoapparat.log.Logger
+import io.fotoapparat.log.none
+import io.fotoapparat.parameter.ScaleType
+import io.fotoapparat.parameter.camera.CameraParameters
+import io.fotoapparat.result.*
+import io.fotoapparat.routine.camera.bootStart
+import io.fotoapparat.routine.camera.shutDown
+import io.fotoapparat.routine.camera.switchCamera
+import io.fotoapparat.routine.camera.updateDeviceConfiguration
+import io.fotoapparat.routine.capability.getCapabilities
+import io.fotoapparat.routine.focus.focus
+import io.fotoapparat.routine.parameter.getCurrentParameters
+import io.fotoapparat.routine.photo.takePhoto
+import io.fotoapparat.routine.zoom.updateZoomLevel
+import io.fotoapparat.selector.back
+import io.fotoapparat.selector.external
+import io.fotoapparat.selector.firstAvailable
+import io.fotoapparat.selector.front
+import io.fotoapparat.view.CameraRenderer
+import java.util.concurrent.FutureTask
+
+/**
+ * Camera. Takes pictures.
+ */
+class Fotoapparat
+@JvmOverloads constructor(
+        context: Context,
+        view: CameraRenderer,
+        // TODO if we have 2 back cameras, we need better selector. Therefore this needs to be wrapped to a "camera Selector" class or similar
+        lensPosition: Collection<LensPosition>.() -> LensPosition? = firstAvailable(
+                back(),
+                front(),
+                external()
+        ),
+        scaleType: ScaleType = ScaleType.CenterCrop,
+        configuration: Configuration = default(),
+        cameraErrorCallback: ((CameraException) -> Unit) = {},
+        private val logger: Logger = none()
+) {
+
+    private val mainThreadErrorCallback = cameraErrorCallback.onMainThread()
+
+    private val display = Display(context)
+
+    private val device = Device(
+            cameraRenderer = view,
+            logger = logger,
+            display = display,
+            scaleType = scaleType,
+            initialLensPositionSelector = lensPosition,
+            initialConfiguration = configuration
+    )
+
+    private val orientationSensor = OrientationSensor(
+            context = context,
+            device = device
+    )
+
+    /**
+     * Starts camera.
+     *
+     * @throws IllegalStateException If the camera has already started.
+     */
+    fun start() {
+        logger.recordMethod()
+
+        execute {
+            device.bootStart(
+                    orientationSensor = orientationSensor,
+                    mainThreadErrorCallback = mainThreadErrorCallback
+            )
+        }
+    }
+
+    /**
+     * Stops camera.
+     *
+     * @throws IllegalStateException If the camera has not started.
+     */
+    fun stop() {
+        logger.recordMethod()
+
+        execute {
+            device.shutDown(
+                    orientationSensor = orientationSensor
+            )
+        }
+    }
+
+    /**
+     * Takes picture, returns immediately.
+     *
+     * @return [PhotoResult] which will deliver result asynchronously.
+     */
+    fun takePicture(): PhotoResult {
+        logger.recordMethod()
+
+        val takePictureTask = FutureTask<Photo> {
+            device.takePhoto()
+        }
+
+        execute(takePictureTask)
+
+        return PhotoResult.fromFuture(takePictureTask)
+    }
+
+    /**
+     * Provides camera capabilities asynchronously, returns immediately.
+     *
+     * @return [CapabilitiesResult] which will deliver result asynchronously.
+     */
+    fun getCapabilities(): CapabilitiesResult {
+        logger.recordMethod()
+
+        val getCapabilitiesTask = FutureTask<Capabilities> {
+            device.getCapabilities()
+        }
+
+        execute(getCapabilitiesTask)
+
+        return PendingResult.fromFuture(getCapabilitiesTask)
+    }
+
+    /**
+     * Provides current camera parameters asynchronously, returns immediately.
+     *
+     * @return [ParametersResult] which will deliver result asynchronously.
+     */
+    fun getCurrentParameters(): ParametersResult {
+        logger.recordMethod()
+
+        val getCameraParametersTask = FutureTask<CameraParameters> {
+            device.getCurrentParameters()
+        }
+
+        execute(getCameraParametersTask)
+
+        return PendingResult.fromFuture(getCameraParametersTask)
+    }
+
+    /**
+     * Updates current configuration.
+     *
+     * @throws IllegalStateException If the current camera has not started.
+     */
+    fun updateConfiguration(configuration: Configuration) = execute {
+        logger.recordMethod()
+
+        device.updateDeviceConfiguration(configuration)
+    }
+
+    /**
+     * Asynchronously updates zoom level of the camera.
+     * If zoom is not supported by the device - does nothing.
+     *
+     * @param zoomLevel Zoom level of the camera. A value between 0 and 1.
+     * @throws IllegalStateException If the current camera has not started.
+     */
+    fun setZoom(@FloatRange(from = 0.0, to = 1.0) zoomLevel: Float) = execute {
+        logger.recordMethod()
+
+        device.updateZoomLevel(
+                zoomLevel = zoomLevel
+        )
+    }
+
+    /**
+     * Performs auto focus. If it is not available or not enabled, does nothing.
+     *
+     * @see Fotoapparat.focus
+     */
+    fun autoFocus(): Fotoapparat {
+        logger.recordMethod()
+        focus()
+
+        return this
+    }
+
+    /**
+     * Attempts to focus the camera asynchronously.
+     *
+     * @return the pending result of focus operation which will deliver result asynchronously.
+     *
+     * @see Fotoapparat.autoFocus
+     */
+    fun focus(): PendingResult<FocusResult> {
+        logger.recordMethod()
+
+        val focusTask = FutureTask<FocusResult> {
+            device.focus()
+        }
+        execute(focusTask)
+
+        return PendingResult.fromFuture(focusTask)
+    }
+
+    /**
+     * Switches to another camera. If previous camera has already started then it will be
+     * stopped automatically and new will start.
+     *
+     * @throws IllegalStateException If the current camera is recording.
+     */
+    fun switchTo(
+            lensPosition: Collection<LensPosition>.() -> LensPosition?,
+            configuration: Configuration
+    ) {
+        logger.recordMethod()
+        execute {
+            device.switchCamera(
+                    newLensPositionSelector = lensPosition,
+                    newConfiguration = configuration,
+                    mainThreadErrorCallback = mainThreadErrorCallback
+            )
+        }
+    }
+
+    companion object {
+
+        @JvmStatic
+        fun with(context: Context) = FotoapparatBuilder(context)
+    }
+}

@@ -31,6 +31,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
 
     testImplementation "junit:junit:${versions.test.junit}"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}"
     testImplementation "org.mockito:mockito-core:${versions.test.mockito}"
     testImplementation "commons-io:commons-io:${versions.util.commons}"
 }
