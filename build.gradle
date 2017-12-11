@@ -21,7 +21,7 @@ buildscript {
                 ],
                 test   : [
                         junit  : '4.12',
-                        mockito: '2.2.28'
+                        mockito: '2.13.0'
                 ],
                 util   : [
                         commons: '2.5'

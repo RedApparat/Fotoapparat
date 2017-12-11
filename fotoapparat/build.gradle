@@ -27,9 +27,10 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:support-annotations:${versions.android.support}"
+    implementation "com.android.support:support-annotations:${versions.android.support}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
 
-    testCompile "junit:junit:${versions.test.junit}"
-    testCompile "org.mockito:mockito-core:${versions.test.mockito}"
-    testCompile "commons-io:commons-io:${versions.util.commons}"
+    testImplementation "junit:junit:${versions.test.junit}"
+    testImplementation "org.mockito:mockito-core:${versions.test.mockito}"
+    testImplementation "commons-io:commons-io:${versions.util.commons}"
 }
