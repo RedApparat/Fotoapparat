@@ -25,6 +25,9 @@ import io.fotoapparat.view.CameraView;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
+import static io.fotoapparat.log.LoggersKt.fileLogger;
+import static io.fotoapparat.log.LoggersKt.logcat;
+import static io.fotoapparat.log.LoggersKt.loggers;
 import static io.fotoapparat.result.transformer.ResolutionTransformersKt.scaled;
 import static io.fotoapparat.selector.AspectRatioSelectorsKt.standardRatio;
 import static io.fotoapparat.selector.FlashSelectorsKt.autoFlash;
@@ -183,10 +186,10 @@ public class MainActivity extends AppCompatActivity {
                 .previewFpsRange(highestFps())
                 .sensorSensitivity(highestSensorSensitivity())
                 .frameProcessor(new SampleFrameProcessor())
-                //                .logger(loggers(
-                //                        logcat(),
-                //                        new FileLogger(this)
-                //                ))
+                .logger(loggers(
+                        logcat(),
+                        fileLogger(this)
+                ))
                 .cameraErrorCallback(new Function1<CameraException, Unit>() {
                     @Override
                     public Unit invoke(CameraException e) {
