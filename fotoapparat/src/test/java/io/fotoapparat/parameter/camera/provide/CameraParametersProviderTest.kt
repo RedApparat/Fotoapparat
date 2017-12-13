@@ -1,7 +1,7 @@
 package io.fotoapparat.parameter.camera.provide
 
 import io.fotoapparat.capability.Capabilities
-import io.fotoapparat.configuration.DefinedConfiguration
+import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.exception.camera.UnsupportedParameterException
 import io.fotoapparat.parameter.Flash
 import io.fotoapparat.parameter.FocusMode
@@ -30,7 +30,7 @@ internal class CameraParametersProviderTest {
             sensorSensitivities = setOf(iso)
     )
 
-    val definedConfiguration = DefinedConfiguration(
+    val definedConfiguration = CameraConfiguration(
             flashMode = single(Flash.AutoRedEye),
             focusMode = single(FocusMode.Fixed),
             frameProcessor = {},
@@ -47,7 +47,7 @@ internal class CameraParametersProviderTest {
         // When
         val cameraParameters = getCameraParameters(
                 capabilities = capabilities,
-                definedConfiguration = definedConfiguration
+                cameraConfiguration = definedConfiguration
         )
 
         // Then
@@ -74,7 +74,7 @@ internal class CameraParametersProviderTest {
         // When
         getCameraParameters(
                 capabilities = capabilities,
-                definedConfiguration = definedConfiguration
+                cameraConfiguration = definedConfiguration
         )
 
         // Then
@@ -91,7 +91,7 @@ internal class CameraParametersProviderTest {
         // When
         getCameraParameters(
                 capabilities = capabilities,
-                definedConfiguration = definedConfiguration
+                cameraConfiguration = definedConfiguration
         )
 
         // Then
@@ -108,7 +108,7 @@ internal class CameraParametersProviderTest {
         // When
         getCameraParameters(
                 capabilities = capabilities,
-                definedConfiguration = definedConfiguration
+                cameraConfiguration = definedConfiguration
         )
 
         // Then
@@ -125,7 +125,7 @@ internal class CameraParametersProviderTest {
         // When
         getCameraParameters(
                 capabilities = capabilities,
-                definedConfiguration = definedConfiguration
+                cameraConfiguration = definedConfiguration
         )
     }
 
@@ -139,7 +139,7 @@ internal class CameraParametersProviderTest {
         // When
         getCameraParameters(
                 capabilities = capabilities,
-                definedConfiguration = definedConfiguration
+                cameraConfiguration = definedConfiguration
         )
 
         // Then
@@ -156,7 +156,7 @@ internal class CameraParametersProviderTest {
         // When
         val cameraParameters = getCameraParameters(
                 capabilities = capabilities,
-                definedConfiguration = definedConfiguration
+                cameraConfiguration = definedConfiguration
         )
 
         // Then
@@ -179,7 +179,7 @@ internal class CameraParametersProviderTest {
         // When
         getCameraParameters(
                 capabilities = capabilities,
-                definedConfiguration = definedConfiguration
+                cameraConfiguration = definedConfiguration
         )
 
         // Then
@@ -199,7 +199,7 @@ internal class CameraParametersProviderTest {
         // When
         getCameraParameters(
                 capabilities = capabilities,
-                definedConfiguration = definedConfiguration
+                cameraConfiguration = definedConfiguration
         )
 
         // Then
@@ -219,7 +219,7 @@ internal class CameraParametersProviderTest {
         // When
         getCameraParameters(
                 capabilities = capabilities,
-                definedConfiguration = definedConfiguration
+                cameraConfiguration = definedConfiguration
         )
 
         // Then
@@ -239,7 +239,7 @@ internal class CameraParametersProviderTest {
         // When
         getCameraParameters(
                 capabilities = capabilities,
-                definedConfiguration = definedConfiguration
+                cameraConfiguration = definedConfiguration
         )
     }
 
@@ -256,7 +256,7 @@ internal class CameraParametersProviderTest {
         // When
         getCameraParameters(
                 capabilities = capabilities,
-                definedConfiguration = definedConfiguration
+                cameraConfiguration = definedConfiguration
         )
 
         // Then

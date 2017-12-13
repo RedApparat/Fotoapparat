@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:activity="io.fotoapparat.sample.MainActivity">
+    tools:activity="io.fotoapparat.sample.ActivityJava">
 
     <io.fotoapparat.view.CameraView
-        android:id="@+id/camera_view"
+        android:id="@+id/cameraView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"

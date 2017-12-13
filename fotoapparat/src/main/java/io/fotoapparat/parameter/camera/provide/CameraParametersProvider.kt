@@ -1,7 +1,7 @@
 package io.fotoapparat.parameter.camera.provide
 
 import io.fotoapparat.capability.Capabilities
-import io.fotoapparat.configuration.DefinedConfiguration
+import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.exception.camera.UnsupportedParameterException
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.parameter.Parameter
@@ -17,11 +17,11 @@ import io.fotoapparat.selector.firstAvailable
  */
 internal fun getCameraParameters(
         capabilities: Capabilities,
-        definedConfiguration: DefinedConfiguration
+        cameraConfiguration: CameraConfiguration
 ): CameraParameters {
 
     return capabilities.run {
-        definedConfiguration.run {
+        cameraConfiguration.run {
 
             val selectedPictureResolution = pictureResolution selectFrom pictureResolutions
             val validPreviewSizeSelector = validPreviewSizeSelector(

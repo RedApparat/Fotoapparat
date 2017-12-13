@@ -1,7 +1,7 @@
 package io.fotoapparat.routine.camera
 
 import io.fotoapparat.characteristic.LensPosition
-import io.fotoapparat.configuration.Configuration
+import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
@@ -13,7 +13,7 @@ import io.fotoapparat.hardware.Device
  */
 internal fun Device.switchCamera(
         newLensPositionSelector: Collection<LensPosition>.() -> LensPosition?,
-        newConfiguration: Configuration,
+        newConfiguration: CameraConfiguration,
         mainThreadErrorCallback: (CameraException) -> Unit
 ) {
     val oldCameraDevice = getSelectedCamera()

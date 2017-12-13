@@ -3,8 +3,8 @@ package io.fotoapparat.hardware
 import android.hardware.Camera
 import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.characteristic.getCharacteristics
+import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.Configuration
-import io.fotoapparat.configuration.DefinedConfiguration
 import io.fotoapparat.configuration.default
 import io.fotoapparat.hardware.display.Display
 import io.fotoapparat.log.Logger
@@ -24,7 +24,7 @@ internal open class Device(
         open val scaleType: ScaleType,
         open val cameraRenderer: CameraRenderer,
         numberOfCameras: Int = Camera.getNumberOfCameras(),
-        initialConfiguration: Configuration,
+        initialConfiguration: CameraConfiguration,
         initialLensPositionSelector: Collection<LensPosition>.() -> LensPosition?
 ) {
 
@@ -35,13 +35,13 @@ internal open class Device(
         )
     }
 
-    private var savedConfiguration: DefinedConfiguration = default()
+    private var savedConfiguration: CameraConfiguration = default()
     private var lensPositionSelector: Collection<LensPosition>.() -> LensPosition? = initialLensPositionSelector
     private var selectedCameraDevice: CameraDevice? = null
 
     init {
         updateLensPositionSelector(initialLensPositionSelector)
-        updateConfiguration(initialConfiguration)
+        savedConfiguration = initialConfiguration
     }
 
     /**
@@ -98,13 +98,13 @@ internal open class Device(
     /**
      * @return The desired from the user selectors.
      */
-    open fun getConfiguration(): DefinedConfiguration {
+    open fun getConfiguration(): CameraConfiguration {
         return savedConfiguration
     }
 
     open fun getCameraParameters(cameraDevice: CameraDevice): CameraParameters {
         return getCameraParameters(
-                definedConfiguration = savedConfiguration,
+                cameraConfiguration = savedConfiguration,
                 capabilities = cameraDevice.getCapabilities()
         )
     }
@@ -126,9 +126,9 @@ internal open class Device(
  * Updates the device's configuration.
  */
 internal fun updateConfiguration(
-        savedConfiguration: DefinedConfiguration,
+        savedConfiguration: CameraConfiguration,
         newConfiguration: Configuration
-) = DefinedConfiguration(
+) = CameraConfiguration(
         flashMode = newConfiguration.flashMode ?: savedConfiguration.flashMode,
         focusMode = newConfiguration.focusMode ?: savedConfiguration.focusMode,
         frameProcessor = newConfiguration.frameProcessor ?: savedConfiguration.frameProcessor,

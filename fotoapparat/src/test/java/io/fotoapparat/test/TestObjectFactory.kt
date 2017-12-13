@@ -1,7 +1,7 @@
 package io.fotoapparat.test
 
 import io.fotoapparat.capability.Capabilities
-import io.fotoapparat.configuration.DefinedConfiguration
+import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.parameter.Flash
 import io.fotoapparat.parameter.FocusMode
 import io.fotoapparat.parameter.FpsRange
@@ -26,9 +26,9 @@ val testFpsRange = FpsRange(20000, 20000)
 val testIso = 100
 
 /**
- * Test object for [DefinedConfiguration].
+ * Test object for [CameraConfiguration].
  */
-internal val testConfiguration = DefinedConfiguration(
+internal val testConfiguration = CameraConfiguration(
         flashMode = single(Flash.AutoRedEye),
         focusMode = single(FocusMode.Fixed),
         frameProcessor = {},

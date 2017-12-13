@@ -1,6 +1,6 @@
 package io.fotoapparat.routine.camera
 
-import io.fotoapparat.configuration.Configuration
+import io.fotoapparat.configuration.UpdateConfiguration
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.test.testCameraParameters
@@ -13,7 +13,7 @@ import org.mockito.Mockito.inOrder
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-internal class UpdateConfigurationRoutineTest {
+internal class UpdateCameraConfigurationRoutineTest {
 
     @Mock
     lateinit var device: Device
@@ -23,7 +23,7 @@ internal class UpdateConfigurationRoutineTest {
     @Test(expected = IllegalStateException::class)
     fun `Update device configuration, but camera has not started`() {
         // Given
-        val configuration = Configuration()
+        val configuration = UpdateConfiguration()
 
         // When
         device.updateDeviceConfiguration(configuration)
@@ -35,7 +35,7 @@ internal class UpdateConfigurationRoutineTest {
     @Test
     fun `Update device configuration`() {
         // Given
-        val configuration = Configuration()
+        val configuration = UpdateConfiguration()
         device.getSelectedCamera() willReturn cameraDevice
         device.getCameraParameters(cameraDevice) willReturn testCameraParameters
         device.getFrameProcessor() willReturn testFrameProcessor

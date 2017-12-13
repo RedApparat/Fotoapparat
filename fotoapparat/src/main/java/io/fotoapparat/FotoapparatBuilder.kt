@@ -3,6 +3,7 @@ package io.fotoapparat
 import android.content.Context
 import android.support.annotation.IntRange
 import io.fotoapparat.characteristic.LensPosition
+import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.default
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.log.Logger
@@ -25,6 +26,10 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
     internal var logger: Logger? = null
 
     internal var configuration = default()
+
+    fun cameraConfiguration(cameraConfiguration: CameraConfiguration): FotoapparatBuilder {
+        return this
+    }
 
     /**
      * @param selector camera sensor position from list of available positions.
@@ -174,7 +179,7 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
                 context = context,
                 view = renderer,
                 lensPosition = lensPositionSelector,
-                configuration = configuration,
+                cameraConfiguration = configuration,
                 scaleType = scaleType ?: ScaleType.CenterCrop,
                 cameraErrorCallback = cameraErrorCallback ?: {},
                 logger = logger ?: none()

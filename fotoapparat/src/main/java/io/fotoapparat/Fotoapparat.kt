@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.annotation.FloatRange
 import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.characteristic.LensPosition
+import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.Configuration
 import io.fotoapparat.configuration.default
 import io.fotoapparat.error.onMainThread
@@ -47,7 +48,7 @@ class Fotoapparat
                 external()
         ),
         scaleType: ScaleType = ScaleType.CenterCrop,
-        configuration: Configuration = default(),
+        cameraConfiguration: CameraConfiguration = default(),
         cameraErrorCallback: ((CameraException) -> Unit) = {},
         private val logger: Logger = none()
 ) {
@@ -62,7 +63,7 @@ class Fotoapparat
             display = display,
             scaleType = scaleType,
             initialLensPositionSelector = lensPosition,
-            initialConfiguration = configuration
+            initialConfiguration = cameraConfiguration
     )
 
     private val orientationSensor = OrientationSensor(
@@ -157,10 +158,10 @@ class Fotoapparat
      *
      * @throws IllegalStateException If the current camera has not started.
      */
-    fun updateConfiguration(configuration: Configuration) = execute {
+    fun updateConfiguration(newConfiguration: Configuration) = execute {
         logger.recordMethod()
 
-        device.updateDeviceConfiguration(configuration)
+        device.updateDeviceConfiguration(newConfiguration)
     }
 
     /**
@@ -216,17 +217,28 @@ class Fotoapparat
      */
     fun switchTo(
             lensPosition: Collection<LensPosition>.() -> LensPosition?,
-            configuration: Configuration
+            cameraConfiguration: CameraConfiguration
     ) {
         logger.recordMethod()
         execute {
             device.switchCamera(
                     newLensPositionSelector = lensPosition,
-                    newConfiguration = configuration,
+                    newConfiguration = cameraConfiguration,
                     mainThreadErrorCallback = mainThreadErrorCallback
             )
         }
     }
+
+    /**
+     * @return `true` if selected lens position is available. `false` if it is not available.
+     */
+    fun isAvailable(
+            selector: (Collection<LensPosition>) -> LensPosition
+    ): Boolean {
+
+        return false // TODO
+    }
+
 
     companion object {
 

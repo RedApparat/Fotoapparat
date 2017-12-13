@@ -5,7 +5,7 @@ import io.fotoapparat.selector.*
 /**
  * Default camera configuration.
  */
-internal fun default() = DefinedConfiguration(
+internal fun default() = CameraConfiguration(
         focusMode = firstAvailable(
                 continuousFocusPicture(),
                 autoFocus(),

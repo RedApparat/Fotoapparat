@@ -10,15 +10,17 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
-import java.util.Collection;
 
 import io.fotoapparat.Fotoapparat;
-import io.fotoapparat.configuration.Configuration;
+import io.fotoapparat.configuration.CameraConfiguration;
+import io.fotoapparat.configuration.UpdateConfiguration;
 import io.fotoapparat.exception.camera.CameraException;
-import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.preview.Frame;
+import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.result.BitmapPhoto;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.view.CameraView;
@@ -44,7 +46,7 @@ import static io.fotoapparat.selector.ResolutionSelectorsKt.highestResolution;
 import static io.fotoapparat.selector.SelectorsKt.firstAvailable;
 import static io.fotoapparat.selector.SensorSensitivitySelectorsKt.highestSensorSensitivity;
 
-public class MainActivity extends AppCompatActivity {
+public class ActivityJava extends AppCompatActivity {
 
     private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
     private boolean hasCameraPermission;
@@ -52,12 +54,33 @@ public class MainActivity extends AppCompatActivity {
 
     private Fotoapparat fotoapparat;
 
+    private CameraConfiguration cameraConfiguration = CameraConfiguration
+            .builder()
+            .photoResolution(standardRatio(
+                    highestResolution()
+            ))
+            .focusMode(firstAvailable(
+                    continuousFocusPicture(),
+                    autoFocus(),
+                    fixed()
+            ))
+            .flash(firstAvailable(
+                    autoRedEye(),
+                    autoFlash(),
+                    torch(),
+                    off()
+            ))
+            .previewFpsRange(highestFps())
+            .sensorSensitivity(highestSensorSensitivity())
+            .frameProcessor(new SampleFrameProcessor())
+            .build();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        cameraView = findViewById(R.id.camera_view);
+        cameraView = findViewById(R.id.cameraView);
         hasCameraPermission = permissionsDelegate.hasCameraPermission();
 
         if (hasCameraPermission) {
@@ -75,25 +98,52 @@ public class MainActivity extends AppCompatActivity {
         zoomSeekBar();
     }
 
+    private Fotoapparat createFotoapparat() {
+        return Fotoapparat
+                .with(this)
+                .into(cameraView)
+                .previewScaleType(ScaleType.CenterCrop)
+                .lensPosition(back())
+                .cameraConfiguration(cameraConfiguration)
+                .logger(loggers(
+                        logcat(),
+                        fileLogger(this)
+                ))
+                .cameraErrorCallback(new Function1<CameraException, Unit>() {
+                    @Override
+                    public Unit invoke(CameraException e) {
+                        Toast.makeText(ActivityJava.this, e.toString(), Toast.LENGTH_LONG).show();
+                        return null;
+                    }
+                })
+                .build();
+    }
+
     private void zoomSeekBar() {
         SeekBar seekBar = findViewById(R.id.zoomSeekBar);
 
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBar.setOnSeekBarChangeListener(new OnProgressChanged() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 fotoapparat.setZoom(progress / (float) seekBar.getMax());
             }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // Do nothing
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // Do nothing
-            }
         });
+    }
+
+    private void switchCameraOnClick() {
+        View switchCameraButton = findViewById(R.id.switchCamera);
+
+        boolean hasFrontCamera = fotoapparat.isAvailable(
+                front(),
+                cameraConfiguration
+        );
+        int switchCameraVisibility = hasFrontCamera ? View.VISIBLE : View.GONE;
+
+        switchCameraButton.setVisibility(switchCameraVisibility);
+
+        if (hasFrontCamera) {
+            switchCameraOnClick(switchCameraButton);
+        }
     }
 
     private void toggleTorchOnSwitch() {
@@ -102,38 +152,25 @@ public class MainActivity extends AppCompatActivity {
         torchSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Function1<Collection<? extends Flash>, Flash> collectionFlashFunction = isChecked ? torch() : off();
-
                 fotoapparat.updateConfiguration(
-                        new Configuration(
-                                collectionFlashFunction,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                        )
+                        UpdateConfiguration.builder()
+                                .flash(
+                                        isChecked ? torch() : off()
+                                )
+                                .build()
                 );
             }
         });
-    }
-
-    private void switchCameraOnClick() {
-        View switchCameraButton = findViewById(R.id.switchCamera);
-        switchCameraButton.setVisibility(
-                canSwitchCameras()
-                        ? View.VISIBLE
-                        : View.GONE
-        );
-        switchCameraOnClick(switchCameraButton);
     }
 
     private void switchCameraOnClick(View view) {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchCamera();
+                fotoapparat.switchTo(
+                        front(),
+                        cameraConfiguration
+                );
             }
         });
     }
@@ -158,50 +195,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private boolean canSwitchCameras() {
-        return frontFotoapparat.isAvailable() == backFotoapparat.isAvailable();
-    }
-
-    private Fotoapparat createFotoapparat() {
-        return Fotoapparat
-                .with(this)
-                .into(cameraView)
-                .previewScaleType(ScaleType.CenterCrop.INSTANCE)
-                .photoResolution(standardRatio(highestResolution()))
-                .lensPosition(firstAvailable(
-                        back(),
-                        front()
-                ))
-                .focusMode(firstAvailable(
-                        continuousFocusPicture(),
-                        autoFocus(),
-                        fixed()
-                ))
-                .flash(firstAvailable(
-                        autoRedEye(),
-                        autoFlash(),
-                        torch(),
-                        off()
-                ))
-                .previewFpsRange(highestFps())
-                .sensorSensitivity(highestSensorSensitivity())
-                .frameProcessor(new SampleFrameProcessor())
-                .logger(loggers(
-                        logcat(),
-                        fileLogger(this)
-                ))
-                .cameraErrorCallback(new Function1<CameraException, Unit>() {
-                    @Override
-                    public Unit invoke(CameraException e) {
-                        Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
-                        return null;
-                    }
-                })
-                .build();
-    }
-
     private void takePicture() {
-        PhotoResult photoResult = fotoapparat.takePicture()
+        PhotoResult photoResult = fotoapparat.takePicture();
 
         photoResult.saveToFile(new File(
                 getExternalFilesDir("photos"),
@@ -220,14 +215,6 @@ public class MainActivity extends AppCompatActivity {
                         return null;
                     }
                 });
-    }
-
-    private void switchCamera() {
-        if (fotoapparatSwitcher.getCurrentFotoapparat() == frontFotoapparat) {
-            fotoapparatSwitcher.switchTo(backFotoapparat);
-        } else {
-            fotoapparatSwitcher.switchTo(frontFotoapparat);
-        }
     }
 
     @Override
@@ -252,18 +239,17 @@ public class MainActivity extends AppCompatActivity {
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (permissionsDelegate.resultGranted(requestCode, permissions, grantResults)) {
+            hasCameraPermission = true;
             fotoapparat.start();
             cameraView.setVisibility(View.VISIBLE);
         }
     }
 
-    private class SampleFrameProcessor implements Function1<Frame, Unit> {
+    private class SampleFrameProcessor implements FrameProcessor {
         @Override
-        public Unit invoke(Frame frame) {
+        public void process(@NotNull Frame frame) {
             // Perform frame processing, if needed
-            return null;
         }
-
     }
 
 }

@@ -9,10 +9,10 @@ import io.fotoapparat.hardware.getSelectedCameraSafely
 /**
  * Updates [Device] configuration.
  */
-internal fun Device.updateDeviceConfiguration(configuration: Configuration) {
+internal fun Device.updateDeviceConfiguration(newConfiguration: Configuration) {
     val cameraDevice = getSelectedCameraSafely()
 
-    updateConfiguration(configuration)
+    updateConfiguration(newConfiguration)
 
     updateCameraConfiguration(cameraDevice = cameraDevice)
 }
