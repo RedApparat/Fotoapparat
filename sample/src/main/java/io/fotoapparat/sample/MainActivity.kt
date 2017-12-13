@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         cameraView onClick takePicture()
-        switchCamera onClick changeCamera()
         zoomSeekBar onProgressChanged updateZoom()
+        switchCamera onClick changeCamera()
         torchSwitch onCheckedChanged toggleFlash()
     }
 

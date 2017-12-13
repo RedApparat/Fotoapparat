@@ -57,6 +57,17 @@ internal open class Device(
     }
 
     /**
+     * Selects a camera.
+     */
+    open fun canSelectCamera(lensPositionSelector: (Collection<LensPosition>) -> LensPosition?): Boolean {
+        val selectedCameraDevice = selectCamera(
+                availableCameras = cameras,
+                lensPositionSelector = lensPositionSelector
+        )
+        return selectedCameraDevice != null
+    }
+
+    /**
      * Returns the selected camera. Returns `null` if no camera is selected.
      */
     open fun getSelectedCamera(): CameraDevice? {
@@ -147,7 +158,7 @@ internal fun selectCamera(
 ): CameraDevice? {
 
     val lensPositions = availableCameras.map { it.characteristics.lensPosition }.toSet()
-    val desiredPosition = lensPositionSelector.invoke(lensPositions)
+    val desiredPosition = lensPositionSelector(lensPositions)
 
     return availableCameras.find { it.characteristics.lensPosition == desiredPosition }
 }

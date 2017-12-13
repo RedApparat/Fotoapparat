@@ -133,13 +133,11 @@ public class ActivityJava extends AppCompatActivity {
     private void switchCameraOnClick() {
         View switchCameraButton = findViewById(R.id.switchCamera);
 
-        boolean hasFrontCamera = fotoapparat.isAvailable(
-                front(),
-                cameraConfiguration
-        );
-        int switchCameraVisibility = hasFrontCamera ? View.VISIBLE : View.GONE;
+        boolean hasFrontCamera = fotoapparat.isAvailable(front());
 
-        switchCameraButton.setVisibility(switchCameraVisibility);
+        switchCameraButton.setVisibility(
+                hasFrontCamera ? View.VISIBLE : View.GONE
+        );
 
         if (hasFrontCamera) {
             switchCameraOnClick(switchCameraButton);

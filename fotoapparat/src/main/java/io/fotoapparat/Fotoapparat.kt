@@ -233,10 +233,9 @@ class Fotoapparat
      * @return `true` if selected lens position is available. `false` if it is not available.
      */
     fun isAvailable(
-            selector: (Collection<LensPosition>) -> LensPosition
+            selector: (Collection<LensPosition>) -> LensPosition?
     ): Boolean {
-
-        return false // TODO
+        return device.canSelectCamera(selector)
     }
 
 
