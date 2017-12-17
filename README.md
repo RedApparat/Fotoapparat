@@ -46,6 +46,7 @@ Add `CameraView` to your layout
 ### Step Two
 
 Configure `Fotoapparat` instance.
+ 
 Are you using Java only? See our [wiki for the java-friendly configuration](https://github.com/Fotoapparat/Fotoapparat/wiki/Configuration-Java).
 
 ```kotlin
