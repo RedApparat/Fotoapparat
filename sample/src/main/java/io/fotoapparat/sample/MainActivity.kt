@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-private const val LOGGING_TAG = "Videoapparat Example"
+private const val LOGGING_TAG = "Fotoapparat Example"
 
 private sealed class Camera(
         val lensPosition: Collection<LensPosition>.() -> LensPosition?,
