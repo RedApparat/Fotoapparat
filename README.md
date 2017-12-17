@@ -49,7 +49,7 @@ Configure `Fotoapparat` instance
 
 ```kotlin
 val configuration = CameraConfiguration(    
-    pictureResolution = highestResolution(), // (optional) we want to have the biggest possible photo resolution
+    pictureResolution = highestResolution(), // (optional) we want to have the highest possible photo resolution
     previewResolution = highestResolution(), // (optional) we want to have the highest possible preview resolution
     previewFpsRange = highestFps(),          // (optional) we want to have the best frame rate
     focusMode = firstAvailable(              // (optional) use the first focus mode which is supported by device
