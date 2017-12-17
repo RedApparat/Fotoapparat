@@ -77,7 +77,7 @@ Fotoapparat(
                      logcat(),                   // ... in logcat
                      fileLogger(this)            // ... and to file
             ),
-            cameraErrorCallback = { error -> } // (optional) log fatal errors
+            cameraErrorCallback = { error -> }   // (optional) log fatal errors
     )
 ```
 
