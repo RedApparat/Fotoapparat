@@ -17,17 +17,17 @@ What it provides:
 
 Taking picture becomes as simple as:
 
-```java
-Fotoapparat fotoapparat = Fotoapparat
-    .with(context)  
-    .into(cameraView)
-    .build();
-
-fotoapparat.start();
+```kotlin
+val fotoapparat = Fotoapparat(
+    context = this,
+    view = cameraView
+)
+ 
+fotoapparat.start()
     
 fotoapparat
     .takePicture()
-    .saveToFile(someFile);
+    .saveToFile(someFile)
 ```
 
 ## How it works
@@ -47,46 +47,53 @@ Add `CameraView` to your layout
 
 Configure `Fotoapparat` instance
 
-```java
-Fotoapparat
-    .with(context)  
-    .into(cameraView)           // view which will draw the camera preview
-    .previewScaleType(ScaleType.CENTER_CROP)  // we want the preview to fill the view  
-    .photoSize(biggestSize())   // we want to have the biggest photo possible
-    .lensPosition(back())       // we want back camera
-    .focusMode(firstAvailable(  // (optional) use the first focus mode which is supported by device
-            continuousFocus(),
-            autoFocus(),        // in case if continuous focus is not available on device, auto focus will be used
-            fixed()             // if even auto focus is not available - fixed focus mode will be used
-    ))
-    .flash(firstAvailable(      // (optional) similar to how it is done for focus mode, this time for flash
+```kotlin
+val configuration = CameraConfiguration(    
+    pictureResolution = highestResolution(), // (optional) we want to have the biggest possible photo resolution
+    previewResolution = highestResolution(), // (optional) we want to have the highest possible preview resolution
+    previewFpsRange = highestFps(),          // (optional) we want to have the best frame rate
+    focusMode = firstAvailable(              // (optional) use the first focus mode which is supported by device
+            continuousFocusPicture(),
+            autoFocus(),                       // if continuous focus is not available on device, auto focus will be used
+            fixed()                            // if even auto focus is not available - fixed focus mode will be used
+    ),
+    flashMode = firstAvailable(              // (optional) similar to how it is done for focus mode, this time for flash
             autoRedEye(),
             autoFlash(),
-            torch()
-    ))
-    .frameProcessor(myFrameProcessor)   // (optional) receives each frame from preview stream
-    .logger(loggers(            // (optional) we want to log camera events in 2 places at once
-            logcat(),           // ... in logcat
-            fileLogger(this)    // ... and to file
-    ))
-    .build();
+            torch(),
+            off()
+    ),
+    sensorSensitivity = lowestSensorSensitivity(), // (optional) we want to have the lowest sensor sensitivity (ISO)
+    frameProcessor = { frame -> }            // (optional) receives each frame from preview stream
+)
+ 
+Fotoapparat(
+            context = this,
+            view = cameraView,                   // view which will draw the camera preview
+            scaleType = ScaleType.CenterCrop,    // (optional) we want the preview to fill the view
+            lensPosition = back(),               // (optional) we want back camera
+            cameraConfiguration = configuration, // (optional) define an advanced configuration
+            logger = loggers(                    // (optional) we want to log camera events in 2 places at once
+                     logcat(),                   // ... in logcat
+                     fileLogger(this)            // ... and to file
+            ),
+            cameraErrorCallback = { error -> } // (optional) log fatal errors
+    )
 ```
 
 ### Step Three
 
 Call `start()` and `stop()`. No rocket science here.
 
-```java
-@Override
-protected void onStart() {
-    super.onStart();
-    fotoapparat.start();
+```kotlin
+override fun onStart() {
+    super.onStart()
+    fotoapparat.start()
 }
-
-@Override
-protected void onStop() {
-    super.onStop();
-    fotoapparat.stop();
+ 
+override fun onStop() {
+    super.onStop()
+    fotoapparat.stop()
 }
 ```
 
@@ -94,60 +101,74 @@ protected void onStop() {
 
 Finally we are ready to take picture. You have various options.
 
-```java
-PhotoResult photoResult = fotoapparat.takePicture();
+```kotlin
+val photoResult = fotoapparat.takePicture()
  
 // Asynchronously saves photo to file
-photoResult.saveToFile(someFile);
+photoResult.saveToFile(someFile)
  
 // Asynchronously converts photo to bitmap and returns result on main thread
 photoResult
     .toBitmap()
-    .whenAvailable(new PendingResult.Callback<BitmapPhoto>() {
-        @Override
-        public void onResult(BitmapPhoto result) {
-            ImageView imageView = (ImageView) findViewById(R.id.result);
-
-            imageView.setImageBitmap(result.bitmap);
-            imageView.setRotation(-result.rotationDegrees);
-        }
-    });
+    .whenAvailable { bitmapPhoto ->
+            val imageView = (ImageView) findViewById(R.id.result)
+ 
+            imageView.setImageBitmap(bitmapPhoto.bitmap)
+            imageView.setRotation(-bitmapPhoto.rotationDegrees)
+    }
     
 // Of course you can also get a photo in a blocking way. Do not do it on main thread though.
-BitmapPhoto result = photoResult.toBitmap().await();
+val result = photoResult.toBitmap().await()
  
-// Convert asynchronous events to RxJava 1.x/2.x types. See /fotoapparat-adapters/ module
+// Convert asynchronous events to RxJava 1.x/2.x types. 
+// See /fotoapparat-adapters/ module 
 photoResult
         .toBitmap()
-        .adapt(SingleAdapter.<BitmapPhoto>toSingle())
-        .subscribe(bitmapPhoto -> {
+        .toSingle()
+        .subscribe { bitmapPhoto -> 
             
-        });
+        }
 ```
 
 ## Update parameters
 
 It is also possible to update some parameters after `Fotoapparat` was already started.
 
-```java
-fotoapparat.updateParameters(
-        UpdateRequest.builder()
-                .flash(
-                    isTurnedOn 
-                        ? torch() 
-                        : off()
-                )
-                .build()
+```kotlin
+fotoapparat.updateConfiguration(
+        UpdateConfiguration(
+                flashMode = if (isChecked) torch() else off()
+                // ...
+                // all the parameters available in CameraConfiguration 
+        )
+)
+```
+
+Or alternatively you may provide updates on an existing full configuration. 
+
+```kotlin
+val configuration = CameraConfiguration(
+    // A full configuration
+    // ...
+)
+ 
+fotoapparat.updateConfiguration(
+    configuration.copy(
+            flashMode = if (isChecked) torch() else off()
+            // all the parameters available in CameraConfiguration 
+    )
 )
 ```
 
 ## Switch cameras
 
-In order to switch between multiple instances of Fotoapparat, for example an instance using the device's front camera and another using the back, `FotoapparatSwitcher` can be used:
+In order to switch between cameras, `Fotoapparat.switchTo` can be used with the new desired `lensPosition` and its `cameraConfiguration`.
 
-```java
-FotoapparatSwitcher fotoapparatSwitcher = FotoapparatSwitcher.withDefault(fotoapparatFront);
-fotoapparatSwitcher.switchTo(fotoapparatBack);
+```kotlin
+fotoapparat.switchTo(
+    lensPosition = front(),
+    cameraConfiguration = newConfigurationForFrontCamera
+)
 ```
 
 ## Set up
