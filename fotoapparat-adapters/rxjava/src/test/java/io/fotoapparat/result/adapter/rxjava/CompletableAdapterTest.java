@@ -24,7 +24,7 @@ public class CompletableAdapterTest {
 
         // When
         CompletableAdapter.<String>toCompletable()
-                .adapt(future)
+                .invoke(future)
                 .subscribe(subscriber);
 
         // Then
@@ -45,7 +45,7 @@ public class CompletableAdapterTest {
 
         // When
         CompletableAdapter.<String>toCompletable()
-                .adapt(future)
+                .invoke(future)
                 .subscribe(subscriber);
 
         // Then

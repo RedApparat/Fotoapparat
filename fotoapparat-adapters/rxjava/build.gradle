@@ -17,8 +17,11 @@ android {
 }
 
 dependencies {
-    compile project(':fotoapparat')
+    provided project(':fotoapparat')
     provided "io.reactivex:rxjava:${versions.rx.rxJava1}"
 
-    testCompile "junit:junit:${versions.test.junit}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+
+    testImplementation "io.reactivex:rxjava:${versions.rx.rxJava1}"
+    testImplementation "junit:junit:${versions.test.junit}"
 }

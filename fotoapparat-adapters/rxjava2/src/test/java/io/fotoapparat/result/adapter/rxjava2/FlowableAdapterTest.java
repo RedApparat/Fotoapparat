@@ -1,4 +1,4 @@
-package io.fotoapparat.result.adapter.rxjava;
+package io.fotoapparat.result.adapter.rxjava2;
 
 import org.junit.Test;
 
@@ -6,11 +6,11 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import rx.observers.TestSubscriber;
+import io.reactivex.subscribers.TestSubscriber;
 
-public class ObservableAdapterTest {
+public class FlowableAdapterTest {
 
-    private TestSubscriber<Object> subscriber = new TestSubscriber<>();
+    private TestSubscriber<String> observer = new TestSubscriber<>();
 
     @Test
     public void completed() throws Exception {
@@ -23,14 +23,13 @@ public class ObservableAdapterTest {
         });
 
         // When
-        ObservableAdapter.<String>toObservable()
+        FlowableAdapter.<String>toFlowable()
                 .invoke(future)
-                .subscribe(subscriber);
+                .subscribe(observer);
 
         // Then
-        subscriber.assertValue("Hello");
-        subscriber.assertNoErrors();
-        subscriber.assertCompleted();
+        observer.assertValue("Hello");
+        observer.assertNoErrors();
     }
 
     @Test
@@ -44,13 +43,13 @@ public class ObservableAdapterTest {
         });
 
         // When
-        ObservableAdapter.<String>toObservable()
+        FlowableAdapter.<String>toFlowable()
                 .invoke(future)
-                .subscribe(subscriber);
+                .subscribe(observer);
 
         // Then
-        subscriber.assertNoValues();
-        subscriber.assertError(ExecutionException.class);
+        observer.assertNoValues();
+        observer.assertError(ExecutionException.class);
     }
 
 }

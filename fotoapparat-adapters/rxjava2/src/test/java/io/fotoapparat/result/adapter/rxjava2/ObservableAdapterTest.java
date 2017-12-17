@@ -10,7 +10,7 @@ import io.reactivex.observers.TestObserver;
 
 public class ObservableAdapterTest {
 
-    private TestObserver<Object> observer = new TestObserver<>();
+    private TestObserver<String> observer = new TestObserver<>();
 
     @Test
     public void completed() throws Exception {
@@ -24,7 +24,7 @@ public class ObservableAdapterTest {
 
         // When
         ObservableAdapter.<String>toObservable()
-                .adapt(future)
+                .invoke(future)
                 .subscribe(observer);
 
         // Then
@@ -44,7 +44,7 @@ public class ObservableAdapterTest {
 
         // When
         ObservableAdapter.<String>toObservable()
-                .adapt(future)
+                .invoke(future)
                 .subscribe(observer);
 
         // Then

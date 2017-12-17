@@ -24,7 +24,7 @@ public class SingleAdapterTest {
 
         // When
         SingleAdapter.<String>toSingle()
-                .adapt(future)
+                .invoke(future)
                 .subscribe(subscriber);
 
         // Then
@@ -45,7 +45,7 @@ public class SingleAdapterTest {
 
         // When
         SingleAdapter.<String>toSingle()
-                .adapt(future)
+                .invoke(future)
                 .subscribe(subscriber);
 
         // Then
