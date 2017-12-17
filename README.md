@@ -12,6 +12,7 @@ What it provides:
 - Simple yet powerful parameters customization.
 - Standalone custom `CameraView` which can be integrated into any `Activity`.
 - Fixes and workarounds for device-specific problems.
+- Both Kotlin and Java friendly configurations.
 - Last, but not least, non 0% test coverage. 
 
 
