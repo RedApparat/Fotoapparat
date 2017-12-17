@@ -162,7 +162,7 @@ fotoapparat.updateConfiguration(
 
 ## Switch cameras
 
-In order to switch between cameras, `Fotoapparat.switchTo` can be used with the new desired `lensPosition` and its `cameraConfiguration`.
+In order to switch between cameras, `Fotoapparat.switchTo()` can be used with the new desired `lensPosition` and its `cameraConfiguration`.
 
 ```kotlin
 fotoapparat.switchTo(
@@ -180,7 +180,7 @@ repositories {
   maven { url 'https://jitpack.io' }
 }
  
-compile 'io.fotoapparat.fotoapparat:library:1.4.1'
+compile 'io.fotoapparat.fotoapparat:library:2.x.x.x' // TODO
 ```
 
 Camera permission will be automatically added to your `AndroidManifest.xml`. Do not forget to request this permission on Marshmallow and higher.
