@@ -24,11 +24,13 @@ import io.fotoapparat.result.ParametersResult;
 import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.routine.CheckAvailabilityRoutine;
+import io.fotoapparat.routine.ConfigureManualFocusRoutine;
 import io.fotoapparat.routine.ConfigurePreviewStreamRoutine;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
 import io.fotoapparat.routine.UpdateOrientationRoutine;
 import io.fotoapparat.routine.focus.AutoFocusRoutine;
+import io.fotoapparat.routine.focus.ManualFocusRoutine;
 import io.fotoapparat.routine.parameter.UpdateParametersRoutine;
 import io.fotoapparat.routine.picture.TakePictureRoutine;
 import io.fotoapparat.routine.zoom.UpdateZoomLevelRoutine;
@@ -51,9 +53,11 @@ public class Fotoapparat {
     private final CheckAvailabilityRoutine checkAvailabilityRoutine;
     private final UpdateParametersRoutine updateParametersRoutine;
     private final UpdateZoomLevelRoutine updateZoomLevelRoutine;
+    private final ConfigureManualFocusRoutine configureManualFocusRoutine;
     private final Executor executor;
 
     private boolean started = false;
+    private boolean allowTapToFocus = false;
 
     Fotoapparat(StartCameraRoutine startCameraRoutine,
                 StopCameraRoutine stopCameraRoutine,
@@ -66,6 +70,8 @@ public class Fotoapparat {
                 CheckAvailabilityRoutine checkAvailabilityRoutine,
                 UpdateParametersRoutine updateParametersRoutine,
                 UpdateZoomLevelRoutine updateZoomLevelRoutine,
+                ConfigureManualFocusRoutine configureManualFocusRoutine,
+                boolean allowTapToFocus,
                 Executor executor) {
         this.startCameraRoutine = startCameraRoutine;
         this.stopCameraRoutine = stopCameraRoutine;
@@ -78,6 +84,8 @@ public class Fotoapparat {
         this.checkAvailabilityRoutine = checkAvailabilityRoutine;
         this.updateParametersRoutine = updateParametersRoutine;
         this.updateZoomLevelRoutine = updateZoomLevelRoutine;
+        this.configureManualFocusRoutine = configureManualFocusRoutine;
+        this.allowTapToFocus = allowTapToFocus;
         this.executor = executor;
     }
 
@@ -89,12 +97,12 @@ public class Fotoapparat {
         return new FotoapparatBuilder(context);
     }
 
-    static Fotoapparat create(FotoapparatBuilder builder) {
+    static Fotoapparat create(final FotoapparatBuilder builder) {
         CameraErrorCallback cameraErrorCallback = Callbacks.onMainThread(
                 builder.cameraErrorCallback
         );
 
-        CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
+        final CameraDevice cameraDevice = builder.cameraProvider.get(builder.logger);
 
         ScreenOrientationProvider screenOrientationProvider = new ScreenOrientationProvider(builder.context);
         RotationListener rotationListener = new RotationListener(builder.context);
@@ -111,6 +119,16 @@ public class Fotoapparat {
                 builder.sensorSensitivitySelector,
                 builder.jpegQuality,
                 parametersValidator
+        );
+
+        ManualFocusRoutine manualFocusRoutine = new ManualFocusRoutine(
+                cameraDevice,
+                SERIAL_EXECUTOR
+        );
+
+        ConfigureManualFocusRoutine configureManualFocusRoutine = new ConfigureManualFocusRoutine(
+                builder.tapProvider,
+                manualFocusRoutine
         );
 
         StartCameraRoutine startCameraRoutine = new StartCameraRoutine(
@@ -187,6 +205,8 @@ public class Fotoapparat {
                 checkAvailabilityRoutine,
                 updateParametersRoutine,
                 updateZoomLevelRoutine,
+                configureManualFocusRoutine,
+                builder.allowTapToFocus,
                 SERIAL_EXECUTOR
         );
     }
@@ -259,6 +279,11 @@ public class Fotoapparat {
         return autoFocusRoutine.autoFocus();
     }
 
+    public void setTapToFocusEnabled(boolean isEnabled) {
+        allowTapToFocus = isEnabled;
+        configureManualFocusRoutine.setEnabled(isEnabled);
+    }
+
     /**
      * Asynchronously updates parameters of the camera. Must be called only after {@link #start()}.
      */
@@ -303,6 +328,7 @@ public class Fotoapparat {
         startCamera();
         configurePreviewStream();
         updateOrientationRoutine.start();
+        configureManualFocusRoutine.setEnabled(allowTapToFocus);
     }
 
     /**

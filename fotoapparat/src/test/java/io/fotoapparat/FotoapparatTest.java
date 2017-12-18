@@ -7,7 +7,6 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.provider.CapabilitiesProvider;
@@ -20,6 +19,7 @@ import io.fotoapparat.result.ParametersResult;
 import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.routine.CheckAvailabilityRoutine;
+import io.fotoapparat.routine.ConfigureManualFocusRoutine;
 import io.fotoapparat.routine.ConfigurePreviewStreamRoutine;
 import io.fotoapparat.routine.StartCameraRoutine;
 import io.fotoapparat.routine.StopCameraRoutine;
@@ -33,9 +33,7 @@ import io.fotoapparat.test.ImmediateExecutor;
 import static io.fotoapparat.test.TestUtils.immediateFuture;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -91,6 +89,8 @@ public class FotoapparatTest {
     UpdateParametersRoutine updateParametersRoutine;
     @Mock
     UpdateZoomLevelRoutine updateZoomLevelRoutine;
+    @Mock
+    ConfigureManualFocusRoutine configureManualFocusRoutine;
 
     Fotoapparat testee;
 
@@ -108,6 +108,8 @@ public class FotoapparatTest {
                 checkAvailabilityRoutine,
                 updateParametersRoutine,
                 updateZoomLevelRoutine,
+                configureManualFocusRoutine,
+                false,
                 new ImmediateExecutor()
         );
     }

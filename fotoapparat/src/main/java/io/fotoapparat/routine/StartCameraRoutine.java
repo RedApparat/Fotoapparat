@@ -1,8 +1,8 @@
 package io.fotoapparat.routine;
 
-import io.fotoapparat.error.CameraErrorCallback;
 import java.util.Collection;
 
+import io.fotoapparat.error.CameraErrorCallback;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.orientation.ScreenOrientationProvider;
@@ -64,6 +64,7 @@ public class StartCameraRoutine implements Runnable {
         );
         cameraRenderer.setScaleType(scaleType);
         cameraRenderer.attachCamera(cameraDevice);
+
         cameraDevice.startPreview();
     }
 }

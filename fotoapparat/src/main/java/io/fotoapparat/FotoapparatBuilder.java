@@ -24,6 +24,7 @@ import io.fotoapparat.parameter.selector.Selectors;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.view.CameraRenderer;
 import io.fotoapparat.view.CameraView;
+import io.fotoapparat.view.TapToFocusSupporter;
 
 import static io.fotoapparat.hardware.provider.CameraProviders.v1;
 import static io.fotoapparat.parameter.selector.AntiBandingModeSelectors.auto;
@@ -47,6 +48,7 @@ public class FotoapparatBuilder {
     Context context;
     CameraProvider cameraProvider = v1();
     CameraRenderer renderer;
+    TapToFocusSupporter tapProvider;
 
     SelectorFunction<Collection<LensPosition>, LensPosition> lensPositionSelector = firstAvailable(
             back(),
@@ -79,6 +81,8 @@ public class FotoapparatBuilder {
     Logger logger = Loggers.none();
 
     CameraErrorCallback cameraErrorCallback = CameraErrorCallback.NULL;
+
+    boolean allowTapToFocus = false;
 
     FotoapparatBuilder(@NonNull Context context) {
         this.context = context;
@@ -199,12 +203,22 @@ public class FotoapparatBuilder {
         return this;
     }
 
+    public FotoapparatBuilder setAllowTapToFocus(boolean isAllowed) {
+        this.allowTapToFocus = isAllowed;
+        return this;
+    }
+
     /**
      * @param renderer view which will draw the stream from the camera.
      * @see CameraView
      */
     public FotoapparatBuilder into(@NonNull CameraRenderer renderer) {
         this.renderer = renderer;
+        return this;
+    }
+
+    public FotoapparatBuilder tapProvider(@NonNull TapToFocusSupporter tapProvider) {
+        this.tapProvider = tapProvider;
         return this;
     }
 

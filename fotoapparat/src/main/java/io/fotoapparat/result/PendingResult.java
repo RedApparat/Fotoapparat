@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -75,6 +76,10 @@ public class PendingResult<T> {
         return future.get();
     }
 
+    public boolean cancel() {
+        return future.cancel(true);
+    }
+
     /**
      * Adapts the resulting object to a different type.
      *
@@ -98,7 +103,7 @@ public class PendingResult<T> {
                     final T result = getResultUnsafe();
 
                     notifyCallbackOnMainThread(result, callback);
-                } catch (RecoverableRuntimeException e) {
+                } catch (RecoverableRuntimeException | CancellationException e) {
                     // Ignore
                 }
             }

@@ -1,6 +1,7 @@
 package io.fotoapparat.view;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.support.annotation.AttrRes;
@@ -9,7 +10,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.TextureView;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import java.util.concurrent.CountDownLatch;
@@ -22,7 +25,7 @@ import io.fotoapparat.parameter.Size;
 /**
  * Uses {@link android.view.TextureView} as an output for camera.
  */
-class TextureRendererView extends FrameLayout implements CameraRenderer {
+class TextureRendererView extends FrameLayout implements CameraRenderer, TapToFocusSupporter {
 
     private final CountDownLatch textureLatch = new CountDownLatch(1);
 
@@ -31,6 +34,7 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
 
     private Size previewSize = null;
     private ScaleType scaleType;
+    private Rect viewRect = new Rect();
 
     public TextureRendererView(@NonNull Context context) {
         super(context);
@@ -98,6 +102,30 @@ class TextureRendererView extends FrameLayout implements CameraRenderer {
         } catch (InterruptedException e) {
             // Do nothing
         }
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+
+        viewRect.set(0, 0, w, h);
+    }
+
+    public void enableTapToFocus(final FocusCallback callback) {
+        setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    callback.onManualFocus(viewRect, event.getX(), event.getY());
+                }
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void disableTapToFocus() {
+        setOnTouchListener(null);
     }
 
     private void updateLayout(final CameraDevice camera) {

@@ -1,5 +1,6 @@
 package io.fotoapparat.hardware.v1;
 
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +20,7 @@ import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.ParametersOperator;
 import io.fotoapparat.hardware.orientation.OrientationUtils;
+import io.fotoapparat.hardware.orientation.SpaceConverter;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.provider.V1AvailableLensPositionProvider;
 import io.fotoapparat.hardware.v1.capabilities.CapabilitiesFactory;
@@ -40,7 +43,8 @@ import io.fotoapparat.preview.PreviewStream;
 @SuppressWarnings("deprecation")
 public class Camera1 implements CameraDevice {
 
-    private static final long AUTOFOCUS_TIMEOUT_SECONDS = 3L;
+    private static final long AUTOFOCUS_TIMEOUT_MILLISECONDS = 3000L;
+    private static final int FOCUS_METERING_AREA_WEIGHT_DEFAULT = 1000;
 
     private final CapabilitiesFactory capabilitiesFactory;
     private final ParametersConverter parametersConverter;
@@ -53,6 +57,7 @@ public class Camera1 implements CameraDevice {
 
     private Throwable lastStacktrace;
     private int imageRotation;
+    private int displayOrientationDegrees;
 
     @Nullable
     private Capabilities cachedCapabilities = null;
@@ -187,9 +192,9 @@ public class Camera1 implements CameraDevice {
 
         imageRotation = computeImageOrientation(degrees, info);
 
-        camera.setDisplayOrientation(
-                computeDisplayOrientation(degrees, info)
-        );
+        displayOrientationDegrees = computeDisplayOrientation(degrees, info);
+        camera.setDisplayOrientation(displayOrientationDegrees);
+
         previewStream.setFrameOrientation(imageRotation);
     }
 
@@ -358,12 +363,17 @@ public class Camera1 implements CameraDevice {
         }
 
         try {
-            latch.await(AUTOFOCUS_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            latch.await(AUTOFOCUS_TIMEOUT_MILLISECONDS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             // Do nothing
         }
 
         return FocusResult.successNoMeasurement();
+    }
+
+    @Override
+    public void cancelAutoFocus() {
+        camera.cancelAutoFocus();
     }
 
     private void logFailedAutoFocus(Exception e) {
@@ -433,4 +443,26 @@ public class Camera1 implements CameraDevice {
         );
     }
 
+    @Override
+    public void setFocusArea(Rect cameraViewRect, float x, float y) {
+        Camera.CameraInfo info = getCameraInfo(cameraId);
+        SpaceConverter spaceConverter = new SpaceConverter(
+                displayOrientationDegrees,
+                info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT
+        );
+
+        Rect previewSpaceRect = spaceConverter.previewToCamera(cameraViewRect, x, y);
+
+        List<Camera.Area> focusingAreas = new ArrayList<>();
+        focusingAreas.add(new Camera.Area(previewSpaceRect, FOCUS_METERING_AREA_WEIGHT_DEFAULT));
+
+        FocusUpdater focusUpdater = new FocusUpdater(
+                CameraParametersDecorator.from(camera),
+                getCapabilities()
+        );
+
+        if (focusUpdater.setManualFocus(focusingAreas)) {
+            camera.setParameters(focusUpdater.getParameters().asCameraParameters());
+        }
+    }
 }
