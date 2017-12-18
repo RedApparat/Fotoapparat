@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
@@ -43,6 +44,20 @@ public class ParametersFactory {
                 selectSafely(
                         selector,
                         capabilities.supportedPreviewSizes()
+                )
+        );
+    }
+
+    /**
+     * @return new parameters by selecting anti banding mode from given capabilities.
+     */
+    public static Parameters selectAntiBandingMode(@NonNull Capabilities capabilities,
+                                             @NonNull SelectorFunction<Collection<AntiBandingMode>, AntiBandingMode> selector) {
+        return new Parameters().putValue(
+                Parameters.Type.ANTI_BANDING_MODE,
+                selectSafely(
+                        selector,
+                        capabilities.supportedAntiBandingModes()
                 )
         );
     }

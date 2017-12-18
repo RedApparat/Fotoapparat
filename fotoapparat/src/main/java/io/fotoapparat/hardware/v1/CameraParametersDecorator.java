@@ -66,6 +66,13 @@ public class CameraParametersDecorator {
     }
 
     /**
+     * @see Camera.Parameters#getSupportedAntibanding()
+     */
+    public List<String> getSupportedAutoBandingModes() {
+        return cameraParameters.getSupportedAntibanding();
+    }
+
+    /**
      * @see Camera.Parameters#getSupportedFocusModes()
      */
     public List<String> getSupportedFocusModes() {
@@ -80,10 +87,24 @@ public class CameraParametersDecorator {
     }
 
     /**
+     * @see Camera.Parameters#getAntibanding()
+     */
+    public String getAntiBandingMode() {
+        return cameraParameters.getAntibanding();
+    }
+
+    /**
      * @see Camera.Parameters#getFocusMode()
      */
     public String getFocusMode() {
         return cameraParameters.getFocusMode();
+    }
+
+    /**
+     * @see Camera.Parameters#setFocusMode(String)
+     */
+    public void setAntiBandingMode(String antiBandingMode) {
+        cameraParameters.setAntibanding(antiBandingMode);
     }
 
     /**

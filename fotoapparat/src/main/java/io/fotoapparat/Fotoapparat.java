@@ -104,6 +104,7 @@ public class Fotoapparat {
                 cameraDevice,
                 builder.photoSizeSelector,
                 builder.previewSizeSelector,
+                builder.antiBandingSelector,
                 builder.focusModeSelector,
                 builder.flashSelector,
                 builder.previewFpsRangeSelector,

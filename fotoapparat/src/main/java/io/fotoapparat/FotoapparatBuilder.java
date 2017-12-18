@@ -11,6 +11,7 @@ import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.log.Loggers;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
@@ -25,6 +26,10 @@ import io.fotoapparat.view.CameraRenderer;
 import io.fotoapparat.view.CameraView;
 
 import static io.fotoapparat.hardware.provider.CameraProviders.v1;
+import static io.fotoapparat.parameter.selector.AntiBandingModeSelectors.auto;
+import static io.fotoapparat.parameter.selector.AntiBandingModeSelectors.hz50;
+import static io.fotoapparat.parameter.selector.AntiBandingModeSelectors.hz60;
+import static io.fotoapparat.parameter.selector.AntiBandingModeSelectors.none;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.continuousFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.fixed;
@@ -50,6 +55,12 @@ public class FotoapparatBuilder {
     );
     SelectorFunction<Collection<Size>, Size> photoSizeSelector = biggestSize();
     SelectorFunction<Collection<Size>, Size> previewSizeSelector = biggestSize();
+    SelectorFunction<Collection<AntiBandingMode>, AntiBandingMode> antiBandingSelector = firstAvailable(
+            auto(),
+            hz50(),
+            hz60(),
+            none()
+    );
     SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector = firstAvailable(
             continuousFocus(),
             autoFocus(),
@@ -102,6 +113,14 @@ public class FotoapparatBuilder {
      */
     public FotoapparatBuilder previewScaleType(ScaleType scaleType) {
         this.scaleType = scaleType;
+        return this;
+    }
+
+    /**
+     * @param selector selects anti banding mode from list of available modes.
+     */
+    public FotoapparatBuilder antiBandingMode(@NonNull SelectorFunction<Collection<AntiBandingMode>, AntiBandingMode> selector) {
+        antiBandingSelector = selector;
         return this;
     }
 

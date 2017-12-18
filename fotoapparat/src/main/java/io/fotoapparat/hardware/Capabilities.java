@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import java.util.Collections;
 import java.util.Set;
 
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
@@ -21,6 +22,8 @@ public class Capabilities {
     @NonNull
     private final Set<Size> previewSizes;
     @NonNull
+    private final Set<AntiBandingMode> antiBandingModes;
+    @NonNull
     private final Set<FocusMode> focusModes;
     @NonNull
     private final Set<Flash> flashModes;
@@ -33,6 +36,7 @@ public class Capabilities {
 
     public Capabilities(@NonNull Set<Size> photoSizes,
                         @NonNull Set<Size> previewSizes,
+                        @NonNull Set<AntiBandingMode> antiBandingModes,
                         @NonNull Set<FocusMode> focusModes,
                         @NonNull Set<Flash> flashModes,
                         @NonNull Set<Range<Integer>> previewFpsRanges,
@@ -40,6 +44,7 @@ public class Capabilities {
                         boolean zoomSupported) {
         this.photoSizes = photoSizes;
         this.previewSizes = previewSizes;
+        this.antiBandingModes = antiBandingModes;
         this.focusModes = focusModes;
         this.flashModes = flashModes;
         this.previewFpsRanges = previewFpsRanges;
@@ -54,6 +59,7 @@ public class Capabilities {
         return new Capabilities(
                 Collections.<Size>emptySet(),
                 Collections.<Size>emptySet(),
+                Collections.<AntiBandingMode>emptySet(),
                 Collections.<FocusMode>emptySet(),
                 Collections.<Flash>emptySet(),
                 Collections.<Range<Integer>>emptySet(),
@@ -76,6 +82,12 @@ public class Capabilities {
         return previewSizes;
     }
 
+    /**
+     * @return list of supported anti banding modes.
+     */
+    public Set<AntiBandingMode> supportedAntiBandingModes() {
+        return antiBandingModes;
+    }
     /**
      * @return list of supported focus modes.
      */

@@ -2,8 +2,10 @@ package io.fotoapparat.hardware.v1;
 
 import android.hardware.Camera;
 
+import io.fotoapparat.hardware.v1.capabilities.AntiBandingCapability;
 import io.fotoapparat.hardware.v1.capabilities.FlashCapability;
 import io.fotoapparat.hardware.v1.capabilities.FocusCapability;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
@@ -45,6 +47,9 @@ public class ParametersConverter {
     public Parameters fromPlatformParameters(CameraParametersDecorator platformParameters) {
         Parameters parameters = new Parameters();
 
+        AntiBandingMode antiBandingMode = AntiBandingCapability.toAntiBandingMode(platformParameters.getAntiBandingMode());
+        parameters.putValue(Parameters.Type.ANTI_BANDING_MODE, antiBandingMode);
+
         FocusMode focusMode = FocusCapability.toFocusMode(platformParameters.getFocusMode());
         parameters.putValue(Parameters.Type.FOCUS_MODE, focusMode);
 
@@ -69,6 +74,12 @@ public class ParametersConverter {
                                 Parameters input,
                                 CameraParametersDecorator output) {
         switch (type) {
+            case ANTI_BANDING_MODE:
+                applyAntiBandingMode(
+                        (AntiBandingMode) input.getValue(type),
+                        output
+                );
+                break;
             case FOCUS_MODE:
                 applyFocusMode(
                         (FocusMode) input.getValue(type),
@@ -131,6 +142,13 @@ public class ParametersConverter {
                             CameraParametersDecorator output) {
         output.setFlashMode(
                 FlashCapability.toCode(flash)
+        );
+    }
+
+    private void applyAntiBandingMode(AntiBandingMode antiBandingMode,
+                                CameraParametersDecorator output) {
+        output.setAntiBandingMode(
+                AntiBandingCapability.toCode(antiBandingMode)
         );
     }
 

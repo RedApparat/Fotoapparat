@@ -5,6 +5,7 @@ import java.util.Collection;
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
@@ -27,6 +28,7 @@ public class InitialParametersProvider {
     private final CapabilitiesOperator capabilitiesOperator;
     private final SelectorFunction<Collection<Size>, Size> photoSizeSelector;
     private final SelectorFunction<Collection<Size>, Size> previewSizeSelector;
+    private final SelectorFunction<Collection<AntiBandingMode>, AntiBandingMode> antiBandingModeSelector;
     private final SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector;
     private final SelectorFunction<Collection<Flash>, Flash> flashSelector;
     private final SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector;
@@ -36,6 +38,7 @@ public class InitialParametersProvider {
     public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
                                      SelectorFunction<Collection<Size>, Size> photoSizeSelector,
                                      SelectorFunction<Collection<Size>, Size> previewSizeSelector,
+                                     SelectorFunction<Collection<AntiBandingMode>, AntiBandingMode> antiBandingModeSelector,
                                      SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector,
                                      SelectorFunction<Collection<Flash>, Flash> flashSelector,
                                      SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector,
@@ -45,6 +48,7 @@ public class InitialParametersProvider {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
         this.previewSizeSelector = previewSizeSelector;
+        this.antiBandingModeSelector = antiBandingModeSelector;
         this.focusModeSelector = focusModeSelector;
         this.flashSelector = flashSelector;
         this.previewFpsRangeSelector = previewFpsRangeSelector;
@@ -82,6 +86,7 @@ public class InitialParametersProvider {
         Parameters parameters = combineParameters(asList(
                 pictureSizeParameters(capabilities),
                 previewSizeParameters(capabilities),
+                antiBandingModeParameters(capabilities),
                 focusModeParameters(capabilities),
                 flashModeParameters(capabilities),
                 previewFpsRange(capabilities),
@@ -98,6 +103,13 @@ public class InitialParametersProvider {
         return ParametersFactory.selectFlashMode(
                 capabilities,
                 flashSelector
+        );
+    }
+
+    private Parameters antiBandingModeParameters(Capabilities capabilities) {
+        return ParametersFactory.selectAntiBandingMode(
+                capabilities,
+                antiBandingModeSelector
         );
     }
 

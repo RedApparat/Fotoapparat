@@ -9,6 +9,7 @@ import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
@@ -20,6 +21,7 @@ import io.fotoapparat.parameter.selector.SensorSensitivitySelectors;
 import io.fotoapparat.parameter.selector.SizeSelectors;
 
 import static io.fotoapparat.parameter.selector.FlashSelectors.torch;
+import static io.fotoapparat.parameter.selector.AntiBandingModeSelectors.auto;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.test.TestUtils.asSet;
 import static io.fotoapparat.util.TestSelectors.selectFromCollection;
@@ -93,6 +95,7 @@ public class InitialParametersProviderTest {
                 .willReturn(new Capabilities(
                         asSet(PHOTO_SIZE),
                         ALL_PREVIEW_SIZES,
+                        asSet(AntiBandingMode.AUTO),
                         asSet(FocusMode.AUTO),
                         asSet(Flash.TORCH),
                         PREVIEW_FPS_RANGES,
@@ -104,6 +107,7 @@ public class InitialParametersProviderTest {
                 capabilitiesOperator,
                 SizeSelectors.biggestSize(),
                 SizeSelectors.biggestSize(),
+                auto(),
                 autoFocus(),
                 torch(),
                 PreviewFpsRangeSelectors.rangeWithHighestFps(),
@@ -125,6 +129,10 @@ public class InitialParametersProviderTest {
                         .putValue(
                                 Parameters.Type.PREVIEW_SIZE,
                                 PREVIEW_SIZE
+                        )
+                        .putValue(
+                                Parameters.Type.ANTI_BANDING_MODE,
+                                AntiBandingMode.AUTO
                         )
                         .putValue(
                                 Parameters.Type.FOCUS_MODE,

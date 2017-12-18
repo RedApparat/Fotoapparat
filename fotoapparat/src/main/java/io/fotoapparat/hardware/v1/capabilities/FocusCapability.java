@@ -45,7 +45,7 @@ public class FocusCapability {
     }
 
     /**
-     * Converts a {@link FocusMode} to a focus mdoe code as in {@link Camera.Parameters}.
+     * Converts a {@link FocusMode} to a focus mode code as in {@link Camera.Parameters}.
      *
      * @param focusMode The {@link io.fotoapparat.Fotoapparat}'s camera {@link FocusMode}.
      * @return focus mode code as in {@link Camera.Parameters}.

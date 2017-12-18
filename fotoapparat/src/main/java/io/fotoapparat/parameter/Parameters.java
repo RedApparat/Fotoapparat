@@ -128,6 +128,11 @@ public class Parameters {
         PREVIEW_SIZE(Size.class),
 
         /**
+         * Anti banding mode of the camera. Expected type: {@link AntiBandingMode}.
+         */
+        ANTI_BANDING_MODE(AntiBandingMode.class),
+
+        /**
          * Focus mode of the camera. Expected type: {@link FocusMode}.
          */
         FOCUS_MODE(FocusMode.class),

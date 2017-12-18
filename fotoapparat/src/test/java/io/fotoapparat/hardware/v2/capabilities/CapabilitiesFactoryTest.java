@@ -16,6 +16,7 @@ import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
@@ -36,6 +37,12 @@ public class CapabilitiesFactoryTest {
 			Flash.ON,
 			Flash.AUTO,
 			Flash.AUTO_RED_EYE
+	);
+	static final Set<AntiBandingMode> ANTI_BANDING_MODE_SET = asSet(
+			AntiBandingMode.AUTO,
+			AntiBandingMode.HZ50,
+			AntiBandingMode.HZ60,
+			AntiBandingMode.NONE
 	);
 	static final Set<FocusMode> FOCUS_MODE_SET = asSet(
 			FocusMode.FIXED,
@@ -109,6 +116,26 @@ public class CapabilitiesFactoryTest {
 				asSet(Flash.OFF),
 				capabilities.supportedFlashModes()
 		);
+	}
+
+	@Test
+	public void supportedAntiBandingModes() throws Exception {
+		// Given
+		given(characteristics.autoAntiBandingModes())
+				.willReturn(
+						new int[]{
+								CameraMetadata.CONTROL_AE_ANTIBANDING_MODE_AUTO,
+								CameraMetadata.CONTROL_AE_ANTIBANDING_MODE_50HZ,
+								CameraMetadata.CONTROL_AE_ANTIBANDING_MODE_60HZ,
+								CameraMetadata.CONTROL_AE_ANTIBANDING_MODE_OFF
+						}
+				);
+
+		// When
+		Capabilities capabilities = testee.getCapabilities();
+
+		// Then
+		assertEquals(ANTI_BANDING_MODE_SET, capabilities.supportedAntiBandingModes());
 	}
 
 	@Test
