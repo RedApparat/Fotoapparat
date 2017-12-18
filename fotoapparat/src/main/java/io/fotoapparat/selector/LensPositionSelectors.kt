@@ -7,7 +7,7 @@ import io.fotoapparat.characteristic.LensPosition
  * @return Selector function which provides the front camera if it is available.
  * Otherwise provides `null`.
  */
-fun front(): Collection<LensPosition>.() -> LensPosition? {
+fun front(): Iterable<LensPosition>.() -> LensPosition? {
     return single(LensPosition.Front)
 }
 
@@ -15,7 +15,7 @@ fun front(): Collection<LensPosition>.() -> LensPosition? {
  * @return Selector function which provides the back camera if it is available.
  * Otherwise provides `null`.
  */
-fun back(): Collection<LensPosition>.() -> LensPosition? {
+fun back(): Iterable<LensPosition>.() -> LensPosition? {
     return single(LensPosition.Back)
 }
 
@@ -23,6 +23,6 @@ fun back(): Collection<LensPosition>.() -> LensPosition? {
  * @return Selector function which provides the external camera if it is available.
  * Otherwise provides `null`.
  */
-fun external(): Collection<LensPosition>.() -> LensPosition? {
+fun external(): Iterable<LensPosition>.() -> LensPosition? {
     return single(LensPosition.External)
 }

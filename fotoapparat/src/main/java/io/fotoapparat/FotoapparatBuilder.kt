@@ -1,15 +1,17 @@
 package io.fotoapparat
 
 import android.content.Context
-import android.support.annotation.IntRange
 import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.configuration.CameraConfiguration
-import io.fotoapparat.configuration.default
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.log.Logger
 import io.fotoapparat.log.none
 import io.fotoapparat.parameter.*
 import io.fotoapparat.preview.Frame
+import io.fotoapparat.selector.back
+import io.fotoapparat.selector.external
+import io.fotoapparat.selector.firstAvailable
+import io.fotoapparat.selector.front
 import io.fotoapparat.view.CameraRenderer
 import io.fotoapparat.view.CameraView
 
@@ -18,18 +20,18 @@ import io.fotoapparat.view.CameraView
  */
 class FotoapparatBuilder internal constructor(private var context: Context) {
 
-    internal var lensPositionSelector: (Iterable<LensPosition>.() -> LensPosition?)? = null
-    internal var cameraErrorCallback: ((CameraException) -> Unit)? = null
+    internal var lensPositionSelector: Iterable<LensPosition>.() -> LensPosition? = firstAvailable(
+            back(),
+            front(),
+            external()
+    )
+    internal var cameraErrorCallback: (CameraException) -> Unit = {}
     internal var frameProcessor: ((Frame) -> Unit?)? = null
     internal var renderer: CameraRenderer? = null
-    internal var scaleType: ScaleType? = null
-    internal var logger: Logger? = null
+    internal var scaleType: ScaleType = ScaleType.CenterCrop
+    internal var logger: Logger = none()
 
-    internal var configuration = default()
-
-    fun cameraConfiguration(cameraConfiguration: CameraConfiguration): FotoapparatBuilder {
-        return this
-    }
+    internal var configuration = CameraConfiguration.default()
 
     /**
      * @param selector camera sensor position from list of available positions.
@@ -109,12 +111,12 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
     }
 
     /**
-     * @param jpegQuality of the picture (1-100)
+     * @param selector of the Jpeg picture quality.
      */
-    fun jpegQuality(@IntRange(from = 0, to = 100) jpegQuality: Int): FotoapparatBuilder {
-//        configuration = configuration.copy(
-//                jpegQuality = jpegQuality
-//        ) // TODO
+    fun jpegQuality(selector: IntRange.() -> Int?): FotoapparatBuilder {
+        configuration = configuration.copy(
+                jpegQuality = selector
+        )
         return this
     }
 
@@ -159,20 +161,14 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
      * @throws IllegalStateException if some mandatory parameters are not specified.
      */
     fun build() = buildInternal(
-            renderer = renderer,
-            lensPositionSelector = lensPositionSelector
+            renderer = renderer
     )
 
     private fun buildInternal(
-            renderer: CameraRenderer?,
-            lensPositionSelector: (Iterable<LensPosition>.() -> LensPosition?)?
+            renderer: CameraRenderer?
     ): Fotoapparat {
         if (renderer == null) {
             throw IllegalStateException("CameraRenderer is mandatory.")
-        }
-
-        if (lensPositionSelector == null) {
-            throw IllegalStateException("LensPosition selector is mandatory.")
         }
 
         return Fotoapparat(
@@ -180,9 +176,9 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
                 view = renderer,
                 lensPosition = lensPositionSelector,
                 cameraConfiguration = configuration,
-                scaleType = scaleType ?: ScaleType.CenterCrop,
-                cameraErrorCallback = cameraErrorCallback ?: {},
-                logger = logger ?: none()
+                scaleType = scaleType,
+                cameraErrorCallback = cameraErrorCallback,
+                logger = logger
         )
     }
 

@@ -18,7 +18,7 @@ data class CameraConfiguration(
                 autoFocus(),
                 fixed()
         ),
-        override val jpegQuality: (IntRange) -> Int? = { 90 },
+        override val jpegQuality: (IntRange) -> Int? = single(90),
         override val frameProcessor: (Frame) -> Unit = {},
         override val previewFpsRange: Iterable<FpsRange>.() -> FpsRange? = highestFps(),
         override val sensorSensitivity: (Iterable<Int>.() -> Int?)? = null,
@@ -92,7 +92,7 @@ data class CameraConfiguration(
     companion object {
 
         /**
-         * Alias for [default]
+         * Alias for [CameraConfiguration.default]
          */
         @JvmStatic
         fun standard() = default()

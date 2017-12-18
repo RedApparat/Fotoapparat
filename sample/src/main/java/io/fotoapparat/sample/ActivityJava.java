@@ -104,7 +104,6 @@ public class ActivityJava extends AppCompatActivity {
                 .into(cameraView)
                 .previewScaleType(ScaleType.CenterCrop)
                 .lensPosition(back())
-                .cameraConfiguration(cameraConfiguration)
                 .logger(loggers(
                         logcat(),
                         fileLogger(this)

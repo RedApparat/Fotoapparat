@@ -37,7 +37,10 @@ class FotoapparatBuilderTest {
     lateinit var flashSelector: Iterable<Flash>.() -> Flash?
     @Mock
     lateinit var previewFpsRangeSelector: Iterable<FpsRange>.() -> FpsRange?
-
+    @Mock
+    lateinit var sensorSensitivitySelector: Iterable<Int>.() -> Int?
+    @Mock
+    lateinit var jpegQualitySelector: IntRange.() -> Int?
     @Mock
     lateinit var frameProcessor: (Frame) -> Unit
 
@@ -63,6 +66,39 @@ class FotoapparatBuilderTest {
 
         // Then
         assertNotNull(result)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `Forgotten view mandatory parameter`() {
+        // Given
+
+        // When
+        FotoapparatBuilder(context).build()
+
+        // Then
+        // throws exception
+    }
+
+    @Test
+    fun `lens position has default`() {
+        // When
+        val builder = builderWithMandatoryArguments()
+
+        // Then
+        assertNotNull(builder.lensPositionSelector)
+    }
+
+    @Test
+    fun `lens position is configurable`() {
+        // When
+        val builder = builderWithMandatoryArguments()
+                .lensPosition(lensPositionSelector)
+
+        // Then
+        assertEquals(
+                lensPositionSelector,
+                builder.lensPositionSelector
+        )
     }
 
     @Test
@@ -132,6 +168,15 @@ class FotoapparatBuilderTest {
     }
 
     @Test
+    fun `flashMode has default`() {
+        // When
+        val builder = builderWithMandatoryArguments()
+
+        // Then
+        assertNotNull(builder.configuration.flashMode)
+    }
+
+    @Test
     fun `flashMode is configurable`() {
         // When
         val builder = builderWithMandatoryArguments()
@@ -141,6 +186,51 @@ class FotoapparatBuilderTest {
         assertEquals(
                 flashSelector,
                 builder.configuration.flashMode
+        )
+    }
+
+
+    @Test
+    fun `sensorSensitivity has not default`() {
+        // When
+        val builder = builderWithMandatoryArguments()
+
+        // Then
+        assertNull(builder.configuration.sensorSensitivity)
+    }
+
+    @Test
+    fun `sensorSensitivity is configurable`() {
+        // When
+        val builder = builderWithMandatoryArguments()
+                .sensorSensitivity(sensorSensitivitySelector)
+
+        // Then
+        assertEquals(
+                sensorSensitivitySelector,
+                builder.configuration.sensorSensitivity
+        )
+    }
+
+    @Test
+    fun `jpegQuality has default`() {
+        // When
+        val builder = builderWithMandatoryArguments()
+
+        // Then
+        assertNotNull(builder.configuration.jpegQuality)
+    }
+
+    @Test
+    fun `jpegQuality is configurable`() {
+        // When
+        val builder = builderWithMandatoryArguments()
+                .jpegQuality(jpegQualitySelector)
+
+        // Then
+        assertEquals(
+                jpegQualitySelector,
+                builder.configuration.jpegQuality
         )
     }
 
@@ -247,8 +337,6 @@ class FotoapparatBuilderTest {
 
     private fun builderWithMandatoryArguments(): FotoapparatBuilder {
         return FotoapparatBuilder(context)
-                .lensPosition(lensPositionSelector)
-                .photoResolution(photoResolutionSelector)
                 .into(cameraRenderer)
     }
 }

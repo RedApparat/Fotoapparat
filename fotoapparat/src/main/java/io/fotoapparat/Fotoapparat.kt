@@ -6,7 +6,6 @@ import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.Configuration
-import io.fotoapparat.configuration.default
 import io.fotoapparat.error.onMainThread
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.Device
@@ -48,7 +47,7 @@ class Fotoapparat
                 external()
         ),
         scaleType: ScaleType = ScaleType.CenterCrop,
-        cameraConfiguration: CameraConfiguration = default(),
+        cameraConfiguration: CameraConfiguration = CameraConfiguration.default(),
         cameraErrorCallback: ((CameraException) -> Unit) = {},
         private val logger: Logger = none()
 ) {
