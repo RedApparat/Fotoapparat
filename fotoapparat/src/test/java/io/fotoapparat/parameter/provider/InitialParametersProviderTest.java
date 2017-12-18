@@ -131,6 +131,10 @@ public class InitialParametersProviderTest {
                                 PREVIEW_SIZE
                         )
                         .putValue(
+                                Parameters.Type.ANTI_BANDING_MODE,
+                                AntiBandingMode.AUTO
+                        )
+                        .putValue(
                                 Parameters.Type.FOCUS_MODE,
                                 FocusMode.AUTO
                         )

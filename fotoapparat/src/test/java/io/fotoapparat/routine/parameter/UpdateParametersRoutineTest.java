@@ -20,6 +20,7 @@ import io.fotoapparat.parameter.range.Ranges;
 import io.fotoapparat.parameter.update.UpdateRequest;
 
 import static io.fotoapparat.parameter.selector.FlashSelectors.torch;
+import static io.fotoapparat.parameter.selector.AntiBandingModeSelectors.auto;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.test.TestUtils.asSet;
 import static org.mockito.BDDMockito.given;
@@ -54,6 +55,7 @@ public class UpdateParametersRoutineTest {
         // Given
         UpdateRequest request = UpdateRequest.builder()
                 .flash(torch())
+                .antiBandingMode(auto())
                 .focusMode(autoFocus())
                 .build();
 
@@ -66,6 +68,10 @@ public class UpdateParametersRoutineTest {
                         .putValue(
                                 Parameters.Type.FLASH,
                                 Flash.TORCH
+                        )
+                        .putValue(
+                                Parameters.Type.ANTI_BANDING_MODE,
+                                AntiBandingMode.AUTO
                         )
                         .putValue(
                                 Parameters.Type.FOCUS_MODE,

@@ -67,8 +67,11 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
     @SuppressWarnings("ConstantConditions")
     private Set<AntiBandingMode> availableAntiBandingModes() {
         Set<AntiBandingMode> antiBandingModes = new HashSet<>();
-        for (int aeMode : characteristics().autoAntiBandingModes()) {
-            antiBandingModes.add(AntiBandingConverter.aeModeToAntiBanding(aeMode));
+        int modes[] = characteristics().autoAntiBandingModes();
+        if (modes != null) {
+            for (int aeMode : modes) {
+                antiBandingModes.add(AntiBandingConverter.aeModeToAntiBanding(aeMode));
+            }
         }
 
         return antiBandingModes;
