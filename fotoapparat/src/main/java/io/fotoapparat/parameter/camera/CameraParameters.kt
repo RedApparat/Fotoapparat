@@ -15,6 +15,7 @@ import io.fotoapparat.util.wrap
 data class CameraParameters(
         val flashMode: Flash,
         val focusMode: FocusMode,
+        val jpegQuality: Int,
         val previewFpsRange: FpsRange,
         val sensorSensitivity: Int?,
         val pictureResolution: Resolution,
@@ -24,6 +25,7 @@ data class CameraParameters(
         return "CameraParameters" + lineSeparator +
                 "flashMode:" + flashMode.wrap() +
                 "focusMode:" + focusMode.wrap() +
+                "jpegQuality:" + jpegQuality.wrap() +
                 "previewFpsRange:" + previewFpsRange.wrap() +
                 "sensorSensitivity:" + sensorSensitivity?.wrap() +
                 "pictureResolution:" + pictureResolution.wrap() +

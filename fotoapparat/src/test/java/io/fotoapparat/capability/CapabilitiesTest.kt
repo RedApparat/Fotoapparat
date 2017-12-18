@@ -16,6 +16,7 @@ class CapabilitiesTest {
             flashModes = setOf(Flash.AutoRedEye),
             focusModes = setOf(FocusMode.Fixed),
             canSmoothZoom = false,
+            jpegQualityRange = IntRange(0, 100),
             previewFpsRanges = setOf(FpsRange(20000, 20000)),
             pictureResolutions = setOf(resolution),
             previewResolutions = setOf(resolution),

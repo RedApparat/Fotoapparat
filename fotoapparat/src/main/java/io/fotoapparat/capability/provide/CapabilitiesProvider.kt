@@ -19,6 +19,7 @@ private fun SupportedParameters.getCapabilities(): Capabilities {
             flashModes = flashModes.extract { it.toFlash() },
             focusModes = focusModes.extract { it.toFocusMode() },
             canSmoothZoom = supportedSmoothZoom,
+            jpegQualityRange = jpegQualityRange,
             sensorSensitivities = sensorSensitivities.toSet(),
             previewFpsRanges = supportedPreviewFpsRanges.extract { it.toFpsRange() },
             pictureResolutions = pictureResolutions.mapSizes(),

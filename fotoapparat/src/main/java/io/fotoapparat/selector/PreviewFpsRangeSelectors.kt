@@ -8,7 +8,7 @@ import io.fotoapparat.util.CompareFpsRangeByBounds
  * @return Selector function which selects FPS range that contains the specified FPS.
  * Prefers fixed rates over non fixed ones.
  */
-fun containsFps(fps: Float): Collection<FpsRange>.() -> FpsRange? = firstAvailable(
+fun containsFps(fps: Float): Iterable<FpsRange>.() -> FpsRange? = firstAvailable(
         exactFixedFps(fps),
         filtered(
                 selector = highestNonFixedFps(),
@@ -22,7 +22,7 @@ fun containsFps(fps: Float): Collection<FpsRange>.() -> FpsRange? = firstAvailab
  * @param fps The specified FPS
  * @return Selector function which selects FPS range that contains only the specified FPS.
  */
-fun exactFixedFps(fps: Float): Collection<FpsRange>.() -> FpsRange? = filtered(
+fun exactFixedFps(fps: Float): Iterable<FpsRange>.() -> FpsRange? = filtered(
         selector = highestFixedFps(),
         predicate = {
             it.min == fps.toFpsIntRepresentation()
@@ -33,7 +33,7 @@ fun exactFixedFps(fps: Float): Collection<FpsRange>.() -> FpsRange? = filtered(
  * @return Selector function which selects FPS range with max FPS.
  * Prefers non fixed rates over fixed ones.
  */
-fun highestFps(): Collection<FpsRange>.() -> FpsRange? = firstAvailable(
+fun highestFps(): Iterable<FpsRange>.() -> FpsRange? = firstAvailable(
         highestNonFixedFps(),
         highestFixedFps()
 )
@@ -41,7 +41,7 @@ fun highestFps(): Collection<FpsRange>.() -> FpsRange? = firstAvailable(
 /**
  * @return Selector function which selects FPS range with max FPS and non fixed rate.
  */
-fun highestNonFixedFps(): Collection<FpsRange>.() -> FpsRange? = filtered(
+fun highestNonFixedFps(): Iterable<FpsRange>.() -> FpsRange? = filtered(
         selector = highestRangeFps(),
         predicate = { !it.isFixed }
 )
@@ -49,7 +49,7 @@ fun highestNonFixedFps(): Collection<FpsRange>.() -> FpsRange? = filtered(
 /**
  * @return Selector function which selects FPS range with max FPS and fixed rate.
  */
-fun highestFixedFps(): Collection<FpsRange>.() -> FpsRange? = filtered(
+fun highestFixedFps(): Iterable<FpsRange>.() -> FpsRange? = filtered(
         selector = highestRangeFps(),
         predicate = { it.isFixed }
 )
@@ -58,7 +58,7 @@ fun highestFixedFps(): Collection<FpsRange>.() -> FpsRange? = filtered(
  * @return Selector function which selects FPS range with min FPS.
  * Prefers non fixed rates over fixed ones.
  */
-fun lowestFps(): Collection<FpsRange>.() -> FpsRange? = firstAvailable(
+fun lowestFps(): Iterable<FpsRange>.() -> FpsRange? = firstAvailable(
         lowestNonFixedFps(),
         lowestFixedFps()
 )
@@ -66,7 +66,7 @@ fun lowestFps(): Collection<FpsRange>.() -> FpsRange? = firstAvailable(
 /**
  * @return Selector function which selects FPS range with min FPS and non fixed rate.
  */
-fun lowestNonFixedFps(): Collection<FpsRange>.() -> FpsRange? {
+fun lowestNonFixedFps(): Iterable<FpsRange>.() -> FpsRange? {
     return filtered(
             selector = lowestRangeFps(),
             predicate = { !it.isFixed }
@@ -76,18 +76,18 @@ fun lowestNonFixedFps(): Collection<FpsRange>.() -> FpsRange? {
 /**
  * @return Selector function which selects FPS range with min FPS and fixed rate.
  */
-fun lowestFixedFps(): Collection<FpsRange>.() -> FpsRange? {
+fun lowestFixedFps(): Iterable<FpsRange>.() -> FpsRange? {
     return filtered(
             selector = lowestRangeFps(),
             predicate = { it.isFixed }
     )
 }
 
-private fun highestRangeFps(): Collection<FpsRange>.() -> FpsRange? = {
+private fun highestRangeFps(): Iterable<FpsRange>.() -> FpsRange? = {
     maxWith(CompareFpsRangeByBounds)
 }
 
-private fun lowestRangeFps(): Collection<FpsRange>.() -> FpsRange? = {
+private fun lowestRangeFps(): Iterable<FpsRange>.() -> FpsRange? = {
     minWith(CompareFpsRangeByBounds)
 }
 

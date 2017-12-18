@@ -26,17 +26,17 @@ class FotoapparatBuilderTest {
     lateinit var cameraRenderer: CameraRenderer
 
     @Mock
-    lateinit var photoResolutionSelector: Collection<Resolution>.() -> Resolution
+    lateinit var photoResolutionSelector: Iterable<Resolution>.() -> Resolution
     @Mock
-    lateinit var previewResolutionSelector: Collection<Resolution>.() -> Resolution?
+    lateinit var previewResolutionSelector: Iterable<Resolution>.() -> Resolution?
     @Mock
-    lateinit var lensPositionSelector: Collection<LensPosition>.() -> LensPosition
+    lateinit var lensPositionSelector: Iterable<LensPosition>.() -> LensPosition
     @Mock
-    lateinit var focusModeSelector: Collection<FocusMode>.() -> FocusMode?
+    lateinit var focusModeSelector: Iterable<FocusMode>.() -> FocusMode?
     @Mock
-    lateinit var flashSelector: Collection<Flash>.() -> Flash?
+    lateinit var flashSelector: Iterable<Flash>.() -> Flash?
     @Mock
-    lateinit var previewFpsRangeSelector: Collection<FpsRange>.() -> FpsRange?
+    lateinit var previewFpsRangeSelector: Iterable<FpsRange>.() -> FpsRange?
 
     @Mock
     lateinit var frameProcessor: (Frame) -> Unit

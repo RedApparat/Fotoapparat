@@ -25,9 +25,10 @@ internal fun Camera.Parameters.applyNewParameters(newParameters: CameraParameter
 private infix fun CameraParameters.tryApplyInto(parameters: Camera.Parameters) {
     flashMode applyInto parameters
     focusMode applyInto parameters
+    jpegQuality applyInto parameters
     previewFpsRange applyInto parameters
-    sensorSensitivity applyInto parameters
     previewResolution applyPreviewInto parameters
+    sensorSensitivity applySensitivityInto parameters
     pictureResolution applyPictureResolutionInto parameters
 }
 
@@ -39,11 +40,15 @@ private infix fun FocusMode.applyInto(parameters: Camera.Parameters) {
     parameters.focusMode = toCode()
 }
 
+private infix fun Int.applyInto(parameters: Camera.Parameters) {
+    parameters.jpegQuality = this
+}
+
 private infix fun FpsRange.applyInto(parameters: Camera.Parameters) {
     parameters.setPreviewFpsRange(min, max)
 }
 
-private infix fun Int?.applyInto(parameters: Camera.Parameters) {
+private infix fun Int?.applySensitivityInto(parameters: Camera.Parameters) {
     this?.let { sensitivity ->
         parameters.findSensitivityKey()?.let { key ->
             parameters.set(key, sensitivity)

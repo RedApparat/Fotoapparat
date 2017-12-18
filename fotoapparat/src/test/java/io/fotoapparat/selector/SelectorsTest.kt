@@ -11,8 +11,8 @@ class SelectorsTest {
         // Given
         val options = listOf("B", "C")
 
-        val selectorA: Collection<String>.() -> String? = { null }
-        val selectorB: Collection<String>.() -> String? = { "B" }
+        val selectorA: Iterable<String>.() -> String? = { null }
+        val selectorB: Iterable<String>.() -> String? = { "B" }
 
         // When
         val result = firstAvailable(
@@ -30,11 +30,11 @@ class SelectorsTest {
     @Test
     fun `Filter selections`() {
         // Given
-        lateinit var receivedStrings: Collection<String>
+        lateinit var receivedStrings: Iterable<String>
         val predicate: (String) -> Boolean = {
             it.startsWith("A")
         }
-        val selector: Collection<String>.() -> String? = {
+        val selector: Iterable<String>.() -> String? = {
             receivedStrings = this
             "A"
         }

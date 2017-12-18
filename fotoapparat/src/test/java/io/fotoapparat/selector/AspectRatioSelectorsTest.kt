@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 
 class AspectRatioSelectorsTest {
 
-    var receivedResolutions: Collection<Resolution>? = null
+    var receivedResolutions: Iterable<Resolution>? = null
 
     @Before
     fun setUp() {
@@ -17,7 +17,7 @@ class AspectRatioSelectorsTest {
     @Test
     fun `Filter standard ratios`() {
         // Given
-        val sizeSelector: Collection<Resolution>.() -> Resolution = {
+        val sizeSelector: Iterable<Resolution>.() -> Resolution = {
             receivedResolutions = this
             Resolution(4, 3)
         }
@@ -47,7 +47,7 @@ class AspectRatioSelectorsTest {
     @Test
     fun `Filter standard ratios with tolerance`() {
         // Given
-        val sizeSelector: Collection<Resolution>.() -> Resolution = {
+        val sizeSelector: Iterable<Resolution>.() -> Resolution = {
             receivedResolutions = this
             Resolution(400, 300)
         }
@@ -85,7 +85,7 @@ class AspectRatioSelectorsTest {
     @Test
     fun `Filter wide ratios`() {
         // Given
-        val sizeSelector: Collection<Resolution>.() -> Resolution = {
+        val sizeSelector: Iterable<Resolution>.() -> Resolution = {
             receivedResolutions = this
             Resolution(16, 9)
         }
@@ -115,7 +115,7 @@ class AspectRatioSelectorsTest {
     @Test
     fun `Filter wide ratios with tolerance`() {
         // Given
-        val sizeSelector: Collection<Resolution>.() -> Resolution = {
+        val sizeSelector: Iterable<Resolution>.() -> Resolution = {
             receivedResolutions = this
             Resolution(16, 9)
         }
@@ -152,7 +152,7 @@ class AspectRatioSelectorsTest {
     @Test
     fun `Filter custom aspect ratio with tolerance`() {
         // Given
-        val sizeSelector: Collection<Resolution>.() -> Resolution = {
+        val sizeSelector: Iterable<Resolution>.() -> Resolution = {
             receivedResolutions = this
             Resolution(110, 100)
         }
@@ -192,7 +192,7 @@ class AspectRatioSelectorsTest {
     @Test(expected = IllegalArgumentException::class)
     fun `Custom Ratio with tolerance less than 0 should throw exception`() {
         // Given
-        val sizeSelector: Collection<Resolution>.() -> Resolution = {
+        val sizeSelector: Iterable<Resolution>.() -> Resolution = {
             Resolution(16, 9)
         }
 
@@ -212,7 +212,7 @@ class AspectRatioSelectorsTest {
     @Test(expected = IllegalArgumentException::class)
     fun `Custom ratio with tolerance above 1 should throw exception`() {
         // Given
-        val sizeSelector: Collection<Resolution>.() -> Resolution = {
+        val sizeSelector: Iterable<Resolution>.() -> Resolution = {
             Resolution(16, 9)
         }
 

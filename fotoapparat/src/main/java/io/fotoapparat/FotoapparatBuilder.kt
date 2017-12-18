@@ -18,7 +18,7 @@ import io.fotoapparat.view.CameraView
  */
 class FotoapparatBuilder internal constructor(private var context: Context) {
 
-    internal var lensPositionSelector: (Collection<LensPosition>.() -> LensPosition?)? = null
+    internal var lensPositionSelector: (Iterable<LensPosition>.() -> LensPosition?)? = null
     internal var cameraErrorCallback: ((CameraException) -> Unit)? = null
     internal var frameProcessor: ((Frame) -> Unit?)? = null
     internal var renderer: CameraRenderer? = null
@@ -34,7 +34,7 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
     /**
      * @param selector camera sensor position from list of available positions.
      */
-    fun lensPosition(selector: Collection<LensPosition>.() -> LensPosition?): FotoapparatBuilder {
+    fun lensPosition(selector: Iterable<LensPosition>.() -> LensPosition?): FotoapparatBuilder {
         lensPositionSelector = selector
         return this
     }
@@ -50,7 +50,7 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
     /**
      * @param selector selects resolution of the photo (in pixels) from list of available resolutions.
      */
-    fun photoResolution(selector: Collection<Resolution>.() -> Resolution?): FotoapparatBuilder {
+    fun photoResolution(selector: Iterable<Resolution>.() -> Resolution?): FotoapparatBuilder {
         configuration = configuration.copy(
                 pictureResolution = selector
         )
@@ -60,7 +60,7 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
     /**
      * @param selector selects size of preview stream (in pixels) from list of available resolutions.
      */
-    fun previewResolution(selector: Collection<Resolution>.() -> Resolution?): FotoapparatBuilder {
+    fun previewResolution(selector: Iterable<Resolution>.() -> Resolution?): FotoapparatBuilder {
         configuration = configuration.copy(
                 previewResolution = selector
         )
@@ -71,7 +71,7 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
     /**
      * @param selector selects focus mode from list of available modes.
      */
-    fun focusMode(selector: Collection<FocusMode>.() -> FocusMode?): FotoapparatBuilder {
+    fun focusMode(selector: Iterable<FocusMode>.() -> FocusMode?): FotoapparatBuilder {
         configuration = configuration.copy(
                 focusMode = selector
         )
@@ -81,7 +81,7 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
     /**
      * @param selector selects flash mode from list of available modes.
      */
-    fun flash(selector: Collection<Flash>.() -> Flash?): FotoapparatBuilder {
+    fun flash(selector: Iterable<Flash>.() -> Flash?): FotoapparatBuilder {
         configuration = configuration.copy(
                 flashMode = selector
         )
@@ -91,7 +91,7 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
     /**
      * @param selector selects preview FPS range from list of available ranges.
      */
-    fun previewFpsRange(selector: Collection<FpsRange>.() -> FpsRange?): FotoapparatBuilder {
+    fun previewFpsRange(selector: Iterable<FpsRange>.() -> FpsRange?): FotoapparatBuilder {
         configuration = configuration.copy(
                 previewFpsRange = selector
         )
@@ -101,7 +101,7 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
     /**
      * @param selector selects ISO value from range of available values.
      */
-    fun sensorSensitivity(selector: Collection<Int>.() -> Int?): FotoapparatBuilder {
+    fun sensorSensitivity(selector: Iterable<Int>.() -> Int?): FotoapparatBuilder {
         configuration = configuration.copy(
                 sensorSensitivity = selector
         )
@@ -165,7 +165,7 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
 
     private fun buildInternal(
             renderer: CameraRenderer?,
-            lensPositionSelector: (Collection<LensPosition>.() -> LensPosition?)?
+            lensPositionSelector: (Iterable<LensPosition>.() -> LensPosition?)?
     ): Fotoapparat {
         if (renderer == null) {
             throw IllegalStateException("CameraRenderer is mandatory.")

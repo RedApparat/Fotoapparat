@@ -7,7 +7,7 @@ import io.fotoapparat.parameter.Flash
  * @return Selector function which provides a disabled flash firing mode if available.
  * Otherwise provides `null`.
  */
-fun off(): Collection<Flash>.() -> Flash? {
+fun off(): Iterable<Flash>.() -> Flash? {
     return single(Flash.Off)
 }
 
@@ -15,7 +15,7 @@ fun off(): Collection<Flash>.() -> Flash? {
  * @return Selector function which provides a forced on flash firing mode if available.
  * Otherwise provides `null`.
  */
-fun on(): Collection<Flash>.() -> Flash? {
+fun on(): Iterable<Flash>.() -> Flash? {
     return single(Flash.On)
 }
 
@@ -23,7 +23,7 @@ fun on(): Collection<Flash>.() -> Flash? {
  * @return Selector function which provides an auto flash firing mode if available.
  * Otherwise provides `null`.
  */
-fun autoFlash(): Collection<Flash>.() -> Flash? {
+fun autoFlash(): Iterable<Flash>.() -> Flash? {
     return single(Flash.Auto)
 }
 
@@ -32,7 +32,7 @@ fun autoFlash(): Collection<Flash>.() -> Flash? {
  * reduction if available.
  * Otherwise provides `null`.
  */
-fun autoRedEye(): Collection<Flash>.() -> Flash? {
+fun autoRedEye(): Iterable<Flash>.() -> Flash? {
     return single(Flash.AutoRedEye)
 }
 
@@ -41,6 +41,6 @@ fun autoRedEye(): Collection<Flash>.() -> Flash? {
  * available.
  * Otherwise provides `null`.
  */
-fun torch(): Collection<Flash>.() -> Flash? {
+fun torch(): Iterable<Flash>.() -> Flash? {
     return single(Flash.Torch)
 }

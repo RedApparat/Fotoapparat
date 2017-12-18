@@ -7,7 +7,7 @@ import io.fotoapparat.parameter.FocusMode
  * @return Selector function which provides a non-adjustable focus mode if available.
  * Otherwise provides `null`.
  */
-fun fixed(): Collection<FocusMode>.() -> FocusMode? {
+fun fixed(): Iterable<FocusMode>.() -> FocusMode? {
     return single(FocusMode.Fixed)
 }
 
@@ -15,7 +15,7 @@ fun fixed(): Collection<FocusMode>.() -> FocusMode? {
  * @return Selector function which provides a focus mode targeting infinity if available.
  * Otherwise provides `null`.
  */
-fun infinity(): Collection<FocusMode>.() -> FocusMode? {
+fun infinity(): Iterable<FocusMode>.() -> FocusMode? {
     return single(FocusMode.Infinity)
 }
 
@@ -23,7 +23,7 @@ fun infinity(): Collection<FocusMode>.() -> FocusMode? {
  * @return Selector function which provides a macro focus mode if available.
  * Otherwise provides `null`.
  */
-fun macro(): Collection<FocusMode>.() -> FocusMode? {
+fun macro(): Iterable<FocusMode>.() -> FocusMode? {
     return single(FocusMode.Macro)
 }
 
@@ -31,7 +31,7 @@ fun macro(): Collection<FocusMode>.() -> FocusMode? {
  * @return Selector function which provides an auto focus mode if available.
  * Otherwise provides `null`.
  */
-fun autoFocus(): Collection<FocusMode>.() -> FocusMode? {
+fun autoFocus(): Iterable<FocusMode>.() -> FocusMode? {
     return single(FocusMode.Auto)
 }
 
@@ -40,7 +40,7 @@ fun autoFocus(): Collection<FocusMode>.() -> FocusMode? {
  * in focus if available. The speed of focus change is aggressive.
  * Otherwise provides `null`.
  */
-fun continuousFocusPicture(): Collection<FocusMode>.() -> FocusMode? {
+fun continuousFocusPicture(): Iterable<FocusMode>.() -> FocusMode? {
     return single(FocusMode.ContinuousFocusPicture)
 }
 
@@ -49,7 +49,7 @@ fun continuousFocusPicture(): Collection<FocusMode>.() -> FocusMode? {
  * in focus if available. The speed of focus change is smooth.
  * Otherwise provides `null`.
  */
-fun continuousFocusVideo(): Collection<FocusMode>.() -> FocusMode? {
+fun continuousFocusVideo(): Iterable<FocusMode>.() -> FocusMode? {
     return single(FocusMode.ContinuousFocusVideo)
 }
 
@@ -58,7 +58,7 @@ fun continuousFocusVideo(): Collection<FocusMode>.() -> FocusMode? {
  * an extended depth of field if available.
  * Otherwise provides `null`.
  */
-fun edof(): Collection<FocusMode>.() -> FocusMode? {
+fun edof(): Iterable<FocusMode>.() -> FocusMode? {
     return single(FocusMode.Edof)
 }
 

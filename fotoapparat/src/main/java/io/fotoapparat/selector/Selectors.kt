@@ -4,7 +4,7 @@ package io.fotoapparat.selector
 /**
  * @return Selector function which always returns `null`.
  */
-fun <T> nothing(): Collection<T>.() -> T? = {
+fun <T> nothing(): Iterable<T>.() -> T? = {
     null
 }
 
@@ -13,21 +13,21 @@ fun <T> nothing(): Collection<T>.() -> T? = {
  * @return Selector function which returns a result if available. If the result is not available returns
  * `null`.
  */
-fun <T> single(preference: T): Collection<T>.() -> T? = {
+fun <T> single(preference: T): Iterable<T>.() -> T? = {
     find { it == preference }
 }
 
 /**
  * @return Selector function which selects highest [Comparable] value.
  */
-fun <T : Comparable<T>> highest(): Collection<T>.() -> T? = {
+fun <T : Comparable<T>> highest(): Iterable<T>.() -> T? = {
     max()
 }
 
 /**
  * @return Selector function which selects lowest [Comparable] value.
  */
-fun <T : Comparable<T>> lowest(): Collection<T>.() -> T? = {
+fun <T : Comparable<T>> lowest(): Iterable<T>.() -> T? = {
     min()
 }
 
@@ -52,9 +52,9 @@ fun <Input, Output> firstAvailable(
  * condition.
  */
 fun <T : Any> filtered(
-        selector: Collection<T>.() -> T?,
+        selector: Iterable<T>.() -> T?,
         predicate: (T) -> Boolean
-): Collection<T>.() -> T? = {
+): Iterable<T>.() -> T? = {
     selector(filter(predicate = predicate))
 }
 

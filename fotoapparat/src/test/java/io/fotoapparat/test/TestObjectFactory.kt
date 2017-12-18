@@ -26,6 +26,11 @@ val testFpsRange = FpsRange(20000, 20000)
 val testIso = 100
 
 /**
+ * Test object for camera Jpeq quality.
+ */
+val jpegQuality = 80
+
+/**
  * Test object for [CameraConfiguration].
  */
 internal val testConfiguration = CameraConfiguration(
@@ -46,6 +51,7 @@ val testCapabilities = Capabilities(
         flashModes = setOf(Flash.AutoRedEye),
         focusModes = setOf(FocusMode.Fixed),
         canSmoothZoom = false,
+        jpegQualityRange = IntRange(0, 100),
         previewFpsRanges = setOf(testFpsRange),
         pictureResolutions = setOf(testResolution),
         previewResolutions = setOf(testResolution),
@@ -58,6 +64,7 @@ val testCapabilities = Capabilities(
 val testCameraParameters = CameraParameters(
         flashMode = Flash.AutoRedEye,
         focusMode = FocusMode.Fixed,
+        jpegQuality = jpegQuality,
         previewFpsRange = testFpsRange,
         sensorSensitivity = testIso,
         pictureResolution = testResolution,

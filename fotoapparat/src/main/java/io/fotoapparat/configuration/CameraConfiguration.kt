@@ -12,17 +12,18 @@ import io.fotoapparat.selector.*
  * A camera configuration which has all it's selectors defined.
  */
 data class CameraConfiguration(
-        override val flashMode: Collection<Flash>.() -> Flash? = off(),
-        override val focusMode: Collection<FocusMode>.() -> FocusMode? = firstAvailable(
+        override val flashMode: Iterable<Flash>.() -> Flash? = off(),
+        override val focusMode: Iterable<FocusMode>.() -> FocusMode? = firstAvailable(
                 continuousFocusPicture(),
                 autoFocus(),
                 fixed()
         ),
+        override val jpegQuality: (IntRange) -> Int? = { 90 },
         override val frameProcessor: (Frame) -> Unit = {},
-        override val previewFpsRange: Collection<FpsRange>.() -> FpsRange? = highestFps(),
-        override val sensorSensitivity: (Collection<Int>.() -> Int?)? = null,
-        override val pictureResolution: Collection<Resolution>.() -> Resolution? = highestResolution(),
-        override val previewResolution: Collection<Resolution>.() -> Resolution? = highestResolution()
+        override val previewFpsRange: Iterable<FpsRange>.() -> FpsRange? = highestFps(),
+        override val sensorSensitivity: (Iterable<Int>.() -> Int?)? = null,
+        override val pictureResolution: Iterable<Resolution>.() -> Resolution? = highestResolution(),
+        override val previewResolution: Iterable<Resolution>.() -> Resolution? = highestResolution()
 ) : Configuration {
 
     /**
@@ -32,42 +33,42 @@ data class CameraConfiguration(
 
         private var cameraConfiguration: CameraConfiguration = default()
 
-        fun flash(selector: (Collection<Flash>.() -> Flash?)): Builder {
+        fun flash(selector: (Iterable<Flash>.() -> Flash?)): Builder {
             cameraConfiguration = cameraConfiguration.copy(
                     flashMode = selector
             )
             return this
         }
 
-        fun focusMode(selector: (Collection<FocusMode>.() -> FocusMode?)): Builder {
+        fun focusMode(selector: (Iterable<FocusMode>.() -> FocusMode?)): Builder {
             cameraConfiguration = cameraConfiguration.copy(
                     focusMode = selector
             )
             return this
         }
 
-        fun previewFpsRange(selector: (Collection<FpsRange>.() -> FpsRange?)): Builder {
+        fun previewFpsRange(selector: (Iterable<FpsRange>.() -> FpsRange?)): Builder {
             cameraConfiguration = cameraConfiguration.copy(
                     previewFpsRange = selector
             )
             return this
         }
 
-        fun sensorSensitivity(selector: (Collection<Int>.() -> Int?)): Builder {
+        fun sensorSensitivity(selector: (Iterable<Int>.() -> Int?)): Builder {
             cameraConfiguration = cameraConfiguration.copy(
                     sensorSensitivity = selector
             )
             return this
         }
 
-        fun previewResolution(selector: (Collection<Resolution>.() -> Resolution?)): Builder {
+        fun previewResolution(selector: (Iterable<Resolution>.() -> Resolution?)): Builder {
             cameraConfiguration = cameraConfiguration.copy(
                     previewResolution = selector
             )
             return this
         }
 
-        fun photoResolution(selector: (Collection<Resolution>.() -> Resolution?)): Builder {
+        fun photoResolution(selector: (Iterable<Resolution>.() -> Resolution?)): Builder {
             cameraConfiguration = cameraConfiguration.copy(
                     pictureResolution = selector
             )

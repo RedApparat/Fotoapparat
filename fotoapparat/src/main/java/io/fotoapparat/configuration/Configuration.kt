@@ -7,11 +7,12 @@ import io.fotoapparat.parameter.Resolution
 import io.fotoapparat.preview.Frame
 
 interface Configuration {
-    val flashMode: (Collection<Flash>.() -> Flash?)?
-    val focusMode: (Collection<FocusMode>.() -> FocusMode?)?
+    val flashMode: (Iterable<Flash>.() -> Flash?)?
+    val focusMode: (Iterable<FocusMode>.() -> FocusMode?)?
+    val jpegQuality: ((IntRange) -> Int?)?
     val frameProcessor: ((Frame) -> Unit)?
-    val previewFpsRange: (Collection<FpsRange>.() -> FpsRange?)?
-    val sensorSensitivity: (Collection<Int>.() -> Int?)?
-    val previewResolution: (Collection<Resolution>.() -> Resolution?)?
-    val pictureResolution: (Collection<Resolution>.() -> Resolution?)?
+    val previewFpsRange: (Iterable<FpsRange>.() -> FpsRange?)?
+    val sensorSensitivity: (Iterable<Int>.() -> Int?)?
+    val previewResolution: (Iterable<Resolution>.() -> Resolution?)?
+    val pictureResolution: (Iterable<Resolution>.() -> Resolution?)?
 }

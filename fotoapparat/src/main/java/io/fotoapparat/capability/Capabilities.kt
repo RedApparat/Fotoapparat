@@ -17,6 +17,7 @@ data class Capabilities(
         val flashModes: Set<Flash>,
         val focusModes: Set<FocusMode>,
         val canSmoothZoom: Boolean,
+        val jpegQualityRange: IntRange,
         val previewFpsRanges: Set<FpsRange>,
         val pictureResolutions: Set<Resolution>,
         val previewResolutions: Set<Resolution>,
@@ -37,6 +38,7 @@ data class Capabilities(
                 "flashModes:" + flashModes.wrap() +
                 "focusModes:" + focusModes.wrap() +
                 "canSmoothZoom:" + canSmoothZoom.wrap() +
+                "jpegQualityRange:" + jpegQualityRange.wrap() +
                 "previewFpsRanges:" + previewFpsRanges.wrap() +
                 "pictureResolutions:" + pictureResolutions.wrap() +
                 "previewResolutions:" + previewResolutions.wrap() +

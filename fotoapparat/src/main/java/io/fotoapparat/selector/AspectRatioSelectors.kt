@@ -11,9 +11,9 @@ import io.fotoapparat.parameter.Resolution
  */
 @JvmOverloads
 fun standardRatio(
-        selector: Collection<Resolution>.() -> Resolution?,
+        selector: Iterable<Resolution>.() -> Resolution?,
         @FloatRange(from = 0.0, to = 1.0) tolerance: Double = 0.0
-): Collection<Resolution>.() -> Resolution? {
+): Iterable<Resolution>.() -> Resolution? {
     return aspectRatio(
             aspectRatio = 4f / 3f,
             selector = selector,
@@ -29,9 +29,9 @@ fun standardRatio(
  */
 @JvmOverloads
 fun wideRatio(
-        selector: Collection<Resolution>.() -> Resolution?,
+        selector: Iterable<Resolution>.() -> Resolution?,
         @FloatRange(from = 0.0, to = 1.0) tolerance: Double = 0.0
-): Collection<Resolution>.() -> Resolution? {
+): Iterable<Resolution>.() -> Resolution? {
     return aspectRatio(
             aspectRatio = 16f / 9f,
             selector = selector,
@@ -51,9 +51,9 @@ fun wideRatio(
 @JvmOverloads
 fun aspectRatio(
         aspectRatio: Float,
-        selector: Collection<Resolution>.() -> Resolution?,
+        selector: Iterable<Resolution>.() -> Resolution?,
         @FloatRange(from = 0.0, to = 1.0) tolerance: Double = 0.0
-): Collection<Resolution>.() -> Resolution? {
+): Iterable<Resolution>.() -> Resolution? {
     if (tolerance < 0.0 || tolerance > 1.0) {
         throw IllegalArgumentException("Tolerance must be between 0.0 and 1.0.")
     }

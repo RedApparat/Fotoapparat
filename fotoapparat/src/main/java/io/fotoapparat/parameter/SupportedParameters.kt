@@ -67,6 +67,13 @@ internal class SupportedParameters(
         cameraParameters.isSmoothZoomSupported
     }
 
+    /**
+     * @return A [IntRange] of supported jpeg qualities that the camera can take photos.
+     */
+    val jpegQualityRange by lazy {
+        IntRange(0, 100)
+    }
+
 }
 
 private val supportedSensitivitiesKeys = listOf("iso-values", "iso-mode-values", "iso-speed-values", "nv-picture-iso-values")

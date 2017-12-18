@@ -2,7 +2,8 @@ package io.fotoapparat.parameter.camera.provide
 
 import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.configuration.CameraConfiguration
-import io.fotoapparat.exception.camera.UnsupportedParameterException
+import io.fotoapparat.exception.camera.InvalidConfigurationException
+import io.fotoapparat.exception.camera.UnsupportedConfigurationException
 import io.fotoapparat.parameter.Flash
 import io.fotoapparat.parameter.FocusMode
 import io.fotoapparat.parameter.FpsRange
@@ -13,10 +14,12 @@ import io.fotoapparat.selector.single
 import org.junit.Test
 import kotlin.test.assertEquals
 
+
 internal class CameraParametersProviderTest {
 
     val resolution = Resolution(10, 10)
     val fpsRange = FpsRange(20000, 20000)
+    val jpegQuality = 80
     val iso = 100
 
     val capabilities = Capabilities(
@@ -25,6 +28,7 @@ internal class CameraParametersProviderTest {
             focusModes = setOf(FocusMode.Fixed),
             canSmoothZoom = false,
             previewFpsRanges = setOf(fpsRange),
+            jpegQualityRange = IntRange(0, 100),
             pictureResolutions = setOf(resolution),
             previewResolutions = setOf(resolution),
             sensorSensitivities = setOf(iso)
@@ -33,6 +37,7 @@ internal class CameraParametersProviderTest {
     val definedConfiguration = CameraConfiguration(
             flashMode = single(Flash.AutoRedEye),
             focusMode = single(FocusMode.Fixed),
+            jpegQuality = single(jpegQuality),
             frameProcessor = {},
             previewFpsRange = single(fpsRange),
             sensorSensitivity = single(iso),
@@ -55,6 +60,7 @@ internal class CameraParametersProviderTest {
                 expected = CameraParameters(
                         flashMode = Flash.AutoRedEye,
                         focusMode = FocusMode.Fixed,
+                        jpegQuality = jpegQuality,
                         previewFpsRange = fpsRange,
                         pictureResolution = resolution,
                         previewResolution = resolution,
@@ -64,7 +70,7 @@ internal class CameraParametersProviderTest {
         )
     }
 
-    @Test(expected = UnsupportedParameterException::class)
+    @Test(expected = UnsupportedConfigurationException::class)
     fun `Select no flash mode`() {
         // Given
         val definedConfiguration = definedConfiguration.copy(
@@ -81,7 +87,7 @@ internal class CameraParametersProviderTest {
         // throw exception
     }
 
-    @Test(expected = UnsupportedParameterException::class)
+    @Test(expected = UnsupportedConfigurationException::class)
     fun `Select no focus mode`() {
         // Given
         val definedConfiguration = definedConfiguration.copy(
@@ -98,7 +104,7 @@ internal class CameraParametersProviderTest {
         // throw exception
     }
 
-    @Test(expected = UnsupportedParameterException::class)
+    @Test(expected = UnsupportedConfigurationException::class)
     fun `Select no preview fps range`() {
         // Given
         val definedConfiguration = definedConfiguration.copy(
@@ -115,7 +121,7 @@ internal class CameraParametersProviderTest {
         // throw exception
     }
 
-    @Test(expected = UnsupportedParameterException::class)
+    @Test(expected = UnsupportedConfigurationException::class)
     fun `Select no picture resolution`() {
         // Given
         val definedConfiguration = definedConfiguration.copy(
@@ -129,11 +135,28 @@ internal class CameraParametersProviderTest {
         )
     }
 
-    @Test(expected = UnsupportedParameterException::class)
+    @Test(expected = UnsupportedConfigurationException::class)
     fun `Select no preview resolution`() {
         // Given
         val definedConfiguration = definedConfiguration.copy(
                 previewResolution = nothing()
+        )
+
+        // When
+        getCameraParameters(
+                capabilities = capabilities,
+                cameraConfiguration = definedConfiguration
+        )
+
+        // Then
+        // throw exception
+    }
+
+    @Test(expected = UnsupportedConfigurationException::class)
+    fun `Select no jpeg quality`() {
+        // Given
+        val definedConfiguration = definedConfiguration.copy(
+                jpegQuality = nothing()
         )
 
         // When
@@ -166,7 +189,7 @@ internal class CameraParametersProviderTest {
         )
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidConfigurationException::class)
     fun `Select flash mode which is not supported`() {
         // Given
         val capabilities = capabilities.copy(
@@ -186,7 +209,7 @@ internal class CameraParametersProviderTest {
         // throw exception
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidConfigurationException::class)
     fun `Select focus mode which is not supported`() {
         // Given
         val capabilities = capabilities.copy(
@@ -206,7 +229,7 @@ internal class CameraParametersProviderTest {
         // throw exception
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidConfigurationException::class)
     fun `Select preview fps range which is not supported`() {
         // Given
         val capabilities = capabilities.copy(
@@ -226,7 +249,7 @@ internal class CameraParametersProviderTest {
         // throw exception
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidConfigurationException::class)
     fun `Select picture resolution which is not supported`() {
         // Given
         val capabilities = capabilities.copy(
@@ -243,7 +266,7 @@ internal class CameraParametersProviderTest {
         )
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = InvalidConfigurationException::class)
     fun `Select preview resolution which is not supported`() {
         // Given
         val capabilities = capabilities.copy(
@@ -251,6 +274,26 @@ internal class CameraParametersProviderTest {
         )
         val definedConfiguration = definedConfiguration.copy(
                 previewResolution = { Resolution(20, 20) }
+        )
+
+        // When
+        getCameraParameters(
+                capabilities = capabilities,
+                cameraConfiguration = definedConfiguration
+        )
+
+        // Then
+        // throw exception
+    }
+
+    @Test(expected = InvalidConfigurationException::class)
+    fun `Select jpeg quality which is not supported`() {
+        // Given
+        val capabilities = capabilities.copy(
+                jpegQualityRange = IntRange(0, 100)
+        )
+        val definedConfiguration = definedConfiguration.copy(
+                jpegQuality = { 200 }
         )
 
         // When

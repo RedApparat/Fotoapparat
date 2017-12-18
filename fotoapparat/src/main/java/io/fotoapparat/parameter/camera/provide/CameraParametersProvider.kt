@@ -2,7 +2,8 @@ package io.fotoapparat.parameter.camera.provide
 
 import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.configuration.CameraConfiguration
-import io.fotoapparat.exception.camera.UnsupportedParameterException
+import io.fotoapparat.exception.camera.InvalidConfigurationException
+import io.fotoapparat.exception.camera.UnsupportedConfigurationException
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.parameter.Parameter
 import io.fotoapparat.parameter.Resolution
@@ -32,6 +33,7 @@ internal fun getCameraParameters(
             CameraParameters(
                     flashMode = flashMode selectFrom flashModes,
                     focusMode = focusMode selectFrom focusModes,
+                    jpegQuality = jpegQuality selectFrom jpegQualityRange,
                     previewFpsRange = previewFpsRange selectFrom previewFpsRanges,
                     pictureResolution = selectedPictureResolution,
                     previewResolution = validPreviewSizeSelector selectFrom previewResolutions,
@@ -43,7 +45,7 @@ internal fun getCameraParameters(
 
 private fun validPreviewSizeSelector(
         resolution: Resolution,
-        original: Collection<Resolution>.() -> Resolution?
+        original: Iterable<Resolution>.() -> Resolution?
 ) = firstAvailable(
         filtered(
                 selector = aspectRatio(
@@ -67,14 +69,54 @@ private inline infix fun <reified T : Parameter> (Collection<T>.() -> T?).select
             .ensureInCollection(supportedParameters)
 }
 
-private fun <T> T.ensureInCollection(supportedParameters: Set<T>): T {
+
+private infix fun (IntRange.() -> Int?).selectFrom(supportedParameters: IntRange): Int {
+    return this(supportedParameters)
+            .ensureSelected(
+                    supportedParameters = supportedParameters,
+                    configurationName = "Jpeg quality"
+            )
+            .ensureInCollection(supportedParameters)
+}
+
+private inline fun <reified Param : Parameter> Param.ensureInCollection(supportedParameters: Set<Param>): Param {
     return if (supportedParameters.contains(this)) {
         this
     } else {
-        throw IllegalArgumentException("The selected parameter is not in the supported set of values.")
+        throw InvalidConfigurationException(
+                value = this,
+                klass = Param::class.java,
+                supportedParameters = supportedParameters
+        )
     }
 }
 
-private inline fun <reified T : Parameter> T?.ensureSelected(supportedParameters: Collection<Parameter>): T {
-    return this ?: throw UnsupportedParameterException(T::class.java, supportedParameters)
+private inline fun <reified Param : Comparable<Param>> Param.ensureInCollection(supportedRange: ClosedRange<Param>): Param {
+    return if (supportedRange.contains(this)) {
+        this
+    } else {
+        throw InvalidConfigurationException(
+                value = this,
+                klass = Param::class.java,
+                supportedRange = supportedRange
+        )
+    }
+}
+
+
+private inline fun <reified Param : Parameter> Param?.ensureSelected(supportedParameters: Collection<Parameter>): Param {
+    return this ?: throw UnsupportedConfigurationException(
+            klass = Param::class.java,
+            supportedParameters = supportedParameters
+    )
+}
+
+private inline fun <reified Param : Comparable<Param>> Param?.ensureSelected(
+        supportedParameters: ClosedRange<Param>,
+        configurationName: String
+): Param {
+    return this ?: throw UnsupportedConfigurationException(
+            configurationName = configurationName,
+            supportedRange = supportedParameters
+    )
 }
