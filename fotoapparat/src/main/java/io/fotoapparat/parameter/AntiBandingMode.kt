@@ -1,28 +1,28 @@
-package io.fotoapparat.parameter;
+package io.fotoapparat.parameter
 
 /**
  * Anti Banding modes which camera can use.
  */
-public enum AntiBandingMode {
+sealed class AntiBandingMode : Parameter {
 
     /**
      * Auto adjust. This should be the default.
      */
-    AUTO,
+    object Auto : AntiBandingMode()
 
     /**
      * Anti Banding is set to 50Hz light frequency.
      */
-    HZ50,
+    object HZ50 : AntiBandingMode()
 
     /**
      * Anti Banding is set to 60Hz light frequency.
      */
-    HZ60,
+    object HZ60 : AntiBandingMode()
 
     /**
      * Anti Banding is not supported or ignored.
      */
-    NONE
+    object None : AntiBandingMode()
 
 }

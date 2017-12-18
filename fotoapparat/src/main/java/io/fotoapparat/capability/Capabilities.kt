@@ -1,9 +1,6 @@
 package io.fotoapparat.capability
 
-import io.fotoapparat.parameter.Flash
-import io.fotoapparat.parameter.FocusMode
-import io.fotoapparat.parameter.FpsRange
-import io.fotoapparat.parameter.Resolution
+import io.fotoapparat.parameter.*
 import io.fotoapparat.util.lineSeparator
 import io.fotoapparat.util.wrap
 
@@ -19,6 +16,7 @@ data class Capabilities(
         val canSmoothZoom: Boolean,
         val jpegQualityRange: IntRange,
         val previewFpsRanges: Set<FpsRange>,
+        val antiBandingModes: Set<AntiBandingMode>,
         val pictureResolutions: Set<Resolution>,
         val previewResolutions: Set<Resolution>,
         val sensorSensitivities: Set<Int>
@@ -27,6 +25,7 @@ data class Capabilities(
     init {
         flashModes.ensureNotEmpty()
         focusModes.ensureNotEmpty()
+        antiBandingModes.ensureNotEmpty()
         previewFpsRanges.ensureNotEmpty()
         pictureResolutions.ensureNotEmpty()
         previewResolutions.ensureNotEmpty()
@@ -39,6 +38,7 @@ data class Capabilities(
                 "focusModes:" + focusModes.wrap() +
                 "canSmoothZoom:" + canSmoothZoom.wrap() +
                 "jpegQualityRange:" + jpegQualityRange.wrap() +
+                "antiBandingModes:" + antiBandingModes.wrap() +
                 "previewFpsRanges:" + previewFpsRanges.wrap() +
                 "pictureResolutions:" + pictureResolutions.wrap() +
                 "previewResolutions:" + previewResolutions.wrap() +

@@ -4,10 +4,7 @@ import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.exception.camera.InvalidConfigurationException
 import io.fotoapparat.exception.camera.UnsupportedConfigurationException
-import io.fotoapparat.parameter.Flash
-import io.fotoapparat.parameter.FocusMode
-import io.fotoapparat.parameter.FpsRange
-import io.fotoapparat.parameter.Resolution
+import io.fotoapparat.parameter.*
 import io.fotoapparat.parameter.camera.CameraParameters
 import io.fotoapparat.selector.nothing
 import io.fotoapparat.selector.single
@@ -28,6 +25,7 @@ internal class CameraParametersProviderTest {
             focusModes = setOf(FocusMode.Fixed),
             canSmoothZoom = false,
             previewFpsRanges = setOf(fpsRange),
+            antiBandingModes = setOf(AntiBandingMode.None),
             jpegQualityRange = IntRange(0, 100),
             pictureResolutions = setOf(resolution),
             previewResolutions = setOf(resolution),
@@ -39,6 +37,7 @@ internal class CameraParametersProviderTest {
             focusMode = single(FocusMode.Fixed),
             jpegQuality = single(jpegQuality),
             frameProcessor = {},
+            antiBandingMode = single(AntiBandingMode.None),
             previewFpsRange = single(fpsRange),
             sensorSensitivity = single(iso),
             pictureResolution = single(resolution),
@@ -62,6 +61,7 @@ internal class CameraParametersProviderTest {
                         focusMode = FocusMode.Fixed,
                         jpegQuality = jpegQuality,
                         previewFpsRange = fpsRange,
+                        antiBandingMode = AntiBandingMode.None,
                         pictureResolution = resolution,
                         previewResolution = resolution,
                         sensorSensitivity = iso
@@ -157,6 +157,23 @@ internal class CameraParametersProviderTest {
         // Given
         val definedConfiguration = definedConfiguration.copy(
                 jpegQuality = nothing()
+        )
+
+        // When
+        getCameraParameters(
+                capabilities = capabilities,
+                cameraConfiguration = definedConfiguration
+        )
+
+        // Then
+        // throw exception
+    }
+
+    @Test(expected = UnsupportedConfigurationException::class)
+    fun `Select no antibanding mode`() {
+        // Given
+        val definedConfiguration = definedConfiguration.copy(
+                antiBandingMode = nothing()
         )
 
         // When
@@ -294,6 +311,26 @@ internal class CameraParametersProviderTest {
         )
         val definedConfiguration = definedConfiguration.copy(
                 jpegQuality = { 200 }
+        )
+
+        // When
+        getCameraParameters(
+                capabilities = capabilities,
+                cameraConfiguration = definedConfiguration
+        )
+
+        // Then
+        // throw exception
+    }
+
+    @Test(expected = InvalidConfigurationException::class)
+    fun `Select anti banding mode which is not supported`() {
+        // Given
+        val capabilities = capabilities.copy(
+                antiBandingModes = setOf(AntiBandingMode.None)
+        )
+        val definedConfiguration = definedConfiguration.copy(
+                antiBandingMode = { AntiBandingMode.HZ60 }
         )
 
         // When

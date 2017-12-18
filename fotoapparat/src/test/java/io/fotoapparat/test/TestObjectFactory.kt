@@ -2,10 +2,7 @@ package io.fotoapparat.test
 
 import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.configuration.CameraConfiguration
-import io.fotoapparat.parameter.Flash
-import io.fotoapparat.parameter.FocusMode
-import io.fotoapparat.parameter.FpsRange
-import io.fotoapparat.parameter.Resolution
+import io.fotoapparat.parameter.*
 import io.fotoapparat.parameter.camera.CameraParameters
 import io.fotoapparat.preview.Frame
 import io.fotoapparat.selector.single
@@ -52,6 +49,7 @@ val testCapabilities = Capabilities(
         focusModes = setOf(FocusMode.Fixed),
         canSmoothZoom = false,
         jpegQualityRange = IntRange(0, 100),
+        antiBandingModes = setOf(AntiBandingMode.None),
         previewFpsRanges = setOf(testFpsRange),
         pictureResolutions = setOf(testResolution),
         previewResolutions = setOf(testResolution),
@@ -65,6 +63,7 @@ val testCameraParameters = CameraParameters(
         flashMode = Flash.AutoRedEye,
         focusMode = FocusMode.Fixed,
         jpegQuality = jpegQuality,
+        antiBandingMode = AntiBandingMode.None,
         previewFpsRange = testFpsRange,
         sensorSensitivity = testIso,
         pictureResolution = testResolution,

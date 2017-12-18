@@ -1,10 +1,7 @@
 package io.fotoapparat.parameter.camera.apply
 
 import android.hardware.Camera
-import io.fotoapparat.parameter.Flash
-import io.fotoapparat.parameter.FocusMode
-import io.fotoapparat.parameter.FpsRange
-import io.fotoapparat.parameter.Resolution
+import io.fotoapparat.parameter.*
 import io.fotoapparat.parameter.camera.CameraParameters
 import io.fotoapparat.parameter.camera.convert.toCode
 
@@ -26,6 +23,7 @@ private infix fun CameraParameters.tryApplyInto(parameters: Camera.Parameters) {
     flashMode applyInto parameters
     focusMode applyInto parameters
     jpegQuality applyInto parameters
+    antiBandingMode applyInto parameters
     previewFpsRange applyInto parameters
     previewResolution applyPreviewInto parameters
     sensorSensitivity applySensitivityInto parameters
@@ -42,6 +40,10 @@ private infix fun FocusMode.applyInto(parameters: Camera.Parameters) {
 
 private infix fun Int.applyInto(parameters: Camera.Parameters) {
     parameters.jpegQuality = this
+}
+
+private infix fun AntiBandingMode.applyInto(parameters: Camera.Parameters) {
+    parameters.antibanding = toCode()
 }
 
 private infix fun FpsRange.applyInto(parameters: Camera.Parameters) {

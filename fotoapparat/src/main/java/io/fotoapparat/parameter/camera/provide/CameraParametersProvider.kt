@@ -35,6 +35,7 @@ internal fun getCameraParameters(
                     focusMode = focusMode selectFrom focusModes,
                     jpegQuality = jpegQuality selectFrom jpegQualityRange,
                     previewFpsRange = previewFpsRange selectFrom previewFpsRanges,
+                    antiBandingMode = antiBandingMode selectFrom antiBandingModes,
                     pictureResolution = selectedPictureResolution,
                     previewResolution = validPreviewSizeSelector selectFrom previewResolutions,
                     sensorSensitivity = sensorSensitivity selectOptionalFrom sensorSensitivities

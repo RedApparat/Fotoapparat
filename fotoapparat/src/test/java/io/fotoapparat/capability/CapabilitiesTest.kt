@@ -1,27 +1,12 @@
 package io.fotoapparat.capability
 
-import io.fotoapparat.parameter.Flash
-import io.fotoapparat.parameter.FocusMode
-import io.fotoapparat.parameter.FpsRange
-import io.fotoapparat.parameter.Resolution
+import io.fotoapparat.test.testCapabilities
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class CapabilitiesTest {
 
-    val resolution = Resolution(10, 10)
-
-    val validCapabilities = Capabilities(
-            canZoom = false,
-            flashModes = setOf(Flash.AutoRedEye),
-            focusModes = setOf(FocusMode.Fixed),
-            canSmoothZoom = false,
-            jpegQualityRange = IntRange(0, 100),
-            previewFpsRanges = setOf(FpsRange(20000, 20000)),
-            pictureResolutions = setOf(resolution),
-            previewResolutions = setOf(resolution),
-            sensorSensitivities = setOf(100)
-    )
+    val validCapabilities = testCapabilities
 
     @Test(expected = IllegalArgumentException::class)
     fun `Ensure flash modes not empty`() {
@@ -60,6 +45,14 @@ class CapabilitiesTest {
         // When
         validCapabilities.copy(
                 previewResolutions = emptySet()
+        )
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun `Ensure autoBanding modes not empty`() {
+        // When
+        validCapabilities.copy(
+                antiBandingModes = emptySet()
         )
     }
 

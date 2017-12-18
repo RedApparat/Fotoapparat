@@ -68,6 +68,13 @@ internal class SupportedParameters(
     }
 
     /**
+     * @see Camera.Parameters.getSupportedAntibanding
+     */
+    val supportedAutoBandingModes by lazy {
+        cameraParameters.supportedAntibanding ?: listOf(Camera.Parameters.ANTIBANDING_OFF)
+    }
+
+    /**
      * @return A [IntRange] of supported jpeg qualities that the camera can take photos.
      */
     val jpegQualityRange by lazy {

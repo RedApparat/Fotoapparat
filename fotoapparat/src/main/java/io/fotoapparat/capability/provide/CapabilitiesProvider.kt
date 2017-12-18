@@ -3,10 +3,7 @@ package io.fotoapparat.capability.provide
 import android.hardware.Camera
 import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.parameter.SupportedParameters
-import io.fotoapparat.parameter.camera.convert.toFlash
-import io.fotoapparat.parameter.camera.convert.toFocusMode
-import io.fotoapparat.parameter.camera.convert.toFpsRange
-import io.fotoapparat.parameter.camera.convert.toResolution
+import io.fotoapparat.parameter.camera.convert.*
 
 /**
  * Returns the [io.fotoapparat.capability.Capabilities] of the given [Camera].
@@ -20,6 +17,7 @@ private fun SupportedParameters.getCapabilities(): Capabilities {
             focusModes = focusModes.extract { it.toFocusMode() },
             canSmoothZoom = supportedSmoothZoom,
             jpegQualityRange = jpegQualityRange,
+            antiBandingModes = supportedAutoBandingModes.extract { it.toAntiBandingMode() },
             sensorSensitivities = sensorSensitivities.toSet(),
             previewFpsRanges = supportedPreviewFpsRanges.extract { it.toFpsRange() },
             pictureResolutions = pictureResolutions.mapSizes(),

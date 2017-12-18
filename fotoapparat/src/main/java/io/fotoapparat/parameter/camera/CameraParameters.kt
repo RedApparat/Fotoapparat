@@ -1,10 +1,7 @@
 package io.fotoapparat.parameter.camera
 
 import io.fotoapparat.hardware.CameraDevice
-import io.fotoapparat.parameter.Flash
-import io.fotoapparat.parameter.FocusMode
-import io.fotoapparat.parameter.FpsRange
-import io.fotoapparat.parameter.Resolution
+import io.fotoapparat.parameter.*
 import io.fotoapparat.util.lineSeparator
 import io.fotoapparat.util.wrap
 
@@ -17,6 +14,7 @@ data class CameraParameters(
         val focusMode: FocusMode,
         val jpegQuality: Int,
         val previewFpsRange: FpsRange,
+        val antiBandingMode: AntiBandingMode,
         val sensorSensitivity: Int?,
         val pictureResolution: Resolution,
         val previewResolution: Resolution
@@ -27,6 +25,7 @@ data class CameraParameters(
                 "focusMode:" + focusMode.wrap() +
                 "jpegQuality:" + jpegQuality.wrap() +
                 "previewFpsRange:" + previewFpsRange.wrap() +
+                "antiBandingMode:" + antiBandingMode.wrap() +
                 "sensorSensitivity:" + sensorSensitivity?.wrap() +
                 "pictureResolution:" + pictureResolution.wrap() +
                 "previewResolution:" + previewResolution.wrap()

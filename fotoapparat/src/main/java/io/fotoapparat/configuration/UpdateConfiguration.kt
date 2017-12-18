@@ -1,9 +1,6 @@
 package io.fotoapparat.configuration
 
-import io.fotoapparat.parameter.Flash
-import io.fotoapparat.parameter.FocusMode
-import io.fotoapparat.parameter.FpsRange
-import io.fotoapparat.parameter.Resolution
+import io.fotoapparat.parameter.*
 import io.fotoapparat.preview.Frame
 
 /**
@@ -15,6 +12,7 @@ data class UpdateConfiguration(
         override val jpegQuality: ((IntRange) -> Int?)? = null,
         override val frameProcessor: ((Frame) -> Unit)? = null,
         override val previewFpsRange: (Iterable<FpsRange>.() -> FpsRange?)? = null,
+        override val antiBandingMode: (Iterable<AntiBandingMode>.() -> AntiBandingMode?)? = null,
         override val sensorSensitivity: (Iterable<Int>.() -> Int?)? = null,
         override val previewResolution: (Iterable<Resolution>.() -> Resolution?)? = null,
         override val pictureResolution: (Iterable<Resolution>.() -> Resolution?)? = null
@@ -51,6 +49,20 @@ data class UpdateConfiguration(
         fun sensorSensitivity(selector: Iterable<Int>.() -> Int?): Builder {
             configuration.copy(
                     sensorSensitivity = selector
+            )
+            return this
+        }
+
+        fun antiBandingMode(selector: Iterable<AntiBandingMode>.() -> AntiBandingMode?): Builder {
+            configuration.copy(
+                    antiBandingMode = selector
+            )
+            return this
+        }
+
+        fun jpegQuality(selector: IntRange.() -> Int?): Builder {
+            configuration.copy(
+                    jpegQuality = selector
             )
             return this
         }
