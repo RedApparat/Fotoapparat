@@ -2,7 +2,6 @@ package io.fotoapparat.hardware.v2.capabilities;
 
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 
 import java.util.Collections;
@@ -10,6 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.hardware.v2.parameters.converters.AntiBandingConverter;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
@@ -37,6 +38,7 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
         return new Capabilities(
                 availableJpegSizes(),
                 availablePreviewSizes(),
+                availableAntiBandingModes(),
                 availableFocusModes(),
                 availableFlashModes(),
                 availablePreviewFpsRanges(),
@@ -60,6 +62,19 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
         }
 
         return filteredOutputSizes;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private Set<AntiBandingMode> availableAntiBandingModes() {
+        Set<AntiBandingMode> antiBandingModes = new HashSet<>();
+        int modes[] = characteristics().autoAntiBandingModes();
+        if (modes != null) {
+            for (int aeMode : modes) {
+                antiBandingModes.add(AntiBandingConverter.aeModeToAntiBanding(aeMode));
+            }
+        }
+
+        return antiBandingModes;
     }
 
     @SuppressWarnings("ConstantConditions")

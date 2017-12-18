@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import java.util.Collection;
 
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.selector.SelectorFunction;
@@ -26,6 +27,14 @@ public class UpdateRequest {
     public final SelectorFunction<Collection<Flash>, Flash> flashSelector;
 
     /**
+     * Selects anti banding mode from list of available modes.
+     * <p>
+     * {@code null} if no update is required.
+     */
+    @Nullable
+    public final SelectorFunction<Collection<AntiBandingMode>, AntiBandingMode> antiBandingModeSelector;
+
+    /**
      * Selects focus mode from list of available modes.
      * <p>
      * {@code null} if no update is required.
@@ -35,6 +44,7 @@ public class UpdateRequest {
 
     private UpdateRequest(Builder builder) {
         this.flashSelector = builder.flashSelector;
+        this.antiBandingModeSelector = builder.antiBandingModeSelector;
         this.focusModeSelector = builder.focusModeSelector;
     }
 
@@ -51,7 +61,16 @@ public class UpdateRequest {
     public static class Builder {
 
         SelectorFunction<Collection<Flash>, Flash> flashSelector = null;
+        SelectorFunction<Collection<AntiBandingMode>, AntiBandingMode> antiBandingModeSelector = null;
         SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector = null;
+
+        /**
+         * @param selector selects anti banding mode from list of available modes.
+         */
+        public Builder antiBandingMode(@Nullable SelectorFunction<Collection<AntiBandingMode>, AntiBandingMode> selector) {
+            this.antiBandingModeSelector = selector;
+            return this;
+        }
 
         /**
          * @param selector selects focus mode from list of available modes.

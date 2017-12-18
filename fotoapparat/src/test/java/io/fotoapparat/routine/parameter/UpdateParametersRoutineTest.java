@@ -11,6 +11,7 @@ import java.util.Collections;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
@@ -19,6 +20,7 @@ import io.fotoapparat.parameter.range.Ranges;
 import io.fotoapparat.parameter.update.UpdateRequest;
 
 import static io.fotoapparat.parameter.selector.FlashSelectors.torch;
+import static io.fotoapparat.parameter.selector.AntiBandingModeSelectors.auto;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.test.TestUtils.asSet;
 import static org.mockito.BDDMockito.given;
@@ -39,6 +41,7 @@ public class UpdateParametersRoutineTest {
                 .willReturn(new Capabilities(
                         Collections.<Size>emptySet(),
                         Collections.<Size>emptySet(),
+                        asSet(AntiBandingMode.AUTO),
                         asSet(FocusMode.AUTO),
                         asSet(Flash.TORCH),
                         asSet(Ranges.continuousRange(30000, 30000)),
@@ -52,6 +55,7 @@ public class UpdateParametersRoutineTest {
         // Given
         UpdateRequest request = UpdateRequest.builder()
                 .flash(torch())
+                .antiBandingMode(auto())
                 .focusMode(autoFocus())
                 .build();
 
@@ -64,6 +68,10 @@ public class UpdateParametersRoutineTest {
                         .putValue(
                                 Parameters.Type.FLASH,
                                 Flash.TORCH
+                        )
+                        .putValue(
+                                Parameters.Type.ANTI_BANDING_MODE,
+                                AntiBandingMode.AUTO
                         )
                         .putValue(
                                 Parameters.Type.FOCUS_MODE,

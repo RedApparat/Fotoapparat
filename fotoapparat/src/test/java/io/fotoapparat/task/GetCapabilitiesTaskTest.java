@@ -11,6 +11,7 @@ import java.util.Collections;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
@@ -28,6 +29,7 @@ public class GetCapabilitiesTaskTest {
     private static final Capabilities CAPABILITIES = new Capabilities(
             Collections.singleton(new Size(1400, 1080)),
             Collections.singleton(new Size(1400, 1080)),
+            Collections.singleton(AntiBandingMode.AUTO),
             Collections.singleton(FocusMode.CONTINUOUS_FOCUS),
             Collections.singleton(Flash.OFF),
             Collections.singleton(Ranges.continuousRange(30000, 30000)),

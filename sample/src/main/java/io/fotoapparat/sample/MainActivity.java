@@ -30,6 +30,10 @@ import io.fotoapparat.view.CameraView;
 import static io.fotoapparat.log.Loggers.fileLogger;
 import static io.fotoapparat.log.Loggers.logcat;
 import static io.fotoapparat.log.Loggers.loggers;
+import static io.fotoapparat.parameter.selector.AntiBandingModeSelectors.auto;
+import static io.fotoapparat.parameter.selector.AntiBandingModeSelectors.hz50;
+import static io.fotoapparat.parameter.selector.AntiBandingModeSelectors.hz60;
+import static io.fotoapparat.parameter.selector.AntiBandingModeSelectors.none;
 import static io.fotoapparat.parameter.selector.AspectRatioSelectors.standardRatio;
 import static io.fotoapparat.parameter.selector.FlashSelectors.autoFlash;
 import static io.fotoapparat.parameter.selector.FlashSelectors.autoRedEye;
@@ -179,6 +183,12 @@ public class MainActivity extends AppCompatActivity {
                 .previewScaleType(ScaleType.CENTER_CROP)
                 .photoSize(standardRatio(biggestSize()))
                 .lensPosition(lensPosition(position))
+                .antiBandingMode(firstAvailable(
+                        auto(),
+                        hz50(),
+                        hz60(),
+                        none()
+                ))
                 .focusMode(firstAvailable(
                         continuousFocus(),
                         autoFocus(),
