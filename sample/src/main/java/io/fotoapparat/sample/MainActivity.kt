@@ -93,6 +93,9 @@ class MainActivity : AppCompatActivity() {
                 cameraConfiguration = activeCamera.configuration
         )
 
+        zoomSeekBar.progress = 0
+        torchSwitch.isChecked = false
+
         Log.i(LOGGING_TAG, "New camera: ${activeCamera::javaClass.name}")
     }
 
