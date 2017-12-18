@@ -12,8 +12,8 @@ internal fun Device.startOrientationMonitoring(
         orientationSensor: OrientationSensor
 ) {
     orientationSensor.start { degrees ->
-        val cameraDevice = getSelectedCameraSafely()
         execute {
+            val cameraDevice = getSelectedCameraSafely()
             cameraDevice.setDisplayOrientation(degrees)
         }
     }

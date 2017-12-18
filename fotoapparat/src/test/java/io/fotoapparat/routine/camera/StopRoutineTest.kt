@@ -61,8 +61,8 @@ internal class StopRoutineTest {
         )
 
         inOrder.apply {
-            verify(cameraDevice).stop()
             verify(orientationSensor).stopMonitoring()
+            verify(cameraDevice).stop()
             verify(device).clearSelectedCamera()
         }
     }

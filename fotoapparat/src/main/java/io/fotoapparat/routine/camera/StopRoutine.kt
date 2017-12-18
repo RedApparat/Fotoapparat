@@ -13,11 +13,11 @@ import io.fotoapparat.routine.orientation.stopMonitoring
 internal fun Device.shutDown(
         orientationSensor: OrientationSensor
 ) {
-    val cameraDevice = getSelectedCameraSafely()
-
-    cameraDevice.stop()
 
     orientationSensor.stopMonitoring()
+
+    val cameraDevice = getSelectedCameraSafely()
+    cameraDevice.stop()
 
     clearSelectedCamera()
 }
