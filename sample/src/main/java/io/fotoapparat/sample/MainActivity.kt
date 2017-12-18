@@ -26,14 +26,7 @@ class MainActivity : AppCompatActivity() {
     private var permissionsGranted: Boolean = false
     private var activeCamera: Camera = Camera.Back
 
-    private val fotoapparat: Fotoapparat = Fotoapparat(
-            context = this,
-            view = cameraView,
-            logger = logcat(),
-            lensPosition = activeCamera.lensPosition,
-            cameraConfiguration = activeCamera.configuration,
-            cameraErrorCallback = { it -> Log.e(LOGGING_TAG, "Camera error: ", it) }
-    )
+    private lateinit var fotoapparat: Fotoapparat
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +40,15 @@ class MainActivity : AppCompatActivity() {
         } else {
             permissionsDelegate.requestCameraPermission()
         }
+
+        fotoapparat = Fotoapparat(
+                context = this,
+                view = cameraView,
+                logger = logcat(),
+                lensPosition = activeCamera.lensPosition,
+                cameraConfiguration = activeCamera.configuration,
+                cameraErrorCallback = { it -> Log.e(LOGGING_TAG, "Camera error: ", it) }
+        )
 
         cameraView onClick takePicture()
         zoomSeekBar onProgressChanged updateZoom()
@@ -97,7 +99,14 @@ class MainActivity : AppCompatActivity() {
     private fun toggleFlash(): (CompoundButton, Boolean) -> Unit = { _, isChecked ->
         fotoapparat.updateConfiguration(
                 UpdateConfiguration(
-                        flashMode = if (isChecked) torch() else off()
+                        flashMode = if (isChecked) {
+                            firstAvailable(
+                                    torch(),
+                                    off()
+                            )
+                        } else {
+                            off()
+                        }
                 )
         )
 
