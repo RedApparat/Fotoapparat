@@ -34,8 +34,16 @@ public class UpdateParametersRoutine {
         cameraDevice.updateParameters(
                 combineParameters(asList(
                         flashModeParameters(request, capabilities),
+                        antiBandingModeParameters(request, capabilities),
                         focusModeParameters(request, capabilities)
                 ))
+        );
+    }
+
+    private Parameters antiBandingModeParameters(@NonNull UpdateRequest request, Capabilities capabilities) {
+        return ParametersFactory.selectAntiBandingMode(
+                capabilities,
+                optional(request.antiBandingModeSelector)
         );
     }
 

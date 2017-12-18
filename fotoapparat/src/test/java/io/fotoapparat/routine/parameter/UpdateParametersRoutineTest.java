@@ -11,6 +11,7 @@ import java.util.Collections;
 
 import io.fotoapparat.hardware.CameraDevice;
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
@@ -39,6 +40,7 @@ public class UpdateParametersRoutineTest {
                 .willReturn(new Capabilities(
                         Collections.<Size>emptySet(),
                         Collections.<Size>emptySet(),
+                        asSet(AntiBandingMode.AUTO),
                         asSet(FocusMode.AUTO),
                         asSet(Flash.TORCH),
                         asSet(Ranges.continuousRange(30000, 30000)),

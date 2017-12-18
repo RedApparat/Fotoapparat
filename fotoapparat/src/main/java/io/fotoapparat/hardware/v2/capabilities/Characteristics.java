@@ -114,6 +114,17 @@ public class Characteristics {
     }
 
     /**
+     * List of anti banding modes that are supported by this camera device.
+     *
+     * @return The list of the anti banding modes. Range of valid values:
+     * Any value listed in {@link android.hardware.camera2.CaptureRequest#CONTROL_AE_ANTIBANDING_MODE
+     * android.control.aeMode}.
+     */
+    public int[] autoAntiBandingModes() {
+        return cameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_ANTIBANDING_MODES);
+    }
+
+    /**
      * List of auto-focus (AF) modes that are supported by this camera device.
      *
      * @return The list of the focus modes. Range of valid values:

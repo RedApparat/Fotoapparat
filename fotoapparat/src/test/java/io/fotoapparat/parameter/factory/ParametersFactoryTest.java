@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.Collections;
 
 import io.fotoapparat.hardware.Capabilities;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
@@ -28,6 +29,7 @@ public class ParametersFactoryTest {
         Capabilities capabilities = new Capabilities(
                 Collections.singleton(size),
                 Collections.<Size>emptySet(),
+                Collections.<AntiBandingMode>emptySet(),
                 Collections.<FocusMode>emptySet(),
                 Collections.<Flash>emptySet(),
                 Collections.<Range<Integer>>emptySet(),
@@ -54,6 +56,7 @@ public class ParametersFactoryTest {
         Capabilities capabilities = new Capabilities(
                 Collections.<Size>emptySet(),
                 Collections.singleton(size),
+                Collections.<AntiBandingMode>emptySet(),
                 Collections.<FocusMode>emptySet(),
                 Collections.<Flash>emptySet(),
                 Collections.<Range<Integer>>emptySet(),
@@ -75,11 +78,13 @@ public class ParametersFactoryTest {
     @Test
     public void selectFocusMode() throws Exception {
         // Given
+        AntiBandingMode antiBandingMode = AntiBandingMode.AUTO;
         FocusMode focusMode = FocusMode.AUTO;
 
         Capabilities capabilities = new Capabilities(
                 Collections.<Size>emptySet(),
                 Collections.<Size>emptySet(),
+                Collections.singleton(antiBandingMode),
                 Collections.singleton(focusMode),
                 Collections.<Flash>emptySet(),
                 Collections.<Range<Integer>>emptySet(),
@@ -106,6 +111,7 @@ public class ParametersFactoryTest {
         Capabilities capabilities = new Capabilities(
                 Collections.<Size>emptySet(),
                 Collections.<Size>emptySet(),
+                Collections.<AntiBandingMode>emptySet(),
                 Collections.<FocusMode>emptySet(),
                 Collections.singleton(flash),
                 Collections.<Range<Integer>>emptySet(),
@@ -132,6 +138,7 @@ public class ParametersFactoryTest {
         Capabilities capabilities = new Capabilities(
                 Collections.<Size>emptySet(),
                 Collections.<Size>emptySet(),
+                Collections.<AntiBandingMode>emptySet(),
                 Collections.<FocusMode>emptySet(),
                 Collections.<Flash>emptySet(),
                 Collections.singleton(range),
@@ -158,6 +165,7 @@ public class ParametersFactoryTest {
         Capabilities capabilities = new Capabilities(
                 Collections.<Size>emptySet(),
                 Collections.<Size>emptySet(),
+                Collections.<AntiBandingMode>emptySet(),
                 Collections.<FocusMode>emptySet(),
                 Collections.<Flash>emptySet(),
                 Collections.<Range<Integer>>emptySet(),

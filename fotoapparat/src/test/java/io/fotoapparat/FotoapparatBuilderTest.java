@@ -15,6 +15,7 @@ import java.util.Collection;
 
 import io.fotoapparat.hardware.provider.CameraProvider;
 import io.fotoapparat.log.Logger;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
@@ -46,6 +47,8 @@ public class FotoapparatBuilderTest {
     SelectorFunction<Collection<Size>, Size> previewSizeSelector;
     @Mock
     SelectorFunction<Collection<LensPosition>, LensPosition> lensPositionSelector;
+    @Mock
+    SelectorFunction<Collection<AntiBandingMode>, AntiBandingMode> AntiBandingModeSelector;
     @Mock
     SelectorFunction<Collection<FocusMode>, FocusMode> focusModeSelector;
     @Mock
@@ -121,6 +124,28 @@ public class FotoapparatBuilderTest {
         assertEquals(
                 logger,
                 builder.logger
+        );
+    }
+
+    @Test
+    public void antiBandingMode_HasDefault() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments();
+
+        // Then
+        assertNotNull(builder.antiBandingSelector);
+    }
+
+    @Test
+    public void antiBandingMode_IsConfigurable() throws Exception {
+        // When
+        FotoapparatBuilder builder = builderWithMandatoryArguments()
+                .antiBandingMode(AntiBandingModeSelector);
+
+        // Then
+        assertEquals(
+                AntiBandingModeSelector,
+                builder.antiBandingSelector
         );
     }
 

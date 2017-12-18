@@ -26,6 +26,7 @@ import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.log.Logger;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.LensPosition;
@@ -157,6 +158,7 @@ public class Camera2Test {
         Capabilities capabilities = new Capabilities(
                 Collections.<Size>emptySet(),
                 Collections.<Size>emptySet(),
+                singleton(AntiBandingMode.AUTO),
                 singleton(FocusMode.MACRO),
                 Collections.<Flash>emptySet(),
                 Collections.<Range<Integer>>emptySet(),

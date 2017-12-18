@@ -13,6 +13,7 @@ import java.util.Collections;
 
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.v1.capabilities.CapabilitiesFactory;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
@@ -40,6 +41,8 @@ public class CapabilitiesFactoryTest {
     public void setUp() throws Exception {
         given(parametersProvider.getSupportedFocusModes())
                 .willReturn(Collections.<String>emptyList());
+        given(parametersProvider.getSupportedAutoBandingModes())
+                .willReturn(Collections.<String>emptyList());
         given(parametersProvider.getSupportedFlashModes())
                 .willReturn(Collections.<String>emptyList());
         given(parametersProvider.getSupportedPictureSizes())
@@ -54,6 +57,49 @@ public class CapabilitiesFactoryTest {
             .willReturn(Collections.<Integer>emptySet());
 
         testee = new CapabilitiesFactory();
+    }
+
+    @Test
+    public void mapAntiBandingModes() throws Exception {
+        // Given
+        given(parametersProvider.getSupportedAutoBandingModes())
+                .willReturn(asList(
+                        Camera.Parameters.ANTIBANDING_AUTO,
+                        Camera.Parameters.ANTIBANDING_50HZ,
+                        Camera.Parameters.ANTIBANDING_60HZ,
+                        Camera.Parameters.ANTIBANDING_OFF,
+                        "something random"
+                ));
+
+        // When
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
+
+        // Then
+        assertEquals(
+                asSet(
+                        AntiBandingMode.AUTO,
+                        AntiBandingMode.HZ50,
+                        AntiBandingMode.HZ60,
+                        AntiBandingMode.NONE
+                ),
+                capabilities.supportedAntiBandingModes()
+        );
+    }
+
+    @Test
+    public void mapAntiBandingModes_EmptyList_AlwaysIncludeFixed() throws Exception {
+        // Given
+        given(parametersProvider.getSupportedAutoBandingModes())
+                .willReturn(Collections.<String>emptyList());
+
+        // When
+        Capabilities capabilities = testee.fromParameters(parametersProvider);
+
+        // Then
+        assertEquals(
+                singleton(AntiBandingMode.NONE),
+                capabilities.supportedAntiBandingModes()
+        );
     }
 
     @Test

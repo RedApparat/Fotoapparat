@@ -12,6 +12,7 @@ import java.util.Set;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.v1.Camera1;
 import io.fotoapparat.hardware.v1.CameraParametersDecorator;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
@@ -31,6 +32,7 @@ public class CapabilitiesFactory {
         return new Capabilities(
                 extractPictureSizes(parametersProvider),
                 extractPreviewSizes(parametersProvider),
+                extractAntiBandingModes(parametersProvider),
                 extractFocusModes(parametersProvider),
                 extractFlashModes(parametersProvider),
                 extractPreviewFpsRanges(parametersProvider),
@@ -82,6 +84,19 @@ public class CapabilitiesFactory {
         return supportedFlashModes != null
                 ? supportedFlashModes
                 : Collections.singletonList(Camera.Parameters.FLASH_MODE_OFF);
+    }
+
+    private Set<AntiBandingMode> extractAntiBandingModes(CameraParametersDecorator parametersProvider) {
+        HashSet<AntiBandingMode> result = new HashSet<>();
+
+        for (String antiBandingMode : parametersProvider.getSupportedAutoBandingModes()) {
+            result.add(
+                    AntiBandingCapability.toAntiBandingMode(antiBandingMode)
+            );
+        }
+
+        result.add(AntiBandingMode.NONE);
+        return result;
     }
 
     private Set<FocusMode> extractFocusModes(CameraParametersDecorator parametersProvider) {
