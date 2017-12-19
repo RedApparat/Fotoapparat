@@ -10,5 +10,9 @@ android:
   - android-27
   - extra-android-m2repository
 
+before_script:
+  - sdkmanager --version
+  - yes | sdkmanager --licenses
+
 script:
   - ./gradlew build test
