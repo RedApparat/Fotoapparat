@@ -12,7 +12,7 @@ buildscript {
                         target : 27
                 ],
                 android: [
-                        buildTools: '26.0.2',
+                        buildTools: '27.0.2',
                         support   : '27.0.2'
                 ],
                 rx     : [
