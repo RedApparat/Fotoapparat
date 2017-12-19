@@ -5,12 +5,10 @@ android:
   components:
   - tools
   - platform-tools
+  - tools
   - build-tools-27.0.2
   - android-27
   - extra-android-m2repository
-
-before_script:
-  - yes | sdkmanager --licenses
 
 script:
   - ./gradlew build test
