@@ -40,7 +40,6 @@ class Fotoapparat
 @JvmOverloads constructor(
         context: Context,
         view: CameraRenderer,
-        // TODO if we have 2 back cameras, we need better selector. Therefore this needs to be wrapped to a "camera Selector" class or similar
         lensPosition: Collection<LensPosition>.() -> LensPosition? = firstAvailable(
                 back(),
                 front(),

@@ -5,6 +5,9 @@ import io.fotoapparat.preview.Frame
 import io.fotoapparat.preview.FrameProcessor
 import io.fotoapparat.selector.*
 
+
+private const val DEFAULT_JPEG_QUALITY = 90
+
 /**
  * A camera configuration which has all it's selectors defined.
  */
@@ -15,7 +18,7 @@ data class CameraConfiguration(
                 autoFocus(),
                 fixed()
         ),
-        override val jpegQuality: (IntRange) -> Int? = single(90),
+        override val jpegQuality: (IntRange) -> Int? = manualJpegQuality(DEFAULT_JPEG_QUALITY),
         override val frameProcessor: (Frame) -> Unit = {},
         override val previewFpsRange: Iterable<FpsRange>.() -> FpsRange? = highestFps(),
         override val antiBandingMode: Iterable<AntiBandingMode>.() -> AntiBandingMode? = firstAvailable(

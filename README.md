@@ -66,6 +66,13 @@ val configuration = CameraConfiguration(
             torch(),
             off()
     ),
+    antiBandingMode = firstAvailable(       // (optional) similar to how it is done for focus mode & flash, now for anti banding 
+            auto(),
+            hz50(),
+            hz60(),
+            none()
+    )
+    jpegQuality = manualJpegQuality(90),     // (optional) select a jpeg quality of 90 (out of 0-100) values
     sensorSensitivity = lowestSensorSensitivity(), // (optional) we want to have the lowest sensor sensitivity (ISO)
     frameProcessor = { frame -> }            // (optional) receives each frame from preview stream
 )
