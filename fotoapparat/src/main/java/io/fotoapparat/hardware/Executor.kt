@@ -5,6 +5,9 @@ import android.os.Looper
 import java.util.concurrent.Executors
 
 
+private var taskExecutor = Executors.newSingleThreadExecutor()
+    get() = field.takeUnless { it.isShutdown } ?: Executors.newSingleThreadExecutor().also { field = it }
+
 private val cameraExecutor = Executors.newSingleThreadExecutor()
 private val loggingExecutor = Executors.newSingleThreadExecutor()
 private val mainThreadHandler = Handler(Looper.getMainLooper())
@@ -18,14 +21,21 @@ internal val pendingResultExecutor = Executors.newSingleThreadExecutor()
 internal val frameProcessingExecutor = Executors.newSingleThreadExecutor()
 
 /**
- * Executes a camera operation.
+ * Shuts down all pending camera tasks.
  */
-internal fun execute(function: () -> Unit) = cameraExecutor.execute(function)
+internal fun shutdownPendingTasks() {
+    taskExecutor.shutdownNow()
+}
+
+/**
+ * Executes a camera task.
+ */
+internal fun executeTask(function: Runnable) = taskExecutor.execute(function)
 
 /**
  * Executes a camera operation.
  */
-internal fun execute(function: Runnable) = cameraExecutor.execute(function)
+internal fun execute(function: () -> Unit) = cameraExecutor.execute(function)
 
 /**
  * Executes an operation in the main thread.

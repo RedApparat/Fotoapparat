@@ -11,6 +11,7 @@ import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.hardware.display.Display
 import io.fotoapparat.hardware.execute
+import io.fotoapparat.hardware.executeTask
 import io.fotoapparat.hardware.orientation.OrientationSensor
 import io.fotoapparat.log.Logger
 import io.fotoapparat.log.none
@@ -69,6 +70,10 @@ class Fotoapparat
             device = device
     )
 
+    init {
+        logger.recordMethod()
+    }
+
     /**
      * Starts camera.
      *
@@ -112,9 +117,9 @@ class Fotoapparat
             device.takePhoto()
         }
 
-        execute(takePictureTask)
+        executeTask(takePictureTask)
 
-        return PhotoResult.fromFuture(takePictureTask)
+        return PhotoResult.fromFuture(takePictureTask, logger)
     }
 
     /**
@@ -129,9 +134,9 @@ class Fotoapparat
             device.getCapabilities()
         }
 
-        execute(getCapabilitiesTask)
+        executeTask(getCapabilitiesTask)
 
-        return PendingResult.fromFuture(getCapabilitiesTask)
+        return PendingResult.fromFuture(getCapabilitiesTask, logger)
     }
 
     /**
@@ -146,9 +151,9 @@ class Fotoapparat
             device.getCurrentParameters()
         }
 
-        execute(getCameraParametersTask)
+        executeTask(getCameraParametersTask)
 
-        return PendingResult.fromFuture(getCameraParametersTask)
+        return PendingResult.fromFuture(getCameraParametersTask, logger)
     }
 
     /**
@@ -202,9 +207,9 @@ class Fotoapparat
         val focusTask = FutureTask<FocusResult> {
             device.focus()
         }
-        execute(focusTask)
+        executeTask(focusTask)
 
-        return PendingResult.fromFuture(focusTask)
+        return PendingResult.fromFuture(focusTask, logger)
     }
 
     /**

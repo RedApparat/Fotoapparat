@@ -75,6 +75,8 @@ class MainActivity : AppCompatActivity() {
         photoResult
                 .toBitmap(scaled(scaleFactor = 0.25f))
                 .whenAvailable { (bitmap, rotationDegrees) ->
+                    Log.i(LOGGING_TAG, "New photo captured. Bitmap length: ${bitmap.byteCount}")
+
                     val imageView = findViewById<ImageView>(R.id.result)
 
                     imageView.setImageBitmap(bitmap)

@@ -1,9 +1,11 @@
 package io.fotoapparat.result
 
+import android.util.Log
 import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.exception.RecoverableRuntimeException
 import io.fotoapparat.hardware.executeMainThread
 import io.fotoapparat.hardware.pendingResultExecutor
+import io.fotoapparat.log.Logger
 import io.fotoapparat.parameter.camera.CameraParameters
 import java.util.concurrent.*
 
@@ -15,6 +17,7 @@ import java.util.concurrent.*
 open class PendingResult<T>
 internal constructor(
         private val future: Future<T>,
+        private val logger: Logger,
         private val executor: Executor
 ) {
     private val resultUnsafe: T
@@ -22,9 +25,9 @@ internal constructor(
             return try {
                 future.get()
             } catch (e: InterruptedException) {
-                throw RuntimeException(e)
+                throw RecoverableRuntimeException(e)
             } catch (e: ExecutionException) {
-                throw RuntimeException(e)
+                throw RecoverableRuntimeException(e)
             }
         }
 
@@ -44,6 +47,7 @@ internal constructor(
 
         return PendingResult<R>(
                 future = transformTask,
+                logger = logger,
                 executor = executor
         )
     }
@@ -78,29 +82,32 @@ internal constructor(
             try {
                 resultUnsafe.notifyCallbackOnMainThread(callback)
             } catch (e: RecoverableRuntimeException) {
-                // Ignore
+                // Suppress any errors from pending results
+                Log.wtf("Fotoapparat", e)
+                logger.log("Couldn't deliver pending result.")
             }
         }
     }
 
     /**
-     * Alias for [.whenAvailable].
+     * Alias for [PendingResult.whenAvailable].
      */
     fun whenDone(callback: (T) -> Unit) {
         whenAvailable(callback)
     }
 
-
     companion object {
         /**
          * @return [PendingResult] which waits for the result of [Future].
          */
-        internal fun <T> fromFuture(future: Future<T>): PendingResult<T> {
-            return PendingResult(
-                    future = future,
-                    executor = pendingResultExecutor
-            )
-        }
+        internal fun <T> fromFuture(
+                future: Future<T>,
+                logger: Logger
+        ): PendingResult<T> = PendingResult(
+                future = future,
+                logger = logger,
+                executor = pendingResultExecutor
+        )
     }
 
 }

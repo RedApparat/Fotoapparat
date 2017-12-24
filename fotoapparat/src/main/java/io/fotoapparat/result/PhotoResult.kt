@@ -2,6 +2,7 @@ package io.fotoapparat.result
 
 import android.graphics.Bitmap
 import io.fotoapparat.exif.ExifWriter
+import io.fotoapparat.log.Logger
 import io.fotoapparat.parameter.Resolution
 import io.fotoapparat.result.transformer.BitmapPhotoTransformer
 import io.fotoapparat.result.transformer.SaveToFileTransformer
@@ -54,11 +55,13 @@ class PhotoResult internal constructor(private val pendingResult: PendingResult<
          * @param photoFuture The future result of a [Photo].
          * @return The result.
          */
-        internal fun fromFuture(photoFuture: Future<Photo>): PhotoResult {
-            return PhotoResult(
-                    PendingResult.fromFuture(photoFuture)
-            )
-        }
+        internal fun fromFuture(
+                photoFuture: Future<Photo>,
+                logger: Logger
+        ) = PhotoResult(
+                PendingResult.fromFuture(photoFuture, logger)
+        )
+
     }
 
 }

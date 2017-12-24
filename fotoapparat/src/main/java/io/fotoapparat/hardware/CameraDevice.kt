@@ -307,11 +307,7 @@ private fun Camera.takePhoto(imageRotation: Int): Photo {
             }
     )
 
-    try {
-        latch.await()
-    } catch (e: InterruptedException) {
-        // Do nothing
-    }
+    latch.await()
 
     return photoReference.get()
 }

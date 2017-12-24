@@ -1,10 +1,12 @@
 package io.fotoapparat.result
 
+import io.fotoapparat.log.Logger
 import io.fotoapparat.test.ImmediateExecutor
 import io.fotoapparat.test.immediateFuture
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import java.util.concurrent.Future
 import kotlin.test.assertEquals
@@ -13,13 +15,18 @@ import kotlin.test.assertEquals
 class PendingResultTest {
 
     val result = "Result"
+
+    @Mock
+    lateinit var logger: Logger
+
     lateinit var testee: PendingResult<String>
 
     @Before
     fun setUp() {
         testee = PendingResult(
-                immediateFuture(result),
-                ImmediateExecutor
+                future = immediateFuture(result),
+                logger = logger,
+                executor = ImmediateExecutor
         )
     }
 
