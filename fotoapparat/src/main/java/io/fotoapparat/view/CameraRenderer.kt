@@ -1,6 +1,5 @@
 package io.fotoapparat.view
 
-import android.view.View
 import io.fotoapparat.parameter.Resolution
 import io.fotoapparat.parameter.ScaleType
 
@@ -23,6 +22,6 @@ interface CameraRenderer {
     /**
      * Returns the surface texture when available.
      */
-    fun getSurfaceTexture(): View
+    fun getPreview(): Preview
 
 }

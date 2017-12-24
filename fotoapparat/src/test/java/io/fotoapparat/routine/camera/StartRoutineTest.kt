@@ -1,6 +1,6 @@
 package io.fotoapparat.routine.camera
 
-import android.view.View
+import android.graphics.SurfaceTexture
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
@@ -9,6 +9,9 @@ import io.fotoapparat.parameter.ScaleType
 import io.fotoapparat.test.testResolution
 import io.fotoapparat.test.willReturn
 import io.fotoapparat.view.CameraRenderer
+import io.fotoapparat.view.Preview
+import io.fotoapparat.view.toPreview
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -24,7 +27,7 @@ import kotlin.test.assertTrue
 internal class StartRoutineTest {
 
     @Mock
-    lateinit var surfaceTexture: View
+    lateinit var surfaceTexture: SurfaceTexture
     @Mock
     lateinit var cameraViewRenderer: CameraRenderer
     @Mock
@@ -34,6 +37,12 @@ internal class StartRoutineTest {
     @Mock
     lateinit var device: Device
 
+    lateinit var preview: Preview
+
+    @Before
+    fun setUp() {
+        preview = surfaceTexture.toPreview()
+    }
 
     @Test(expected = CameraException::class)
     fun `Start camera, but camera cannot be selected`() {
@@ -54,7 +63,7 @@ internal class StartRoutineTest {
             scaleType willReturn ScaleType.CenterCrop
         }
         cameraDevice.getPreviewResolution() willReturn testResolution
-        cameraViewRenderer.getSurfaceTexture() willReturn surfaceTexture
+        cameraViewRenderer.getPreview() willReturn preview
 
         // When
         device.start()
@@ -73,7 +82,7 @@ internal class StartRoutineTest {
             verify(cameraDevice).setDisplayOrientation(90)
             verify(cameraViewRenderer).setScaleType(ScaleType.CenterCrop)
             verify(cameraViewRenderer).setPreviewResolution(testResolution)
-            verify(cameraDevice).setDisplaySurface(surfaceTexture)
+            verify(cameraDevice).setDisplaySurface(preview)
             verify(cameraDevice).startPreview()
         }
     }
@@ -119,7 +128,7 @@ internal class StartRoutineTest {
             scaleType willReturn ScaleType.CenterCrop
         }
         cameraDevice.getPreviewResolution() willReturn testResolution
-        cameraViewRenderer.getSurfaceTexture() willReturn surfaceTexture
+        cameraViewRenderer.getPreview() willReturn surfaceTexture.toPreview()
 
         // When
         device.bootStart(

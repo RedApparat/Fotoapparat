@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.SurfaceTexture
 import android.util.AttributeSet
 import android.view.TextureView
-import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import io.fotoapparat.parameter.Resolution
@@ -50,11 +49,8 @@ class CameraView
         }
     }
 
-    override fun getSurfaceTexture(): View {
-        return getTextureView() ?: let {
-            textureLatch.await()
-            getTextureView() ?: throw InterruptedException("No surface became available.")
-        }
+    override fun getPreview(): Preview {
+        return surfaceTexture?.toPreview() ?: getPreviewAfterLatch()
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -65,7 +61,10 @@ class CameraView
         }
     }
 
-    private fun getTextureView() = surfaceTexture?.let { textureView }
+    private fun getPreviewAfterLatch(): Preview.Texture {
+        textureLatch.await()
+        return surfaceTexture?.toPreview() ?: throw InterruptedException("No surface became available.")
+    }
 
     private fun TextureView.tryInitialize() = surfaceTexture ?: null.also {
         surfaceTextureListener = TextureAvailabilityListener {

@@ -52,7 +52,7 @@ internal fun Device.start() {
             resolution = cameraDevice.getPreviewResolution()
     )
     cameraDevice.setDisplaySurface(
-            displaySurface = cameraRenderer.getSurfaceTexture()
+            preview = cameraRenderer.getPreview()
     )
     cameraDevice.startPreview()
 }

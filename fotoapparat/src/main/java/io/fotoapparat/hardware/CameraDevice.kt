@@ -6,9 +6,6 @@ import android.hardware.Camera
 import android.media.MediaRecorder
 import android.support.annotation.FloatRange
 import android.view.Surface
-import android.view.SurfaceView
-import android.view.TextureView
-import android.view.View
 import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.capability.provide.getCapabilities
 import io.fotoapparat.characteristic.Characteristics
@@ -25,6 +22,7 @@ import io.fotoapparat.preview.Frame
 import io.fotoapparat.preview.PreviewStream
 import io.fotoapparat.result.FocusResult
 import io.fotoapparat.result.Photo
+import io.fotoapparat.view.Preview
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -219,12 +217,12 @@ internal open class CameraDevice(
     }
 
     /**
-     * Sets the desired surface on which the camera preview will be displayed.
+     * Sets the desired surface on which the camera's preview will be displayed.
      */
-    open fun setDisplaySurface(displaySurface: View) {
+    open fun setDisplaySurface(preview: Preview) {
         logger.recordMethod()
 
-        surface = camera.setDisplaySurface(displaySurface)
+        surface = camera.setDisplaySurface(preview)
     }
 
     /**
@@ -342,19 +340,20 @@ private fun Camera.updateParameters(newParameters: CameraParameters) {
 
 @Throws(IOException::class)
 private fun Camera.setDisplaySurface(
-        displaySurface: View
-): Surface {
-    return when (displaySurface) {
-        is TextureView -> displaySurface.surfaceTexture.run {
-            setPreviewTexture(this)
-            Surface(this)
-        }
-        is SurfaceView -> displaySurface.holder.run {
-            setPreviewDisplay(this)
-            surface
-        }
-        else -> throw IllegalArgumentException("Unsupported display surface: " + displaySurface)
-    }
+        preview: Preview
+): Surface = when (preview) {
+    is Preview.Texture -> preview.surfaceTexture
+            .also {
+                setPreviewTexture(it)
+            }
+            .let {
+                Surface(it)
+            }
+    is Preview.Surface -> preview.surfaceHolder
+            .also {
+                setPreviewDisplay(it)
+            }
+            .surface
 }
 
 private fun Camera.getPreviewResolution(imageRotation: Int): Resolution {
