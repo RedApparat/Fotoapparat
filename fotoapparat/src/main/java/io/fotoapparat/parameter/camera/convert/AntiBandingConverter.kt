@@ -7,15 +7,15 @@ import io.fotoapparat.parameter.AntiBandingMode
  * Converts an anti banding mode code to a [AntiBandingMode].
  *
  * @receiver Code of the anti banding mode as in [Camera.Parameters].
- * @return The [io.fotoapparat.Fotoapparat]'s camera [AntiBandingMode].
+ * @return The [io.fotoapparat.Fotoapparat]'s camera [AntiBandingMode]. `null` if camera code is not supported.
  */
-fun String.toAntiBandingMode(): AntiBandingMode {
+fun String.toAntiBandingMode(): AntiBandingMode? {
     return when (this) {
         Camera.Parameters.ANTIBANDING_AUTO -> AntiBandingMode.Auto
         Camera.Parameters.ANTIBANDING_50HZ -> AntiBandingMode.HZ50
         Camera.Parameters.ANTIBANDING_60HZ -> AntiBandingMode.HZ60
         Camera.Parameters.ANTIBANDING_OFF -> AntiBandingMode.None
-        else -> throw IllegalArgumentException("Anti banding mode $this is not supported.")
+        else -> null
     }
 }
 

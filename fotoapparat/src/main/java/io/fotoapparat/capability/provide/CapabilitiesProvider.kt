@@ -25,6 +25,6 @@ private fun SupportedParameters.getCapabilities(): Capabilities {
     )
 }
 
-private fun <Parameter, Code> List<Code>.extract(converter: (Code) -> Parameter) = map { converter.invoke(it) }.toSet()
+private fun <Parameter : Any, Code> List<Code>.extract(converter: (Code) -> Parameter?) = mapNotNull { converter(it) }.toSet()
 
 private fun Collection<Camera.Size>.mapSizes() = map { it.toResolution() }.toSet()

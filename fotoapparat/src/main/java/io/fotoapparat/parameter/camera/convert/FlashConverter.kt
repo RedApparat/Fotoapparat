@@ -9,14 +9,14 @@ import io.fotoapparat.parameter.Flash
  * @receiver Code of flash mode as in [Camera.Parameters].
  * @return [Flash] from given camera code. `null` if camera code is not supported.
  */
-internal fun String.toFlash(): Flash {
+internal fun String.toFlash(): Flash? {
     return when (this) {
         Camera.Parameters.FLASH_MODE_ON -> Flash.On
         Camera.Parameters.FLASH_MODE_OFF -> Flash.Off
         Camera.Parameters.FLASH_MODE_AUTO -> Flash.Auto
         Camera.Parameters.FLASH_MODE_TORCH -> Flash.Torch
         Camera.Parameters.FLASH_MODE_RED_EYE -> Flash.AutoRedEye
-        else -> throw IllegalArgumentException("Flash mode $this is not supported.")
+        else -> null
     }
 }
 

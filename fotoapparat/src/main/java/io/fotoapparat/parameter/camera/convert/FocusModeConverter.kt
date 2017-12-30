@@ -10,7 +10,7 @@ import io.fotoapparat.parameter.FocusMode
  * @receiver Code of focus mode as in [Camera.Parameters].
  * @return [FocusMode] from given camera code. `null` if camera code is not supported.
  */
-internal fun String.toFocusMode(): FocusMode {
+internal fun String.toFocusMode(): FocusMode? {
     return when (this) {
         Camera.Parameters.FOCUS_MODE_EDOF -> FocusMode.Edof
         Camera.Parameters.FOCUS_MODE_AUTO -> FocusMode.Auto
@@ -19,7 +19,7 @@ internal fun String.toFocusMode(): FocusMode {
         Camera.Parameters.FOCUS_MODE_INFINITY -> FocusMode.Infinity
         Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO -> FocusMode.ContinuousFocusVideo
         Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE -> FocusMode.ContinuousFocusPicture
-        else -> throw IllegalArgumentException("FocusMode mode $this is not supported.")
+        else -> null
     }
 }
 
