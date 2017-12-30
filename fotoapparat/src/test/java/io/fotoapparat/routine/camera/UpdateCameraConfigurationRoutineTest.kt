@@ -20,18 +20,6 @@ internal class UpdateCameraConfigurationRoutineTest {
     @Mock
     lateinit var cameraDevice: CameraDevice
 
-    @Test(expected = IllegalStateException::class)
-    fun `Update device configuration, but camera has not started`() {
-        // Given
-        val configuration = UpdateConfiguration()
-
-        // When
-        device.updateDeviceConfiguration(configuration)
-
-        // Then
-        // throw exception
-    }
-
     @Test
     fun `Update device configuration`() {
         // Given

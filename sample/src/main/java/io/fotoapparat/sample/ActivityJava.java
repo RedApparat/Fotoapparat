@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -23,6 +25,7 @@ import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.result.BitmapPhoto;
 import io.fotoapparat.result.PhotoResult;
+import io.fotoapparat.result.WhenDoneListener;
 import io.fotoapparat.view.CameraView;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -48,11 +51,14 @@ import static io.fotoapparat.selector.SensorSensitivitySelectorsKt.highestSensor
 
 public class ActivityJava extends AppCompatActivity {
 
+    private static final String LOGGING_TAG = "Fotoapparat Example";
+
     private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
     private boolean hasCameraPermission;
     private CameraView cameraView;
 
     private Fotoapparat fotoapparat;
+
 
     private CameraConfiguration cameraConfiguration = CameraConfiguration
             .builder()
@@ -202,14 +208,17 @@ public class ActivityJava extends AppCompatActivity {
 
         photoResult
                 .toBitmap(scaled(0.25f))
-                .whenAvailable(new Function1<BitmapPhoto, Unit>() {
+                .whenDone(new WhenDoneListener<BitmapPhoto>() {
                     @Override
-                    public Unit invoke(BitmapPhoto bitmapPhoto) {
+                    public void whenDone(@Nullable BitmapPhoto bitmapPhoto) {
+                        if (bitmapPhoto == null) {
+                            Log.e(LOGGING_TAG, "Couldn't capture photo.");
+                            return;
+                        }
                         ImageView imageView = findViewById(R.id.result);
 
                         imageView.setImageBitmap(bitmapPhoto.bitmap);
                         imageView.setRotation(-bitmapPhoto.rotationDegrees);
-                        return null;
                     }
                 });
     }

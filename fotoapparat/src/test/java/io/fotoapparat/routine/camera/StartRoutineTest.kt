@@ -8,9 +8,11 @@ import io.fotoapparat.hardware.orientation.OrientationSensor
 import io.fotoapparat.parameter.ScaleType
 import io.fotoapparat.test.testResolution
 import io.fotoapparat.test.willReturn
+import io.fotoapparat.test.willThrow
 import io.fotoapparat.view.CameraRenderer
 import io.fotoapparat.view.Preview
 import io.fotoapparat.view.toPreview
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,15 +44,6 @@ internal class StartRoutineTest {
     @Before
     fun setUp() {
         preview = surfaceTexture.toPreview()
-    }
-
-    @Test(expected = CameraException::class)
-    fun `Start camera, but camera cannot be selected`() {
-        // When
-        device.start()
-
-        // Then
-        // throw exception
     }
 
     @Test
@@ -90,7 +83,7 @@ internal class StartRoutineTest {
     @Test(expected = IllegalStateException::class)
     fun `Boot start, but camera has already started`() {
         // Given
-        device.getSelectedCamera() willReturn cameraDevice
+        device.hasSelectedCamera() willReturn true
 
         // When
         device.bootStart(
@@ -105,6 +98,7 @@ internal class StartRoutineTest {
     @Test
     fun `Boot start, but camera cannot be selected`() {
         // Given
+        device.getSelectedCamera() willThrow CameraException("Camera cannot be selected")
         val hasErrors = AtomicBoolean(false)
 
         // When
@@ -118,11 +112,12 @@ internal class StartRoutineTest {
     }
 
     @Test
-    fun `Boot start`() {
+    fun `Boot start`() = runBlocking {
         // Given
         val hasErrors = AtomicBoolean(false)
         device.apply {
-            getSelectedCamera().willReturn(null, cameraDevice)
+            hasSelectedCamera() willReturn false
+            getSelectedCamera() willReturn cameraDevice
             getScreenRotation() willReturn 90
             cameraRenderer willReturn cameraViewRenderer
             scaleType willReturn ScaleType.CenterCrop

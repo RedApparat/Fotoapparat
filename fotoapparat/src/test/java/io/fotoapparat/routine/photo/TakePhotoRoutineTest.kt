@@ -6,6 +6,7 @@ import io.fotoapparat.hardware.Device
 import io.fotoapparat.result.Photo
 import io.fotoapparat.test.willReturn
 import io.fotoapparat.test.willThrow
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -21,20 +22,11 @@ internal class TakePhotoRoutineTest {
     @Mock
     lateinit var device: Device
 
-    @Test(expected = IllegalStateException::class)
-    fun `Take photo, but camera has not started`() {
-        // When
-        device.takePhoto()
-
-        // Then
-        // throw exception
-    }
-
     @Test
-    fun `Take photo`() {
+    fun `Take photo`() = runBlocking {
         // Given
         val photo = Photo.empty()
-        device.getSelectedCamera() willReturn cameraDevice
+        device.awaitSelectedCamera() willReturn cameraDevice
         cameraDevice.takePhoto() willReturn photo
 
         // When
@@ -54,10 +46,10 @@ internal class TakePhotoRoutineTest {
     }
 
     @Test
-    fun `Suppress restarting preview exception`() {
+    fun `Suppress restarting preview exception`() = runBlocking {
         // Given
         val photo = Photo.empty()
-        device.getSelectedCamera() willReturn cameraDevice
+        device.awaitSelectedCamera() willReturn cameraDevice
         cameraDevice.takePhoto() willReturn photo
         cameraDevice.startPreview() willThrow CameraException("test")
 

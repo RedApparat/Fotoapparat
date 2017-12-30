@@ -2,7 +2,6 @@ package io.fotoapparat.routine.camera
 
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
-import io.fotoapparat.hardware.getSelectedCameraSafely
 import io.fotoapparat.hardware.orientation.OrientationSensor
 import io.fotoapparat.hardware.shutdownPendingTasks
 import io.fotoapparat.routine.orientation.stopMonitoring
@@ -19,17 +18,18 @@ internal fun Device.shutDown(
 
     orientationSensor.stopMonitoring()
 
-    val cameraDevice = getSelectedCameraSafely()
-    cameraDevice.stop()
+    val cameraDevice = getSelectedCamera()
 
-    clearSelectedCamera()
+    stop(cameraDevice)
 }
 
 /**
  * Stops the camera.
  */
-internal fun CameraDevice.stop() {
-    stopPreview()
+internal fun Device.stop(cameraDevice: CameraDevice) {
+    cameraDevice.stopPreview()
 
-    close()
+    cameraDevice.close()
+
+    clearSelectedCamera()
 }

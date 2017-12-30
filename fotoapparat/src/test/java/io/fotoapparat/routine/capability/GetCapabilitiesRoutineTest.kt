@@ -4,6 +4,7 @@ import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.test.testCapabilities
 import io.fotoapparat.test.willReturn
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -18,19 +19,10 @@ internal class GetCapabilitiesRoutineTest {
     @Mock
     lateinit var device: Device
 
-    @Test(expected = IllegalStateException::class)
-    fun `Get capabilities, but camera has not started`() {
-        // When
-        device.getCapabilities()
-
-        // Then
-        // throw exception
-    }
-
     @Test
-    fun `Get capabilities`() {
+    fun `Get capabilities`() = runBlocking {
         // Given
-        device.getSelectedCamera() willReturn cameraDevice
+        device.awaitSelectedCamera() willReturn cameraDevice
         cameraDevice.getCapabilities() willReturn testCapabilities
 
         // When

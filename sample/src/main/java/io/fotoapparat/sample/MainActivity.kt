@@ -12,7 +12,7 @@ import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.UpdateConfiguration
 import io.fotoapparat.log.logcat
-import io.fotoapparat.parameter.Resolution
+import io.fotoapparat.parameter.Flash
 import io.fotoapparat.result.transformer.scaled
 import io.fotoapparat.selector.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -56,7 +56,6 @@ class MainActivity : AppCompatActivity() {
         torchSwitch onCheckedChanged toggleFlash()
     }
 
-
     private fun updateZoom(): (SeekBar, Int) -> Unit = { seekBar: SeekBar, progress: Int ->
         fotoapparat.setZoom(progress / seekBar.max.toFloat())
     }
@@ -74,13 +73,17 @@ class MainActivity : AppCompatActivity() {
 
         photoResult
                 .toBitmap(scaled(scaleFactor = 0.25f))
-                .whenAvailable { (bitmap, rotationDegrees) ->
-                    Log.i(LOGGING_TAG, "New photo captured. Bitmap length: ${bitmap.byteCount}")
+                .whenAvailable {
+                    it
+                            ?.let {
+                                Log.i(LOGGING_TAG, "New photo captured. Bitmap length: ${it.bitmap.byteCount}")
 
-                    val imageView = findViewById<ImageView>(R.id.result)
+                                val imageView = findViewById<ImageView>(R.id.result)
 
-                    imageView.setImageBitmap(bitmap)
-                    imageView.rotation = (-rotationDegrees).toFloat()
+                                imageView.setImageBitmap(it.bitmap)
+                                imageView.rotation = (-it.rotationDegrees).toFloat()
+                            }
+                            ?: Log.e(LOGGING_TAG, "Couldn't capture photo.")
                 }
     }
 
@@ -95,10 +98,12 @@ class MainActivity : AppCompatActivity() {
                 cameraConfiguration = activeCamera.configuration
         )
 
+        adjustViewsVisibility()
+
         zoomSeekBar.progress = 0
         torchSwitch.isChecked = false
 
-        Log.i(LOGGING_TAG, "New camera: ${activeCamera::javaClass.name}")
+        Log.i(LOGGING_TAG, "New camera position: ${if(activeCamera is Camera.Back) "back" else "front"}")
     }
 
     private fun toggleFlash(): (CompoundButton, Boolean) -> Unit = { _, isChecked ->
@@ -122,6 +127,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         if (permissionsGranted) {
             fotoapparat.start()
+            adjustViewsVisibility()
         }
     }
 
@@ -137,9 +143,25 @@ class MainActivity : AppCompatActivity() {
         if (permissionsDelegate.resultGranted(requestCode, permissions, grantResults)) {
             permissionsGranted = true
             fotoapparat.start()
+            adjustViewsVisibility()
             cameraView.visibility = View.VISIBLE
         }
     }
+
+    private fun adjustViewsVisibility() {
+        fotoapparat.getCapabilities()
+                .whenAvailable {
+                    it
+                            ?.let {
+                                zoomSeekBar.visibility = if (it.canZoom) View.VISIBLE else View.GONE
+                                torchSwitch.visibility = if (it.flashModes.contains(Flash.Torch)) View.VISIBLE else View.GONE
+                            }
+                            ?: Log.e(LOGGING_TAG, "Couldn't obtain capabilities.")
+                }
+
+        switchCamera.visibility = if (fotoapparat.isAvailable(front())) View.VISIBLE else View.GONE
+    }
+
 }
 
 private const val LOGGING_TAG = "Fotoapparat Example"
@@ -152,10 +174,10 @@ private sealed class Camera(
     object Back : Camera(
             lensPosition = back(),
             configuration = CameraConfiguration(
-                    previewResolution = single(Resolution(
-                            1920,
-                            1080
-                    )),
+                    previewResolution = firstAvailable(
+                            wideRatio(highestResolution()),
+                            standardRatio(highestResolution())
+                    ),
                     previewFpsRange = highestFps(),
                     flashMode = off(),
                     focusMode = continuousFocusPicture()
@@ -165,6 +187,10 @@ private sealed class Camera(
     object Front : Camera(
             lensPosition = front(),
             configuration = CameraConfiguration(
+                    previewResolution = firstAvailable(
+                            wideRatio(highestResolution()),
+                            standardRatio(highestResolution())
+                    ),
                     previewFpsRange = highestFps(),
                     flashMode = off(),
                     focusMode = fixed()

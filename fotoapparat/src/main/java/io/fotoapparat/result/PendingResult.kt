@@ -1,8 +1,8 @@
 package io.fotoapparat.result
 
-import android.util.Log
 import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.exception.RecoverableRuntimeException
+import io.fotoapparat.exception.UnableToDecodeBitmapException
 import io.fotoapparat.hardware.executeMainThread
 import io.fotoapparat.hardware.pendingResultExecutor
 import io.fotoapparat.log.Logger
@@ -56,6 +56,8 @@ internal constructor(
      * Blocks current thread until result is available.
      *
      * @return result of execution.
+     * @throws ExecutionException if the result couldn't be obtained.
+     * @throws InterruptedException if the thread has been interrupted.
      */
     @Throws(ExecutionException::class, InterruptedException::class)
     fun await(): T {
@@ -76,24 +78,27 @@ internal constructor(
     /**
      * Notifies given callback as soon as result is available. Callback will always be notified on
      * a main thread.
+     *
+     * If the result couldn't be obtained, a null value will be returned.
      */
-    fun whenAvailable(callback: (T) -> Unit) {
+    fun whenAvailable(callback: (T?) -> Unit) {
         executor.execute {
             try {
                 resultUnsafe.notifyCallbackOnMainThread(callback)
+            } catch (e: UnableToDecodeBitmapException) {
+                logger.log("Couldn't decode bitmap from byte array")
             } catch (e: RecoverableRuntimeException) {
-                // Suppress any errors from pending results
-                Log.wtf("Fotoapparat", e)
                 logger.log("Couldn't deliver pending result.")
+                callback(null)
             }
         }
     }
 
     /**
-     * Alias for [PendingResult.whenAvailable].
+     * Alias for [PendingResult.whenAvailable] for java.
      */
-    fun whenDone(callback: (T) -> Unit) {
-        whenAvailable(callback)
+    fun whenDone(callback: WhenDoneListener<T>) {
+        whenAvailable { callback.whenDone(it) }
     }
 
     companion object {
@@ -118,6 +123,9 @@ private fun <T> T.notifyCallbackOnMainThread(callback: (T) -> Unit) {
     }
 }
 
+interface WhenDoneListener<T> {
+    fun whenDone(it: T?)
+}
 
 typealias CapabilitiesResult = PendingResult<Capabilities>
 typealias ParametersResult = PendingResult<CameraParameters>

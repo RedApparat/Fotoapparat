@@ -12,7 +12,7 @@ internal fun Device.bootStart(
         orientationSensor: OrientationSensor,
         mainThreadErrorCallback: (CameraException) -> Unit
 ) {
-    getSelectedCamera()?.let {
+    if (hasSelectedCamera()) {
         throw IllegalStateException("Camera has already started!")
     }
 
@@ -33,7 +33,6 @@ internal fun Device.start() {
     selectCamera()
 
     val cameraDevice = getSelectedCamera()
-            ?: throw CameraException("Device has no camera for the desired lens position(s).")
 
     cameraDevice.open()
 

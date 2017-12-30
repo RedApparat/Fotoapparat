@@ -5,6 +5,7 @@ import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.characteristic.getCharacteristics
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.Configuration
+import io.fotoapparat.exception.camera.UnsupportedLensException
 import io.fotoapparat.hardware.display.Display
 import io.fotoapparat.log.Logger
 import io.fotoapparat.parameter.ScaleType
@@ -12,6 +13,7 @@ import io.fotoapparat.parameter.camera.CameraParameters
 import io.fotoapparat.parameter.camera.provide.getCameraParameters
 import io.fotoapparat.preview.Frame
 import io.fotoapparat.view.CameraRenderer
+import kotlinx.coroutines.experimental.CompletableDeferred
 
 
 /**
@@ -35,24 +37,12 @@ internal open class Device(
     }
 
     private var lensPositionSelector: Collection<LensPosition>.() -> LensPosition? = initialLensPositionSelector
-    private var selectedCameraDevice: CameraDevice? = null
+    private var selectedCameraDevice = CompletableDeferred<CameraDevice>()
     private var savedConfiguration = CameraConfiguration.default()
 
     init {
         updateLensPositionSelector(initialLensPositionSelector)
         savedConfiguration = initialConfiguration
-    }
-
-    /**
-     * Selects a camera. Will do nothing if camera cannot be selected.
-     */
-    open fun selectCamera() {
-        logger.recordMethod()
-
-        selectedCameraDevice = selectCamera(
-                availableCameras = cameras,
-                lensPositionSelector = lensPositionSelector
-        )
     }
 
     /**
@@ -67,15 +57,53 @@ internal open class Device(
     }
 
     /**
-     * Returns the selected camera. Returns `null` if no camera is selected.
+     * Selects a camera. Will do nothing if camera cannot be selected.
      */
-    open fun getSelectedCamera(): CameraDevice? {
-        return selectedCameraDevice
+    open fun selectCamera() {
+        logger.recordMethod()
+
+        selectCamera(
+                availableCameras = cameras,
+                lensPositionSelector = lensPositionSelector
+        )
+                ?.let {
+                    selectedCameraDevice.complete(it)
+                }
+                ?: selectedCameraDevice.completeExceptionally(UnsupportedLensException())
     }
 
+    /**
+     * Clears the selected camera.
+     */
     open fun clearSelectedCamera() {
-        selectedCameraDevice = null
+        selectedCameraDevice = CompletableDeferred()
     }
+
+    /**
+     * Waits and returns the selected camera.
+     */
+    open suspend fun awaitSelectedCamera(): CameraDevice {
+        return selectedCameraDevice.await()
+    }
+
+    /**
+     * Returns the selected camera.
+     *
+     * @throws IllegalStateException If no camera has been yet selected.
+     * @throws UnsupportedLensException If no camera could get selected.
+     */
+    open fun getSelectedCamera(): CameraDevice {
+        return try {
+            selectedCameraDevice.getCompleted()
+        } catch (e: IllegalStateException) {
+            throw IllegalStateException("Camera has not started!")
+        }
+    }
+
+    /**
+     * @return `true` if a camera has been selected.
+     */
+    open fun hasSelectedCamera() = selectedCameraDevice.isCompleted
 
     /**
      * @return rotation of the screen in degrees.
@@ -160,11 +188,4 @@ internal fun selectCamera(
     val desiredPosition = lensPositionSelector(lensPositions)
 
     return availableCameras.find { it.characteristics.lensPosition == desiredPosition }
-}
-
-/**
- * @return The currently selected camera safely.
- */
-internal fun Device.getSelectedCameraSafely(): CameraDevice {
-    return getSelectedCamera() ?: throw IllegalStateException("Camera has not started!")
 }

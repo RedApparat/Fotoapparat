@@ -1,15 +1,14 @@
 package io.fotoapparat.routine.parameter
 
 import io.fotoapparat.hardware.Device
-import io.fotoapparat.hardware.getSelectedCameraSafely
 import io.fotoapparat.parameter.camera.CameraParameters
+import kotlinx.coroutines.experimental.runBlocking
 
 /**
  * Returns the current [CameraParameters].
  */
-internal fun Device.getCurrentParameters(): CameraParameters {
+internal fun Device.getCurrentParameters(): CameraParameters = runBlocking {
+    val cameraDevice = awaitSelectedCamera()
 
-    val cameraDevice = getSelectedCameraSafely()
-
-    return cameraDevice.getParameters()
+    cameraDevice.getParameters()
 }

@@ -24,23 +24,20 @@ internal class StopRoutineTest {
     @Test
     fun `Stop camera`() {
         // When
-        cameraDevice.stop()
+        device.stop(cameraDevice)
 
         // Then
-        val inOrder = inOrder(cameraDevice)
-        inOrder.verify(cameraDevice).stopPreview()
-        inOrder.verify(cameraDevice).close()
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `Shut down camera, but camera has not started`() {
-        // When
-        device.shutDown(
-                orientationSensor = orientationSensor
+        val inOrder = inOrder(
+                device,
+                cameraDevice
         )
 
-        // Then
-        // throw exception
+        inOrder.apply {
+            verify(cameraDevice).stopPreview()
+            verify(cameraDevice).close()
+            verify(device).clearSelectedCamera()
+        }
+
     }
 
     @Test
@@ -62,8 +59,7 @@ internal class StopRoutineTest {
 
         inOrder.apply {
             verify(orientationSensor).stopMonitoring()
-            verify(cameraDevice).stop()
-            verify(device).clearSelectedCamera()
+            verify(device).stop(cameraDevice)
         }
     }
 

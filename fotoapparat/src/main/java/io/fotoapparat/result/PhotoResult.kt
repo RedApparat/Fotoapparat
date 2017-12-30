@@ -1,6 +1,7 @@
 package io.fotoapparat.result
 
 import android.graphics.Bitmap
+import io.fotoapparat.exception.FileSaveException
 import io.fotoapparat.exif.ExifWriter
 import io.fotoapparat.log.Logger
 import io.fotoapparat.parameter.Resolution
@@ -32,6 +33,7 @@ class PhotoResult internal constructor(private val pendingResult: PendingResult<
      * Saves result to file.
      *
      * @return pending operation which completes when photo is saved to file.
+     * @throws FileSaveException If the file cannot be saved.
      */
     fun saveToFile(file: File): PendingResult<Unit> {
         return pendingResult.transform(SaveToFileTransformer(

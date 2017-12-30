@@ -5,6 +5,7 @@ import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.test.testCapabilities
 import io.fotoapparat.test.willReturn
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyFloat
@@ -39,19 +40,10 @@ internal class UpdateZoomLevelRoutineTest {
         // Expect exception
     }
 
-    @Test(expected = IllegalStateException::class)
-    fun `Update zoom, but camera has not started`() {
-        // When
-        device.updateZoomLevel(0.5f)
-
-        // Then
-        // throw exception
-    }
-
     @Test
-    fun `Update zoom`() {
+    fun `Update zoom`() = runBlocking {
         // Given
-        device.getSelectedCamera() willReturn cameraDevice
+        device.awaitSelectedCamera() willReturn cameraDevice
         cameraDevice.getCapabilities() willReturn testCapabilities.copy(
                 canZoom = true
         )
@@ -64,9 +56,9 @@ internal class UpdateZoomLevelRoutineTest {
     }
 
     @Test
-    fun `Do not update zoom if it's not supported`() {
+    fun `Do not update zoom if it's not supported`() = runBlocking {
         // Given
-        device.getSelectedCamera() willReturn cameraDevice
+        device.awaitSelectedCamera() willReturn cameraDevice
         cameraDevice.getCapabilities() willReturn testCapabilities.copy(
                 canZoom = false
         )

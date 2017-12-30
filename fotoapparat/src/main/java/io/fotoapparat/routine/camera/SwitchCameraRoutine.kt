@@ -16,7 +16,11 @@ internal fun Device.switchCamera(
         newConfiguration: CameraConfiguration,
         mainThreadErrorCallback: (CameraException) -> Unit
 ) {
-    val oldCameraDevice = getSelectedCamera()
+    val oldCameraDevice = try {
+        getSelectedCamera()
+    } catch (e: IllegalStateException) {
+        null
+    }
 
     if (oldCameraDevice == null) {
         updateLensPositionSelector(newLensPositionSelector)
@@ -39,7 +43,7 @@ internal fun Device.restartPreview(
         oldCameraDevice: CameraDevice,
         mainThreadErrorCallback: (CameraException) -> Unit
 ) {
-    oldCameraDevice.stop()
+    stop(oldCameraDevice)
 
     try {
         start()

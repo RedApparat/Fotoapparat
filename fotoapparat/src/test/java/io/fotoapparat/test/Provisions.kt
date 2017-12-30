@@ -10,13 +10,6 @@ internal inline infix fun <reified T> T.willReturn(item: T) {
 }
 
 /**
- * Delegates the [org.mockito.BDDMockito.given] / [org.mockito.BDDMockito.BDDMyOngoingStubbing.willReturn] pattern
- */
-internal inline fun <reified T> T.willReturn(item: T, vararg items: T) {
-    given(this).willReturn(item, *items)
-}
-
-/**
  * Delegates the [org.mockito.BDDMockito.given] / [org.mockito.BDDMockito.BDDMyOngoingStubbing.willThrow] pattern
  */
 internal inline infix fun <reified T> T.willThrow(item: Exception) {

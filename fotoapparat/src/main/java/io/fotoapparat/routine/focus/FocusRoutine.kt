@@ -1,14 +1,14 @@
 package io.fotoapparat.routine.focus
 
 import io.fotoapparat.hardware.Device
-import io.fotoapparat.hardware.getSelectedCameraSafely
 import io.fotoapparat.result.FocusResult
+import kotlinx.coroutines.experimental.runBlocking
 
 /**
  * Focuses the camera.
  */
-internal fun Device.focus(): FocusResult {
-    val cameraDevice = getSelectedCameraSafely()
+internal fun Device.focus(): FocusResult = runBlocking {
+    val cameraDevice = awaitSelectedCamera()
 
-    return cameraDevice.autoFocus()
+    cameraDevice.autoFocus()
 }

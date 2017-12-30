@@ -2,15 +2,14 @@ package io.fotoapparat.routine.capability
 
 import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.hardware.Device
-import io.fotoapparat.hardware.getSelectedCameraSafely
+import kotlinx.coroutines.experimental.runBlocking
 
 /**
  * Returns the camera [Capabilities].
  */
-internal fun Device.getCapabilities(): Capabilities {
+internal fun Device.getCapabilities(): Capabilities = runBlocking {
+    val cameraDevice = awaitSelectedCamera()
 
-    val cameraDevice = getSelectedCameraSafely()
-
-    return cameraDevice.getCapabilities()
+    cameraDevice.getCapabilities()
 }
 

@@ -4,6 +4,7 @@ import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.result.FocusResult
 import io.fotoapparat.test.willReturn
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -18,19 +19,10 @@ internal class FocusRoutineTest {
     @Mock
     lateinit var device: Device
 
-    @Test(expected = IllegalStateException::class)
-    fun `Focus, but camera has not started`() {
-        // When
-        device.focus()
-
-        // Then
-        // throw exception
-    }
-
     @Test
-    fun Focus() {
+    fun Focus() = runBlocking {
         // Given
-        device.getSelectedCamera() willReturn cameraDevice
+        device.awaitSelectedCamera() willReturn cameraDevice
         cameraDevice.autoFocus() willReturn FocusResult.Focused
 
         // When

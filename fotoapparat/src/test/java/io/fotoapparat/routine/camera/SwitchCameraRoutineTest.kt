@@ -9,6 +9,7 @@ import io.fotoapparat.test.willReturn
 import io.fotoapparat.view.CameraRenderer
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.BDDMockito.given
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
@@ -30,6 +31,10 @@ internal class SwitchCameraRoutineTest {
     @Test
     fun `Switch camera, not started`() {
         // Given
+        given(device.getSelectedCamera())
+                .willThrow(IllegalStateException())
+                .willReturn(oldCameraDevice)
+        device.cameraRenderer willReturn cameraRenderer
         val lensPositionSelector: Collection<LensPosition>.() -> LensPosition.Front = { LensPosition.Front }
 
         // When
@@ -112,12 +117,10 @@ internal class SwitchCameraRoutineTest {
         )
 
         // Then
-        val inOrder = inOrder(
-                device,
-                oldCameraDevice
-        )
+        val inOrder = inOrder(device)
+
         inOrder.apply {
-            verify(oldCameraDevice).stop()
+            verify(device).stop(oldCameraDevice)
             verify(device).start()
         }
     }
@@ -135,12 +138,9 @@ internal class SwitchCameraRoutineTest {
         )
 
         // Then
-        val inOrder = inOrder(
-                device,
-                oldCameraDevice
-        )
+        val inOrder = inOrder(device)
         inOrder.apply {
-            verify(oldCameraDevice).stop()
+            verify(device).stop(oldCameraDevice)
             verify(device).start()
         }
     }
