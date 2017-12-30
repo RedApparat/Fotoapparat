@@ -1,7 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-
+repositories {
+    maven { url 'https://jitpack.io' }
+}
 android {
     buildToolsVersion versions.android.buildTools
     compileSdkVersion versions.sdk.target
@@ -23,8 +25,9 @@ android {
 }
 
 dependencies {
-    compile project(':fotoapparat')
-
-    compile "com.android.support:appcompat-v7:${versions.android.support}"
+//    implementation project(':fotoapparat')
+    implementation 'io.fotoapparat.fotoapparat:library:2.0.0-beta4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+
+    implementation "com.android.support:appcompat-v7:${versions.android.support}"
 }

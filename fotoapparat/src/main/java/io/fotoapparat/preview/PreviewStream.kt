@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package io.fotoapparat.preview
 
 import android.graphics.ImageFormat

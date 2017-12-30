@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package io.fotoapparat.hardware
 
 import android.hardware.Camera

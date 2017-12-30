@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package io.fotoapparat.parameter.camera.convert
 
 import android.hardware.Camera

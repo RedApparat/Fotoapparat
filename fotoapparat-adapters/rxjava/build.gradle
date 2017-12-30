@@ -17,8 +17,8 @@ android {
 }
 
 dependencies {
-    provided project(':fotoapparat')
-    provided "io.reactivex:rxjava:${versions.rx.rxJava1}"
+    compileOnly project(':fotoapparat')
+    compileOnly "io.reactivex:rxjava:${versions.rx.rxJava1}"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
 
