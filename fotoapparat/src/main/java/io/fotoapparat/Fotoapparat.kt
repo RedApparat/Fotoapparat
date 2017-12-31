@@ -215,8 +215,6 @@ class Fotoapparat
     /**
      * Switches to another camera. If previous camera has already started then it will be
      * stopped automatically and new will start.
-     *
-     * @throws IllegalStateException If the current camera is recording.
      */
     fun switchTo(
             lensPosition: Collection<LensPosition>.() -> LensPosition?,
@@ -240,7 +238,6 @@ class Fotoapparat
     ): Boolean {
         return device.canSelectCamera(selector)
     }
-
 
     companion object {
 

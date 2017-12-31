@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                 logger = logcat(),
                 lensPosition = activeCamera.lensPosition,
                 cameraConfiguration = activeCamera.configuration,
-                cameraErrorCallback = { it -> Log.e(LOGGING_TAG, "Camera error: ", it) }
+                cameraErrorCallback = { Log.e(LOGGING_TAG, "Camera error: ", it) }
         )
 
         cameraView onClick takePicture()
@@ -73,8 +73,8 @@ class MainActivity : AppCompatActivity() {
 
         photoResult
                 .toBitmap(scaled(scaleFactor = 0.25f))
-                .whenAvailable {
-                    it
+                .whenAvailable { photo ->
+                    photo
                             ?.let {
                                 Log.i(LOGGING_TAG, "New photo captured. Bitmap length: ${it.bitmap.byteCount}")
 
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
         zoomSeekBar.progress = 0
         torchSwitch.isChecked = false
 
-        Log.i(LOGGING_TAG, "New camera position: ${if(activeCamera is Camera.Back) "back" else "front"}")
+        Log.i(LOGGING_TAG, "New camera position: ${if (activeCamera is Camera.Back) "back" else "front"}")
     }
 
     private fun toggleFlash(): (CompoundButton, Boolean) -> Unit = { _, isChecked ->
@@ -150,8 +150,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun adjustViewsVisibility() {
         fotoapparat.getCapabilities()
-                .whenAvailable {
-                    it
+                .whenAvailable { capabilities ->
+                    capabilities
                             ?.let {
                                 zoomSeekBar.visibility = if (it.canZoom) View.VISIBLE else View.GONE
                                 torchSwitch.visibility = if (it.flashModes.contains(Flash.Torch)) View.VISIBLE else View.GONE

@@ -123,10 +123,6 @@ private fun <T> T.notifyCallbackOnMainThread(callback: (T) -> Unit) {
     }
 }
 
-interface WhenDoneListener<T> {
-    fun whenDone(it: T?)
-}
-
 typealias CapabilitiesResult = PendingResult<Capabilities>
 typealias ParametersResult = PendingResult<CameraParameters>
 
