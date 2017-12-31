@@ -3,8 +3,8 @@
 buildscript {
     ext {
         versions = [
-                gradle : '4.0',
-                kotlin : '1.2.0',
+                gradle : '4.4.1',
+                kotlin : '1.2.10',
                 code   : 1,
                 name   : '1.0.0',
                 sdk    : [
@@ -33,7 +33,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:3.0.1"
+        classpath "com.android.tools.build:gradle:3.1.0-alpha06"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
     }
