@@ -47,36 +47,8 @@ Add `CameraView` to your layout
 ### Step Two
 
 Configure `Fotoapparat` instance.
- 
-Are you using Java only? See our [wiki for the java-friendly configuration](https://github.com/Fotoapparat/Fotoapparat/wiki/Configuration-Java).
 
-```kotlin
-val configuration = CameraConfiguration(    
-    pictureResolution = highestResolution(), // (optional) we want to have the highest possible photo resolution
-    previewResolution = highestResolution(), // (optional) we want to have the highest possible preview resolution
-    previewFpsRange = highestFps(),          // (optional) we want to have the best frame rate
-    focusMode = firstAvailable(              // (optional) use the first focus mode which is supported by device
-            continuousFocusPicture(),
-            autoFocus(),                       // if continuous focus is not available on device, auto focus will be used
-            fixed()                            // if even auto focus is not available - fixed focus mode will be used
-    ),
-    flashMode = firstAvailable(              // (optional) similar to how it is done for focus mode, this time for flash
-            autoRedEye(),
-            autoFlash(),
-            torch(),
-            off()
-    ),
-    antiBandingMode = firstAvailable(       // (optional) similar to how it is done for focus mode & flash, now for anti banding 
-            auto(),
-            hz50(),
-            hz60(),
-            none()
-    )
-    jpegQuality = manualJpegQuality(90),     // (optional) select a jpeg quality of 90 (out of 0-100) values
-    sensorSensitivity = lowestSensorSensitivity(), // (optional) we want to have the lowest sensor sensitivity (ISO)
-    frameProcessor = { frame -> }            // (optional) receives each frame from preview stream
-)
- 
+```kotlin 
 Fotoapparat(
             context = this,
             view = cameraView,                   // view which will draw the camera preview
@@ -89,7 +61,11 @@ Fotoapparat(
             ),
             cameraErrorCallback = { error -> }   // (optional) log fatal errors
     )
-```
+``` 
+Check the [wiki for the `configuration` options e.g. change iso](https://github.com/Fotoapparat/Fotoapparat/wiki/Configuration-Kotlin)
+
+Are you using Java only? See our [wiki for the java-friendly configuration](https://github.com/Fotoapparat/Fotoapparat/wiki/Configuration-Java).
+
 
 ### Step Three
 
@@ -190,7 +166,7 @@ repositories {
   maven { url 'https://jitpack.io' }
 }
  
-compile 'io.fotoapparat.fotoapparat:library:2.0.0-beta4'
+compile 'io.fotoapparat.fotoapparat:library:2.0.0'
 ```
 
 Camera permission will be automatically added to your `AndroidManifest.xml`. Do not forget to request this permission on Marshmallow and higher.
