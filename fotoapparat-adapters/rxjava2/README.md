@@ -5,6 +5,7 @@ An `Adapter` for adapting RxJava 2.x types.
 Available types:
 
  * `Observable<T>`
+ * `Flowable<T>`
  * `Single<T>`
  * `Completable`
 

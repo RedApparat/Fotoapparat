@@ -24,7 +24,7 @@ public class ObservableAdapterTest {
 
         // When
         ObservableAdapter.<String>toObservable()
-                .adapt(future)
+                .invoke(future)
                 .subscribe(subscriber);
 
         // Then
@@ -45,7 +45,7 @@ public class ObservableAdapterTest {
 
         // When
         ObservableAdapter.<String>toObservable()
-                .adapt(future)
+                .invoke(future)
                 .subscribe(subscriber);
 
         // Then

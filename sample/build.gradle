@@ -1,13 +1,15 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
-    buildToolsVersion project.buildToolsVersion
-    compileSdkVersion Integer.parseInt(project.compileSdkVersion)
+    buildToolsVersion versions.android.buildTools
+    compileSdkVersion versions.sdk.target
 
     defaultConfig {
         applicationId "io.fotoapparat.sample"
-        minSdkVersion Integer.parseInt(project.minSdkVersion)
-        targetSdkVersion Integer.parseInt(project.targetSdkVersion)
+        minSdkVersion versions.sdk.minimum
+        targetSdkVersion versions.sdk.target
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -21,7 +23,8 @@ android {
 }
 
 dependencies {
-    compile project(':fotoapparat')
+    implementation project(':fotoapparat')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
 
-    compile "com.android.support:appcompat-v7:${project.appCompatVersion}"
+    implementation "com.android.support:appcompat-v7:${versions.android.support}"
 }
