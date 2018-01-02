@@ -180,7 +180,10 @@ private sealed class Camera(
                     ),
                     previewFpsRange = highestFps(),
                     flashMode = off(),
-                    focusMode = continuousFocusPicture()
+                    focusMode = continuousFocusPicture(),
+                    frameProcessor = {
+                        // Do something with the preview frame
+                    }
             )
     )
 

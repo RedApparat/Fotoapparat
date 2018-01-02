@@ -110,6 +110,12 @@ public class ActivityJava extends AppCompatActivity {
                 .into(cameraView)
                 .previewScaleType(ScaleType.CenterCrop)
                 .lensPosition(back())
+                .frameProcessor(new Function1<Frame, Unit>() {
+                    @Override
+                    public Unit invoke(Frame frame) {
+                        return null;
+                    }
+                })
                 .logger(loggers(
                         logcat(),
                         fileLogger(this)
