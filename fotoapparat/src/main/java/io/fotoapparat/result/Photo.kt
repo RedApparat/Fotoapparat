@@ -1,5 +1,6 @@
 package io.fotoapparat.result
 
+import android.graphics.BitmapFactory
 import java.util.*
 
 /**
@@ -22,6 +23,31 @@ data class Photo(
         @JvmField
         val rotationDegrees: Int
 ) {
+
+    private val decodedBounds by lazy {
+        BitmapFactory.decodeByteArray(
+                encodedImage,
+                0,
+                encodedImage.size,
+                BitmapFactory.Options().apply {
+                    inJustDecodeBounds = true
+                }
+        )
+    }
+
+    /**
+     * The height of the photo.
+     */
+    val height by lazy {
+        decodedBounds.height
+    }
+
+    /**
+     * The width of the photo.
+     */
+    val width by lazy {
+        decodedBounds.width
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
