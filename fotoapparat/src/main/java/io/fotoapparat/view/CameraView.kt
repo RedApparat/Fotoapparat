@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.TextureView
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import io.fotoapparat.exception.camera.UnavailableSurfaceException
 import io.fotoapparat.parameter.Resolution
 import io.fotoapparat.parameter.ScaleType
 import java.util.concurrent.CountDownLatch
@@ -63,7 +64,7 @@ class CameraView
 
     private fun getPreviewAfterLatch(): Preview.Texture {
         textureLatch.await()
-        return surfaceTexture?.toPreview() ?: throw InterruptedException("No surface became available.")
+        return surfaceTexture?.toPreview() ?: throw UnavailableSurfaceException()
     }
 
     private fun TextureView.tryInitialize() = surfaceTexture ?: null.also {
@@ -74,7 +75,6 @@ class CameraView
     }
 
 }
-
 
 private fun ViewGroup.layoutTextureView(
         previewResolution: Resolution?,
