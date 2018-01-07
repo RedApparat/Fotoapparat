@@ -5,7 +5,6 @@ package io.fotoapparat.hardware.metering.convert
 import android.graphics.Matrix
 import android.graphics.Rect
 import android.hardware.Camera
-import android.util.Log
 import io.fotoapparat.hardware.metering.FocalRequest
 import io.fotoapparat.hardware.metering.PointF
 import io.fotoapparat.parameter.Resolution
@@ -53,13 +52,7 @@ private fun FocalRequest.focusBounds(
                 displayOrientationDegrees,
                 cameraIsMirrored
         )
-        .also {
-            Log.wtf("TAG", "scaled point: $it")
-        }
         .toBoundsRect()
-        .also {
-            Log.wtf("TAG", "focusBounds: $it")
-        }
 
 private fun PointF.adjustPointToCameraPreview(
         visibleResolution: Resolution,

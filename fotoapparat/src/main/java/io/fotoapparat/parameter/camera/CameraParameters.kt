@@ -26,7 +26,7 @@ data class CameraParameters(
                 "jpegQuality:" + jpegQuality.wrap() +
                 "previewFpsRange:" + previewFpsRange.wrap() +
                 "antiBandingMode:" + antiBandingMode.wrap() +
-                "sensorSensitivity:" + sensorSensitivity?.wrap() +
+                "sensorSensitivity:" + sensorSensitivity.wrap() +
                 "pictureResolution:" + pictureResolution.wrap() +
                 "previewResolution:" + previewResolution.wrap()
     }
