@@ -23,11 +23,6 @@
 
     </io.fotoapparat.view.CameraView>
 
-    <ImageView
-        android:id="@+id/result"
-        android:layout_width="200dp"
-        android:layout_height="200dp" />
-
     <TextView
         android:id="@+id/no_permission"
         android:layout_width="wrap_content"
@@ -43,34 +38,55 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/torchSwitch"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical"
-            android:padding="20dp"
-            tools:ignore="RtlHardcoded" />
+            android:layout_gravity="top">
 
-        <SeekBar
-            android:id="@+id/zoomSeekBar"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:max="30" />
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/torchSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:padding="20dp"
+                tools:ignore="RtlHardcoded" />
+
+            <SeekBar
+                android:id="@+id/zoomSeekBar"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:max="30" />
+
+            <ImageView
+                android:id="@+id/switchCamera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:padding="20dp"
+                android:src="@drawable/ic_autorenew_white"
+                tools:ignore="RtlHardcoded" />
+
+        </FrameLayout>
 
         <ImageView
-            android:id="@+id/switchCamera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
-            android:padding="20dp"
-            android:src="@drawable/ic_autorenew_white"
-            tools:ignore="RtlHardcoded" />
+            android:id="@+id/result"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="bottom|left"
+            tools:ignore="ContentDescription,RtlHardcoded" />
 
+        <ImageView
+            android:id="@+id/capture"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/capture"
+            tools:ignore="ContentDescription" />
     </FrameLayout>
 
 </android.support.v7.widget.FitWindowsFrameLayout>

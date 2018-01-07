@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                 cameraErrorCallback = { Log.e(LOGGING_TAG, "Camera error: ", it) }
         )
 
-        cameraView onClick takePicture()
+        capture onClick takePicture()
         zoomSeekBar onProgressChanged updateZoom()
         switchCamera onClick changeCamera()
         torchSwitch onCheckedChanged toggleFlash()
