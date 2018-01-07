@@ -26,7 +26,6 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
             external()
     )
     internal var cameraErrorCallback: (CameraException) -> Unit = {}
-    internal var frameProcessor: ((Frame) -> Unit?)? = null
     internal var renderer: CameraRenderer? = null
     internal var scaleType: ScaleType = ScaleType.CenterCrop
     internal var logger: Logger = none()
@@ -125,7 +124,9 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
      * @see FrameProcessor
      */
     fun frameProcessor(frameProcessor: (Frame) -> Unit): FotoapparatBuilder {
-        this.frameProcessor = frameProcessor
+        configuration = configuration.copy(
+                frameProcessor = frameProcessor
+        )
         return this
     }
 

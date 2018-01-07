@@ -235,12 +235,12 @@ class FotoapparatBuilderTest {
     }
 
     @Test
-    fun `frameProcessor null by default`() {
+    fun `frameProcessor empty by default`() {
         // When
         val builder = builderWithMandatoryArguments()
 
         // Then
-        assertNull(builder.frameProcessor)
+        assertNotNull(builder.configuration.frameProcessor)
     }
 
     @Test
@@ -252,7 +252,7 @@ class FotoapparatBuilderTest {
         // Then
         assertEquals(
                 frameProcessor,
-                builder.frameProcessor
+                builder.configuration.frameProcessor
         )
     }
 

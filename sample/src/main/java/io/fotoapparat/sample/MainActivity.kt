@@ -184,7 +184,10 @@ private sealed class Camera(
                     focusMode = firstAvailable(
                             continuousFocusPicture(),
                             autoFocus()
-                    )
+                    ),
+                    frameProcessor = {
+                        // Do something with the preview frame
+                    }
             )
     )
 
