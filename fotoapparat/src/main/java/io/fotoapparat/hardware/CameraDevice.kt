@@ -9,15 +9,18 @@ import android.view.Surface
 import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.capability.provide.getCapabilities
 import io.fotoapparat.characteristic.Characteristics
-import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.characteristic.toCameraId
 import io.fotoapparat.exception.camera.CameraException
+import io.fotoapparat.hardware.metering.FocalRequest
+import io.fotoapparat.hardware.metering.convert.toFocusAreas
 import io.fotoapparat.hardware.orientation.computeDisplayOrientation
 import io.fotoapparat.hardware.orientation.computeImageOrientation
 import io.fotoapparat.log.Logger
+import io.fotoapparat.parameter.FocusMode
 import io.fotoapparat.parameter.Resolution
 import io.fotoapparat.parameter.camera.CameraParameters
 import io.fotoapparat.parameter.camera.apply.applyNewParameters
+import io.fotoapparat.parameter.camera.convert.toCode
 import io.fotoapparat.preview.Frame
 import io.fotoapparat.preview.PreviewStream
 import io.fotoapparat.result.FocusResult
@@ -27,6 +30,7 @@ import java.io.IOException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
+
 
 typealias PreviewSize = io.fotoapparat.parameter.Resolution
 
@@ -217,6 +221,26 @@ internal open class CameraDevice(
     }
 
     /**
+     * Sets the point where the focus & exposure metering will happen.
+     */
+    open fun setFocalPoint(focalRequest: FocalRequest) {
+        logger.recordMethod()
+
+        if (capabilities.canSetFocusingAreas()) {
+            camera.updateFocusingAreas(focalRequest)
+        }
+    }
+
+    /**
+     * Clears the point where the focus & exposure will happen.
+     */
+    open fun clearFocalPoint() {
+        logger.recordMethod()
+
+        camera.clearFocusingAreas()
+    }
+
+    /**
      * Sets the desired surface on which the camera's preview will be displayed.
      */
     open fun setDisplaySurface(preview: Preview) {
@@ -286,7 +310,40 @@ internal open class CameraDevice(
 
         return FocusResult.Focused
     }
+
+    private fun Camera.updateFocusingAreas(focalRequest: FocalRequest) {
+        val focusingAreas = focalRequest.toFocusAreas(
+                displayOrientationDegrees = displayRotation,
+                cameraIsMirrored = characteristics.isMirrored
+        )
+
+        parameters = parameters.apply {
+            with(capabilities) {
+                if (maxMeteringAreas > 0) {
+                    meteringAreas = focusingAreas
+                }
+
+                if (maxFocusAreas > 0) {
+                    if (focusModes.contains(FocusMode.Auto)) {
+                        focusMode = FocusMode.Auto.toCode()
+                    }
+                    focusAreas = focusingAreas
+                }
+            }
+        }
+    }
+
+    private fun Camera.clearFocusingAreas() {
+        parameters = parameters.apply {
+            with(capabilities) {
+                meteringAreas = null
+                focusAreas = null
+            }
+        }
+    }
+
 }
+
 
 private const val AUTOFOCUS_TIMEOUT_SECONDS = 3L
 
@@ -318,7 +375,7 @@ private fun computeImageOrientation(
 ) = computeImageOrientation(
         screenRotationDegrees = degrees,
         cameraRotationDegrees = characteristics.orientation,
-        cameraIsMirrored = characteristics.lensPosition == LensPosition.Front
+        cameraIsMirrored = characteristics.isMirrored
 )
 
 private fun computeDisplayOrientation(
@@ -327,7 +384,7 @@ private fun computeDisplayOrientation(
 ) = computeDisplayOrientation(
         screenRotationDegrees = degrees,
         cameraRotationDegrees = characteristics.orientation,
-        cameraIsMirrored = characteristics.lensPosition == LensPosition.Front
+        cameraIsMirrored = characteristics.isMirrored
 )
 
 private fun Camera.updateParameters(newParameters: CameraParameters) {
@@ -377,4 +434,8 @@ private fun PreviewStream.updateProcessorSafely(frameProcessor: ((Frame) -> Unit
             start()
         }
     }
+}
+
+private fun Capabilities.canSetFocusingAreas(): Boolean {
+    return maxMeteringAreas > 0 || maxFocusAreas > 0
 }

@@ -83,6 +83,19 @@ internal class SupportedParameters(
         IntRange(0, 100)
     }
 
+    /**
+     * @see Camera.Parameters.getMaxNumFocusAreas
+     */
+    val maxNumFocusAreas by lazy {
+        cameraParameters.maxNumFocusAreas
+    }
+
+    /**
+     * @see Camera.Parameters.getMaxNumMeteringAreas
+     */
+    val maxNumMeteringAreas by lazy {
+        cameraParameters.maxNumMeteringAreas
+    }
 }
 
 private val supportedSensitivitiesKeys = listOf("iso-values", "iso-mode-values", "iso-speed-values", "nv-picture-iso-values")

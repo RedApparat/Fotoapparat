@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         fotoapparat = Fotoapparat(
                 context = this,
                 view = cameraView,
+                focusView = focusView,
                 logger = logcat(),
                 lensPosition = activeCamera.lensPosition,
                 cameraConfiguration = activeCamera.configuration,
@@ -180,7 +181,10 @@ private sealed class Camera(
                     ),
                     previewFpsRange = highestFps(),
                     flashMode = off(),
-                    focusMode = continuousFocusPicture()
+                    focusMode = firstAvailable(
+                            continuousFocusPicture(),
+                            autoFocus()
+                    )
             )
     )
 
@@ -193,7 +197,10 @@ private sealed class Camera(
                     ),
                     previewFpsRange = highestFps(),
                     flashMode = off(),
-                    focusMode = fixed()
+                    focusMode = firstAvailable(
+                            fixed(),
+                            autoFocus()
+                    )
             )
     )
 }

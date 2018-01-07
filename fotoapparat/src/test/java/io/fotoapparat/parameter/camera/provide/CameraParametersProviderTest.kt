@@ -24,6 +24,8 @@ internal class CameraParametersProviderTest {
             flashModes = setOf(Flash.AutoRedEye),
             focusModes = setOf(FocusMode.Fixed),
             canSmoothZoom = false,
+            maxFocusAreas = 1,
+            maxMeteringAreas = 1,
             previewFpsRanges = setOf(fpsRange),
             antiBandingModes = setOf(AntiBandingMode.None),
             jpegQualityRange = IntRange(0, 100),

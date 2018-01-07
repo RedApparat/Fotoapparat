@@ -2,7 +2,9 @@ package io.fotoapparat.routine.camera
 
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.Device
+import io.fotoapparat.hardware.executeTask
 import io.fotoapparat.hardware.orientation.OrientationSensor
+import io.fotoapparat.routine.focus.focusOnPoint
 import io.fotoapparat.routine.orientation.startOrientationMonitoring
 
 /**
@@ -32,26 +34,40 @@ internal fun Device.bootStart(
 internal fun Device.start() {
     selectCamera()
 
-    val cameraDevice = getSelectedCamera()
+    val cameraDevice = getSelectedCamera().apply {
+        open()
 
-    cameraDevice.open()
+        updateCameraConfiguration(
+                cameraDevice = this
+        )
+        setDisplayOrientation(
+                degrees = getScreenRotation()
+        )
+    }
 
-    updateCameraConfiguration(
-            cameraDevice = cameraDevice
-    )
+    val previewResolution = cameraDevice.getPreviewResolution()
 
-    cameraDevice.setDisplayOrientation(
-            degrees = getScreenRotation()
-    )
+    cameraRenderer.apply {
+        setScaleType(
+                scaleType = scaleType
+        )
 
-    cameraRenderer.setScaleType(
-            scaleType = scaleType
-    )
-    cameraRenderer.setPreviewResolution(
-            resolution = cameraDevice.getPreviewResolution()
-    )
-    cameraDevice.setDisplaySurface(
-            preview = cameraRenderer.getPreview()
-    )
-    cameraDevice.startPreview()
+        setPreviewResolution(
+                resolution = previewResolution
+        )
+    }
+
+    focusPointSelector?.setFocalPointListener {
+        executeTask(Runnable {
+            focusOnPoint(it)
+        })
+    }
+
+    cameraDevice.run {
+        setDisplaySurface(
+                preview = cameraRenderer.getPreview()
+        )
+
+        startPreview()
+    }
 }

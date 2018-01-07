@@ -6,5 +6,6 @@ package io.fotoapparat.characteristic
 internal data class Characteristics(
         val cameraId: Int,
         val lensPosition: LensPosition,
-        val orientation: Int
+        val orientation: Int,
+        val isMirrored: Boolean
 )

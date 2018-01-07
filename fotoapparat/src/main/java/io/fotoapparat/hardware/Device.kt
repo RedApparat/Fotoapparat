@@ -15,6 +15,7 @@ import io.fotoapparat.parameter.camera.CameraParameters
 import io.fotoapparat.parameter.camera.provide.getCameraParameters
 import io.fotoapparat.preview.Frame
 import io.fotoapparat.view.CameraRenderer
+import io.fotoapparat.view.FocalPointSelector
 import kotlinx.coroutines.experimental.CompletableDeferred
 
 
@@ -26,9 +27,9 @@ internal open class Device(
         private val display: Display,
         open val scaleType: ScaleType,
         open val cameraRenderer: CameraRenderer,
+        val focusPointSelector: FocalPointSelector?,
         numberOfCameras: Int = Camera.getNumberOfCameras(),
-        initialConfiguration: CameraConfiguration,
-        initialLensPositionSelector: Collection<LensPosition>.() -> LensPosition?
+        initialConfiguration: CameraConfiguration, initialLensPositionSelector: Collection<LensPosition>.() -> LensPosition?
 ) {
 
     private val cameras = (0 until numberOfCameras).map { cameraId ->

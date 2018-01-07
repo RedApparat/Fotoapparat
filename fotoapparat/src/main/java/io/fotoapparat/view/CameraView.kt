@@ -1,6 +1,7 @@
 package io.fotoapparat.view
 
 import android.content.Context
+import android.graphics.Rect
 import android.graphics.SurfaceTexture
 import android.util.AttributeSet
 import android.view.TextureView
@@ -97,12 +98,14 @@ private fun Resolution.centerInside(view: ViewGroup) {
     val extraX = Math.max(0, view.measuredWidth - width)
     val extraY = Math.max(0, view.measuredHeight - height)
 
-    view.getChildAt(0).layout(
+    val rect = Rect(
             extraX / 2,
             extraY / 2,
             width + extraX / 2,
             height + extraY / 2
     )
+
+    view.layoutChildrenAt(rect)
 }
 
 private fun Resolution.centerCrop(view: ViewGroup) {
@@ -117,10 +120,23 @@ private fun Resolution.centerCrop(view: ViewGroup) {
     val extraX = Math.max(0, width - view.measuredWidth)
     val extraY = Math.max(0, height - view.measuredHeight)
 
-    view.getChildAt(0).layout(
+    val rect = Rect(
             -extraX / 2,
             -extraY / 2,
             width - extraX / 2,
             height - extraY / 2
     )
+
+    view.layoutChildrenAt(rect)
+}
+
+private fun ViewGroup.layoutChildrenAt(rect: Rect) {
+    (0 until childCount).forEach {
+        getChildAt(it).layout(
+                rect.left,
+                rect.top,
+                rect.right,
+                rect.bottom
+        )
+    }
 }
