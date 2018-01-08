@@ -14,4 +14,4 @@ internal fun Set<Any>.wrap(): String = "${this.map { lineSeparator + "\t\t" + it
 /**
  * Prints a item in logcat with left margin and appends a line separator
  */
-internal fun Any.wrap() = "\t\t" + this + lineSeparator
+internal fun Any?.wrap(): String = (this ?: "null").let { "\t\t" + it + lineSeparator }

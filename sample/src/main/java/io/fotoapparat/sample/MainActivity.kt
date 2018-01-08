@@ -44,13 +44,14 @@ class MainActivity : AppCompatActivity() {
         fotoapparat = Fotoapparat(
                 context = this,
                 view = cameraView,
+                focusView = focusView,
                 logger = logcat(),
                 lensPosition = activeCamera.lensPosition,
                 cameraConfiguration = activeCamera.configuration,
                 cameraErrorCallback = { Log.e(LOGGING_TAG, "Camera error: ", it) }
         )
 
-        cameraView onClick takePicture()
+        capture onClick takePicture()
         zoomSeekBar onProgressChanged updateZoom()
         switchCamera onClick changeCamera()
         torchSwitch onCheckedChanged toggleFlash()
@@ -180,7 +181,10 @@ private sealed class Camera(
                     ),
                     previewFpsRange = highestFps(),
                     flashMode = off(),
-                    focusMode = continuousFocusPicture(),
+                    focusMode = firstAvailable(
+                            continuousFocusPicture(),
+                            autoFocus()
+                    ),
                     frameProcessor = {
                         // Do something with the preview frame
                     }
@@ -196,7 +200,10 @@ private sealed class Camera(
                     ),
                     previewFpsRange = highestFps(),
                     flashMode = off(),
-                    focusMode = fixed()
+                    focusMode = firstAvailable(
+                            fixed(),
+                            autoFocus()
+                    )
             )
     )
 }

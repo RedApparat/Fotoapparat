@@ -10,9 +10,11 @@ import android.hardware.Camera
 internal fun getCharacteristics(cameraId: Int): Characteristics {
     val info = Camera.CameraInfo()
     Camera.getCameraInfo(cameraId, info)
+    val lensPosition = info.facing.toLensPosition()
     return Characteristics(
-            cameraId,
-            info.facing.toLensPosition(),
-            info.orientation
+            cameraId = cameraId,
+            lensPosition = lensPosition,
+            orientation = info.orientation,
+            isMirrored = lensPosition == LensPosition.Front
     )
 }

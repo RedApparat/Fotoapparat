@@ -54,7 +54,7 @@ fun aspectRatio(
         selector: Iterable<Resolution>.() -> Resolution?,
         @FloatRange(from = 0.0, to = 1.0) tolerance: Double = 0.0
 ): Iterable<Resolution>.() -> Resolution? {
-    if (tolerance < 0.0 || tolerance > 1.0) {
+    if (tolerance !in 0.0..1.0) {
         throw IllegalArgumentException("Tolerance must be between 0.0 and 1.0.")
     }
 

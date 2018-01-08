@@ -14,6 +14,8 @@ data class Capabilities(
         val flashModes: Set<Flash>,
         val focusModes: Set<FocusMode>,
         val canSmoothZoom: Boolean,
+        val maxFocusAreas: Int,
+        val maxMeteringAreas: Int,
         val jpegQualityRange: IntRange,
         val previewFpsRanges: Set<FpsRange>,
         val antiBandingModes: Set<AntiBandingMode>,
@@ -37,6 +39,8 @@ data class Capabilities(
                 "flashModes:" + flashModes.wrap() +
                 "focusModes:" + focusModes.wrap() +
                 "canSmoothZoom:" + canSmoothZoom.wrap() +
+                "maxFocusAreas:" + maxFocusAreas.wrap() +
+                "maxMeteringAreas:" + maxMeteringAreas.wrap() +
                 "jpegQualityRange:" + jpegQualityRange.wrap() +
                 "antiBandingModes:" + antiBandingModes.wrap() +
                 "previewFpsRanges:" + previewFpsRanges.wrap() +

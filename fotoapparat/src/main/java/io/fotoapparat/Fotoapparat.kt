@@ -32,6 +32,7 @@ import io.fotoapparat.selector.external
 import io.fotoapparat.selector.firstAvailable
 import io.fotoapparat.selector.front
 import io.fotoapparat.view.CameraRenderer
+import io.fotoapparat.view.FocalPointSelector
 import java.util.concurrent.FutureTask
 
 /**
@@ -41,6 +42,7 @@ class Fotoapparat
 @JvmOverloads constructor(
         context: Context,
         view: CameraRenderer,
+        focusView: FocalPointSelector? = null,
         lensPosition: Collection<LensPosition>.() -> LensPosition? = firstAvailable(
                 back(),
                 front(),
@@ -58,6 +60,7 @@ class Fotoapparat
 
     private val device = Device(
             cameraRenderer = view,
+            focusPointSelector = focusView,
             logger = logger,
             display = display,
             scaleType = scaleType,
