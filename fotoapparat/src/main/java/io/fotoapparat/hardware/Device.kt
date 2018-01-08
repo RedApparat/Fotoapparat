@@ -142,13 +142,19 @@ internal open class Device(
         return savedConfiguration
     }
 
-    open fun getCameraParameters(cameraDevice: CameraDevice): CameraParameters {
+    /**
+     * @return The selected [CameraParameters] for the given [CameraDevice].
+     */
+    open suspend fun getCameraParameters(cameraDevice: CameraDevice): CameraParameters {
         return getCameraParameters(
                 cameraConfiguration = savedConfiguration,
                 capabilities = cameraDevice.getCapabilities()
         )
     }
 
+    /**
+     * @return The frame processor.
+     */
     open fun getFrameProcessor(): (Frame) -> Unit {
         return savedConfiguration.frameProcessor
     }

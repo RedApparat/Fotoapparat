@@ -11,6 +11,7 @@ import io.fotoapparat.capability.provide.getCapabilities
 import io.fotoapparat.characteristic.Characteristics
 import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.characteristic.toCameraId
+import io.fotoapparat.coroutines.AwaitBroadcastChannel
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.orientation.computeDisplayOrientation
 import io.fotoapparat.hardware.orientation.computeImageOrientation
@@ -23,6 +24,7 @@ import io.fotoapparat.preview.PreviewStream
 import io.fotoapparat.result.FocusResult
 import io.fotoapparat.result.Photo
 import io.fotoapparat.view.Preview
+import kotlinx.coroutines.experimental.CompletableDeferred
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -38,9 +40,9 @@ internal open class CameraDevice(
         val characteristics: Characteristics
 ) {
 
-    private lateinit var cameraParameters: CameraParameters
+    private val capabilities = CompletableDeferred<Capabilities>()
+    private val cameraParameters = AwaitBroadcastChannel<CameraParameters>()
     private lateinit var previewStream: PreviewStream
-    private lateinit var capabilities: Capabilities
     private lateinit var surface: Surface
     private lateinit var camera: Camera
 
@@ -59,7 +61,7 @@ internal open class CameraDevice(
 
         try {
             camera = Camera.open(cameraId)
-            capabilities = camera.getCapabilities()
+            capabilities.complete(camera.getCapabilities())
             previewStream = PreviewStream(camera)
         } catch (e: RuntimeException) {
             throw CameraException(
@@ -136,28 +138,28 @@ internal open class CameraDevice(
     /**
      * Returns the [Capabilities] of the camera.
      */
-    open fun getCapabilities(): Capabilities {
+    open suspend fun getCapabilities(): Capabilities {
         logger.recordMethod()
 
-        return capabilities
+        return capabilities.await()
     }
 
     /**
      * Returns the [CameraParameters] used.
      */
-    open fun getParameters(): CameraParameters {
+    open suspend fun getParameters(): CameraParameters {
         logger.recordMethod()
 
-        return cameraParameters
+        return cameraParameters.getValue()
     }
 
     /**
      * Updates the desired camera parameters.
      */
-    open fun updateParameters(cameraParameters: CameraParameters) {
+    open suspend fun updateParameters(cameraParameters: CameraParameters) {
         logger.recordMethod()
 
-        this.cameraParameters = cameraParameters
+        this.cameraParameters.send(cameraParameters)
 
         logger.log("New camera parameters are: $cameraParameters")
 
