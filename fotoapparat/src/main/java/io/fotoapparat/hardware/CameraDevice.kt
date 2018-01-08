@@ -225,10 +225,10 @@ internal open class CameraDevice(
     /**
      * Sets the point where the focus & exposure metering will happen.
      */
-    open fun setFocalPoint(focalRequest: FocalRequest) {
+    open suspend fun setFocalPoint(focalRequest: FocalRequest) {
         logger.recordMethod()
 
-        if (capabilities.canSetFocusingAreas()) {
+        if (capabilities.await().canSetFocusingAreas()) {
             camera.updateFocusingAreas(focalRequest)
         }
     }
@@ -313,14 +313,14 @@ internal open class CameraDevice(
         return FocusResult.Focused
     }
 
-    private fun Camera.updateFocusingAreas(focalRequest: FocalRequest) {
+    private suspend fun Camera.updateFocusingAreas(focalRequest: FocalRequest) {
         val focusingAreas = focalRequest.toFocusAreas(
                 displayOrientationDegrees = displayRotation,
                 cameraIsMirrored = characteristics.isMirrored
         )
 
         parameters = parameters.apply {
-            with(capabilities) {
+            with(capabilities.await()) {
                 if (maxMeteringAreas > 0) {
                     meteringAreas = focusingAreas
                 }
