@@ -8,7 +8,7 @@ buildscript {
                 code   : 1,
                 name   : '1.0.0',
                 sdk    : [
-                        minimum: 16,
+                        minimum: 14,
                         target : 27
                 ],
                 android: [
