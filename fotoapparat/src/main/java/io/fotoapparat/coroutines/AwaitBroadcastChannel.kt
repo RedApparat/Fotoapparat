@@ -10,24 +10,24 @@ import kotlinx.coroutines.experimental.channels.ConflatedBroadcastChannel
  */
 internal class AwaitBroadcastChannel<T>(
         private val channel: ConflatedBroadcastChannel<T> = ConflatedBroadcastChannel(),
-        private val defered: CompletableDeferred<Boolean> = CompletableDeferred()
-) : BroadcastChannel<T> by channel, Deferred<Boolean> by defered {
+        private val deferred: CompletableDeferred<Boolean> = CompletableDeferred()
+) : BroadcastChannel<T> by channel, Deferred<Boolean> by deferred {
 
     /**
      * The most recently sent element to this channel.
      */
     suspend fun getValue(): T {
-        defered.await()
+        deferred.await()
         return channel.value
     }
 
     override fun offer(element: T): Boolean {
-        defered.complete(true)
+        deferred.complete(true)
         return channel.offer(element)
     }
 
-    suspend override fun send(element: T) {
-        defered.complete(true)
+    override suspend fun send(element: T) {
+        deferred.complete(true)
         channel.send(element)
     }
 }

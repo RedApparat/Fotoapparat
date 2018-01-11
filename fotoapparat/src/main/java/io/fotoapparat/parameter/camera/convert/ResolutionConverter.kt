@@ -8,9 +8,4 @@ import io.fotoapparat.parameter.Resolution
 /**
  * Converts [Camera.Size] to [Resolution].
  */
-fun Camera.Size.toResolution(): Resolution {
-    return Resolution(
-            width,
-            height
-    )
-}
+fun Camera.Size.toResolution(): Resolution = Resolution(width, height)

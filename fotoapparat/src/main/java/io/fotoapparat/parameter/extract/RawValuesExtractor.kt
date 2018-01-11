@@ -10,14 +10,12 @@ import android.hardware.Camera
  * Empty list of values will be returned
  */
 internal fun Camera.Parameters.extractRawCameraValues(keys: List<String>): List<String> {
-    keys.forEach {
-        getValuesForKey(key = it)
-                ?.let { return it }
+    keys.forEach { key ->
+        getValuesForKey(key)?.let { params -> return params }
     }
 
     return emptyList()
 }
 
-private fun Camera.Parameters.getValuesForKey(key: String): List<String>? {
-    return get(key)?.split(regex = ",".toRegex())
-}
+private fun Camera.Parameters.getValuesForKey(key: String): List<String>? =
+        get(key)?.split(regex = ",".toRegex())

@@ -23,7 +23,7 @@ internal fun Device.updateZoomLevel(
 }
 
 private fun Float.ensureInBounds() {
-    if (this < 0f || this > 1f) {
+    if (this !in 0f..1f) {
         throw LevelOutOfRangeException(this)
     }
 }

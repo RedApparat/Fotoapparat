@@ -6,6 +6,7 @@ import io.fotoapparat.parameter.*
 import io.fotoapparat.parameter.camera.CameraParameters
 import io.fotoapparat.preview.Frame
 import io.fotoapparat.selector.single
+import io.fotoapparat.util.FrameProcessor
 
 /**
  * Test object for [Resolution].
@@ -75,4 +76,4 @@ val testCameraParameters = CameraParameters(
 /**
  * Test frame processor.
  */
-val testFrameProcessor: (Frame) -> Unit = { }
+val testFrameProcessor: FrameProcessor = { }

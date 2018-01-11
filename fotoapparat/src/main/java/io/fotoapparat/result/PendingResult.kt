@@ -7,7 +7,10 @@ import io.fotoapparat.hardware.executeMainThread
 import io.fotoapparat.hardware.pendingResultExecutor
 import io.fotoapparat.log.Logger
 import io.fotoapparat.parameter.camera.CameraParameters
-import java.util.concurrent.*
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.Executor
+import java.util.concurrent.Future
+import java.util.concurrent.FutureTask
 
 
 /**
@@ -21,14 +24,12 @@ internal constructor(
         private val executor: Executor
 ) {
     private val resultUnsafe: T
-        get() {
-            return try {
-                future.get()
-            } catch (e: InterruptedException) {
-                throw RecoverableRuntimeException(e)
-            } catch (e: ExecutionException) {
-                throw RecoverableRuntimeException(e)
-            }
+        get() = try {
+            future.get()
+        } catch (e: InterruptedException) {
+            throw RecoverableRuntimeException(e)
+        } catch (e: ExecutionException) {
+            throw RecoverableRuntimeException(e)
         }
 
     /**
@@ -39,9 +40,7 @@ internal constructor(
      * @return [PendingResult] of another type.
      */
     fun <R> transform(transformer: (T) -> R): PendingResult<R> {
-        val transformTask = FutureTask(Callable<R> {
-            transformer(future.get())
-        })
+        val transformTask = FutureTask { transformer(future.get()) }
 
         executor.execute(transformTask)
 
@@ -60,9 +59,7 @@ internal constructor(
      * @throws InterruptedException if the thread has been interrupted.
      */
     @Throws(ExecutionException::class, InterruptedException::class)
-    fun await(): T {
-        return future.get()
-    }
+    fun await(): T = future.get()
 
     /**
      * Adapts the resulting object to a different type.
@@ -71,9 +68,7 @@ internal constructor(
      * type.
      * @return result adapted to a new type.
      */
-    fun <R> adapt(adapter: (Future<T>) -> R): R {
-        return adapter(future)
-    }
+    fun <R> adapt(adapter: (Future<T>) -> R): R = adapter(future)
 
     /**
      * Notifies given callback as soon as result is available. Callback will always be notified on
@@ -98,7 +93,7 @@ internal constructor(
      * Alias for [PendingResult.whenAvailable] for java.
      */
     fun whenDone(callback: WhenDoneListener<T>) {
-        whenAvailable { callback.whenDone(it) }
+        whenAvailable(callback::whenDone)
     }
 
     companion object {

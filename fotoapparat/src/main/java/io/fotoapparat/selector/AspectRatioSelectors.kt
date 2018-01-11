@@ -1,7 +1,6 @@
 package io.fotoapparat.selector
 
 import android.support.annotation.FloatRange
-import io.fotoapparat.parameter.Resolution
 
 /**
  * @param selector Input selector
@@ -11,15 +10,13 @@ import io.fotoapparat.parameter.Resolution
  */
 @JvmOverloads
 fun standardRatio(
-        selector: Iterable<Resolution>.() -> Resolution?,
+        selector: ResolutionSelector,
         @FloatRange(from = 0.0, to = 1.0) tolerance: Double = 0.0
-): Iterable<Resolution>.() -> Resolution? {
-    return aspectRatio(
-            aspectRatio = 4f / 3f,
-            selector = selector,
-            tolerance = tolerance
-    )
-}
+): ResolutionSelector = aspectRatio(
+        aspectRatio = 4f / 3f,
+        selector = selector,
+        tolerance = tolerance
+)
 
 /**
  * @param selector Input sizes, selected by provided selector function
@@ -29,15 +26,13 @@ fun standardRatio(
  */
 @JvmOverloads
 fun wideRatio(
-        selector: Iterable<Resolution>.() -> Resolution?,
+        selector: ResolutionSelector,
         @FloatRange(from = 0.0, to = 1.0) tolerance: Double = 0.0
-): Iterable<Resolution>.() -> Resolution? {
-    return aspectRatio(
-            aspectRatio = 16f / 9f,
-            selector = selector,
-            tolerance = tolerance
-    )
-}
+): ResolutionSelector = aspectRatio(
+        aspectRatio = 16f / 9f,
+        selector = selector,
+        tolerance = tolerance
+)
 
 /**
  * Select sizes with desired aspect ratio. This selector can
@@ -51,9 +46,9 @@ fun wideRatio(
 @JvmOverloads
 fun aspectRatio(
         aspectRatio: Float,
-        selector: Iterable<Resolution>.() -> Resolution?,
+        selector: ResolutionSelector,
         @FloatRange(from = 0.0, to = 1.0) tolerance: Double = 0.0
-): Iterable<Resolution>.() -> Resolution? {
+): ResolutionSelector {
     if (tolerance !in 0.0..1.0) {
         throw IllegalArgumentException("Tolerance must be between 0.0 and 1.0.")
     }

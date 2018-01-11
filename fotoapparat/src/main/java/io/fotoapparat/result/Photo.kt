@@ -24,29 +24,25 @@ data class Photo(
         val rotationDegrees: Int
 ) {
 
+    /**
+     * The height of the photo.
+     */
+    val height by lazy { decodedBounds.height }
+
+    /**
+     * The width of the photo.
+     */
+    val width by lazy { decodedBounds.width }
+
     private val decodedBounds by lazy {
         BitmapFactory.decodeByteArray(
                 encodedImage,
                 0,
                 encodedImage.size,
                 BitmapFactory.Options().apply {
-                    inJustDecodeBounds = true
-                }
+                            inJustDecodeBounds = true
+                        }
         )
-    }
-
-    /**
-     * The height of the photo.
-     */
-    val height by lazy {
-        decodedBounds.height
-    }
-
-    /**
-     * The width of the photo.
-     */
-    val width by lazy {
-        decodedBounds.width
     }
 
     override fun equals(other: Any?): Boolean {
@@ -69,15 +65,12 @@ data class Photo(
 
     companion object {
 
+        private val EMPTY by lazy { Photo(encodedImage = ByteArray(0), rotationDegrees = 0) }
+
         /**
          * @return empty [Photo].
          */
-        internal fun empty(): Photo {
-            return Photo(
-                    encodedImage = ByteArray(0),
-                    rotationDegrees = 0
-            )
-        }
+        internal fun empty(): Photo = EMPTY
     }
 
 }

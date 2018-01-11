@@ -1,7 +1,7 @@
 package io.fotoapparat.routine.camera
 
 import io.fotoapparat.characteristic.LensPosition
-import io.fotoapparat.exception.camera.CameraException
+import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.test.testConfiguration
@@ -26,7 +26,7 @@ internal class SwitchCameraRoutineTest {
     @Mock
     lateinit var cameraRenderer: CameraRenderer
 
-    val mainThreadErrorCallback: (CameraException) -> Unit = {}
+    private val mainThreadErrorCallback: CameraErrorCallback = {}
 
     @Test
     fun `Switch camera, not started`() {
@@ -35,7 +35,7 @@ internal class SwitchCameraRoutineTest {
                 .willThrow(IllegalStateException())
                 .willReturn(oldCameraDevice)
         device.cameraRenderer willReturn cameraRenderer
-        val lensPositionSelector: Collection<LensPosition>.() -> LensPosition.Front = { LensPosition.Front }
+        val lensPositionSelector: Iterable<LensPosition>.() -> LensPosition.Front = { LensPosition.Front }
 
         // When
         device.switchCamera(
@@ -53,7 +53,7 @@ internal class SwitchCameraRoutineTest {
     @Test
     fun `Switch camera, same lens position`() {
         // Given
-        val lensPositionSelector: Collection<LensPosition>.() -> LensPosition.Front = { LensPosition.Front }
+        val lensPositionSelector: Iterable<LensPosition>.() -> LensPosition.Front = { LensPosition.Front }
         device.getLensPositionSelector() willReturn lensPositionSelector
         device.getSelectedCamera() willReturn oldCameraDevice
         device.cameraRenderer willReturn cameraRenderer
@@ -80,7 +80,7 @@ internal class SwitchCameraRoutineTest {
     @Test
     fun `Switch camera, different lens position`() {
         // Given
-        val lensPositionSelector: Collection<LensPosition>.() -> LensPosition.Front = { LensPosition.Front }
+        val lensPositionSelector: Iterable<LensPosition>.() -> LensPosition.Front = { LensPosition.Front }
         device.getLensPositionSelector() willReturn { LensPosition.Back }
         device.getSelectedCamera() willReturn oldCameraDevice
         device.cameraRenderer willReturn cameraRenderer

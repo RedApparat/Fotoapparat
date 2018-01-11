@@ -11,16 +11,16 @@ import java.io.IOException
  */
 internal object ExifWriter : ExifOrientationWriter {
 
-
     @Throws(FileSaveException::class)
     override fun writeExifOrientation(file: File, photo: Photo) {
         try {
-            val exifInterface = ExifInterface(file.path)
-            exifInterface.setAttribute(
-                    ExifInterface.TAG_ORIENTATION,
-                    toExifOrientation(photo.rotationDegrees).toString()
-            )
-            exifInterface.saveAttributes()
+            ExifInterface(file.path).apply {
+                setAttribute(
+                        ExifInterface.TAG_ORIENTATION,
+                        toExifOrientation(photo.rotationDegrees).toString()
+                )
+                saveAttributes()
+            }
         } catch (e: IOException) {
             throw FileSaveException(e)
         }
