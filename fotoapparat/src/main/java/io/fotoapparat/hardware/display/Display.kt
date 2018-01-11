@@ -7,7 +7,7 @@ import android.view.WindowManager
 /**
  * A phone's display.
  */
-open internal class Display(context: Context) {
+internal open class Display(context: Context) {
 
     private val display = context.getDisplay()
 

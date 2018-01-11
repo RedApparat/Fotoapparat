@@ -1,17 +1,13 @@
 package io.fotoapparat
 
 import android.content.Context
-import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.configuration.CameraConfiguration
-import io.fotoapparat.exception.camera.CameraException
+import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.log.Logger
 import io.fotoapparat.log.none
-import io.fotoapparat.parameter.*
-import io.fotoapparat.preview.Frame
-import io.fotoapparat.selector.back
-import io.fotoapparat.selector.external
-import io.fotoapparat.selector.firstAvailable
-import io.fotoapparat.selector.front
+import io.fotoapparat.parameter.ScaleType
+import io.fotoapparat.selector.*
+import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.view.CameraRenderer
 import io.fotoapparat.view.CameraView
 
@@ -20,12 +16,12 @@ import io.fotoapparat.view.CameraView
  */
 class FotoapparatBuilder internal constructor(private var context: Context) {
 
-    internal var lensPositionSelector: Iterable<LensPosition>.() -> LensPosition? = firstAvailable(
+    internal var lensPositionSelector: LensPositionSelector = firstAvailable(
             back(),
             front(),
             external()
     )
-    internal var cameraErrorCallback: (CameraException) -> Unit = {}
+    internal var cameraErrorCallback: CameraErrorCallback = {}
     internal var renderer: CameraRenderer? = null
     internal var scaleType: ScaleType = ScaleType.CenterCrop
     internal var logger: Logger = none()
@@ -35,127 +31,109 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
     /**
      * @param selector camera sensor position from list of available positions.
      */
-    fun lensPosition(selector: Iterable<LensPosition>.() -> LensPosition?): FotoapparatBuilder {
-        lensPositionSelector = selector
-        return this
-    }
+    fun lensPosition(selector: LensPositionSelector): FotoapparatBuilder =
+            apply { lensPositionSelector = selector }
 
     /**
      * @param scaleType of preview inside the view.
      */
-    fun previewScaleType(scaleType: ScaleType): FotoapparatBuilder {
-        this.scaleType = scaleType
-        return this
-    }
+    fun previewScaleType(scaleType: ScaleType): FotoapparatBuilder =
+            apply { this.scaleType = scaleType }
 
     /**
      * @param selector selects resolution of the photo (in pixels) from list of available resolutions.
      */
-    fun photoResolution(selector: Iterable<Resolution>.() -> Resolution?): FotoapparatBuilder {
+    fun photoResolution(selector: ResolutionSelector): FotoapparatBuilder = apply {
         configuration = configuration.copy(
                 pictureResolution = selector
         )
-        return this
     }
 
     /**
      * @param selector selects size of preview stream (in pixels) from list of available resolutions.
      */
-    fun previewResolution(selector: Iterable<Resolution>.() -> Resolution?): FotoapparatBuilder {
+    fun previewResolution(selector: ResolutionSelector): FotoapparatBuilder = apply {
         configuration = configuration.copy(
                 previewResolution = selector
         )
-        return this
     }
 
 
     /**
      * @param selector selects focus mode from list of available modes.
      */
-    fun focusMode(selector: Iterable<FocusMode>.() -> FocusMode?): FotoapparatBuilder {
+    fun focusMode(selector: FocusModeSelector): FotoapparatBuilder = apply {
         configuration = configuration.copy(
                 focusMode = selector
         )
-        return this
     }
 
     /**
      * @param selector selects flash mode from list of available modes.
      */
-    fun flash(selector: Iterable<Flash>.() -> Flash?): FotoapparatBuilder {
+    fun flash(selector: FlashSelector): FotoapparatBuilder = apply {
         configuration = configuration.copy(
                 flashMode = selector
         )
-        return this
     }
 
     /**
      * @param selector selects preview FPS range from list of available ranges.
      */
-    fun previewFpsRange(selector: Iterable<FpsRange>.() -> FpsRange?): FotoapparatBuilder {
+    fun previewFpsRange(selector: FpsRangeSelector): FotoapparatBuilder = apply {
         configuration = configuration.copy(
                 previewFpsRange = selector
         )
-        return this
     }
 
     /**
      * @param selector selects ISO value from range of available values.
      */
-    fun sensorSensitivity(selector: Iterable<Int>.() -> Int?): FotoapparatBuilder {
+    fun sensorSensitivity(selector: SensorSensitivitySelector): FotoapparatBuilder = apply {
         configuration = configuration.copy(
                 sensorSensitivity = selector
         )
-        return this
     }
 
     /**
      * @param selector of the Jpeg picture quality.
      */
-    fun jpegQuality(selector: IntRange.() -> Int?): FotoapparatBuilder {
+    fun jpegQuality(selector: QualitySelector): FotoapparatBuilder = apply {
         configuration = configuration.copy(
                 jpegQuality = selector
         )
-        return this
     }
 
     /**
      * @param frameProcessor receives preview frames for processing.
      * @see FrameProcessor
      */
-    fun frameProcessor(frameProcessor: (Frame) -> Unit): FotoapparatBuilder {
+    fun frameProcessor(frameProcessor: FrameProcessor): FotoapparatBuilder = apply {
         configuration = configuration.copy(
                 frameProcessor = frameProcessor
         )
-        return this
     }
 
     /**
      * @param logger logger which will print logs. No logger is set by default.
      * @see io.fotoapparat.log.Loggers
      */
-    fun logger(logger: Logger): FotoapparatBuilder {
-        this.logger = logger
-        return this
-    }
+    fun logger(logger: Logger): FotoapparatBuilder =
+            apply { this.logger = logger }
 
     /**
      * @param callback which will be notified when camera error happens in Fotoapparat.
      * @see CameraErrorCallback
      */
-    fun cameraErrorCallback(callback: (CameraException) -> Unit): FotoapparatBuilder {
-        cameraErrorCallback = callback
-        return this
-    }
+    fun cameraErrorCallback(callback: CameraErrorCallback): FotoapparatBuilder =
+            apply { cameraErrorCallback = callback }
 
     /**
      * @param renderer view which will draw the stream from the camera.
      * @see CameraView
      */
-    fun into(renderer: CameraRenderer): FotoapparatBuilder {
-        this.renderer = renderer
-        return this
-    }
+    fun into(renderer: CameraRenderer): FotoapparatBuilder =
+            apply { this.renderer = renderer }
 
     /**
      * @return set up instance of [Fotoapparat].

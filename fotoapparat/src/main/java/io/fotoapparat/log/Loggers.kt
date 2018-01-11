@@ -19,11 +19,7 @@ fun logcat(): Logger = LogcatLogger()
  *
  * Note: if file is not writable, no errors will be produced.
  */
-fun fileLogger(file: File): Logger {
-    return BackgroundThreadLogger(
-            FileLogger(file)
-    )
-}
+fun fileLogger(file: File): Logger = BackgroundThreadLogger(FileLogger(file))
 
 /**
  * @return logger which prints logs to file located at `context.getExternalFilesDir("logs")`.

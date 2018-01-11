@@ -4,8 +4,8 @@ import android.graphics.Bitmap
 import io.fotoapparat.exception.FileSaveException
 import io.fotoapparat.exif.ExifWriter
 import io.fotoapparat.log.Logger
-import io.fotoapparat.parameter.Resolution
 import io.fotoapparat.result.transformer.BitmapPhotoTransformer
+import io.fotoapparat.result.transformer.ResolutionTransformer
 import io.fotoapparat.result.transformer.SaveToFileTransformer
 import io.fotoapparat.result.transformer.originalResolution
 import java.io.File
@@ -25,9 +25,10 @@ class PhotoResult internal constructor(private val pendingResult: PendingResult<
      * future.
      */
     @JvmOverloads
-    fun toBitmap(sizeTransformer: (Resolution) -> Resolution = originalResolution()): PendingResult<BitmapPhoto> {
-        return pendingResult.transform(BitmapPhotoTransformer(sizeTransformer))
-    }
+    fun toBitmap(
+            sizeTransformer: ResolutionTransformer = originalResolution()
+    ): PendingResult<BitmapPhoto> =
+            pendingResult.transform(BitmapPhotoTransformer(sizeTransformer))
 
     /**
      * Saves result to file.
@@ -35,19 +36,16 @@ class PhotoResult internal constructor(private val pendingResult: PendingResult<
      * @return pending operation which completes when photo is saved to file.
      * @throws FileSaveException If the file cannot be saved.
      */
-    fun saveToFile(file: File): PendingResult<Unit> {
-        return pendingResult.transform(SaveToFileTransformer(
-                file = file,
-                exifOrientationWriter = ExifWriter
-        ))
-    }
+    fun saveToFile(file: File): PendingResult<Unit> =
+            pendingResult.transform(SaveToFileTransformer(
+                    file = file,
+                    exifOrientationWriter = ExifWriter
+            ))
 
     /**
      * @return result as [PendingResult].
      */
-    fun toPendingResult(): PendingResult<Photo> {
-        return pendingResult
-    }
+    fun toPendingResult(): PendingResult<Photo> = pendingResult
 
     companion object {
 

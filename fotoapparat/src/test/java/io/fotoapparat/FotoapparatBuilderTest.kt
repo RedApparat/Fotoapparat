@@ -3,10 +3,12 @@ package io.fotoapparat
 import android.content.Context
 import android.view.WindowManager
 import io.fotoapparat.characteristic.LensPosition
-import io.fotoapparat.exception.camera.CameraException
+import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.log.Logger
-import io.fotoapparat.parameter.*
-import io.fotoapparat.preview.Frame
+import io.fotoapparat.parameter.Resolution
+import io.fotoapparat.parameter.ScaleType
+import io.fotoapparat.selector.*
+import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.view.CameraRenderer
 import junit.framework.Assert.*
 import org.junit.Before
@@ -28,27 +30,27 @@ class FotoapparatBuilderTest {
     @Mock
     lateinit var photoResolutionSelector: Iterable<Resolution>.() -> Resolution
     @Mock
-    lateinit var previewResolutionSelector: Iterable<Resolution>.() -> Resolution?
+    lateinit var previewResolutionSelector: ResolutionSelector
     @Mock
     lateinit var lensPositionSelector: Iterable<LensPosition>.() -> LensPosition
     @Mock
-    lateinit var focusModeSelector: Iterable<FocusMode>.() -> FocusMode?
+    lateinit var focusModeSelector: FocusModeSelector
     @Mock
-    lateinit var flashSelector: Iterable<Flash>.() -> Flash?
+    lateinit var flashSelector: FlashSelector
     @Mock
-    lateinit var previewFpsRangeSelector: Iterable<FpsRange>.() -> FpsRange?
+    lateinit var previewFpsRangeSelector: FpsRangeSelector
     @Mock
-    lateinit var sensorSensitivitySelector: Iterable<Int>.() -> Int?
+    lateinit var sensorSensitivitySelector: SensorSensitivitySelector
     @Mock
-    lateinit var jpegQualitySelector: IntRange.() -> Int?
+    lateinit var jpegQualitySelector: QualitySelector
     @Mock
-    lateinit var frameProcessor: (Frame) -> Unit
+    lateinit var frameProcessor: FrameProcessor
 
     @Mock
     lateinit var logger: Logger
 
     @Mock
-    lateinit var cameraErrorCallback: (CameraException) -> Unit
+    lateinit var cameraErrorCallback: CameraErrorCallback
 
     @Before
     fun setUp() {

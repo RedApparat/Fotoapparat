@@ -20,7 +20,6 @@ internal fun Device.takePhoto(): Photo = runBlocking {
 private fun CameraDevice.startPreviewSafely() {
     try {
         startPreview()
-    } catch (e: CameraException) {
-        //Nothing
+    } catch (ignore: CameraException) {
     }
 }

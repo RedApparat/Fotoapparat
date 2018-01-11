@@ -8,7 +8,6 @@ import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.SeekBar
 import io.fotoapparat.Fotoapparat
-import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.UpdateConfiguration
 import io.fotoapparat.log.logcat
@@ -168,7 +167,7 @@ class MainActivity : AppCompatActivity() {
 private const val LOGGING_TAG = "Fotoapparat Example"
 
 private sealed class Camera(
-        val lensPosition: Collection<LensPosition>.() -> LensPosition?,
+        val lensPosition: LensPositionSelector,
         val configuration: CameraConfiguration
 ) {
 

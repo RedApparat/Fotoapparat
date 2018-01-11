@@ -20,16 +20,12 @@ fun <T> single(preference: T): Iterable<T>.() -> T? = {
 /**
  * @return Selector function which selects highest [Comparable] value.
  */
-fun <T : Comparable<T>> highest(): Iterable<T>.() -> T? = {
-    max()
-}
+fun <T : Comparable<T>> highest(): Iterable<T>.() -> T? = Iterable<T>::max
 
 /**
  * @return Selector function which selects lowest [Comparable] value.
  */
-fun <T : Comparable<T>> lowest(): Iterable<T>.() -> T? = {
-    min()
-}
+fun <T : Comparable<T>> lowest(): Iterable<T>.() -> T? = Iterable<T>::min
 
 /**
  * @param functions functions in order of importance.

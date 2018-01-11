@@ -7,7 +7,7 @@ import android.view.OrientationEventListener
 /**
  * Wrapper around [OrientationEventListener] to notify when the device's rotation has changed.
  */
-open internal class RotationListener(
+internal open class RotationListener(
         context: Context
 ) : OrientationEventListener(context) {
 
