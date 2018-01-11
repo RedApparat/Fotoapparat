@@ -23,7 +23,7 @@ internal class SaveToFileTransformer(
         try {
             saveImage(input, outputStream)
 
-            exifOrientationWriter.writeExifOrientation(file, input)
+            exifOrientationWriter.writeExifOrientation(file, input.rotationDegrees)
         } catch (e: IOException) {
             throw FileSaveException(e)
         }

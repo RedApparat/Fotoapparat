@@ -51,7 +51,7 @@ internal class SaveToFileTransformerTest {
 
         verify(exifOrientationWriter).writeExifOrientation(
                 file,
-                photo
+                photo.rotationDegrees
         )
     }
 

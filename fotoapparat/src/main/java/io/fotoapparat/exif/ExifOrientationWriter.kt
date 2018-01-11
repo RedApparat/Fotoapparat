@@ -1,6 +1,5 @@
 package io.fotoapparat.exif
 
-import io.fotoapparat.result.Photo
 import java.io.File
 
 /**
@@ -15,5 +14,5 @@ internal interface ExifOrientationWriter {
      * @param photo    Photo stored in the file.
      * @throws FileSaveException If writing has failed.
      */
-    fun writeExifOrientation(file: File, photo: Photo)
+    fun writeExifOrientation(file: File, rotationDegrees: Int)
 }
