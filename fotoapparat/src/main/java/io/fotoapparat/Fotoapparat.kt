@@ -187,11 +187,9 @@ class Fotoapparat
      *
      * @see Fotoapparat.focus
      */
-    fun autoFocus(): Fotoapparat {
+    fun autoFocus(): Fotoapparat = apply {
         logger.recordMethod()
         focus()
-
-        return this
     }
 
     /**

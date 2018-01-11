@@ -38,67 +38,58 @@ data class CameraConfiguration(
 
         private var cameraConfiguration: CameraConfiguration = default()
 
-        fun flash(selector: FlashSelector): Builder {
+        fun flash(selector: FlashSelector): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
                     flashMode = selector
             )
-            return this
         }
 
-        fun focusMode(selector: FocusModeSelector): Builder {
+        fun focusMode(selector: FocusModeSelector): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
                     focusMode = selector
             )
-            return this
         }
 
-        fun previewFpsRange(selector: FpsRangeSelector): Builder {
+        fun previewFpsRange(selector: FpsRangeSelector): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
                     previewFpsRange = selector
             )
-            return this
         }
 
-        fun sensorSensitivity(selector: SensorSensitivitySelector): Builder {
+        fun sensorSensitivity(selector: SensorSensitivitySelector): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
                     sensorSensitivity = selector
             )
-            return this
         }
 
-        fun antiBandingMode(selector: AntiBandingModeSelector): Builder {
+        fun antiBandingMode(selector: AntiBandingModeSelector): Builder = apply {
             cameraConfiguration.copy(
                     antiBandingMode = selector
             )
-            return this
         }
 
-        fun jpegQuality(selector: QualitySelector): Builder {
+        fun jpegQuality(selector: QualitySelector): Builder = apply {
             cameraConfiguration.copy(
                     jpegQuality = selector
             )
-            return this
         }
 
-        fun previewResolution(selector: ResolutionSelector): Builder {
+        fun previewResolution(selector: ResolutionSelector): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
                     previewResolution = selector
             )
-            return this
         }
 
-        fun photoResolution(selector: ResolutionSelector): Builder {
+        fun photoResolution(selector: ResolutionSelector): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
                     pictureResolution = selector
             )
-            return this
         }
 
-        fun frameProcessor(frameProcessor: FrameProcessorJava): Builder {
+        fun frameProcessor(frameProcessor: FrameProcessorJava): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
                     frameProcessor = frameProcessor::process
             )
-            return this
         }
 
         /**
