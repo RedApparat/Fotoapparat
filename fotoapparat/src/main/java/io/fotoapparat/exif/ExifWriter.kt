@@ -2,7 +2,6 @@ package io.fotoapparat.exif
 
 import android.media.ExifInterface
 import io.fotoapparat.exception.FileSaveException
-import io.fotoapparat.result.Photo
 import java.io.File
 import java.io.IOException
 
@@ -12,12 +11,12 @@ import java.io.IOException
 internal object ExifWriter : ExifOrientationWriter {
 
     @Throws(FileSaveException::class)
-    override fun writeExifOrientation(file: File, photo: Photo) {
+    override fun writeExifOrientation(file: File, rotationDegrees: Int) {
         try {
             ExifInterface(file.path).apply {
                 setAttribute(
                         ExifInterface.TAG_ORIENTATION,
-                        toExifOrientation(photo.rotationDegrees).toString()
+                        toExifOrientation(rotationDegrees).toString()
                 )
                 saveAttributes()
             }
