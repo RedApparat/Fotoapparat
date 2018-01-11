@@ -3,6 +3,7 @@
 package io.fotoapparat.characteristic
 
 import android.hardware.Camera
+import io.fotoapparat.hardware.orientation.toOrientation
 
 /**
  * Returns the [Characteristics] for the given `cameraId`.
@@ -14,7 +15,7 @@ internal fun getCharacteristics(cameraId: Int): Characteristics {
     return Characteristics(
             cameraId = cameraId,
             lensPosition = lensPosition,
-            orientation = info.orientation,
+            cameraOrientation = info.orientation.toOrientation(),
             isMirrored = lensPosition == LensPosition.Front
     )
 }

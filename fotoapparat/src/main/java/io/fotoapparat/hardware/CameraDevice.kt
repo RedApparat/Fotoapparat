@@ -14,8 +14,8 @@ import io.fotoapparat.coroutines.AwaitBroadcastChannel
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.metering.FocalRequest
 import io.fotoapparat.hardware.metering.convert.toFocusAreas
-import io.fotoapparat.hardware.orientation.computeDisplayOrientation
-import io.fotoapparat.hardware.orientation.computeImageOrientation
+import io.fotoapparat.hardware.orientation.*
+import io.fotoapparat.hardware.orientation.Orientation.Vertical.Portrait
 import io.fotoapparat.log.Logger
 import io.fotoapparat.parameter.FocusMode
 import io.fotoapparat.parameter.Resolution
@@ -26,6 +26,7 @@ import io.fotoapparat.preview.Frame
 import io.fotoapparat.preview.PreviewStream
 import io.fotoapparat.result.FocusResult
 import io.fotoapparat.result.Photo
+import io.fotoapparat.util.lineSeparator
 import io.fotoapparat.view.Preview
 import kotlinx.coroutines.experimental.CompletableDeferred
 import java.io.IOException
@@ -51,8 +52,9 @@ internal open class CameraDevice(
     private lateinit var camera: Camera
 
     private var cachedZoomParameters: Camera.Parameters? = null
-    private var displayRotation = 0
-    var imageRotation = 0
+    private var displayOrientation: Orientation = Portrait
+    private var imageOrientation: Orientation = Portrait
+    private var previewOrientation: Orientation = Portrait
 
     /**
      * Opens a connection to a camera.
@@ -136,7 +138,7 @@ internal open class CameraDevice(
     open fun takePhoto(): Photo {
         logger.recordMethod()
 
-        return camera.takePhoto(imageRotation)
+        return camera.takePhoto(imageOrientation.degrees)
     }
 
     /**
@@ -182,23 +184,34 @@ internal open class CameraDevice(
     /**
      * Sets the current orientation of the display.
      */
-    open fun setDisplayOrientation(degrees: Int) {
+    open fun setDisplayOrientation(orientationState: OrientationState) {
         logger.recordMethod()
 
-        imageRotation = computeImageOrientation(
-                degrees = degrees,
-                characteristics = characteristics
+        imageOrientation = computeImageOrientation(
+                deviceOrientation = orientationState.deviceOrientation,
+                cameraOrientation = characteristics.cameraOrientation,
+                cameraIsMirrored = characteristics.isMirrored
         )
 
-        displayRotation = computeDisplayOrientation(
-                degrees = degrees,
-                characteristics = characteristics
+        displayOrientation = computeDisplayOrientation(
+                screenOrientation = orientationState.screenOrientation,
+                cameraOrientation = characteristics.cameraOrientation,
+                cameraIsMirrored = characteristics.isMirrored
         )
 
-        logger.log("Image Rotation is: $imageRotation. Display rotation is: $displayRotation")
+        previewOrientation = computePreviewOrientation(
+                screenOrientation = orientationState.screenOrientation,
+                cameraOrientation = characteristics.cameraOrientation,
+                cameraIsMirrored = characteristics.isMirrored
+        )
 
-        previewStream.frameOrientation = imageRotation
-        camera.setDisplayOrientation(displayRotation)
+        logger.log("Image orientation is: $imageOrientation. " + lineSeparator +
+                "Display orientation is: $displayOrientation. " + lineSeparator +
+                "Preview orientation is: $previewOrientation."
+        )
+
+        previewStream.frameOrientation = previewOrientation
+        camera.setDisplayOrientation(displayOrientation.degrees)
     }
 
     /**
@@ -266,7 +279,7 @@ internal open class CameraDevice(
     open fun getPreviewResolution(): Resolution {
         logger.recordMethod()
 
-        val previewResolution = camera.getPreviewResolution(imageRotation)
+        val previewResolution = camera.getPreviewResolution(previewOrientation)
 
         logger.log("Preview resolution is: $previewResolution")
 
@@ -315,7 +328,7 @@ internal open class CameraDevice(
 
     private suspend fun Camera.updateFocusingAreas(focalRequest: FocalRequest) {
         val focusingAreas = focalRequest.toFocusAreas(
-                displayOrientationDegrees = displayRotation,
+                displayOrientationDegrees = displayOrientation.degrees,
                 cameraIsMirrored = characteristics.isMirrored
         )
 
@@ -371,24 +384,6 @@ private fun Camera.takePhoto(imageRotation: Int): Photo {
     return photoReference.get()
 }
 
-private fun computeImageOrientation(
-        degrees: Int,
-        characteristics: Characteristics
-) = computeImageOrientation(
-        screenRotationDegrees = degrees,
-        cameraRotationDegrees = characteristics.orientation,
-        cameraIsMirrored = characteristics.isMirrored
-)
-
-private fun computeDisplayOrientation(
-        degrees: Int,
-        characteristics: Characteristics
-) = computeDisplayOrientation(
-        screenRotationDegrees = degrees,
-        cameraRotationDegrees = characteristics.orientation,
-        cameraIsMirrored = characteristics.isMirrored
-)
-
 private fun Camera.updateParameters(newParameters: CameraParameters) {
     parameters = parameters.applyNewParameters(newParameters)
 }
@@ -411,31 +406,17 @@ private fun Camera.setDisplaySurface(
             .surface
 }
 
-private fun Camera.getPreviewResolution(imageRotation: Int): Resolution {
-    val previewSize = parameters.previewSize
-
-    val size = PreviewSize(
-            previewSize.width,
-            previewSize.height
-    )
-
-    return size.run {
-        when (imageRotation) {
-            0, 180 -> this
-            else -> flipDimensions()
-        }
-    }
-}
-
-private fun PreviewStream.updateProcessorSafely(frameProcessor: ((Frame) -> Unit)?) {
-    clearProcessors()
-    when (frameProcessor) {
-        null -> stop()
-        else -> {
-            addProcessor(frameProcessor)
-            start()
-        }
-    }
+private fun Camera.getPreviewResolution(previewOrientation: Orientation): Resolution {
+    return parameters.previewSize
+            .run {
+                PreviewSize(width, height)
+            }
+            .run {
+                when (previewOrientation) {
+                    is Orientation.Vertical -> this
+                    is Orientation.Horizontal -> flipDimensions()
+                }
+            }
 }
 
 private fun Capabilities.canSetFocusingAreas(): Boolean {

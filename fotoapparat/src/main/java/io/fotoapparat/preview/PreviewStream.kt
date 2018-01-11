@@ -5,6 +5,7 @@ package io.fotoapparat.preview
 import android.graphics.ImageFormat
 import android.hardware.Camera
 import io.fotoapparat.hardware.frameProcessingExecutor
+import io.fotoapparat.hardware.orientation.Orientation
 import io.fotoapparat.parameter.Resolution
 import java.util.*
 
@@ -18,14 +19,14 @@ internal class PreviewStream(private val camera: Camera) {
     private var previewResolution: Resolution? = null
 
     /**
-     * CW rotation of frames in degrees.
+     * CW orientation.
      */
-    var frameOrientation = 0
+    var frameOrientation: Orientation = Orientation.Vertical.Portrait
 
     /**
      * Clears all processors.
      */
-    fun clearProcessors() {
+    private fun clearProcessors() {
         synchronized(frameProcessors) {
             frameProcessors.clear()
         }
@@ -34,7 +35,7 @@ internal class PreviewStream(private val camera: Camera) {
     /**
      * Registers new processor. If processor was already added before, does nothing.
      */
-    fun addProcessor(processor: (Frame) -> Unit) {
+    private fun addProcessor(processor: (Frame) -> Unit) {
         synchronized(frameProcessors) {
             frameProcessors.add(processor)
         }
@@ -43,7 +44,7 @@ internal class PreviewStream(private val camera: Camera) {
     /**
      * Starts preview stream. After preview is started frame processors will start receiving frames.
      */
-    fun start() {
+    private fun start() {
         camera.addFrameToBuffer()
 
         camera.setPreviewCallbackWithBuffer { data, _ -> dispatchFrameOnBackgroundThread(data) }
@@ -52,8 +53,22 @@ internal class PreviewStream(private val camera: Camera) {
     /**
      * Stops preview stream.
      */
-    fun stop() {
+    private fun stop() {
         camera.setPreviewCallbackWithBuffer(null)
+    }
+
+    /**
+     * Updates the frame processor safely.
+     */
+    fun updateProcessorSafely(frameProcessor: ((Frame) -> Unit)?) {
+        clearProcessors()
+        when (frameProcessor) {
+            null -> stop()
+            else -> {
+                addProcessor(frameProcessor)
+                start()
+            }
+        }
     }
 
     private fun Camera.addFrameToBuffer() {
@@ -85,7 +100,7 @@ internal class PreviewStream(private val camera: Camera) {
         val frame = Frame(
                 size = previewResolution,
                 image = image,
-                rotation = frameOrientation
+                rotation = frameOrientation.degrees
         )
 
         frameProcessors.forEach {

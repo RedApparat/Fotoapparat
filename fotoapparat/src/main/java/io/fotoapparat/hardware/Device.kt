@@ -9,6 +9,7 @@ import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.Configuration
 import io.fotoapparat.exception.camera.UnsupportedLensException
 import io.fotoapparat.hardware.display.Display
+import io.fotoapparat.hardware.orientation.Orientation
 import io.fotoapparat.log.Logger
 import io.fotoapparat.parameter.ScaleType
 import io.fotoapparat.parameter.camera.CameraParameters
@@ -109,10 +110,10 @@ internal open class Device(
     open fun hasSelectedCamera() = selectedCameraDevice.isCompleted
 
     /**
-     * @return rotation of the screen in degrees.
+     * @return Orientation of the screen.
      */
-    open fun getScreenRotation(): Int {
-        return display.getRotation()
+    open fun getScreenOrientation(): Orientation {
+        return display.getOrientation()
     }
 
     /**
