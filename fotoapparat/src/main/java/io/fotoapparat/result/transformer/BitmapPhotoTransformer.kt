@@ -11,7 +11,7 @@ import io.fotoapparat.result.Photo
  * Creates [BitmapPhoto] out of [Photo].
  */
 internal class BitmapPhotoTransformer(
-        private val sizeTransformer: (Resolution) -> Resolution
+        private val sizeTransformer: ResolutionTransformer
 ) : (Photo) -> BitmapPhoto {
 
     override fun invoke(input: Photo): BitmapPhoto {
@@ -23,9 +23,7 @@ internal class BitmapPhotoTransformer(
                 desiredResolution = desiredResolution
         )
 
-        val decodedBitmap = input.decodeBitmap(scaleFactor)
-
-        decodedBitmap ?: throw UnableToDecodeBitmapException()
+        val decodedBitmap = input.decodeBitmap(scaleFactor) ?: throw UnableToDecodeBitmapException()
 
         val bitmap = if (decodedBitmap.width == desiredResolution.width && decodedBitmap.height == desiredResolution.height) {
             decodedBitmap
@@ -77,9 +75,7 @@ private fun Photo.readResolution(): Resolution {
 private fun computeScaleFactor(
         originalResolution: Resolution,
         desiredResolution: Resolution
-): Float {
-    return Math.min(
-            originalResolution.width / desiredResolution.width.toFloat(),
-            originalResolution.height / desiredResolution.height.toFloat()
-    )
-}
+): Float = Math.min(
+        originalResolution.width / desiredResolution.width.toFloat(),
+        originalResolution.height / desiredResolution.height.toFloat()
+)

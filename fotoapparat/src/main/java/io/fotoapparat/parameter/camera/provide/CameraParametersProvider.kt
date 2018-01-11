@@ -8,9 +8,7 @@ import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.parameter.Parameter
 import io.fotoapparat.parameter.Resolution
 import io.fotoapparat.parameter.camera.CameraParameters
-import io.fotoapparat.selector.aspectRatio
-import io.fotoapparat.selector.filtered
-import io.fotoapparat.selector.firstAvailable
+import io.fotoapparat.selector.*
 
 
 /**
@@ -46,7 +44,7 @@ internal fun getCameraParameters(
 
 private fun validPreviewSizeSelector(
         resolution: Resolution,
-        original: Iterable<Resolution>.() -> Resolution?
+        original: ResolutionSelector
 ) = firstAvailable(
         filtered(
                 selector = aspectRatio(
@@ -60,30 +58,28 @@ private fun validPreviewSizeSelector(
         original
 )
 
-private infix fun <T> (Collection<T>.() -> T?)?.selectOptionalFrom(supportedParameters: Set<T>): T? {
-    return this?.run { this(supportedParameters) }
-}
+private infix fun <T> (Collection<T>.() -> T?)?.selectOptionalFrom(supportedParameters: Set<T>): T? =
+        this?.run { this(supportedParameters) }
 
-private inline infix fun <reified T : Parameter> (Collection<T>.() -> T?).selectFrom(supportedParameters: Set<T>): T {
-    return this(supportedParameters)
-            .ensureSelected(supportedParameters)
-            .ensureInCollection(supportedParameters)
-}
+private inline infix fun <reified T : Parameter> (Collection<T>.() -> T?).selectFrom(
+        supportedParameters: Set<T>
+): T = this(supportedParameters)
+        .ensureSelected(supportedParameters)
+        .ensureInCollection(supportedParameters)
 
 
-private infix fun (IntRange.() -> Int?).selectFrom(supportedParameters: IntRange): Int {
-    return this(supportedParameters)
-            .ensureSelected(
-                    supportedParameters = supportedParameters,
-                    configurationName = "Jpeg quality"
-            )
-            .ensureInCollection(supportedParameters)
-}
+private infix fun QualitySelector.selectFrom(supportedParameters: IntRange): Int =
+        this(supportedParameters)
+                .ensureSelected(
+                        supportedParameters = supportedParameters,
+                        configurationName = "Jpeg quality"
+                )
+                .ensureInCollection(supportedParameters)
 
-private inline fun <reified Param : Parameter> Param.ensureInCollection(supportedParameters: Set<Param>): Param {
-    return if (supportedParameters.contains(this)) {
-        this
-    } else {
+private inline fun <reified Param : Parameter> Param.ensureInCollection(
+        supportedParameters: Set<Param>
+): Param = apply {
+    if (this !in supportedParameters) {
         throw InvalidConfigurationException(
                 value = this,
                 klass = Param::class.java,
@@ -92,10 +88,10 @@ private inline fun <reified Param : Parameter> Param.ensureInCollection(supporte
     }
 }
 
-private inline fun <reified Param : Comparable<Param>> Param.ensureInCollection(supportedRange: ClosedRange<Param>): Param {
-    return if (supportedRange.contains(this)) {
-        this
-    } else {
+private inline fun <reified Param : Comparable<Param>> Param.ensureInCollection(
+        supportedRange: ClosedRange<Param>
+): Param = apply {
+    if (this !in supportedRange) {
         throw InvalidConfigurationException(
                 value = this,
                 klass = Param::class.java,
@@ -105,19 +101,17 @@ private inline fun <reified Param : Comparable<Param>> Param.ensureInCollection(
 }
 
 
-private inline fun <reified Param : Parameter> Param?.ensureSelected(supportedParameters: Collection<Parameter>): Param {
-    return this ?: throw UnsupportedConfigurationException(
-            klass = Param::class.java,
-            supportedParameters = supportedParameters
-    )
-}
+private inline fun <reified Param : Parameter> Param?.ensureSelected(
+        supportedParameters: Collection<Parameter>
+): Param = this ?: throw UnsupportedConfigurationException(
+        klass = Param::class.java,
+        supportedParameters = supportedParameters
+)
 
 private inline fun <reified Param : Comparable<Param>> Param?.ensureSelected(
         supportedParameters: ClosedRange<Param>,
         configurationName: String
-): Param {
-    return this ?: throw UnsupportedConfigurationException(
-            configurationName = configurationName,
-            supportedRange = supportedParameters
-    )
-}
+): Param = this ?: throw UnsupportedConfigurationException(
+        configurationName = configurationName,
+        supportedRange = supportedParameters
+)

@@ -7,6 +7,7 @@ import android.hardware.Camera
 import io.fotoapparat.hardware.frameProcessingExecutor
 import io.fotoapparat.hardware.orientation.Orientation
 import io.fotoapparat.parameter.Resolution
+import io.fotoapparat.util.FrameProcessor
 import java.util.*
 
 /**
@@ -14,7 +15,7 @@ import java.util.*
  */
 internal class PreviewStream(private val camera: Camera) {
 
-    private val frameProcessors = LinkedHashSet<(Frame) -> Unit>()
+    private val frameProcessors = LinkedHashSet<FrameProcessor>()
 
     private var previewResolution: Resolution? = null
 
@@ -35,7 +36,7 @@ internal class PreviewStream(private val camera: Camera) {
     /**
      * Registers new processor. If processor was already added before, does nothing.
      */
-    private fun addProcessor(processor: (Frame) -> Unit) {
+    private fun addProcessor(processor: FrameProcessor) {
         synchronized(frameProcessors) {
             frameProcessors.add(processor)
         }
@@ -60,14 +61,13 @@ internal class PreviewStream(private val camera: Camera) {
     /**
      * Updates the frame processor safely.
      */
-    fun updateProcessorSafely(frameProcessor: ((Frame) -> Unit)?) {
+    fun updateProcessorSafely(frameProcessor: FrameProcessor?) {
         clearProcessors()
-        when (frameProcessor) {
-            null -> stop()
-            else -> {
-                addProcessor(frameProcessor)
-                start()
-            }
+        if (frameProcessor == null) {
+            stop()
+        } else {
+            addProcessor(frameProcessor)
+            start()
         }
     }
 
@@ -104,15 +104,15 @@ internal class PreviewStream(private val camera: Camera) {
         )
 
         frameProcessors.forEach {
-            it(frame)
+            it.invoke(frame)
         }
 
         returnFrameToBuffer(frame)
     }
 
-    private fun ensurePreviewSizeAvailable(): Resolution {
-        return previewResolution ?: throw IllegalStateException("previewSize is null. Frame was not added?")
-    }
+    private fun ensurePreviewSizeAvailable(): Resolution =
+            previewResolution
+                    ?: throw IllegalStateException("previewSize is null. Frame was not added?")
 
     private fun returnFrameToBuffer(frame: Frame) {
         camera.addCallbackBuffer(
@@ -122,9 +122,8 @@ internal class PreviewStream(private val camera: Camera) {
 
 }
 
-private fun Camera.Size.bytesPerFrame(): Int {
-    return width * height * ImageFormat.getBitsPerPixel(ImageFormat.NV21) / 8
-}
+private fun Camera.Size.bytesPerFrame(): Int =
+        width * height * ImageFormat.getBitsPerPixel(ImageFormat.NV21) / 8
 
 private fun Camera.Parameters.ensureNv21Format() {
     if (previewFormat != ImageFormat.NV21) {

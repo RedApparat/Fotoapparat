@@ -12,7 +12,7 @@ import io.fotoapparat.hardware.orientation.Orientation.Vertical.ReversePortrait
 /**
  * A phone's display.
  */
-open internal class Display(context: Context) {
+internal open class Display(context: Context) {
 
     private val display = context.getDisplay()
 

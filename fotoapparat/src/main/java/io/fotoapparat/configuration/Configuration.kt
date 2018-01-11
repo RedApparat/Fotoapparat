@@ -1,16 +1,16 @@
 package io.fotoapparat.configuration
 
-import io.fotoapparat.parameter.*
-import io.fotoapparat.preview.Frame
+import io.fotoapparat.selector.*
+import io.fotoapparat.util.FrameProcessor
 
 interface Configuration {
-    val flashMode: (Iterable<Flash>.() -> Flash?)?
-    val focusMode: (Iterable<FocusMode>.() -> FocusMode?)?
-    val jpegQuality: ((IntRange) -> Int?)?
-    val frameProcessor: ((Frame) -> Unit)?
-    val previewFpsRange: (Iterable<FpsRange>.() -> FpsRange?)?
-    val antiBandingMode: (Iterable<AntiBandingMode>.() -> AntiBandingMode?)?
-    val sensorSensitivity: (Iterable<Int>.() -> Int?)?
-    val previewResolution: (Iterable<Resolution>.() -> Resolution?)?
-    val pictureResolution: (Iterable<Resolution>.() -> Resolution?)?
+    val flashMode: FlashSelector?
+    val focusMode: FocusModeSelector?
+    val jpegQuality: QualitySelector?
+    val frameProcessor: FrameProcessor?
+    val previewFpsRange: FpsRangeSelector?
+    val antiBandingMode: AntiBandingModeSelector?
+    val sensorSensitivity: SensorSensitivitySelector?
+    val previewResolution: ResolutionSelector?
+    val pictureResolution: ResolutionSelector?
 }

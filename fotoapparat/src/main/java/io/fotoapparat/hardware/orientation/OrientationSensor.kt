@@ -8,7 +8,7 @@ import io.fotoapparat.hardware.orientation.Orientation.Vertical.Portrait
 /**
  * Monitors orientation of the device.
  */
-open internal class OrientationSensor(
+internal open class OrientationSensor(
         private val rotationListener: RotationListener,
         private val device: Device
 ) {

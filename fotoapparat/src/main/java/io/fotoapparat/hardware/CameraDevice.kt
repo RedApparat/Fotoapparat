@@ -27,6 +27,7 @@ import io.fotoapparat.preview.PreviewStream
 import io.fotoapparat.result.FocusResult
 import io.fotoapparat.result.Photo
 import io.fotoapparat.util.lineSeparator
+import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.view.Preview
 import kotlinx.coroutines.experimental.CompletableDeferred
 import java.io.IOException
@@ -175,7 +176,7 @@ internal open class CameraDevice(
     /**
      * Updates the frame processor.
      */
-    open fun updateFrameProcessor(frameProcessor: ((Frame) -> Unit)?) {
+    open fun updateFrameProcessor(frameProcessor: FrameProcessor?) {
         logger.recordMethod()
 
         previewStream.updateProcessorSafely(frameProcessor)
@@ -393,16 +394,11 @@ private fun Camera.setDisplaySurface(
         preview: Preview
 ): Surface = when (preview) {
     is Preview.Texture -> preview.surfaceTexture
-            .also {
-                setPreviewTexture(it)
-            }
-            .let {
-                Surface(it)
-            }
+            .also(this::setPreviewTexture)
+            .let(::Surface)
+
     is Preview.Surface -> preview.surfaceHolder
-            .also {
-                setPreviewDisplay(it)
-            }
+            .also(this::setPreviewDisplay)
             .surface
 }
 
@@ -419,6 +415,5 @@ private fun Camera.getPreviewResolution(previewOrientation: Orientation): Resolu
             }
 }
 
-private fun Capabilities.canSetFocusingAreas(): Boolean {
-    return maxMeteringAreas > 0 || maxFocusAreas > 0
-}
+private fun Capabilities.canSetFocusingAreas(): Boolean =
+        maxMeteringAreas > 0 || maxFocusAreas > 0

@@ -9,9 +9,7 @@ import java.io.IOException
  */
 class FileLogger(private val file: File) : Logger {
 
-    private val writer: FileWriter by lazy {
-        FileWriter(file)
-    }
+    private val writer: FileWriter by lazy { FileWriter(file) }
 
     override fun log(message: String) {
         try {

@@ -3,9 +3,9 @@ package io.fotoapparat
 import android.content.Context
 import android.support.annotation.FloatRange
 import io.fotoapparat.capability.Capabilities
-import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.Configuration
+import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.error.onMainThread
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.Device
@@ -27,10 +27,7 @@ import io.fotoapparat.routine.focus.focus
 import io.fotoapparat.routine.parameter.getCurrentParameters
 import io.fotoapparat.routine.photo.takePhoto
 import io.fotoapparat.routine.zoom.updateZoomLevel
-import io.fotoapparat.selector.back
-import io.fotoapparat.selector.external
-import io.fotoapparat.selector.firstAvailable
-import io.fotoapparat.selector.front
+import io.fotoapparat.selector.*
 import io.fotoapparat.view.CameraRenderer
 import io.fotoapparat.view.FocalPointSelector
 import java.util.concurrent.FutureTask
@@ -43,14 +40,14 @@ class Fotoapparat
         context: Context,
         view: CameraRenderer,
         focusView: FocalPointSelector? = null,
-        lensPosition: Collection<LensPosition>.() -> LensPosition? = firstAvailable(
+        lensPosition: LensPositionSelector = firstAvailable(
                 back(),
                 front(),
                 external()
         ),
         scaleType: ScaleType = ScaleType.CenterCrop,
         cameraConfiguration: CameraConfiguration = CameraConfiguration.default(),
-        cameraErrorCallback: ((CameraException) -> Unit) = {},
+        cameraErrorCallback: CameraErrorCallback = {},
         private val logger: Logger = none()
 ) {
 
@@ -190,11 +187,9 @@ class Fotoapparat
      *
      * @see Fotoapparat.focus
      */
-    fun autoFocus(): Fotoapparat {
+    fun autoFocus(): Fotoapparat = apply {
         logger.recordMethod()
         focus()
-
-        return this
     }
 
     /**
@@ -220,7 +215,7 @@ class Fotoapparat
      * stopped automatically and new will start.
      */
     fun switchTo(
-            lensPosition: Collection<LensPosition>.() -> LensPosition?,
+            lensPosition: LensPositionSelector,
             cameraConfiguration: CameraConfiguration
     ) {
         logger.recordMethod()
@@ -237,14 +232,12 @@ class Fotoapparat
      * @return `true` if selected lens position is available. `false` if it is not available.
      */
     fun isAvailable(
-            selector: (Collection<LensPosition>) -> LensPosition?
-    ): Boolean {
-        return device.canSelectCamera(selector)
-    }
+            selector: LensPositionSelector
+    ): Boolean = device.canSelectCamera(selector)
 
     companion object {
 
         @JvmStatic
-        fun with(context: Context) = FotoapparatBuilder(context)
+        fun with(context: Context): FotoapparatBuilder = FotoapparatBuilder(context)
     }
 }

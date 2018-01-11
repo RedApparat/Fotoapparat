@@ -1,5 +1,6 @@
 package io.fotoapparat.routine.camera
 
+import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.hardware.executeTask
@@ -14,7 +15,7 @@ import io.fotoapparat.routine.orientation.startOrientationMonitoring
  */
 internal fun Device.bootStart(
         orientationSensor: OrientationSensor,
-        mainThreadErrorCallback: (CameraException) -> Unit
+        mainThreadErrorCallback: CameraErrorCallback
 ) {
     if (hasSelectedCamera()) {
         throw IllegalStateException("Camera has already started!")
@@ -62,9 +63,9 @@ internal fun Device.start() {
         )
     }
 
-    focusPointSelector?.setFocalPointListener {
+    focusPointSelector?.setFocalPointListener { focalRequest ->
         executeTask(Runnable {
-            focusOnPoint(it)
+            focusOnPoint(focalRequest)
         })
     }
 

@@ -3,7 +3,6 @@
 package io.fotoapparat.hardware
 
 import android.hardware.Camera
-import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.characteristic.getCharacteristics
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.Configuration
@@ -15,6 +14,8 @@ import io.fotoapparat.parameter.ScaleType
 import io.fotoapparat.parameter.camera.CameraParameters
 import io.fotoapparat.parameter.camera.provide.getCameraParameters
 import io.fotoapparat.preview.Frame
+import io.fotoapparat.selector.LensPositionSelector
+import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.view.CameraRenderer
 import io.fotoapparat.view.FocalPointSelector
 import kotlinx.coroutines.experimental.CompletableDeferred
@@ -30,7 +31,7 @@ internal open class Device(
         open val cameraRenderer: CameraRenderer,
         val focusPointSelector: FocalPointSelector?,
         numberOfCameras: Int = Camera.getNumberOfCameras(),
-        initialConfiguration: CameraConfiguration, initialLensPositionSelector: Collection<LensPosition>.() -> LensPosition?
+        initialConfiguration: CameraConfiguration, initialLensPositionSelector: LensPositionSelector
 ) {
 
     private val cameras = (0 until numberOfCameras).map { cameraId ->
@@ -40,7 +41,7 @@ internal open class Device(
         )
     }
 
-    private var lensPositionSelector: Collection<LensPosition>.() -> LensPosition? = initialLensPositionSelector
+    private var lensPositionSelector: LensPositionSelector = initialLensPositionSelector
     private var selectedCameraDevice = CompletableDeferred<CameraDevice>()
     private var savedConfiguration = CameraConfiguration.default()
 
@@ -52,7 +53,7 @@ internal open class Device(
     /**
      * Selects a camera.
      */
-    open fun canSelectCamera(lensPositionSelector: (Collection<LensPosition>) -> LensPosition?): Boolean {
+    open fun canSelectCamera(lensPositionSelector: LensPositionSelector): Boolean {
         val selectedCameraDevice = selectCamera(
                 availableCameras = cameras,
                 lensPositionSelector = lensPositionSelector
@@ -70,9 +71,7 @@ internal open class Device(
                 availableCameras = cameras,
                 lensPositionSelector = lensPositionSelector
         )
-                ?.let {
-                    selectedCameraDevice.complete(it)
-                }
+                ?.let(selectedCameraDevice::complete)
                 ?: selectedCameraDevice.completeExceptionally(UnsupportedLensException())
     }
 
@@ -86,9 +85,7 @@ internal open class Device(
     /**
      * Waits and returns the selected camera.
      */
-    open suspend fun awaitSelectedCamera(): CameraDevice {
-        return selectedCameraDevice.await()
-    }
+    open suspend fun awaitSelectedCamera(): CameraDevice = selectedCameraDevice.await()
 
     /**
      * Returns the selected camera.
@@ -96,12 +93,10 @@ internal open class Device(
      * @throws IllegalStateException If no camera has been yet selected.
      * @throws UnsupportedLensException If no camera could get selected.
      */
-    open fun getSelectedCamera(): CameraDevice {
-        return try {
-            selectedCameraDevice.getCompleted()
-        } catch (e: IllegalStateException) {
-            throw IllegalStateException("Camera has not started!")
-        }
+    open fun getSelectedCamera(): CameraDevice = try {
+        selectedCameraDevice.getCompleted()
+    } catch (e: IllegalStateException) {
+        throw IllegalStateException("Camera has not started!")
     }
 
     /**
@@ -119,7 +114,7 @@ internal open class Device(
     /**
      * Updates the desired from the user camera lens position.
      */
-    open fun updateLensPositionSelector(newLensPosition: Collection<LensPosition>.() -> LensPosition?) {
+    open fun updateLensPositionSelector(newLensPosition: LensPositionSelector) {
         logger.recordMethod()
 
         lensPositionSelector = newLensPosition
@@ -140,34 +135,26 @@ internal open class Device(
     /**
      * @return The desired from the user selectors.
      */
-    open fun getConfiguration(): CameraConfiguration {
-        return savedConfiguration
-    }
+    open fun getConfiguration(): CameraConfiguration = savedConfiguration
 
     /**
      * @return The selected [CameraParameters] for the given [CameraDevice].
      */
-    open suspend fun getCameraParameters(cameraDevice: CameraDevice): CameraParameters {
-        return getCameraParameters(
-                cameraConfiguration = savedConfiguration,
-                capabilities = cameraDevice.getCapabilities()
-        )
-    }
+    open suspend fun getCameraParameters(cameraDevice: CameraDevice): CameraParameters =
+            getCameraParameters(
+                    cameraConfiguration = savedConfiguration,
+                    capabilities = cameraDevice.getCapabilities()
+            )
 
     /**
      * @return The frame processor.
      */
-    open fun getFrameProcessor(): (Frame) -> Unit {
-        return savedConfiguration.frameProcessor
-    }
+    open fun getFrameProcessor(): FrameProcessor = savedConfiguration.frameProcessor
 
     /**
      * @return The desired from the user camera lens position.
      */
-    open fun getLensPositionSelector(): Collection<LensPosition>.() -> LensPosition? {
-        return lensPositionSelector
-    }
-
+    open fun getLensPositionSelector(): LensPositionSelector = lensPositionSelector
 }
 
 /**
@@ -181,9 +168,12 @@ internal fun updateConfiguration(
         focusMode = newConfiguration.focusMode ?: savedConfiguration.focusMode,
         frameProcessor = newConfiguration.frameProcessor ?: savedConfiguration.frameProcessor,
         previewFpsRange = newConfiguration.previewFpsRange ?: savedConfiguration.previewFpsRange,
-        sensorSensitivity = newConfiguration.sensorSensitivity ?: savedConfiguration.sensorSensitivity,
-        pictureResolution = newConfiguration.pictureResolution ?: savedConfiguration.pictureResolution,
-        previewResolution = newConfiguration.previewResolution ?: savedConfiguration.previewResolution
+        sensorSensitivity = newConfiguration.sensorSensitivity
+                ?: savedConfiguration.sensorSensitivity,
+        pictureResolution = newConfiguration.pictureResolution
+                ?: savedConfiguration.pictureResolution,
+        previewResolution = newConfiguration.previewResolution
+                ?: savedConfiguration.previewResolution
 )
 
 /**
@@ -191,7 +181,7 @@ internal fun updateConfiguration(
  */
 internal fun selectCamera(
         availableCameras: List<CameraDevice>,
-        lensPositionSelector: Collection<LensPosition>.() -> LensPosition?
+        lensPositionSelector: LensPositionSelector
 ): CameraDevice? {
 
     val lensPositions = availableCameras.map { it.characteristics.lensPosition }.toSet()

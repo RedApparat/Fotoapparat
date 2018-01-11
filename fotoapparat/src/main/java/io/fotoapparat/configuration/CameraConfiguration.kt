@@ -1,9 +1,8 @@
 package io.fotoapparat.configuration
 
-import io.fotoapparat.parameter.*
-import io.fotoapparat.preview.Frame
-import io.fotoapparat.preview.FrameProcessor
 import io.fotoapparat.selector.*
+import io.fotoapparat.util.FrameProcessor
+import io.fotoapparat.preview.FrameProcessor as FrameProcessorJava
 
 
 private const val DEFAULT_JPEG_QUALITY = 90
@@ -12,24 +11,24 @@ private const val DEFAULT_JPEG_QUALITY = 90
  * A camera configuration which has all it's selectors defined.
  */
 data class CameraConfiguration(
-        override val flashMode: Iterable<Flash>.() -> Flash? = off(),
-        override val focusMode: Iterable<FocusMode>.() -> FocusMode? = firstAvailable(
+        override val flashMode: FlashSelector = off(),
+        override val focusMode: FocusModeSelector = firstAvailable(
                 continuousFocusPicture(),
                 autoFocus(),
                 fixed()
         ),
-        override val jpegQuality: (IntRange) -> Int? = manualJpegQuality(DEFAULT_JPEG_QUALITY),
-        override val frameProcessor: (Frame) -> Unit = {},
-        override val previewFpsRange: Iterable<FpsRange>.() -> FpsRange? = highestFps(),
-        override val antiBandingMode: Iterable<AntiBandingMode>.() -> AntiBandingMode? = firstAvailable(
+        override val jpegQuality: QualitySelector = manualJpegQuality(DEFAULT_JPEG_QUALITY),
+        override val frameProcessor: FrameProcessor = {},
+        override val previewFpsRange: FpsRangeSelector = highestFps(),
+        override val antiBandingMode: AntiBandingModeSelector = firstAvailable(
                 auto(),
                 hz50(),
                 hz60(),
                 none()
         ),
-        override val sensorSensitivity: (Iterable<Int>.() -> Int?)? = null,
-        override val pictureResolution: Iterable<Resolution>.() -> Resolution? = highestResolution(),
-        override val previewResolution: Iterable<Resolution>.() -> Resolution? = highestResolution()
+        override val sensorSensitivity: SensorSensitivitySelector? = null,
+        override val pictureResolution: ResolutionSelector = highestResolution(),
+        override val previewResolution: ResolutionSelector = highestResolution()
 ) : Configuration {
 
     /**
@@ -39,67 +38,58 @@ data class CameraConfiguration(
 
         private var cameraConfiguration: CameraConfiguration = default()
 
-        fun flash(selector: (Iterable<Flash>.() -> Flash?)): Builder {
+        fun flash(selector: FlashSelector): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
                     flashMode = selector
             )
-            return this
         }
 
-        fun focusMode(selector: (Iterable<FocusMode>.() -> FocusMode?)): Builder {
+        fun focusMode(selector: FocusModeSelector): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
                     focusMode = selector
             )
-            return this
         }
 
-        fun previewFpsRange(selector: (Iterable<FpsRange>.() -> FpsRange?)): Builder {
+        fun previewFpsRange(selector: FpsRangeSelector): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
                     previewFpsRange = selector
             )
-            return this
         }
 
-        fun sensorSensitivity(selector: (Iterable<Int>.() -> Int?)): Builder {
+        fun sensorSensitivity(selector: SensorSensitivitySelector): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
                     sensorSensitivity = selector
             )
-            return this
         }
 
-        fun antiBandingMode(selector: Iterable<AntiBandingMode>.() -> AntiBandingMode?): Builder {
+        fun antiBandingMode(selector: AntiBandingModeSelector): Builder = apply {
             cameraConfiguration.copy(
                     antiBandingMode = selector
             )
-            return this
         }
 
-        fun jpegQuality(selector: IntRange.() -> Int?): Builder {
+        fun jpegQuality(selector: QualitySelector): Builder = apply {
             cameraConfiguration.copy(
                     jpegQuality = selector
             )
-            return this
         }
 
-        fun previewResolution(selector: (Iterable<Resolution>.() -> Resolution?)): Builder {
+        fun previewResolution(selector: ResolutionSelector): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
                     previewResolution = selector
             )
-            return this
         }
 
-        fun photoResolution(selector: (Iterable<Resolution>.() -> Resolution?)): Builder {
+        fun photoResolution(selector: ResolutionSelector): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
                     pictureResolution = selector
             )
-            return this
         }
 
-        fun frameProcessor(frameProcessor: FrameProcessor): Builder {
+        fun frameProcessor(frameProcessor: FrameProcessorJava): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
-                    frameProcessor = { frameProcessor.process(it) }
+                    frameProcessor = frameProcessor::process
             )
-            return this
         }
 
         /**
@@ -115,18 +105,18 @@ data class CameraConfiguration(
          * Alias for [CameraConfiguration.default]
          */
         @JvmStatic
-        fun standard() = default()
+        fun standard(): CameraConfiguration = default()
 
         /**
          * Default [CameraConfiguration].
          */
         @JvmStatic
-        fun default() = CameraConfiguration()
+        fun default(): CameraConfiguration = CameraConfiguration()
 
         /**
          * Creates a new [CameraConfiguration.Builder].
          */
         @JvmStatic
-        fun builder() = CameraConfiguration.Builder()
+        fun builder(): Builder = Builder()
     }
 }

@@ -2,7 +2,6 @@ package io.fotoapparat.exif
 
 import android.media.ExifInterface
 import io.fotoapparat.exception.FileSaveException
-import io.fotoapparat.result.Photo
 import java.io.File
 import java.io.IOException
 
@@ -11,16 +10,16 @@ import java.io.IOException
  */
 internal object ExifWriter : ExifOrientationWriter {
 
-
     @Throws(FileSaveException::class)
-    override fun writeExifOrientation(file: File, photo: Photo) {
+    override fun writeExifOrientation(file: File, rotationDegrees: Int) {
         try {
-            val exifInterface = ExifInterface(file.path)
-            exifInterface.setAttribute(
-                    ExifInterface.TAG_ORIENTATION,
-                    toExifOrientation(photo.rotationDegrees).toString()
-            )
-            exifInterface.saveAttributes()
+            ExifInterface(file.path).apply {
+                setAttribute(
+                        ExifInterface.TAG_ORIENTATION,
+                        toExifOrientation(rotationDegrees).toString()
+                )
+                saveAttributes()
+            }
         } catch (e: IOException) {
             throw FileSaveException(e)
         }
