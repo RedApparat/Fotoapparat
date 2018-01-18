@@ -15,7 +15,8 @@ data class CameraConfiguration(
         override val focusMode: FocusModeSelector = firstAvailable(
                 continuousFocusPicture(),
                 autoFocus(),
-                fixed()
+                fixed(),
+                infinity()
         ),
         override val jpegQuality: QualitySelector = manualJpegQuality(DEFAULT_JPEG_QUALITY),
         override val frameProcessor: FrameProcessor = {},
