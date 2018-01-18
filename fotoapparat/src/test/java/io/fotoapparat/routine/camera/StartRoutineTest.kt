@@ -4,7 +4,10 @@ import android.graphics.SurfaceTexture
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
+import io.fotoapparat.hardware.orientation.Orientation.Horizontal.Landscape
+import io.fotoapparat.hardware.orientation.Orientation.Vertical.Portrait
 import io.fotoapparat.hardware.orientation.OrientationSensor
+import io.fotoapparat.hardware.orientation.OrientationState
 import io.fotoapparat.parameter.ScaleType
 import io.fotoapparat.test.testResolution
 import io.fotoapparat.test.willReturn
@@ -51,7 +54,7 @@ internal class StartRoutineTest {
         // Given
         device.apply {
             getSelectedCamera() willReturn cameraDevice
-            getScreenRotation() willReturn 90
+            getScreenOrientation() willReturn Landscape
             cameraRenderer willReturn cameraViewRenderer
             scaleType willReturn ScaleType.CenterCrop
         }
@@ -72,7 +75,10 @@ internal class StartRoutineTest {
             verify(device).selectCamera()
             verify(cameraDevice).open()
             verify(device).updateCameraConfiguration(cameraDevice)
-            verify(cameraDevice).setDisplayOrientation(90)
+            verify(cameraDevice).setDisplayOrientation(OrientationState(
+                    Portrait,
+                    Landscape
+            ))
             verify(cameraViewRenderer).setScaleType(ScaleType.CenterCrop)
             verify(cameraViewRenderer).setPreviewResolution(testResolution)
             verify(cameraDevice).setDisplaySurface(preview)
@@ -118,7 +124,7 @@ internal class StartRoutineTest {
         device.apply {
             hasSelectedCamera() willReturn false
             getSelectedCamera() willReturn cameraDevice
-            getScreenRotation() willReturn 90
+            getScreenOrientation() willReturn Landscape
             cameraRenderer willReturn cameraViewRenderer
             scaleType willReturn ScaleType.CenterCrop
         }

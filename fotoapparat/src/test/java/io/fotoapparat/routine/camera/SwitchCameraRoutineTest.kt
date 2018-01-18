@@ -4,9 +4,11 @@ import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
+import io.fotoapparat.hardware.orientation.Orientation.Horizontal.Landscape
 import io.fotoapparat.test.testConfiguration
 import io.fotoapparat.test.willReturn
 import io.fotoapparat.view.CameraRenderer
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.BDDMockito.given
@@ -27,6 +29,11 @@ internal class SwitchCameraRoutineTest {
     lateinit var cameraRenderer: CameraRenderer
 
     private val mainThreadErrorCallback: CameraErrorCallback = {}
+
+    @Before
+    fun setUp() {
+        device.getScreenOrientation() willReturn Landscape
+    }
 
     @Test
     fun `Switch camera, not started`() {

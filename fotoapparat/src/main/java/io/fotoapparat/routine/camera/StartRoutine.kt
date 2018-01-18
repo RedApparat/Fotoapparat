@@ -4,7 +4,9 @@ import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.hardware.executeTask
+import io.fotoapparat.hardware.orientation.Orientation.Vertical.Portrait
 import io.fotoapparat.hardware.orientation.OrientationSensor
+import io.fotoapparat.hardware.orientation.OrientationState
 import io.fotoapparat.routine.focus.focusOnPoint
 import io.fotoapparat.routine.orientation.startOrientationMonitoring
 
@@ -42,7 +44,10 @@ internal fun Device.start() {
                 cameraDevice = this
         )
         setDisplayOrientation(
-                degrees = getScreenRotation()
+                orientationState = OrientationState(
+                        deviceOrientation = Portrait,
+                        screenOrientation = getScreenOrientation()
+                )
         )
     }
 

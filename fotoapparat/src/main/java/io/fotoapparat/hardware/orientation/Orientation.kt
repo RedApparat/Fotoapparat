@@ -1,61 +1,56 @@
 package io.fotoapparat.hardware.orientation
 
+typealias DeviceOrientation = Orientation
+typealias ScreenOrientation = Orientation
 
 /**
- * @param screenRotationDegrees rotation of the display (as provided by system) in degrees.
- * @param cameraRotationDegrees rotation of the camera sensor relatively to device natural
- * orientation.
- * @param cameraIsMirrored `true` if camera is mirrored (typically that is the case for
- * front cameras). `false` if it is not mirrored.
- *
- * @return clockwise rotation of the image relatively to current device orientation.
+ * The device orientation.
  */
-internal fun computeImageOrientation(
-        screenRotationDegrees: Int,
-        cameraRotationDegrees: Int,
-        cameraIsMirrored: Boolean
-): Int {
-    val rotation = if (cameraIsMirrored) {
-        -(screenRotationDegrees + cameraRotationDegrees)
-    } else {
-        screenRotationDegrees - cameraRotationDegrees
+sealed class Orientation(
+        val degrees: Int
+) {
+
+    /**
+     * A vertical device orientation.
+     */
+    sealed class Vertical(degrees: Int) : Orientation(degrees) {
+
+        /**
+         * A vertical, normal orientation.
+         */
+        object Portrait : Vertical(0)
+
+        /**
+         * A reversed (flipped phone) orientation.
+         */
+        object ReversePortrait : Vertical(180)
+
     }
 
-    return (rotation + 720) % 360
-}
+    /**
+     * A horizontal device orientation.
+     */
+    sealed class Horizontal(degrees: Int) : Orientation(degrees) {
 
-/**
- * @param screenRotationDegrees rotation of the display (as provided by system) in degrees.
- * @param cameraRotationDegrees rotation of the camera sensor relatively to device natural
- * orientation.
- * @param cameraIsMirrored `true` if camera is mirrored (typically that is the case for
- * front cameras). `false` if it is not mirrored.
- *
- * @return display orientation in which user will see the output camera in a correct rotation.
- */
-internal fun computeDisplayOrientation(
-        screenRotationDegrees: Int,
-        cameraRotationDegrees: Int,
-        cameraIsMirrored: Boolean
-): Int {
-    var degrees = toClosestRightAngle(screenRotationDegrees)
+        /**
+         * A 90 degrees clockwise from "normal", orientation.
+         */
+        object Landscape : Horizontal(90)
 
-    return if (cameraIsMirrored) {
-        degrees = (cameraRotationDegrees + degrees) % 360
-        (360 - degrees) % 360
-    } else {
-        (cameraRotationDegrees - degrees + 360) % 360
+        /**
+         * A 90 degrees counter-clockwise from "normal", orientation.
+         */
+        object ReverseLandscape : Horizontal(270)
+
     }
-
 }
 
-/**
- * @return closest right angle to given value. That is: 0, 90, 180, 270.
- */
-internal fun toClosestRightAngle(degrees: Int): Int {
-    val roundUp = degrees % 90 > 45
-
-    val roundAppModifier = if (roundUp) 1 else 0
-
-    return (degrees / 90 + roundAppModifier) * 90 % 360
+internal fun Int.toOrientation(): Orientation {
+    return when (this) {
+        0, 360 -> Orientation.Vertical.Portrait
+        90 -> Orientation.Horizontal.Landscape
+        180 -> Orientation.Vertical.ReversePortrait
+        270 -> Orientation.Horizontal.ReverseLandscape
+        else -> throw IllegalArgumentException("Cannot convert $this to absolute Orientation.")
+    }
 }

@@ -1,6 +1,8 @@
 package io.fotoapparat.hardware.orientation
 
 import io.fotoapparat.hardware.Device
+import io.fotoapparat.hardware.orientation.Orientation.Horizontal.Landscape
+import io.fotoapparat.hardware.orientation.Orientation.Vertical.ReversePortrait
 import io.fotoapparat.test.willReturn
 import org.junit.Before
 import org.junit.Test
@@ -8,7 +10,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
@@ -45,21 +47,24 @@ internal class OrientationSensorTest {
     @Test
     fun singleEvent() {
         // Given
-        device.getScreenRotation() willReturn 90
+        device.getScreenOrientation() willReturn Landscape
 
-        val atomicInteger = AtomicInteger()
+        val atomicReference = AtomicReference<OrientationState>()
 
-        testee.start { degrees ->
-            atomicInteger.set(degrees)
+        testee.start { orientationState: OrientationState ->
+            atomicReference.set(orientationState)
         }
 
         // When
-        rotationListener.orientationChanged()
+        rotationListener.orientationChanged(ReversePortrait.degrees)
 
         // Then
         assertEquals(
-                expected = 90,
-                actual = atomicInteger.get()
+                expected = OrientationState(
+                        deviceOrientation = ReversePortrait,
+                        screenOrientation = Landscape
+                ),
+                actual = atomicReference.get()
         )
     }
 }
