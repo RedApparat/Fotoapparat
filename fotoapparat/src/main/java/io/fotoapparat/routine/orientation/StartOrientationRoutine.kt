@@ -3,6 +3,7 @@ package io.fotoapparat.routine.orientation
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.hardware.execute
 import io.fotoapparat.hardware.orientation.OrientationSensor
+import io.fotoapparat.hardware.orientation.OrientationState
 
 /**
  * Starts orientation monitoring routine.
@@ -10,10 +11,10 @@ import io.fotoapparat.hardware.orientation.OrientationSensor
 internal fun Device.startOrientationMonitoring(
         orientationSensor: OrientationSensor
 ) {
-    orientationSensor.start { degrees ->
+    orientationSensor.start { orientationState: OrientationState ->
         execute {
             val cameraDevice = getSelectedCamera()
-            cameraDevice.setDisplayOrientation(degrees)
+            cameraDevice.setDisplayOrientation(orientationState)
         }
     }
 }

@@ -2,6 +2,7 @@ package io.fotoapparat.hardware.orientation
 
 import android.content.Context
 import io.fotoapparat.hardware.Device
+import io.fotoapparat.hardware.orientation.Orientation.Vertical.Portrait
 
 
 /**
@@ -12,33 +13,40 @@ internal open class OrientationSensor(
         private val device: Device
 ) {
 
-    constructor(context: Context,
-                device: Device
+    private val onOrientationChanged: (DeviceRotationDegrees) -> Unit = { deviceRotation ->
+        deviceRotation.toClosestRightAngle()
+                .toOrientation()
+                .takeIf { it != lastKnownDeviceOrientation }
+                ?.let {
+                    val state = OrientationState(
+                            deviceOrientation = it,
+                            screenOrientation = device.getScreenOrientation()
+                    )
+
+                    lastKnownDeviceOrientation = state.deviceOrientation
+                    listener(state)
+                }
+    }
+
+    private lateinit var listener: (OrientationState) -> Unit
+    private var lastKnownDeviceOrientation: Orientation = Portrait
+
+    constructor(
+            context: Context,
+            device: Device
     ) : this(
             RotationListener(context),
             device
     )
 
-    private val onOrientationChanged = {
-        device.getScreenRotation().let {
-            if (it != lastKnownRotation) {
-                listener(it)
-                lastKnownRotation = it
-            }
-        }
-    }
-
     init {
         rotationListener.orientationChanged = onOrientationChanged
     }
 
-    private lateinit var listener: (Int) -> Unit
-    private var lastKnownRotation: Int = 0
-
     /**
-     * Starts monitoring device's orientation.
+     * Starts monitoring device's orientation state.
      */
-    open fun start(listener: (Int) -> Unit) {
+    open fun start(listener: (OrientationState) -> Unit) {
         this.listener = listener
         rotationListener.enable()
     }

@@ -11,11 +11,11 @@ internal open class RotationListener(
         context: Context
 ) : OrientationEventListener(context) {
 
-    lateinit var orientationChanged: () -> Unit
+    lateinit var orientationChanged: (DeviceRotationDegrees) -> Unit
 
-    override fun onOrientationChanged(orientation: Int) {
+    override fun onOrientationChanged(orientation: DeviceRotationDegrees) {
         if (canDetectOrientation()) {
-            orientationChanged()
+            orientationChanged(orientation)
         }
     }
 

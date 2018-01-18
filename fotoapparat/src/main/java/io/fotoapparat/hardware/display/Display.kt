@@ -3,6 +3,11 @@ package io.fotoapparat.hardware.display
 import android.content.Context
 import android.view.Surface
 import android.view.WindowManager
+import io.fotoapparat.hardware.orientation.Orientation
+import io.fotoapparat.hardware.orientation.Orientation.Horizontal.Landscape
+import io.fotoapparat.hardware.orientation.Orientation.Horizontal.ReverseLandscape
+import io.fotoapparat.hardware.orientation.Orientation.Vertical.Portrait
+import io.fotoapparat.hardware.orientation.Orientation.Vertical.ReversePortrait
 
 /**
  * A phone's display.
@@ -12,14 +17,14 @@ internal open class Display(context: Context) {
     private val display = context.getDisplay()
 
     /**
-     * Returns the rotation of the screen from its "natural" orientation in degrees.
+     * Returns the orientation of the screen.
      */
-    open fun getRotation(): Int = when (display.rotation) {
-        Surface.ROTATION_90 -> 90
-        Surface.ROTATION_180 -> 180
-        Surface.ROTATION_270 -> 270
-        Surface.ROTATION_0 -> 0
-        else -> 0
+    open fun getOrientation(): Orientation = when (display.rotation) {
+        Surface.ROTATION_0 -> Portrait
+        Surface.ROTATION_90 -> Landscape
+        Surface.ROTATION_180 -> ReversePortrait
+        Surface.ROTATION_270 -> ReverseLandscape
+        else -> Portrait
     }
 
 }
