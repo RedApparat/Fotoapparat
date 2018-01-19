@@ -16,6 +16,7 @@ internal fun Device.shutDown(
 
     shutdownPendingTasks()
 
+    focusPointSelector?.setFocalPointListener { }
     orientationSensor.stopMonitoring()
 
     val cameraDevice = getSelectedCamera()
