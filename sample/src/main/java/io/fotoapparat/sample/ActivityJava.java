@@ -253,7 +253,7 @@ public class ActivityJava extends AppCompatActivity {
     private class SampleFrameProcessor implements FrameProcessor {
         @Override
         public void process(@NotNull Frame frame) {
-
+            // Perform frame processing, if needed
         }
     }
 
