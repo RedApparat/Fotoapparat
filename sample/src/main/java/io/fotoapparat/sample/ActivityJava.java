@@ -19,6 +19,7 @@ import java.io.File;
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.configuration.CameraConfiguration;
 import io.fotoapparat.configuration.UpdateConfiguration;
+import io.fotoapparat.error.CameraErrorListener;
 import io.fotoapparat.exception.camera.CameraException;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.preview.Frame;
@@ -27,8 +28,6 @@ import io.fotoapparat.result.BitmapPhoto;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.result.WhenDoneListener;
 import io.fotoapparat.view.CameraView;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 import static io.fotoapparat.log.LoggersKt.fileLogger;
 import static io.fotoapparat.log.LoggersKt.logcat;
@@ -110,21 +109,15 @@ public class ActivityJava extends AppCompatActivity {
                 .into(cameraView)
                 .previewScaleType(ScaleType.CenterCrop)
                 .lensPosition(back())
-                .frameProcessor(new Function1<Frame, Unit>() {
-                    @Override
-                    public Unit invoke(Frame frame) {
-                        return null;
-                    }
-                })
+                .frameProcessor(new SampleFrameProcessor())
                 .logger(loggers(
                         logcat(),
                         fileLogger(this)
                 ))
-                .cameraErrorCallback(new Function1<CameraException, Unit>() {
+                .cameraErrorCallback(new CameraErrorListener() {
                     @Override
-                    public Unit invoke(CameraException e) {
+                    public void onError(@NotNull CameraException e) {
                         Toast.makeText(ActivityJava.this, e.toString(), Toast.LENGTH_LONG).show();
-                        return null;
                     }
                 })
                 .build();
@@ -260,7 +253,7 @@ public class ActivityJava extends AppCompatActivity {
     private class SampleFrameProcessor implements FrameProcessor {
         @Override
         public void process(@NotNull Frame frame) {
-            // Perform frame processing, if needed
+
         }
     }
 

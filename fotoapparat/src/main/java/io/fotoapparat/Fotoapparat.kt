@@ -7,7 +7,6 @@ import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.Configuration
 import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.error.onMainThread
-import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.hardware.display.Display
 import io.fotoapparat.hardware.execute

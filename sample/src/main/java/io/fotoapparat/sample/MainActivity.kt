@@ -125,17 +125,26 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+    }
+
+
+    override fun onResume() {
+        super.onResume()
         if (permissionsGranted) {
             fotoapparat.start()
             adjustViewsVisibility()
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
         if (permissionsGranted) {
             fotoapparat.stop()
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
