@@ -2,21 +2,18 @@ package io.fotoapparat
 
 import android.content.Context
 import android.support.annotation.FloatRange
-import io.fotoapparat.capability.Capabilities
+import io.fotoapparat.concurrent.CameraExecutor
+import io.fotoapparat.concurrent.CameraExecutor.Operation
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.Configuration
 import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.error.onMainThread
-import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.hardware.display.Display
-import io.fotoapparat.hardware.execute
-import io.fotoapparat.hardware.executeTask
 import io.fotoapparat.hardware.orientation.OrientationSensor
 import io.fotoapparat.log.Logger
 import io.fotoapparat.log.none
 import io.fotoapparat.parameter.ScaleType
-import io.fotoapparat.parameter.camera.CameraParameters
 import io.fotoapparat.result.*
 import io.fotoapparat.routine.camera.bootStart
 import io.fotoapparat.routine.camera.shutDown
@@ -30,7 +27,6 @@ import io.fotoapparat.routine.zoom.updateZoomLevel
 import io.fotoapparat.selector.*
 import io.fotoapparat.view.CameraRenderer
 import io.fotoapparat.view.FocalPointSelector
-import java.util.concurrent.FutureTask
 
 /**
  * Camera. Takes pictures.
@@ -48,6 +44,7 @@ class Fotoapparat
         scaleType: ScaleType = ScaleType.CenterCrop,
         cameraConfiguration: CameraConfiguration = CameraConfiguration.default(),
         cameraErrorCallback: CameraErrorCallback = {},
+        private val executor: CameraExecutor = EXECUTOR,
         private val logger: Logger = none()
 ) {
 
@@ -62,7 +59,8 @@ class Fotoapparat
             display = display,
             scaleType = scaleType,
             initialLensPositionSelector = lensPosition,
-            initialConfiguration = cameraConfiguration
+            initialConfiguration = cameraConfiguration,
+            executor = executor
     )
 
     private val orientationSensor = OrientationSensor(
@@ -82,12 +80,12 @@ class Fotoapparat
     fun start() {
         logger.recordMethod()
 
-        execute {
+        executor.execute(Operation {
             device.bootStart(
                     orientationSensor = orientationSensor,
                     mainThreadErrorCallback = mainThreadErrorCallback
             )
-        }
+        })
     }
 
     /**
@@ -98,11 +96,12 @@ class Fotoapparat
     fun stop() {
         logger.recordMethod()
 
-        execute {
+        executor.cancelTasks()
+        executor.execute(Operation {
             device.shutDown(
                     orientationSensor = orientationSensor
             )
-        }
+        })
     }
 
     /**
@@ -113,13 +112,12 @@ class Fotoapparat
     fun takePicture(): PhotoResult {
         logger.recordMethod()
 
-        val takePictureTask = FutureTask<Photo> {
-            device.takePhoto()
-        }
+        val future = executor.execute(Operation(
+                cancellable = true,
+                function = device::takePhoto
+        ))
 
-        executeTask(takePictureTask)
-
-        return PhotoResult.fromFuture(takePictureTask, logger)
+        return PhotoResult.fromFuture(future, logger)
     }
 
     /**
@@ -130,13 +128,12 @@ class Fotoapparat
     fun getCapabilities(): CapabilitiesResult {
         logger.recordMethod()
 
-        val getCapabilitiesTask = FutureTask<Capabilities> {
-            device.getCapabilities()
-        }
+        val future = executor.execute(Operation(
+                cancellable = true,
+                function = device::getCapabilities
+        ))
 
-        executeTask(getCapabilitiesTask)
-
-        return PendingResult.fromFuture(getCapabilitiesTask, logger)
+        return PendingResult.fromFuture(future, logger)
     }
 
     /**
@@ -147,13 +144,12 @@ class Fotoapparat
     fun getCurrentParameters(): ParametersResult {
         logger.recordMethod()
 
-        val getCameraParametersTask = FutureTask<CameraParameters> {
-            device.getCurrentParameters()
-        }
+        val future = executor.execute(Operation(
+                cancellable = true,
+                function = device::getCurrentParameters
+        ))
 
-        executeTask(getCameraParametersTask)
-
-        return PendingResult.fromFuture(getCameraParametersTask, logger)
+        return PendingResult.fromFuture(future, logger)
     }
 
     /**
@@ -161,11 +157,12 @@ class Fotoapparat
      *
      * @throws IllegalStateException If the current camera has not started.
      */
-    fun updateConfiguration(newConfiguration: Configuration) = execute {
-        logger.recordMethod()
+    fun updateConfiguration(newConfiguration: Configuration) = executor.execute(
+            Operation(cancellable = true) {
+                logger.recordMethod()
 
-        device.updateDeviceConfiguration(newConfiguration)
-    }
+                device.updateDeviceConfiguration(newConfiguration)
+            })
 
     /**
      * Asynchronously updates zoom level of the camera.
@@ -174,13 +171,14 @@ class Fotoapparat
      * @param zoomLevel Zoom level of the camera. A value between 0 and 1.
      * @throws IllegalStateException If the current camera has not started.
      */
-    fun setZoom(@FloatRange(from = 0.0, to = 1.0) zoomLevel: Float) = execute {
-        logger.recordMethod()
+    fun setZoom(@FloatRange(from = 0.0, to = 1.0) zoomLevel: Float) = executor.execute(
+            Operation(cancellable = true) {
+                logger.recordMethod()
 
-        device.updateZoomLevel(
-                zoomLevel = zoomLevel
-        )
-    }
+                device.updateZoomLevel(
+                        zoomLevel = zoomLevel
+                )
+            })
 
     /**
      * Performs auto focus. If it is not available or not enabled, does nothing.
@@ -202,12 +200,12 @@ class Fotoapparat
     fun focus(): PendingResult<FocusResult> {
         logger.recordMethod()
 
-        val focusTask = FutureTask<FocusResult> {
-            device.focus()
-        }
-        executeTask(focusTask)
+        val future = executor.execute(Operation(
+                cancellable = true,
+                function = device::focus
+        ))
 
-        return PendingResult.fromFuture(focusTask, logger)
+        return PendingResult.fromFuture(future, logger)
     }
 
     /**
@@ -219,13 +217,14 @@ class Fotoapparat
             cameraConfiguration: CameraConfiguration
     ) {
         logger.recordMethod()
-        execute {
+
+        executor.execute(Operation(cancellable = true) {
             device.switchCamera(
                     newLensPositionSelector = lensPosition,
                     newConfiguration = cameraConfiguration,
                     mainThreadErrorCallback = mainThreadErrorCallback
             )
-        }
+        })
     }
 
     /**
@@ -237,7 +236,10 @@ class Fotoapparat
 
     companion object {
 
+        private val EXECUTOR = CameraExecutor()
+
         @JvmStatic
         fun with(context: Context): FotoapparatBuilder = FotoapparatBuilder(context)
+
     }
 }

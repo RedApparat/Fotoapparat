@@ -4,6 +4,7 @@ package io.fotoapparat.hardware
 
 import android.hardware.Camera
 import io.fotoapparat.characteristic.getCharacteristics
+import io.fotoapparat.concurrent.CameraExecutor
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.Configuration
 import io.fotoapparat.exception.camera.UnsupportedLensException
@@ -13,7 +14,6 @@ import io.fotoapparat.log.Logger
 import io.fotoapparat.parameter.ScaleType
 import io.fotoapparat.parameter.camera.CameraParameters
 import io.fotoapparat.parameter.camera.provide.getCameraParameters
-import io.fotoapparat.preview.Frame
 import io.fotoapparat.selector.LensPositionSelector
 import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.view.CameraRenderer
@@ -27,9 +27,10 @@ import kotlinx.coroutines.experimental.CompletableDeferred
 internal open class Device(
         private val logger: Logger,
         private val display: Display,
-        open val scaleType: ScaleType,
-        open val cameraRenderer: CameraRenderer,
-        val focusPointSelector: FocalPointSelector?,
+        internal open val scaleType: ScaleType,
+        internal open val cameraRenderer: CameraRenderer,
+        internal val focusPointSelector: FocalPointSelector?,
+        internal val executor: CameraExecutor,
         numberOfCameras: Int = Camera.getNumberOfCameras(),
         initialConfiguration: CameraConfiguration, initialLensPositionSelector: LensPositionSelector
 ) {
