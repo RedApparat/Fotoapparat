@@ -3,10 +3,8 @@ package io.fotoapparat.hardware
 import android.os.Handler
 import android.os.Looper
 import java.util.concurrent.Executors
+import java.util.concurrent.Future
 
-
-private var taskExecutor = Executors.newSingleThreadExecutor()
-    get() = field.takeUnless { it.isShutdown } ?: Executors.newSingleThreadExecutor().also { field = it }
 
 private val cameraExecutor = Executors.newSingleThreadExecutor()
 private val loggingExecutor = Executors.newSingleThreadExecutor()
@@ -24,18 +22,13 @@ internal val frameProcessingExecutor = Executors.newSingleThreadExecutor()
  * Shuts down all pending camera tasks.
  */
 internal fun shutdownPendingTasks() {
-    taskExecutor.shutdownNow()
+    // FIXME
 }
 
 /**
- * Executes a camera task.
+ * Executes a camera operation and returns a result as a future.
  */
-internal fun executeTask(function: Runnable) = taskExecutor.execute(function)
-
-/**
- * Executes a camera operation.
- */
-internal fun execute(function: () -> Unit) = cameraExecutor.execute(function)
+internal fun <T> execute(function: () -> T): Future<T> = cameraExecutor.submit(function)
 
 /**
  * Executes an operation in the main thread.

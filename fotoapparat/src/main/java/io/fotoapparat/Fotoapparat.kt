@@ -2,21 +2,17 @@ package io.fotoapparat
 
 import android.content.Context
 import android.support.annotation.FloatRange
-import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.Configuration
 import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.error.onMainThread
-import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.hardware.display.Display
 import io.fotoapparat.hardware.execute
-import io.fotoapparat.hardware.executeTask
 import io.fotoapparat.hardware.orientation.OrientationSensor
 import io.fotoapparat.log.Logger
 import io.fotoapparat.log.none
 import io.fotoapparat.parameter.ScaleType
-import io.fotoapparat.parameter.camera.CameraParameters
 import io.fotoapparat.result.*
 import io.fotoapparat.routine.camera.bootStart
 import io.fotoapparat.routine.camera.shutDown
@@ -30,7 +26,6 @@ import io.fotoapparat.routine.zoom.updateZoomLevel
 import io.fotoapparat.selector.*
 import io.fotoapparat.view.CameraRenderer
 import io.fotoapparat.view.FocalPointSelector
-import java.util.concurrent.FutureTask
 
 /**
  * Camera. Takes pictures.
@@ -113,13 +108,9 @@ class Fotoapparat
     fun takePicture(): PhotoResult {
         logger.recordMethod()
 
-        val takePictureTask = FutureTask<Photo> {
-            device.takePhoto()
-        }
+        val future = execute(device::takePhoto)
 
-        executeTask(takePictureTask)
-
-        return PhotoResult.fromFuture(takePictureTask, logger)
+        return PhotoResult.fromFuture(future, logger)
     }
 
     /**
@@ -130,13 +121,9 @@ class Fotoapparat
     fun getCapabilities(): CapabilitiesResult {
         logger.recordMethod()
 
-        val getCapabilitiesTask = FutureTask<Capabilities> {
-            device.getCapabilities()
-        }
+        val future = execute(device::getCapabilities)
 
-        executeTask(getCapabilitiesTask)
-
-        return PendingResult.fromFuture(getCapabilitiesTask, logger)
+        return PendingResult.fromFuture(future, logger)
     }
 
     /**
@@ -147,13 +134,9 @@ class Fotoapparat
     fun getCurrentParameters(): ParametersResult {
         logger.recordMethod()
 
-        val getCameraParametersTask = FutureTask<CameraParameters> {
-            device.getCurrentParameters()
-        }
+        val future = execute(device::getCurrentParameters)
 
-        executeTask(getCameraParametersTask)
-
-        return PendingResult.fromFuture(getCameraParametersTask, logger)
+        return PendingResult.fromFuture(future, logger)
     }
 
     /**
@@ -202,12 +185,9 @@ class Fotoapparat
     fun focus(): PendingResult<FocusResult> {
         logger.recordMethod()
 
-        val focusTask = FutureTask<FocusResult> {
-            device.focus()
-        }
-        executeTask(focusTask)
+        val future = execute(device::focus)
 
-        return PendingResult.fromFuture(focusTask, logger)
+        return PendingResult.fromFuture(future, logger)
     }
 
     /**

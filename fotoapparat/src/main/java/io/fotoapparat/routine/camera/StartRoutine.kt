@@ -3,8 +3,8 @@ package io.fotoapparat.routine.camera
 import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.Device
-import io.fotoapparat.hardware.executeTask
-import io.fotoapparat.hardware.orientation.Orientation.Vertical.Portrait
+import io.fotoapparat.hardware.execute
+import io.fotoapparat.hardware.orientation.Orientation
 import io.fotoapparat.hardware.orientation.OrientationSensor
 import io.fotoapparat.hardware.orientation.OrientationState
 import io.fotoapparat.routine.focus.focusOnPoint
@@ -45,7 +45,7 @@ internal fun Device.start() {
         )
         setDisplayOrientation(
                 orientationState = OrientationState(
-                        deviceOrientation = Portrait,
+                        deviceOrientation = Orientation.Vertical.Portrait,
                         screenOrientation = getScreenOrientation()
                 )
         )
@@ -64,9 +64,9 @@ internal fun Device.start() {
     }
 
     focusPointSelector?.setFocalPointListener { focalRequest ->
-        executeTask(Runnable {
+        execute {
             focusOnPoint(focalRequest)
-        })
+        }
     }
 
     cameraDevice.run {
