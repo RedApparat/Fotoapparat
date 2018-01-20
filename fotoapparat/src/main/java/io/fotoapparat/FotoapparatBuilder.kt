@@ -3,6 +3,7 @@ package io.fotoapparat
 import android.content.Context
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.error.CameraErrorCallback
+import io.fotoapparat.error.CameraErrorListener
 import io.fotoapparat.log.Logger
 import io.fotoapparat.log.none
 import io.fotoapparat.parameter.ScaleType
@@ -10,6 +11,7 @@ import io.fotoapparat.selector.*
 import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.view.CameraRenderer
 import io.fotoapparat.view.CameraView
+import io.fotoapparat.preview.FrameProcessor as FrameProcessorJava
 
 /**
  * Builder for [Fotoapparat].
@@ -106,11 +108,21 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
 
     /**
      * @param frameProcessor receives preview frames for processing.
-     * @see FrameProcessor
+     * @see FrameProcessorJava
      */
     fun frameProcessor(frameProcessor: FrameProcessor): FotoapparatBuilder = apply {
         configuration = configuration.copy(
                 frameProcessor = frameProcessor
+        )
+    }
+
+    /**
+     * @param frameProcessor receives preview frames for processing.
+     * @see FrameProcessorJava
+     */
+    fun frameProcessor(frameProcessor: FrameProcessorJava): FotoapparatBuilder = apply {
+        configuration = configuration.copy(
+                frameProcessor = { frameProcessor.process(it) }
         )
     }
 
@@ -123,7 +135,14 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
 
     /**
      * @param callback which will be notified when camera error happens in Fotoapparat.
-     * @see CameraErrorCallback
+     * @see CameraErrorListener
+     */
+    fun cameraErrorCallback(callback: CameraErrorListener): FotoapparatBuilder =
+            apply { cameraErrorCallback = { callback.onError(it) } }
+
+    /**
+     * @param callback which will be notified when camera error happens in Fotoapparat.
+     * @see CameraErrorListener
      */
     fun cameraErrorCallback(callback: CameraErrorCallback): FotoapparatBuilder =
             apply { cameraErrorCallback = callback }
