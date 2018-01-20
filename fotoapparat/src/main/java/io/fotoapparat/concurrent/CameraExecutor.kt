@@ -30,7 +30,15 @@ class CameraExecutor(
             cancellableTasksQueue += future
         }
 
+        cleanUpCancelledTasks()
+
         return future
+    }
+
+    private fun cleanUpCancelledTasks() {
+        cancellableTasksQueue.removeAll {
+            !it.isPending
+        }
     }
 
     /**
@@ -41,12 +49,14 @@ class CameraExecutor(
      */
     fun cancelTasks() {
         cancellableTasksQueue
-                .filter { !it.isDone && !it.isCancelled }
+                .filter { it.isPending }
                 .forEach {
                     it.cancel(true)
                 }
         cancellableTasksQueue.clear()
     }
+
+    private val Future<*>.isPending get() = !isCancelled && !isDone
 
     /**
      * Operation to be executed.
