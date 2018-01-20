@@ -258,6 +258,7 @@ internal open class CameraDevice(
     /**
      * Sets the desired surface on which the camera's preview will be displayed.
      */
+    @Throws(IOException::class)
     open fun setDisplaySurface(preview: Preview) {
         logger.recordMethod()
 
