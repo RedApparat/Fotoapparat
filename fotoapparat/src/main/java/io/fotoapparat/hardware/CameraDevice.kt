@@ -22,12 +22,11 @@ import io.fotoapparat.parameter.Resolution
 import io.fotoapparat.parameter.camera.CameraParameters
 import io.fotoapparat.parameter.camera.apply.applyNewParameters
 import io.fotoapparat.parameter.camera.convert.toCode
-import io.fotoapparat.preview.Frame
 import io.fotoapparat.preview.PreviewStream
 import io.fotoapparat.result.FocusResult
 import io.fotoapparat.result.Photo
-import io.fotoapparat.util.lineSeparator
 import io.fotoapparat.util.FrameProcessor
+import io.fotoapparat.util.lineSeparator
 import io.fotoapparat.view.Preview
 import kotlinx.coroutines.experimental.CompletableDeferred
 import java.io.IOException

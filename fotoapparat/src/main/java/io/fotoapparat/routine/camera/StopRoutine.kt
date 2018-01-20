@@ -12,9 +12,6 @@ import io.fotoapparat.routine.orientation.stopMonitoring
 internal fun Device.shutDown(
         orientationSensor: OrientationSensor
 ) {
-
-    executor.cancelTasks()
-
     orientationSensor.stopMonitoring()
 
     val cameraDevice = getSelectedCamera()

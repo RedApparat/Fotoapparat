@@ -1,6 +1,10 @@
 package io.fotoapparat.concurrent
 
-import java.util.concurrent.*
+import java.util.*
+import java.util.concurrent.Callable
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
 
 /**
  * Executes camera related operations using a dedicated thread and provides a control over the queue
@@ -12,7 +16,7 @@ class CameraExecutor(
         private val executor: ExecutorService = Executors.newSingleThreadExecutor()
 ) {
 
-    private val cancellableTasksQueue = LinkedBlockingQueue<Future<*>>()
+    private val cancellableTasksQueue = LinkedList<Future<*>>()
 
     /**
      * Adds operation to the serial execution queue.
@@ -36,9 +40,11 @@ class CameraExecutor(
      * further.
      */
     fun cancelTasks() {
-        cancellableTasksQueue.forEach {
-            it.cancel(true)
-        }
+        cancellableTasksQueue
+                .filter { !it.isDone && !it.isCancelled }
+                .forEach {
+                    it.cancel(true)
+                }
         cancellableTasksQueue.clear()
     }
 

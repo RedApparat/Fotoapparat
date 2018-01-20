@@ -96,6 +96,7 @@ class Fotoapparat
     fun stop() {
         logger.recordMethod()
 
+        executor.cancelTasks()
         executor.execute(Operation {
             device.shutDown(
                     orientationSensor = orientationSensor
