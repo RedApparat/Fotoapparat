@@ -1,9 +1,9 @@
 package io.fotoapparat.routine.camera
 
+import io.fotoapparat.concurrent.CameraExecutor.Operation
 import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.Device
-import io.fotoapparat.hardware.execute
 import io.fotoapparat.hardware.orientation.Orientation
 import io.fotoapparat.hardware.orientation.OrientationSensor
 import io.fotoapparat.hardware.orientation.OrientationState
@@ -64,9 +64,9 @@ internal fun Device.start() {
     }
 
     focusPointSelector?.setFocalPointListener { focalRequest ->
-        execute {
+        executor.execute(Operation(cancellable = true) {
             focusOnPoint(focalRequest)
-        }
+        })
     }
 
     cameraDevice.run {

@@ -3,12 +3,11 @@ package io.fotoapparat.hardware
 import android.os.Handler
 import android.os.Looper
 import java.util.concurrent.Executors
-import java.util.concurrent.Future
 
 
-private val cameraExecutor = Executors.newSingleThreadExecutor()
 private val loggingExecutor = Executors.newSingleThreadExecutor()
 private val mainThreadHandler = Handler(Looper.getMainLooper())
+
 /**
  * [java.util.concurrent.Executor] operating the [io.fotoapparat.result.PendingResult].
  */
@@ -17,18 +16,6 @@ internal val pendingResultExecutor = Executors.newSingleThreadExecutor()
  * [java.util.concurrent.Executor] operating the [io.fotoapparat.preview.PreviewStream].
  */
 internal val frameProcessingExecutor = Executors.newSingleThreadExecutor()
-
-/**
- * Shuts down all pending camera tasks.
- */
-internal fun shutdownPendingTasks() {
-    // FIXME
-}
-
-/**
- * Executes a camera operation and returns a result as a future.
- */
-internal fun <T> execute(function: () -> T): Future<T> = cameraExecutor.submit(function)
 
 /**
  * Executes an operation in the main thread.
