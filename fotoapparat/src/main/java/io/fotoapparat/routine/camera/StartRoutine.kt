@@ -9,6 +9,7 @@ import io.fotoapparat.hardware.orientation.OrientationSensor
 import io.fotoapparat.hardware.orientation.OrientationState
 import io.fotoapparat.routine.focus.focusOnPoint
 import io.fotoapparat.routine.orientation.startOrientationMonitoring
+import java.io.IOException
 
 /**
  * Starts the camera from idle.
@@ -69,11 +70,15 @@ internal fun Device.start() {
         })
     }
 
-    cameraDevice.run {
-        setDisplaySurface(
-                preview = cameraRenderer.getPreview()
-        )
+    with(cameraDevice) {
+        try {
+            setDisplaySurface(
+                    preview = cameraRenderer.getPreview()
+            )
 
-        startPreview()
+            startPreview()
+        } catch (e: IOException) {
+            logger.log("Can't start preview because of the exception: $e")
+        }
     }
 }

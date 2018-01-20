@@ -25,7 +25,7 @@ import kotlinx.coroutines.experimental.CompletableDeferred
  * Phone.
  */
 internal open class Device(
-        private val logger: Logger,
+        internal open val logger: Logger,
         private val display: Display,
         internal open val scaleType: ScaleType,
         internal open val cameraRenderer: CameraRenderer,
