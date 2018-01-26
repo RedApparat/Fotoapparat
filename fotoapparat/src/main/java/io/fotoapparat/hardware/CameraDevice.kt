@@ -1,4 +1,3 @@
-@file:Suppress("DEPRECATION")
 
 package io.fotoapparat.hardware
 
@@ -179,6 +178,15 @@ internal open class CameraDevice(
         logger.recordMethod()
 
         previewStream.updateProcessorSafely(frameProcessor)
+    }
+
+    /**
+     * Sets one shot preview callback - to get single frame from preview stream
+     */
+    fun setOneShotPreviewCallback(callback: Camera.PreviewCallback){
+        logger.recordMethod()
+
+        camera.setOneShotPreviewCallback(callback)
     }
 
     /**
