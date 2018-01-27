@@ -33,4 +33,6 @@ internal fun Device.updateCameraConfiguration(
     cameraDevice.updateFrameProcessor(
             frameProcessor = frameProcessor
     )
+    
+    cameraDevice.clearCachedZoomParameters()
 }
