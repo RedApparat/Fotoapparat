@@ -29,6 +29,11 @@ val testIso = 100
 val jpegQuality = 80
 
 /**
+ * Test object for camera exposure compensation.
+ */
+val exposureCompensation = 5
+
+/**
  * Test object for [CameraConfiguration].
  */
 internal val testConfiguration = CameraConfiguration(
@@ -52,6 +57,7 @@ val testCapabilities = Capabilities(
         maxFocusAreas = 100,
         maxMeteringAreas = 100,
         jpegQualityRange = IntRange(0, 100),
+        exposureCompensationRange = IntRange(-20, 20),
         antiBandingModes = setOf(AntiBandingMode.None),
         previewFpsRanges = setOf(testFpsRange),
         pictureResolutions = setOf(testResolution),
@@ -66,6 +72,7 @@ val testCameraParameters = CameraParameters(
         flashMode = Flash.AutoRedEye,
         focusMode = FocusMode.Fixed,
         jpegQuality = jpegQuality,
+        exposureCompensation = exposureCompensation,
         antiBandingMode = AntiBandingMode.None,
         previewFpsRange = testFpsRange,
         sensorSensitivity = testIso,

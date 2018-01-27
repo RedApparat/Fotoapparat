@@ -10,6 +10,7 @@ data class UpdateConfiguration(
         override val flashMode: FlashSelector? = null,
         override val focusMode: FocusModeSelector? = null,
         override val jpegQuality: QualitySelector? = null,
+        override val exposureCompensation: ExposureSelector? = null,
         override val frameProcessor: FrameProcessor? = null,
         override val previewFpsRange: FpsRangeSelector? = null,
         override val antiBandingMode: AntiBandingModeSelector? = null,
@@ -58,6 +59,12 @@ data class UpdateConfiguration(
         fun jpegQuality(selector: QualitySelector): Builder = apply {
             configuration = configuration.copy(
                     jpegQuality = selector
+            )
+        }
+
+        fun exposureCompensation(selector: ExposureSelector): Builder = apply {
+            configuration = configuration.copy(
+                    exposureCompensation = selector
             )
         }
 
