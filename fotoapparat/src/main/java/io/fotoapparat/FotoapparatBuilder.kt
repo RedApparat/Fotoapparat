@@ -107,6 +107,15 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
     }
 
     /**
+     * @param selector selects exposure compensation value from available range.
+     */
+    fun exposureCompensation(selector: ExposureSelector): FotoapparatBuilder = apply {
+        configuration = configuration.copy(
+                exposureCompensation = selector
+        )
+    }
+
+    /**
      * @param frameProcessor receives preview frames for processing.
      * @see FrameProcessorJava
      */

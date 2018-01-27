@@ -25,6 +25,7 @@ private infix fun CameraParameters.tryApplyInto(parameters: Camera.Parameters) {
     flashMode applyInto parameters
     focusMode applyInto parameters
     jpegQuality applyInto parameters
+    exposureCompensation applyExposureCompensationInto parameters
     antiBandingMode applyInto parameters
     previewFpsRange applyInto parameters
     previewResolution applyPreviewInto parameters
@@ -42,6 +43,10 @@ private infix fun FocusMode.applyInto(parameters: Camera.Parameters) {
 
 private infix fun Int.applyInto(parameters: Camera.Parameters) {
     parameters.jpegQuality = this
+}
+
+private infix fun Int.applyExposureCompensationInto(parameters: Camera.Parameters) {
+    parameters.exposureCompensation = this
 }
 
 private infix fun AntiBandingMode.applyInto(parameters: Camera.Parameters) {

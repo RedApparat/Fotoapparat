@@ -84,6 +84,13 @@ internal class SupportedParameters(
     }
 
     /**
+     * @return A [IntRange] of exposure compensation values supported by the camera.
+     */
+    val exposureCompensationRange by lazy {
+        IntRange(cameraParameters.minExposureCompensation, cameraParameters.maxExposureCompensation)
+    }
+
+    /**
      * @see Camera.Parameters.getMaxNumFocusAreas
      */
     val maxNumFocusAreas by lazy {

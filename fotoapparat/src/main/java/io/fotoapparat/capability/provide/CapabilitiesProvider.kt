@@ -21,6 +21,7 @@ private fun SupportedParameters.getCapabilities(): Capabilities {
             canSmoothZoom = supportedSmoothZoom,
             maxMeteringAreas = maxNumMeteringAreas,
             jpegQualityRange = jpegQualityRange,
+            exposureCompensationRange = exposureCompensationRange,
             antiBandingModes = supportedAutoBandingModes.extract(String::toAntiBandingMode),
             sensorSensitivities = sensorSensitivities.toSet(),
             previewFpsRanges = supportedPreviewFpsRanges.extract { it.toFpsRange() },

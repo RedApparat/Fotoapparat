@@ -17,6 +17,7 @@ internal class CameraParametersProviderTest {
     val resolution = Resolution(10, 10)
     val fpsRange = FpsRange(20000, 20000)
     val jpegQuality = 80
+    val exposureCompensation = 5
     val iso = 100
 
     val capabilities = Capabilities(
@@ -29,6 +30,7 @@ internal class CameraParametersProviderTest {
             previewFpsRanges = setOf(fpsRange),
             antiBandingModes = setOf(AntiBandingMode.None),
             jpegQualityRange = IntRange(0, 100),
+            exposureCompensationRange = IntRange(-20, 20),
             pictureResolutions = setOf(resolution),
             previewResolutions = setOf(resolution),
             sensorSensitivities = setOf(iso)
@@ -38,6 +40,7 @@ internal class CameraParametersProviderTest {
             flashMode = single(Flash.AutoRedEye),
             focusMode = single(FocusMode.Fixed),
             jpegQuality = single(jpegQuality),
+            exposureCompensation = single(exposureCompensation),
             frameProcessor = {},
             antiBandingMode = single(AntiBandingMode.None),
             previewFpsRange = single(fpsRange),
@@ -62,6 +65,7 @@ internal class CameraParametersProviderTest {
                         flashMode = Flash.AutoRedEye,
                         focusMode = FocusMode.Fixed,
                         jpegQuality = jpegQuality,
+                        exposureCompensation = exposureCompensation,
                         previewFpsRange = fpsRange,
                         antiBandingMode = AntiBandingMode.None,
                         pictureResolution = resolution,
@@ -159,6 +163,23 @@ internal class CameraParametersProviderTest {
         // Given
         val definedConfiguration = definedConfiguration.copy(
                 jpegQuality = nothing()
+        )
+
+        // When
+        getCameraParameters(
+                capabilities = capabilities,
+                cameraConfiguration = definedConfiguration
+        )
+
+        // Then
+        // throw exception
+    }
+
+    @Test(expected = UnsupportedConfigurationException::class)
+    fun `Select no exposure compensation`() {
+        // Given
+        val definedConfiguration = definedConfiguration.copy(
+                exposureCompensation = nothing()
         )
 
         // When
@@ -313,6 +334,26 @@ internal class CameraParametersProviderTest {
         )
         val definedConfiguration = definedConfiguration.copy(
                 jpegQuality = { 200 }
+        )
+
+        // When
+        getCameraParameters(
+                capabilities = capabilities,
+                cameraConfiguration = definedConfiguration
+        )
+
+        // Then
+        // throw exception
+    }
+
+    @Test(expected = InvalidConfigurationException::class)
+    fun `Select exposure compensation which is not supported`() {
+        // Given
+        val capabilities = capabilities.copy(
+                exposureCompensationRange = IntRange(-20, 20)
+        )
+        val definedConfiguration = definedConfiguration.copy(
+                exposureCompensation = { 100 }
         )
 
         // When
