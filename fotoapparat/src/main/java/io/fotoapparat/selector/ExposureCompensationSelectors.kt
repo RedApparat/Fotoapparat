@@ -21,4 +21,4 @@ fun lowestExposure(): ExposureSelector = lowest()
 /**
  * @return Selector function which always provides the default exposure.
  */
-fun autoExposure(): ExposureSelector = single(0)
+fun defaultExposure(): ExposureSelector = single(0)
