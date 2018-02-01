@@ -51,6 +51,7 @@ internal open class CameraDevice(
     private lateinit var surface: Surface
     private lateinit var camera: Camera
 
+    private var cachedCameraParameters: Camera.Parameters? = null
     private var displayOrientation: Orientation = Portrait
     private var imageOrientation: Orientation = Portrait
     private var previewOrientation: Orientation = Portrait
@@ -168,7 +169,8 @@ internal open class CameraDevice(
 
         logger.log("New camera parameters are: $cameraParameters")
 
-        cameraParameters.applyInto(camera.parameters)
+        cameraParameters.applyInto(cachedCameraParameters ?: camera.parameters)
+                .cacheLocally()
                 .setInCamera()
     }
 
@@ -297,11 +299,16 @@ internal open class CameraDevice(
     }
 
     private fun setZoomUnsafe(@FloatRange(from = 0.0, to = 1.0) level: Float) {
-        camera.parameters
+        (cachedCameraParameters ?: camera.parameters)
                 .apply {
                     zoom = (maxZoom * level).toInt()
                 }
+                .cacheLocally()
                 .setInCamera()
+    }
+
+    private fun Camera.Parameters.cacheLocally() = apply {
+        cachedCameraParameters = this
     }
 
     private fun Camera.Parameters.setInCamera() = apply {
