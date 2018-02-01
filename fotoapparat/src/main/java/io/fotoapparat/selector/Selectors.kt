@@ -32,6 +32,7 @@ fun <T : Comparable<T>> lowest(): Iterable<T>.() -> T? = Iterable<T>::min
  * @return Selector function which returns first non-null result from given selectors.
  * If there are no non-null results, returns `null`.
  */
+@SafeVarargs
 fun <Input, Output> firstAvailable(
         vararg functions: Input.() -> Output?
 ): Input.() -> Output? = {
