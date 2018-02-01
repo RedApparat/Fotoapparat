@@ -1,6 +1,7 @@
 package io.fotoapparat
 
 import android.content.Context
+import android.hardware.Camera
 import android.support.annotation.FloatRange
 import io.fotoapparat.concurrent.CameraExecutor
 import io.fotoapparat.concurrent.CameraExecutor.Operation
@@ -15,14 +16,12 @@ import io.fotoapparat.log.Logger
 import io.fotoapparat.log.none
 import io.fotoapparat.parameter.ScaleType
 import io.fotoapparat.result.*
-import io.fotoapparat.routine.camera.bootStart
-import io.fotoapparat.routine.camera.shutDown
-import io.fotoapparat.routine.camera.switchCamera
-import io.fotoapparat.routine.camera.updateDeviceConfiguration
+import io.fotoapparat.routine.camera.*
 import io.fotoapparat.routine.capability.getCapabilities
 import io.fotoapparat.routine.focus.focus
 import io.fotoapparat.routine.parameter.getCurrentParameters
 import io.fotoapparat.routine.photo.takePhoto
+import io.fotoapparat.routine.preview.setOneshotPreviewCallback
 import io.fotoapparat.routine.zoom.updateZoomLevel
 import io.fotoapparat.selector.*
 import io.fotoapparat.view.CameraRenderer
@@ -206,6 +205,13 @@ class Fotoapparat
         ))
 
         return PendingResult.fromFuture(future, logger)
+    }
+
+    /**
+     * Sets one shot preview callback - to get single frame from preview stream
+     */
+    fun setOneshotPreviewCallback(callback: Camera.PreviewCallback) {
+        device.setOneshotPreviewCallback(callback)
     }
 
     /**
