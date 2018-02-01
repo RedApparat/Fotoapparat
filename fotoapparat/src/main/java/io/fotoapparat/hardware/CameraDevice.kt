@@ -20,7 +20,7 @@ import io.fotoapparat.log.Logger
 import io.fotoapparat.parameter.FocusMode
 import io.fotoapparat.parameter.Resolution
 import io.fotoapparat.parameter.camera.CameraParameters
-import io.fotoapparat.parameter.camera.apply.applyNewParameters
+import io.fotoapparat.parameter.camera.apply.applyInto
 import io.fotoapparat.parameter.camera.convert.toCode
 import io.fotoapparat.preview.PreviewStream
 import io.fotoapparat.result.FocusResult
@@ -51,7 +51,6 @@ internal open class CameraDevice(
     private lateinit var surface: Surface
     private lateinit var camera: Camera
 
-    private var cachedZoomParameters: Camera.Parameters? = null
     private var displayOrientation: Orientation = Portrait
     private var imageOrientation: Orientation = Portrait
     private var previewOrientation: Orientation = Portrait
@@ -169,7 +168,8 @@ internal open class CameraDevice(
 
         logger.log("New camera parameters are: $cameraParameters")
 
-        camera.updateParameters(cameraParameters)
+        cameraParameters.applyInto(camera.parameters)
+                .setInCamera()
     }
 
     /**
@@ -297,14 +297,15 @@ internal open class CameraDevice(
     }
 
     private fun setZoomUnsafe(@FloatRange(from = 0.0, to = 1.0) level: Float) {
-        (cachedZoomParameters ?: camera.parameters)
+        camera.parameters
                 .apply {
                     zoom = (maxZoom * level).toInt()
                 }
-                .let {
-                    cachedZoomParameters = it
-                    camera.parameters = it
-                }
+                .setInCamera()
+    }
+
+    private fun Camera.Parameters.setInCamera() = apply {
+        camera.parameters = this
     }
 
     private fun Camera.focusSafely(): FocusResult {
@@ -383,10 +384,6 @@ private fun Camera.takePhoto(imageRotation: Int): Photo {
     latch.await()
 
     return photoReference.get()
-}
-
-private fun Camera.updateParameters(newParameters: CameraParameters) {
-    parameters = parameters.applyNewParameters(newParameters)
 }
 
 @Throws(IOException::class)

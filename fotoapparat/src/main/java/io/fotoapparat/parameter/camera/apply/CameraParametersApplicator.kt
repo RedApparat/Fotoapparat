@@ -12,13 +12,13 @@ import io.fotoapparat.parameter.camera.convert.toCode
  * Applies a new set of [CameraParameters] to existing [Camera.Parameters].
  *
  * @receiver The existing [Camera.Parameters]
- * @param newParameters A new set of [CameraParameters].
+ * @param parameters A new set of [CameraParameters].
  *
  * @return Same [Camera.Parameters] object which was passed, but filled with new parameters.
  */
-internal fun Camera.Parameters.applyNewParameters(newParameters: CameraParameters): Camera.Parameters {
-    newParameters tryApplyInto this
-    return this
+internal fun CameraParameters.applyInto(parameters: Camera.Parameters): Camera.Parameters {
+    this tryApplyInto parameters
+    return parameters
 }
 
 private infix fun CameraParameters.tryApplyInto(parameters: Camera.Parameters) {
