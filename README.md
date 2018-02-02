@@ -166,10 +166,19 @@ repositories {
   maven { url 'https://jitpack.io' }
 }
  
-compile 'io.fotoapparat.fotoapparat:library:2.2.0'
+implementation 'io.fotoapparat.fotoapparat:library:2.2.0'
 ```
 
 Camera permission will be automatically added to your `AndroidManifest.xml`. Do not forget to request this permission on Marshmallow and higher.
+
+#### Snapshot versions
+
+If you like to test and try the latest added features & bugfixes you can use the `-SNAPSHOT` version.
+Gradle will download & cache the latest snapshot version, so be sure to delete the cache if you want to try a newer `snapshot` version than the downloaded/cached one.
+
+```groovy
+implementation 'io.fotoapparat:fotoapparat:-SNAPSHOT'
+```
 
 ## Face detection
 
