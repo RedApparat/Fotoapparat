@@ -314,6 +314,10 @@ internal open class CameraDevice(
     private fun Camera.Parameters.setInCamera() = apply {
         camera.parameters = this
     }
+        
+    open fun clearCachedZoomParameters() {
+        cachedZoomParameters = null
+    }
 
     private fun Camera.focusSafely(): FocusResult {
         val latch = CountDownLatch(1)
