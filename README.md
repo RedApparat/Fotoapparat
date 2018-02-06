@@ -188,17 +188,19 @@ Optionally, you can check out our other library which adds face detection capabi
 
 For video recording possibility, check out our premium library - [Videoapparat](https://github.com/Fotoapparat/Videoapparat)
 
+## Contact us
+
+Impressed? We are actually open for your projects.
+
+If you want some particular computer vision algorithm (document recognition, edge detection, photo processing or more), drop us a line at fotoapparat.team@gmail.com.
+
+
 ## Credits
 
 We want to say thanks to [Mark Murphy](https://github.com/commonsguy) for the awesome job he did with [CWAC-Camera](https://github.com/commonsguy/cwac-camera). We were using his library for a couple of years and now we feel that Fotoapparat is a next step in the right direction.
 
 We also want to say many thanks to [Leander Lenzing](http://leanderlenzing.com/) for the amazing icon. Don't forget to follow his work in [dribbble](https://dribbble.com/leanderlenzing).
 
-## Contact us
-
-Impressed? We are actually open for your projects.
-
-If you want some particular computer vision algorithm (document recognition, photo processing or more), drop us a line at fotoapparat.team@gmail.com.
 
 ## License
 
