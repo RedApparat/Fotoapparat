@@ -188,12 +188,6 @@ Optionally, you can check out our other library which adds face detection capabi
 
 For video recording possibility, check out our premium library - [Videoapparat](https://github.com/Fotoapparat/Videoapparat)
 
-## Contact us
-
-Impressed? We are actually open for your projects.
-
-If you want some particular computer vision algorithm (document recognition, edge detection, photo processing or more), drop us a line at fotoapparat.team@gmail.com.
-
 
 ## Credits
 
