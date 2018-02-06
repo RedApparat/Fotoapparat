@@ -184,6 +184,10 @@ implementation 'io.fotoapparat:fotoapparat:-SNAPSHOT'
 
 Optionally, you can check out our other library which adds face detection capabilities - [FaceDetector](https://github.com/Fotoapparat/FaceDetector).
 
+## Videoapparat
+
+For video recording possibility, check out our premium library - [Videoapparat](https://github.com/Fotoapparat/Videoapparat)
+
 ## Credits
 
 We want to say thanks to [Mark Murphy](https://github.com/commonsguy) for the awesome job he did with [CWAC-Camera](https://github.com/commonsguy/cwac-camera). We were using his library for a couple of years and now we feel that Fotoapparat is a next step in the right direction.
