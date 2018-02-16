@@ -15,6 +15,7 @@ internal fun Camera.getCapabilities() = SupportedParameters(parameters).getCapab
 private fun SupportedParameters.getCapabilities(): Capabilities {
     return Capabilities(
             canZoom = supportedZoom,
+            maxZoom = maxSupportedZoom,
             flashModes = flashModes.extract { it.toFlash() },
             focusModes = focusModes.extract { it.toFocusMode() },
             maxFocusAreas = maxNumFocusAreas,

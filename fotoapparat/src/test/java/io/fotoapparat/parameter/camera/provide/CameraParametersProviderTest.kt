@@ -22,6 +22,7 @@ internal class CameraParametersProviderTest {
 
     val capabilities = Capabilities(
             canZoom = false,
+            maxZoom = 3,
             flashModes = setOf(Flash.AutoRedEye),
             focusModes = setOf(FocusMode.Fixed),
             canSmoothZoom = false,
