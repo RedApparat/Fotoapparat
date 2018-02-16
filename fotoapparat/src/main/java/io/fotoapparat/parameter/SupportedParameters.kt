@@ -56,6 +56,13 @@ internal class SupportedParameters(
     }
 
     /**
+     * @see Camera.Parameters.getMaxZoom
+     */
+    val maxSupportedZoom by lazy {
+        cameraParameters.maxZoom
+    }
+
+    /**
      * @see Camera.Parameters.isZoomSupported
      */
     val supportedZoom by lazy {

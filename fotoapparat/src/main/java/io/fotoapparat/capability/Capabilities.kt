@@ -11,6 +11,7 @@ import io.fotoapparat.util.wrap
  */
 data class Capabilities(
         val canZoom: Boolean,
+        val maxZoom: Int,
         val flashModes: Set<Flash>,
         val focusModes: Set<FocusMode>,
         val canSmoothZoom: Boolean,
@@ -37,6 +38,7 @@ data class Capabilities(
     override fun toString(): String {
         return "Capabilities" + lineSeparator +
                 "canZoom:" + canZoom.wrap() +
+                "maxZoom:" + maxZoom.wrap() +
                 "flashModes:" + flashModes.wrap() +
                 "focusModes:" + focusModes.wrap() +
                 "canSmoothZoom:" + canSmoothZoom.wrap() +
