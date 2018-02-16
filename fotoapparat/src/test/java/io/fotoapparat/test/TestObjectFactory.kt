@@ -4,7 +4,6 @@ import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.parameter.*
 import io.fotoapparat.parameter.camera.CameraParameters
-import io.fotoapparat.preview.Frame
 import io.fotoapparat.selector.single
 import io.fotoapparat.util.FrameProcessor
 
@@ -50,8 +49,7 @@ internal val testConfiguration = CameraConfiguration(
  * Test object for [Capabilities].
  */
 val testCapabilities = Capabilities(
-        canZoom = false,
-        maxZoom = 3,
+        zoom = Zoom.VariableZoom(0, 3),
         flashModes = setOf(Flash.AutoRedEye),
         focusModes = setOf(FocusMode.Fixed),
         canSmoothZoom = false,
