@@ -122,7 +122,7 @@ public class ActivityJava extends AppCompatActivity {
                 ))
                 .cameraErrorCallback(new CameraErrorListener() {
                     @Override
-                    public void onError(CameraException e) {
+                    public void onError(@NotNull CameraException e) {
                         Toast.makeText(ActivityJava.this, e.toString(), Toast.LENGTH_LONG).show();
                     }
                 })
