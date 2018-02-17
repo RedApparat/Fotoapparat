@@ -46,7 +46,7 @@ internal class UpdateZoomLevelRoutineTest {
         // Given
         device.awaitSelectedCamera() willReturn cameraDevice
         cameraDevice.getCapabilities() willReturn testCapabilities.copy(
-                zoom = Zoom.VariableZoom(0, 3)
+                zoom = Zoom.VariableZoom(3)
         )
 
         // When

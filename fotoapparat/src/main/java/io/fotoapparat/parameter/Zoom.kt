@@ -1,12 +1,18 @@
 package io.fotoapparat.parameter
 
 /**
- * Zoom modes which camera can use.
+ * Zoom modes which camera can have.
  */
 sealed class Zoom {
 
+    /**
+     * The camera can only support one, fixed zoom level.
+     */
     object FixedZoom : Zoom()
 
-    data class VariableZoom(val minZoom: Int, val maxZoom: Int) : Zoom()
+    /**
+     * The camera can only support a variable zoom level between (and including) 0 and [maxZoom] values.
+     */
+    data class VariableZoom(val maxZoom: Int) : Zoom()
 
 }
