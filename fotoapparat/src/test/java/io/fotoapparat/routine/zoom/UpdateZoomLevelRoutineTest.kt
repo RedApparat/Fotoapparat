@@ -3,6 +3,7 @@ package io.fotoapparat.routine.zoom
 import io.fotoapparat.exception.LevelOutOfRangeException
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
+import io.fotoapparat.parameter.Zoom
 import io.fotoapparat.test.testCapabilities
 import io.fotoapparat.test.willReturn
 import kotlinx.coroutines.experimental.runBlocking
@@ -45,7 +46,7 @@ internal class UpdateZoomLevelRoutineTest {
         // Given
         device.awaitSelectedCamera() willReturn cameraDevice
         cameraDevice.getCapabilities() willReturn testCapabilities.copy(
-                canZoom = true
+                zoom = Zoom.VariableZoom(3)
         )
 
         // When
@@ -60,7 +61,7 @@ internal class UpdateZoomLevelRoutineTest {
         // Given
         device.awaitSelectedCamera() willReturn cameraDevice
         cameraDevice.getCapabilities() willReturn testCapabilities.copy(
-                canZoom = false
+                zoom = Zoom.FixedZoom
         )
 
         // When

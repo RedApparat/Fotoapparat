@@ -12,6 +12,7 @@ import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.UpdateConfiguration
 import io.fotoapparat.log.logcat
 import io.fotoapparat.parameter.Flash
+import io.fotoapparat.parameter.Zoom
 import io.fotoapparat.result.transformer.scaled
 import io.fotoapparat.selector.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -153,7 +154,7 @@ class MainActivity : AppCompatActivity() {
                 .whenAvailable { capabilities ->
                     capabilities
                             ?.let {
-                                zoomSeekBar.visibility = if (it.canZoom) View.VISIBLE else View.GONE
+                                zoomSeekBar.visibility = if (it.zoom is Zoom.VariableZoom) View.VISIBLE else View.GONE
                                 torchSwitch.visibility = if (it.flashModes.contains(Flash.Torch)) View.VISIBLE else View.GONE
                             }
                             ?: Log.e(LOGGING_TAG, "Couldn't obtain capabilities.")
