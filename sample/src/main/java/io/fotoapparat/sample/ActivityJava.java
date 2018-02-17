@@ -17,10 +17,9 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 
 import io.fotoapparat.Fotoapparat;
-import io.fotoapparat.characteristic.LensPosition;
-import io.fotoapparat.concurrent.CameraExecutor;
 import io.fotoapparat.configuration.CameraConfiguration;
 import io.fotoapparat.configuration.UpdateConfiguration;
+import io.fotoapparat.error.CameraErrorListener;
 import io.fotoapparat.exception.camera.CameraException;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.preview.Frame;
@@ -30,8 +29,6 @@ import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.result.WhenDoneListener;
 import io.fotoapparat.view.CameraView;
 import io.fotoapparat.view.FocusView;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 import static io.fotoapparat.log.LoggersKt.fileLogger;
 import static io.fotoapparat.log.LoggersKt.logcat;
@@ -112,17 +109,24 @@ public class ActivityJava extends AppCompatActivity {
     }
 
     private Fotoapparat createFotoapparat() {
-        return new Fotoapparat(this, cameraView, focusView, back(), ScaleType
-                .CenterCrop, cameraConfiguration, new Function1<CameraException, Unit>() {
-            @Override
-            public Unit invoke(CameraException e) {
-                Toast.makeText(ActivityJava.this, e.toString(), Toast.LENGTH_LONG).show();
-                return Unit.INSTANCE;
-            }
-        }, new CameraExecutor(), loggers(
-                logcat(),
-                fileLogger(this)
-        ));
+        return Fotoapparat
+                .with(this)
+                .into(cameraView)
+                .focusView(focusView)
+                .previewScaleType(ScaleType.CenterCrop)
+                .lensPosition(back())
+                .frameProcessor(new SampleFrameProcessor())
+                .logger(loggers(
+                        logcat(),
+                        fileLogger(this)
+                ))
+                .cameraErrorCallback(new CameraErrorListener() {
+                    @Override
+                    public void onError(CameraException e) {
+                        Toast.makeText(ActivityJava.this, e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                })
+                .build();
     }
 
     private void zoomSeekBar() {
@@ -173,20 +177,11 @@ public class ActivityJava extends AppCompatActivity {
             public void onClick(View v) {
                 activeCameraBack = !activeCameraBack;
                 fotoapparat.switchTo(
-                        getOtherCamera(),
+                        activeCameraBack ? back() : front(),
                         cameraConfiguration
                 );
             }
         });
-    }
-
-    @NonNull
-    private Function1<Iterable<? extends LensPosition>, LensPosition> getOtherCamera() {
-        if (activeCameraBack) {
-            return back();
-        } else {
-            return front();
-        }
     }
 
     private void takePictureOnClick() {

@@ -11,6 +11,7 @@ import io.fotoapparat.selector.*
 import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.view.CameraRenderer
 import io.fotoapparat.view.CameraView
+import io.fotoapparat.view.FocusView
 import io.fotoapparat.preview.FrameProcessor as FrameProcessorJava
 
 /**
@@ -25,6 +26,7 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
     )
     internal var cameraErrorCallback: CameraErrorCallback = {}
     internal var renderer: CameraRenderer? = null
+    internal var focusView: FocusView? = null
     internal var scaleType: ScaleType = ScaleType.CenterCrop
     internal var logger: Logger = none()
 
@@ -164,6 +166,13 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
             apply { this.renderer = renderer }
 
     /**
+     * @param focusView view which will be used for touch to focus.
+     * @see FocusView
+     */
+    fun focusView(focusView: FocusView): FotoapparatBuilder =
+            apply { this.focusView = focusView }
+
+    /**
      * @return set up instance of [Fotoapparat].
      * @throws IllegalStateException if some mandatory parameters are not specified.
      */
@@ -181,6 +190,7 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
         return Fotoapparat(
                 context = context,
                 view = renderer,
+                focusView = focusView,
                 lensPosition = lensPositionSelector,
                 cameraConfiguration = configuration,
                 scaleType = scaleType,
