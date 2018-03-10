@@ -5,7 +5,7 @@
 
 ![ ](sample/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
 
-Camera API in Android is hard. Having 2 different API for new and old Camera does not make things any easier. But fret not, that is your lucky day! After several years of working with Camera we came up with Fotoapparat.
+Camera API in Android is hard. Having 2 different API for new and old Camera does not make things any easier. But fret not, that is your lucky day! After several years of working with Camera, we came up with Fotoapparat.
 
 What it provides:
 - Camera API which does not allow you to shoot yourself in the foot.
@@ -83,9 +83,9 @@ override fun onStop() {
 }
 ```
 
-### Take picture
+### Take a picture
 
-Finally we are ready to take picture. You have various options.
+Finally, we are ready to take a picture. You have various options.
 
 ```kotlin
 val photoResult = fotoapparat.takePicture()
@@ -93,7 +93,7 @@ val photoResult = fotoapparat.takePicture()
 // Asynchronously saves photo to file
 photoResult.saveToFile(someFile)
  
-// Asynchronously converts photo to bitmap and returns result on main thread
+// Asynchronously converts photo to bitmap and returns the result on the main thread
 photoResult
     .toBitmap()
     .whenAvailable { bitmapPhoto ->
@@ -103,7 +103,7 @@ photoResult
             imageView.setRotation(-bitmapPhoto.rotationDegrees)
     }
     
-// Of course you can also get a photo in a blocking way. Do not do it on main thread though.
+// Of course, you can also get a photo in a blocking way. Do not do it on the main thread though.
 val result = photoResult.toBitmap().await()
  
 // Convert asynchronous events to RxJava 1.x/2.x types. 
@@ -130,7 +130,7 @@ fotoapparat.updateConfiguration(
 )
 ```
 
-Or alternatively you may provide updates on an existing full configuration. 
+Or alternatively, you may provide updates on an existing full configuration. 
 
 ```kotlin
 val configuration = CameraConfiguration(
