@@ -234,6 +234,30 @@ class Fotoapparat
             selector: LensPositionSelector
     ): Boolean = device.canSelectCamera(selector)
 
+    /**
+     * request active camera preview
+     */
+    fun startPreview() {
+        logger.recordMethod()
+
+        executor.execute(
+                Operation(cancellable = true,
+                        function = device.getSelectedCamera()::stopPreview)
+        )
+    }
+
+    /**
+     * request inactive camera preview
+     */
+    fun stopPreview() {
+        logger.recordMethod()
+
+        executor.execute(
+                Operation(cancellable = true,
+                        function = device.getSelectedCamera()::startPreview)
+        )
+    }
+
     companion object {
 
         private val EXECUTOR = CameraExecutor()
