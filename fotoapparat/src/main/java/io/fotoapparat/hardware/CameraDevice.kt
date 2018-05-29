@@ -82,7 +82,7 @@ internal open class CameraDevice(
      */
     open fun close() {
         logger.recordMethod()
-
+        surface.release()
         camera.release()
     }
 
