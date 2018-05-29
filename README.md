@@ -177,7 +177,7 @@ If you like to test and try the latest added features & bugfixes you can use the
 Gradle will download & cache the latest snapshot version, so be sure to delete the cache if you want to try a newer `snapshot` version than the downloaded/cached one.
 
 ```groovy
-implementation 'io.fotoapparat:fotoapparat:library:-SNAPSHOT'
+implementation 'io.fotoapparat:fotoapparat:-SNAPSHOT'
 ```
 
 ## Face detection
