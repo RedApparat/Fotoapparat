@@ -1,6 +1,6 @@
 # Fotoapparat
 
-![Build status](https://travis-ci.org/Fotoapparat/Fotoapparat.svg?branch=master)
+![Build status](https://travis-ci.org/RedApparat/Fotoapparat.svg?branch=master)
 
 
 ![ ](sample/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
