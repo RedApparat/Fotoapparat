@@ -78,12 +78,14 @@ public class V2Provider implements CameraProvider {
         CaptureRequestFactory captureRequestFactory = new CaptureRequestFactory(
                 cameraConnection,
                 stillSurfaceReader,
+                continuousSurfaceReader,
                 textureManager,
                 parametersProvider
         );
 
         SessionProvider sessionProvider = new SessionProvider(
                 stillSurfaceReader,
+                continuousSurfaceReader,
                 cameraConnection,
                 captureRequestFactory,
                 textureManager,

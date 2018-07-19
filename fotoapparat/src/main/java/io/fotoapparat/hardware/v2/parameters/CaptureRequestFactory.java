@@ -8,6 +8,7 @@ import android.support.annotation.RequiresApi;
 import android.view.Surface;
 
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
+import io.fotoapparat.hardware.v2.readers.ContinuousSurfaceReader;
 import io.fotoapparat.hardware.v2.readers.StillSurfaceReader;
 import io.fotoapparat.hardware.v2.surface.TextureManager;
 import io.fotoapparat.parameter.Flash;
@@ -21,16 +22,19 @@ import io.fotoapparat.parameter.range.Range;
 public class CaptureRequestFactory {
 
     private final StillSurfaceReader surfaceReader;
+    private final ContinuousSurfaceReader continuousSurfaceReader;
     private final TextureManager textureManager;
     private final ParametersProvider parametersProvider;
     private final CameraConnection cameraConnection;
 
     public CaptureRequestFactory(CameraConnection cameraConnection,
                                  StillSurfaceReader surfaceReader,
+                                 ContinuousSurfaceReader continuousSurfaceReader,
                                  TextureManager textureManager,
                                  ParametersProvider parametersProvider) {
         this.cameraConnection = cameraConnection;
         this.surfaceReader = surfaceReader;
+        this.continuousSurfaceReader = continuousSurfaceReader;
         this.textureManager = textureManager;
         this.parametersProvider = parametersProvider;
     }
@@ -45,6 +49,7 @@ public class CaptureRequestFactory {
 
         CameraDevice camera = cameraConnection.getCamera();
         Surface viewSurface = textureManager.getSurface();
+        Surface frameSurface = continuousSurfaceReader.getSurface();
         Flash flash = parametersProvider.getFlash();
         Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
         Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
@@ -52,7 +57,7 @@ public class CaptureRequestFactory {
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_PREVIEW)
-                .into(viewSurface)
+                .into(viewSurface, frameSurface)
                 .flash(flash)
                 .previewFpsRange(previewFpsRange)
                 .sensorSensitivity(sensorSensitivity)
