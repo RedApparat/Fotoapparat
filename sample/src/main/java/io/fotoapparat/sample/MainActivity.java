@@ -4,13 +4,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import org.reactivestreams.Subscription;
+
 import java.io.File;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.FotoapparatSwitcher;
@@ -26,6 +31,13 @@ import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.view.CameraView;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 import static io.fotoapparat.log.Loggers.fileLogger;
 import static io.fotoapparat.log.Loggers.logcat;
@@ -47,228 +59,248 @@ import static io.fotoapparat.result.transformer.SizeTransformers.scaled;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
-    private boolean hasCameraPermission;
-    private CameraView cameraView;
+	private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
+	private boolean hasCameraPermission;
+	private CameraView cameraView;
 
-    private FotoapparatSwitcher fotoapparatSwitcher;
-    private Fotoapparat frontFotoapparat;
-    private Fotoapparat backFotoapparat;
+	private FotoapparatSwitcher fotoapparatSwitcher;
+	private Fotoapparat frontFotoapparat;
+	private Fotoapparat backFotoapparat;
+	private Disposable rate;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
-        cameraView = (CameraView) findViewById(R.id.camera_view);
-        hasCameraPermission = permissionsDelegate.hasCameraPermission();
+		cameraView = (CameraView) findViewById(R.id.camera_view);
+		hasCameraPermission = permissionsDelegate.hasCameraPermission();
 
-        if (hasCameraPermission) {
-            cameraView.setVisibility(View.VISIBLE);
-        } else {
-            permissionsDelegate.requestCameraPermission();
-        }
+		if (hasCameraPermission) {
+			cameraView.setVisibility(View.VISIBLE);
+		} else {
+			permissionsDelegate.requestCameraPermission();
+		}
 
-        setupFotoapparat();
+		setupFotoapparat();
 
-        takePictureOnClick();
-        focusOnLongClick();
-        switchCameraOnClick();
-        toggleTorchOnSwitch();
-        zoomSeekBar();
-    }
+		takePictureOnClick();
+		focusOnLongClick();
+		switchCameraOnClick();
+		toggleTorchOnSwitch();
+		zoomSeekBar();
+	}
 
-    private void setupFotoapparat() {
-        frontFotoapparat = createFotoapparat(LensPosition.FRONT);
-        backFotoapparat = createFotoapparat(LensPosition.BACK);
-        fotoapparatSwitcher = FotoapparatSwitcher.withDefault(backFotoapparat);
-    }
+	private void setupFotoapparat() {
+		frontFotoapparat = createFotoapparat(LensPosition.FRONT);
+		backFotoapparat = createFotoapparat(LensPosition.BACK);
+		fotoapparatSwitcher = FotoapparatSwitcher.withDefault(backFotoapparat);
+	}
 
-    private void zoomSeekBar() {
-        SeekBar seekBar = (SeekBar) findViewById(R.id.zoomSeekBar);
+	private void zoomSeekBar() {
+		SeekBar seekBar = (SeekBar) findViewById(R.id.zoomSeekBar);
 
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                fotoapparatSwitcher
-                        .getCurrentFotoapparat()
-                        .setZoom(progress / (float) seekBar.getMax());
-            }
+		seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				fotoapparatSwitcher
+						.getCurrentFotoapparat()
+						.setZoom(progress / (float) seekBar.getMax());
+			}
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // Do nothing
-            }
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// Do nothing
+			}
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // Do nothing
-            }
-        });
-    }
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				// Do nothing
+			}
+		});
+	}
 
-    private void toggleTorchOnSwitch() {
-        SwitchCompat torchSwitch = (SwitchCompat) findViewById(R.id.torchSwitch);
+	private void toggleTorchOnSwitch() {
+		SwitchCompat torchSwitch = (SwitchCompat) findViewById(R.id.torchSwitch);
 
-        torchSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                fotoapparatSwitcher
-                        .getCurrentFotoapparat()
-                        .updateParameters(
-                                UpdateRequest.builder()
-                                        .flash(
-                                                isChecked
-                                                        ? torch()
-                                                        : off()
-                                        )
-                                        .build()
-                        );
-            }
-        });
-    }
+		torchSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				fotoapparatSwitcher
+						.getCurrentFotoapparat()
+						.updateParameters(
+								UpdateRequest.builder()
+										.flash(
+												isChecked
+														? torch()
+														: off()
+										)
+										.build()
+						);
+			}
+		});
+	}
 
-    private void switchCameraOnClick() {
-        View switchCameraButton = findViewById(R.id.switchCamera);
-        switchCameraButton.setVisibility(
-                canSwitchCameras()
-                        ? View.VISIBLE
-                        : View.GONE
-        );
-        switchCameraOnClick(switchCameraButton);
-    }
+	private void switchCameraOnClick() {
+		View switchCameraButton = findViewById(R.id.switchCamera);
+		switchCameraButton.setVisibility(
+				canSwitchCameras()
+						? View.VISIBLE
+						: View.GONE
+		);
+		switchCameraOnClick(switchCameraButton);
+	}
 
-    private void switchCameraOnClick(View view) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchCamera();
-            }
-        });
-    }
+	private void switchCameraOnClick(View view) {
+		view.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				switchCamera();
+			}
+		});
+	}
 
-    private void focusOnLongClick() {
-        cameraView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                fotoapparatSwitcher.getCurrentFotoapparat().autoFocus();
+	private void focusOnLongClick() {
+		cameraView.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				fotoapparatSwitcher.getCurrentFotoapparat().autoFocus();
 
-                return true;
-            }
-        });
-    }
+				return true;
+			}
+		});
+	}
 
-    private void takePictureOnClick() {
-        cameraView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture();
-            }
-        });
-    }
+	private void takePictureOnClick() {
+		cameraView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				takePicture();
+			}
+		});
+	}
 
-    private boolean canSwitchCameras() {
-        return frontFotoapparat.isAvailable() == backFotoapparat.isAvailable();
-    }
+	private boolean canSwitchCameras() {
+		return frontFotoapparat.isAvailable() == backFotoapparat.isAvailable();
+	}
 
-    private Fotoapparat createFotoapparat(LensPosition position) {
-        return Fotoapparat
-                .with(this)
-                .cameraProvider(CameraProviders.v1()) // change this to v2 to test Camera2 API
-                .into(cameraView)
-                .previewScaleType(ScaleType.CENTER_CROP)
-                .photoSize(standardRatio(biggestSize()))
-                .lensPosition(lensPosition(position))
-                .focusMode(firstAvailable(
-                        continuousFocus(),
-                        autoFocus(),
-                        fixed()
-                ))
-                .flash(firstAvailable(
-                        autoRedEye(),
-                        autoFlash(),
-                        torch(),
-                        off()
-                ))
-                .previewFpsRange(rangeWithHighestFps())
-                .sensorSensitivity(highestSensorSensitivity())
-                .frameProcessor(new SampleFrameProcessor())
-                .logger(loggers(
-                        logcat(),
-                        fileLogger(this)
-                ))
-                .cameraErrorCallback(new CameraErrorCallback() {
-                    @Override
-                    public void onError(CameraException e) {
-                        Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
-                    }
-                })
-                .build();
-    }
+	private Fotoapparat createFotoapparat(LensPosition position) {
+		return Fotoapparat
+				.with(this)
+				.cameraProvider(CameraProviders.v2(this))
+				.into(cameraView)
+				.previewScaleType(ScaleType.CENTER_CROP)
+				.photoSize(standardRatio(biggestSize()))
+				.lensPosition(lensPosition(position))
+				.focusMode(firstAvailable(
+						continuousFocus(),
+						autoFocus(),
+						fixed()
+				))
+				.flash(firstAvailable(
+						autoRedEye(),
+						autoFlash(),
+						torch(),
+						off()
+				))
+				.previewFpsRange(rangeWithHighestFps())
+				.sensorSensitivity(highestSensorSensitivity())
+				.frameProcessor(new SampleFrameProcessor())
+				.logger(loggers(
+						logcat(),
+						fileLogger(this)
+				))
+				.cameraErrorCallback(new CameraErrorCallback() {
+					@Override
+					public void onError(CameraException e) {
+						Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+					}
+				})
+				.build();
+	}
 
-    private void takePicture() {
-        PhotoResult photoResult = fotoapparatSwitcher.getCurrentFotoapparat().takePicture();
+	private void takePicture() {
+		PhotoResult photoResult = fotoapparatSwitcher.getCurrentFotoapparat().takePicture();
 
-        photoResult.saveToFile(new File(
-                getExternalFilesDir("photos"),
-                "photo.jpg"
-        ));
+		photoResult.saveToFile(new File(
+				getExternalFilesDir("photos"),
+				"photo.jpg"
+		));
 
-        photoResult
-                .toBitmap(scaled(0.25f))
-                .whenAvailable(new PendingResult.Callback<BitmapPhoto>() {
-                    @Override
-                    public void onResult(BitmapPhoto result) {
-                        ImageView imageView = (ImageView) findViewById(R.id.result);
+		photoResult
+				.toBitmap(scaled(0.25f))
+				.whenAvailable(new PendingResult.Callback<BitmapPhoto>() {
+					@Override
+					public void onResult(BitmapPhoto result) {
+						ImageView imageView = (ImageView) findViewById(R.id.result);
 
-                        imageView.setImageBitmap(result.bitmap);
-                        imageView.setRotation(-result.rotationDegrees);
-                    }
-                });
-    }
+						imageView.setImageBitmap(result.bitmap);
+						imageView.setRotation(-result.rotationDegrees);
+					}
+				});
+	}
 
-    private void switchCamera() {
-        if (fotoapparatSwitcher.getCurrentFotoapparat() == frontFotoapparat) {
-            fotoapparatSwitcher.switchTo(backFotoapparat);
-        } else {
-            fotoapparatSwitcher.switchTo(frontFotoapparat);
-        }
-    }
+	private void switchCamera() {
+		if (fotoapparatSwitcher.getCurrentFotoapparat() == frontFotoapparat) {
+			fotoapparatSwitcher.switchTo(backFotoapparat);
+		} else {
+			fotoapparatSwitcher.switchTo(frontFotoapparat);
+		}
+	}
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (hasCameraPermission) {
-            fotoapparatSwitcher.start();
-        }
-    }
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if (hasCameraPermission) {
+			fotoapparatSwitcher.start();
+		}
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (hasCameraPermission) {
-            fotoapparatSwitcher.stop();
-        }
-    }
+		rate = rateReceiver.buffer(1, TimeUnit.SECONDS, Schedulers.computation())
+				.map(new Function<List<Integer>, Integer>() {
+					@Override
+					public Integer apply(List<Integer> integers) {
+						return integers.size();
+					}
+				})
+				.subscribe(new Consumer<Integer>() {
+					@Override
+					public void accept(Integer integer) {
+						Log.d("Frames", integer + "fps");
+					}
+				});
+	}
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (permissionsDelegate.resultGranted(requestCode, permissions, grantResults)) {
-            fotoapparatSwitcher.start();
-            cameraView.setVisibility(View.VISIBLE);
-        }
-    }
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (hasCameraPermission) {
+			fotoapparatSwitcher.stop();
+		}
+		rate.dispose();
+	}
 
-    private class SampleFrameProcessor implements FrameProcessor {
+	@Override
+	public void onRequestPermissionsResult(int requestCode,
+										   @NonNull String[] permissions,
+										   @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		if (permissionsDelegate.resultGranted(requestCode, permissions, grantResults)) {
+			fotoapparatSwitcher.start();
+			cameraView.setVisibility(View.VISIBLE);
+		}
+	}
 
-        @Override
-        public void processFrame(Frame frame) {
-            // Perform frame processing, if needed
-        }
+	PublishSubject<Integer> rateReceiver = PublishSubject.create();
 
-    }
+	private class SampleFrameProcessor implements FrameProcessor {
+
+		@Override
+		public void processFrame(Frame frame) {
+//			Log.d("Frames", "New frame obtained");
+			// Perform frame processing, if needed
+			rateReceiver.onNext(0);
+		}
+
+	}
 
 }

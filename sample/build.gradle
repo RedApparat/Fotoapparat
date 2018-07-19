@@ -24,4 +24,5 @@ dependencies {
     compile project(':fotoapparat')
 
     compile "com.android.support:appcompat-v7:${project.appCompatVersion}"
+    compile "io.reactivex.rxjava2:rxjava:${project.rxjava2Version}"
 }
