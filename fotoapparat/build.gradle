@@ -29,12 +29,24 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:support-annotations:${versions.android.support}"
-    compile "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21'
+    implementation "com.android.support:support-annotations:${versions.android.support}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21'
 
     testImplementation "junit:junit:${versions.test.junit}"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}"
     testImplementation "org.mockito:mockito-core:${versions.test.mockito}"
     testImplementation "commons-io:commons-io:${versions.util.commons}"
 }
+
+ext {
+    bintrayName = 'fotoapparat'
+
+    libraryName = 'Fotoapparat'
+    artifact = 'fotoapparat'
+    libraryVersion = '2.3.1'
+
+    libraryDescription = 'Camera library for Android with a more user-friendly API.'
+}
+
+apply from: '../deploy.gradle'

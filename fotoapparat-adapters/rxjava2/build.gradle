@@ -25,3 +25,15 @@ dependencies {
     testImplementation "io.reactivex.rxjava2:rxjava:${versions.rx.rxJava2}"
     testImplementation "junit:junit:${versions.test.junit}"
 }
+
+ext {
+    bintrayName = 'fotoapparat.adapter-rxjava2'
+
+    libraryName = 'Fotoapparat Adapters - RxJava2'
+    artifact = 'fotoapparat.adapter-rxjava2'
+    libraryVersion = '2.3.1'
+
+    libraryDescription = 'RxJava2 adapter for Fotoapparat.'
+}
+
+apply from: '../../deploy.gradle'
