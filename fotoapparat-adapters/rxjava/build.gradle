@@ -11,8 +11,6 @@ android {
     defaultConfig {
         minSdkVersion versions.sdk.minimum
         targetSdkVersion versions.sdk.target
-
-        archivesBaseName = 'adapter-rxjava'
     }
 }
 
