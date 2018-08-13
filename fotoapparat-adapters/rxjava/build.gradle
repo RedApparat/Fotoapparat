@@ -12,6 +12,8 @@ android {
         minSdkVersion versions.sdk.minimum
         targetSdkVersion versions.sdk.target
     }
+
+    archivesBaseName = 'adapter-rxjava'
 }
 
 dependencies {
@@ -25,10 +27,10 @@ dependencies {
 }
 
 ext {
-    bintrayName = 'fotoapparat.adapter-rxjava'
+    bintrayName = 'adapter-rxjava'
 
     libraryName = 'Fotoapparat Adapters - RxJava'
-    artifact = 'fotoapparat.adapter-rxjava'
+    artifact = 'adapter-rxjava'
     libraryVersion = '2.3.1'
 
     libraryDescription = 'RxJava1 adapter for Fotoapparat.'
