@@ -7,6 +7,7 @@ import io.fotoapparat.error.CameraErrorListener
 import io.fotoapparat.log.Logger
 import io.fotoapparat.log.none
 import io.fotoapparat.parameter.ScaleType
+import io.fotoapparat.preview.Frame
 import io.fotoapparat.selector.*
 import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.view.CameraRenderer
@@ -131,9 +132,9 @@ class FotoapparatBuilder internal constructor(private var context: Context) {
      * @param frameProcessor receives preview frames for processing.
      * @see FrameProcessorJava
      */
-    fun frameProcessor(frameProcessor: FrameProcessorJava): FotoapparatBuilder = apply {
+    fun frameProcessor(frameProcessor: FrameProcessorJava?): FotoapparatBuilder = apply {
         configuration = configuration.copy(
-                frameProcessor = { frameProcessor.process(it) }
+                frameProcessor = frameProcessor?.let { it::process }
         )
     }
 

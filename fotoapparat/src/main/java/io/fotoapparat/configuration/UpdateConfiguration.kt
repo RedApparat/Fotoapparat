@@ -80,7 +80,7 @@ data class UpdateConfiguration(
             )
         }
 
-        fun frameProcessor(frameProcessor: FrameProcessor): Builder = apply {
+        fun frameProcessor(frameProcessor: FrameProcessor?): Builder = apply {
             configuration = configuration.copy(
                     frameProcessor = frameProcessor
             )
