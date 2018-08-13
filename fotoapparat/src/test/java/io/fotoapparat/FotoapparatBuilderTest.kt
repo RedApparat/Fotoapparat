@@ -237,12 +237,12 @@ class FotoapparatBuilderTest {
     }
 
     @Test
-    fun `frameProcessor empty by default`() {
+    fun `frameProcessor null by default`() {
         // When
         val builder = builderWithMandatoryArguments()
 
         // Then
-        assertNotNull(builder.configuration.frameProcessor)
+        assertNull(builder.configuration.frameProcessor)
     }
 
     @Test

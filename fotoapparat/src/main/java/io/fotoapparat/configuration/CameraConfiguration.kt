@@ -21,7 +21,7 @@ data class CameraConfiguration(
         ),
         override val jpegQuality: QualitySelector = manualJpegQuality(DEFAULT_JPEG_QUALITY),
         override val exposureCompensation: ExposureSelector = manualExposure(DEFAULT_EXPOSURE_COMPENSATION),
-        override val frameProcessor: FrameProcessor = {},
+        override val frameProcessor: FrameProcessor? = null,
         override val previewFpsRange: FpsRangeSelector = highestFps(),
         override val antiBandingMode: AntiBandingModeSelector = firstAvailable(
                 auto(),
@@ -95,9 +95,9 @@ data class CameraConfiguration(
             )
         }
 
-        fun frameProcessor(frameProcessor: FrameProcessorJava): Builder = apply {
+        fun frameProcessor(frameProcessor: FrameProcessorJava?): Builder = apply {
             cameraConfiguration = cameraConfiguration.copy(
-                    frameProcessor = frameProcessor::process
+                    frameProcessor = frameProcessor?.let { it::process }
             )
         }
 

@@ -150,7 +150,7 @@ internal open class Device(
     /**
      * @return The frame processor.
      */
-    open fun getFrameProcessor(): FrameProcessor = savedConfiguration.frameProcessor
+    open fun getFrameProcessor(): FrameProcessor? = savedConfiguration.frameProcessor
 
     /**
      * @return The desired from the user camera lens position.
