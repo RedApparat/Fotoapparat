@@ -42,7 +42,7 @@ ext {
 
     libraryName = 'Fotoapparat'
     artifact = 'fotoapparat'
-    libraryVersion = '2.3.1'
+    libraryVersion = '2.3.2'
 
     libraryDescription = 'Camera library for Android with a more user-friendly API.'
 }
