@@ -35,7 +35,6 @@
         tools:ignore="HardcodedText"
         tools:visibility="visible" />
 
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -58,8 +57,7 @@
                 android:id="@+id/zoomSeekBar"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:max="30" />
+                android:layout_gravity="center" />
 
             <ImageView
                 android:id="@+id/switchCamera"
@@ -71,6 +69,16 @@
                 tools:ignore="RtlHardcoded" />
 
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/zoomLvl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginTop="50dp"
+            android:textColor="#FFF"
+            android:textSize="20sp"
+            tools:text="2.4" />
 
         <ImageView
             android:id="@+id/result"
