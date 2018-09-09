@@ -3,6 +3,7 @@ package io.fotoapparat.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.FrameLayout
 import io.fotoapparat.hardware.metering.FocalRequest
@@ -36,27 +37,31 @@ class FocusView
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            focusMeteringListener?.let {
-                it(FocalRequest(
-                        point = PointF(
-                                x = event.x,
-                                y = event.y
-                        ),
-                        previewResolution = Resolution(
-                                width = width,
-                                height = height
-                        )
-                ))
-                visualFeedbackCircle.showAt(
-                        x = event.x - visualFeedbackCircle.width / 2,
-                        y = event.y - visualFeedbackCircle.height / 2
-                )
-                performClick()
-                return true
-            }
-        }
-        return super.onTouchEvent(event)
+        tapDetector.onTouchEvent(event)
+        return true
     }
 
+    private val gestureDetectorListener = object : GestureDetector.SimpleOnGestureListener() {
+        override fun onSingleTapUp(e: MotionEvent): Boolean {
+            return focusMeteringListener
+                    ?.let {
+                        it(FocalRequest(
+                                point = PointF(
+                                        x = e.x,
+                                        y = e.y),
+                                previewResolution = Resolution(
+                                        width = width,
+                                        height = height)))
+                        visualFeedbackCircle.showAt(
+                                x = e.x - visualFeedbackCircle.width / 2,
+                                y = e.y - visualFeedbackCircle.height / 2)
+                        performClick()
+
+                        true
+                    }
+                    ?: super.onSingleTapUp(e)
+        }
+    }
+
+    private val tapDetector = GestureDetector(context, gestureDetectorListener)
 }
