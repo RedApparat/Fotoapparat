@@ -49,7 +49,7 @@ internal val testConfiguration = CameraConfiguration(
  * Test object for [Capabilities].
  */
 val testCapabilities = Capabilities(
-        zoom = Zoom.VariableZoom(3),
+        zoom = Zoom.VariableZoom(3, listOf(100, 150, 200, 250)),
         flashModes = setOf(Flash.AutoRedEye),
         focusModes = setOf(FocusMode.Fixed),
         canSmoothZoom = false,

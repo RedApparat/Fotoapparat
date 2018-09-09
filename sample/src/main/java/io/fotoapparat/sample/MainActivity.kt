@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.ImageView
-import android.widget.SeekBar
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.UpdateConfiguration
@@ -17,7 +16,7 @@ import io.fotoapparat.result.transformer.scaled
 import io.fotoapparat.selector.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
-
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     private var activeCamera: Camera = Camera.Back
 
     private lateinit var fotoapparat: Fotoapparat
-
+    private lateinit var cameraZoom: Zoom.VariableZoom
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,13 +51,8 @@ class MainActivity : AppCompatActivity() {
         )
 
         capture onClick takePicture()
-        zoomSeekBar onProgressChanged updateZoom()
         switchCamera onClick changeCamera()
         torchSwitch onCheckedChanged toggleFlash()
-    }
-
-    private fun updateZoom(): (SeekBar, Int) -> Unit = { seekBar: SeekBar, progress: Int ->
-        fotoapparat.setZoom(progress / seekBar.max.toFloat())
     }
 
     private fun takePicture(): () -> Unit = {
@@ -101,7 +95,6 @@ class MainActivity : AppCompatActivity() {
 
         adjustViewsVisibility()
 
-        zoomSeekBar.progress = 0
         torchSwitch.isChecked = false
 
         Log.i(LOGGING_TAG, "New camera position: ${if (activeCamera is Camera.Back) "back" else "front"}")
@@ -154,7 +147,10 @@ class MainActivity : AppCompatActivity() {
                 .whenAvailable { capabilities ->
                     capabilities
                             ?.let {
-                                zoomSeekBar.visibility = if (it.zoom is Zoom.VariableZoom) View.VISIBLE else View.GONE
+                                (it.zoom as? Zoom.VariableZoom)
+                                        ?.let { zoom -> setupZoom(zoom) }
+                                        ?: run { zoomSeekBar.visibility = View.GONE }
+
                                 torchSwitch.visibility = if (it.flashModes.contains(Flash.Torch)) View.VISIBLE else View.GONE
                             }
                             ?: Log.e(LOGGING_TAG, "Couldn't obtain capabilities.")
@@ -163,6 +159,20 @@ class MainActivity : AppCompatActivity() {
         switchCamera.visibility = if (fotoapparat.isAvailable(front())) View.VISIBLE else View.GONE
     }
 
+    private fun setupZoom(zoom: Zoom.VariableZoom) {
+        zoomSeekBar.max = zoom.maxZoom
+        cameraZoom = zoom
+        zoomSeekBar.visibility = View.VISIBLE
+        zoomSeekBar onProgressChanged { updateZoom(zoomSeekBar.progress) }
+        updateZoom(0)
+    }
+
+    private fun updateZoom(progress: Int) {
+        fotoapparat.setZoom(progress.toFloat() / zoomSeekBar.max)
+        val value = cameraZoom.zoomRatios[progress]
+        val roundedValue = ((value.toFloat()) / 10).roundToInt().toFloat() / 10
+        zoomLvl.text = String.format("%.1f ×", roundedValue)
+    }
 }
 
 private const val LOGGING_TAG = "Fotoapparat Example"

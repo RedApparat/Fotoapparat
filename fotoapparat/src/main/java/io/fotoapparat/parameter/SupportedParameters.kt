@@ -60,7 +60,7 @@ internal class SupportedParameters(
      * and [io.fotoapparat.parameter.Zoom.VariableZoom] with max zoom level otherwise.
      */
     val supportedZoom by lazy {
-        if (cameraParameters.isZoomSupported) Zoom.VariableZoom(cameraParameters.maxZoom) else Zoom.FixedZoom
+        if (cameraParameters.isZoomSupported) Zoom.VariableZoom(cameraParameters.maxZoom, cameraParameters.zoomRatios) else Zoom.FixedZoom
     }
 
     /**
