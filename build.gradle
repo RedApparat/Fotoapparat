@@ -1,7 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-ext {
-    artifactVersion = '2.3.1'
+subprojects {
+    ext {
+        artifactVersion = '2.4.0'
+    }
 }
 
 buildscript {

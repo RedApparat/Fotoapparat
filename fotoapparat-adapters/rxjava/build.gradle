@@ -31,7 +31,7 @@ ext {
 
     libraryName = 'Fotoapparat Adapters - RxJava'
     artifact = 'adapter-rxjava'
-    libraryVersion = '2.3.3'
+    libraryVersion = artifactVersion
 
     libraryDescription = 'RxJava1 adapter for Fotoapparat.'
 }
