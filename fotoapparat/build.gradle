@@ -4,8 +4,6 @@ apply plugin: 'kotlin-android'
 
 group = 'io.fotoapparat'
 
-kotlin.experimental.coroutines 'enable'
-
 android {
     buildToolsVersion versions.android.buildTools
     compileSdkVersion versions.sdk.target
@@ -29,7 +27,7 @@ android {
 dependencies {
     compile "com.android.support:support-annotations:${versions.android.support}"
     compile "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21'
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.0-eap13'
 
     testImplementation "junit:junit:${versions.test.junit}"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}"
