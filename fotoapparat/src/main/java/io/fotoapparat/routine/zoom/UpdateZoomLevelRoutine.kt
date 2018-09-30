@@ -4,7 +4,7 @@ import android.support.annotation.FloatRange
 import io.fotoapparat.exception.LevelOutOfRangeException
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.parameter.Zoom
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 
 
 /**

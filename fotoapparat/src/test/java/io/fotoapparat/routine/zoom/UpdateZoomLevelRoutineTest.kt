@@ -6,7 +6,7 @@ import io.fotoapparat.hardware.Device
 import io.fotoapparat.parameter.Zoom
 import io.fotoapparat.test.testCapabilities
 import io.fotoapparat.test.willReturn
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyFloat

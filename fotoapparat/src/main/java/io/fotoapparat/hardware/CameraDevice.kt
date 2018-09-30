@@ -28,7 +28,7 @@ import io.fotoapparat.result.Photo
 import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.util.lineSeparator
 import io.fotoapparat.view.Preview
-import kotlinx.coroutines.experimental.CompletableDeferred
+import kotlinx.coroutines.CompletableDeferred
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit

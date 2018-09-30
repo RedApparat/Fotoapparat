@@ -18,7 +18,7 @@ import io.fotoapparat.selector.LensPositionSelector
 import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.view.CameraRenderer
 import io.fotoapparat.view.FocalPointSelector
-import kotlinx.coroutines.experimental.CompletableDeferred
+import kotlinx.coroutines.CompletableDeferred
 
 
 /**

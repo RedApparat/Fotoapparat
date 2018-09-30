@@ -4,7 +4,7 @@ import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.test.testCameraParameters
 import io.fotoapparat.test.willReturn
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock

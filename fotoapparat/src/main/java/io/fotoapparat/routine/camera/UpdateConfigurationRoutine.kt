@@ -3,7 +3,7 @@ package io.fotoapparat.routine.camera
 import io.fotoapparat.configuration.Configuration
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 
 
 /**

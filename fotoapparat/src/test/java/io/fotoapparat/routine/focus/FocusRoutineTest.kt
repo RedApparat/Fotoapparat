@@ -7,7 +7,7 @@ import io.fotoapparat.hardware.metering.PointF
 import io.fotoapparat.parameter.Resolution
 import io.fotoapparat.result.FocusResult
 import io.fotoapparat.test.willReturn
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
