@@ -13,6 +13,10 @@ internal class AwaitBroadcastChannel<T>(
         private val deferred: CompletableDeferred<Boolean> = CompletableDeferred()
 ) : BroadcastChannel<T> by channel, Deferred<Boolean> by deferred {
 
+    override fun cancel(cause: Throwable?): Boolean {
+        return deferred.cancel() && channel.cancel()
+    }
+
     /**
      * The most recently sent element to this channel.
      */
