@@ -25,13 +25,14 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:support-annotations:${versions.android.support}"
-    compile "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.0-eap13'
+    implementation "com.android.support:support-annotations:${versions.android.support}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines.core}"
 
     testImplementation "junit:junit:${versions.test.junit}"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}"
-    testImplementation "org.mockito:mockito-core:${versions.test.mockito}"
+    //testImplementation "org.mockito:mockito-core:${versions.test.mockito}"
+    testImplementation "com.github.dzharkov.mockito:mockito-core:${versions.test.mockitoFork}"
     testImplementation "commons-io:commons-io:${versions.util.commons}"
 }
 
