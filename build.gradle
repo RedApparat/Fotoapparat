@@ -30,8 +30,7 @@ buildscript {
                 ],
                 test   : [
                         junit  : '4.12',
-                        mockito: '2.13.0',
-                        mockitoFork: 'kotlin-release-coroutines-SNAPSHOT'
+                        mockito: '2.23.0'
                 ],
                 util   : [
                         commons: '2.5'
