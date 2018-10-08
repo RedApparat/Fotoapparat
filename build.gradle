@@ -10,7 +10,7 @@ buildscript {
     ext {
         versions = [
                 gradle : '4.4.1',
-                kotlin : '1.2.51',
+                kotlin : '1.2.71',
                 code   : 1,
                 name   : '1.0.0',
                 sdk    : [
