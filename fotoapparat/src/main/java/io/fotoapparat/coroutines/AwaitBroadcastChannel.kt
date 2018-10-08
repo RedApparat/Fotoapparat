@@ -30,4 +30,8 @@ internal class AwaitBroadcastChannel<T>(
         deferred.complete(true)
         channel.send(element)
     }
+
+    override fun cancel(cause: Throwable?): Boolean {
+        return channel.cancel(cause)
+    }
 }
