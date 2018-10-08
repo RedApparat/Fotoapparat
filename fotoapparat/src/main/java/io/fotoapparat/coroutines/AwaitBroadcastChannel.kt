@@ -31,7 +31,5 @@ internal class AwaitBroadcastChannel<T>(
         channel.send(element)
     }
 
-    override fun cancel(cause: Throwable?): Boolean {
-        return channel.cancel(cause)
-    }
+    override fun cancel(cause: Throwable?) = channel.cancel(cause)
 }
