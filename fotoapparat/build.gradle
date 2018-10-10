@@ -29,7 +29,7 @@ android {
 dependencies {
     compile "com.android.support:support-annotations:${versions.android.support}"
     compile "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21'
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.2'
 
     testImplementation "junit:junit:${versions.test.junit}"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}"
