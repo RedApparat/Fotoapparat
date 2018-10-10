@@ -171,10 +171,6 @@ Camera permission will be automatically added to your `AndroidManifest.xml`. Do 
 
 Optionally, you can check out our other library which adds face detection capabilities - [FaceDetector](https://github.com/Fotoapparat/FaceDetector).
 
-## Videoapparat
-
-For video recording possibility, check out our premium library - [Videoapparat](https://github.com/Fotoapparat/Videoapparat)
-
 
 ## Credits
 
