@@ -15,11 +15,11 @@ buildscript {
                 name   : '1.0.0',
                 sdk    : [
                         minimum: 14,
-                        target : 27
+                        target : 28
                 ],
                 android: [
-                        buildTools: '27.0.3',
-                        support   : '27.0.2'
+                        buildTools: '28.0.3',
+                        support   : '28.0.0'
                 ],
                 rx     : [
                         rxJava1: '1.2.9',
@@ -39,7 +39,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
 
