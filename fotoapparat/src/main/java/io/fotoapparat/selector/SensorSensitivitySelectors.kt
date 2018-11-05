@@ -1,6 +1,5 @@
 package io.fotoapparat.selector
 
-
 typealias SensorSensitivitySelector = Iterable<Int>.() -> Int?
 
 /**

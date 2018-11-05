@@ -11,7 +11,6 @@ import io.fotoapparat.selector.single
 import org.junit.Test
 import kotlin.test.assertEquals
 
-
 internal class CameraParametersProviderTest {
 
     val resolution = Resolution(10, 10)

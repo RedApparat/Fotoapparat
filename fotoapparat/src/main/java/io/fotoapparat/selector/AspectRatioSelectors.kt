@@ -1,6 +1,6 @@
 package io.fotoapparat.selector
 
-import android.support.annotation.FloatRange
+import androidx.annotation.FloatRange
 
 /**
  * @param selector Input selector

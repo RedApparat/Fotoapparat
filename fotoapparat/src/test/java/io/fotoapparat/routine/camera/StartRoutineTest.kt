@@ -27,7 +27,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-
 @RunWith(MockitoJUnitRunner::class)
 internal class StartRoutineTest {
 

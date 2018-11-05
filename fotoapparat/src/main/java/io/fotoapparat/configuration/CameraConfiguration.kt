@@ -4,7 +4,6 @@ import io.fotoapparat.selector.*
 import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.preview.FrameProcessor as FrameProcessorJava
 
-
 private const val DEFAULT_JPEG_QUALITY = 90
 private const val DEFAULT_EXPOSURE_COMPENSATION = 0
 

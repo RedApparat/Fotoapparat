@@ -4,8 +4,8 @@ package io.fotoapparat.hardware
 
 import android.hardware.Camera
 import android.media.MediaRecorder
-import android.support.annotation.FloatRange
 import android.view.Surface
+import androidx.annotation.FloatRange
 import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.capability.provide.getCapabilities
 import io.fotoapparat.characteristic.Characteristics
@@ -28,12 +28,11 @@ import io.fotoapparat.result.Photo
 import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.util.lineSeparator
 import io.fotoapparat.view.Preview
-import kotlinx.coroutines.experimental.CompletableDeferred
+import kotlinx.coroutines.CompletableDeferred
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
-
 
 typealias PreviewSize = io.fotoapparat.parameter.Resolution
 

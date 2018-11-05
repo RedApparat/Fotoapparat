@@ -2,7 +2,6 @@ package io.fotoapparat.selector
 
 import io.fotoapparat.parameter.AntiBandingMode
 
-
 typealias AntiBandingModeSelector = Iterable<AntiBandingMode>.() -> AntiBandingMode?
 
 /**

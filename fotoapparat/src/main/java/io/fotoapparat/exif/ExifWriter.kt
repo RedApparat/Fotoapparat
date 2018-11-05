@@ -1,6 +1,6 @@
 package io.fotoapparat.exif
 
-import android.media.ExifInterface
+import androidx.exifinterface.media.ExifInterface
 import io.fotoapparat.exception.FileSaveException
 import java.io.File
 import java.io.IOException

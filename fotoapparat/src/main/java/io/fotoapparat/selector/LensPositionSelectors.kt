@@ -2,7 +2,6 @@ package io.fotoapparat.selector
 
 import io.fotoapparat.characteristic.LensPosition
 
-
 typealias LensPositionSelector = Iterable<LensPosition>.() -> LensPosition?
 
 /**

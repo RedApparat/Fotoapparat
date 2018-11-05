@@ -3,14 +3,13 @@ package io.fotoapparat.view
 import android.animation.AnimatorInflater.loadAnimator
 import android.animation.AnimatorSet
 import android.content.Context
-import android.support.annotation.AnimatorRes
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.annotation.AnimatorRes
 import io.fotoapparat.R
-
 
 /**
  * A circle which gives feedback to the user about a click.

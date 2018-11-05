@@ -4,7 +4,6 @@ import android.content.Context
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.hardware.orientation.Orientation.Vertical.Portrait
 
-
 /**
  * Monitors orientation of the device.
  */

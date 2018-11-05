@@ -3,7 +3,7 @@ package io.fotoapparat.routine.focus
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.hardware.metering.FocalRequest
 import io.fotoapparat.result.FocusResult
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 
 /**
  * Focuses the camera on a particular point.

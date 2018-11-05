@@ -4,7 +4,6 @@ import android.os.Looper
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.executeMainThread
 
-
 typealias CameraErrorCallback = (CameraException) -> Unit
 
 /**

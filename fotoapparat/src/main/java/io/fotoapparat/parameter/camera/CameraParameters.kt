@@ -5,7 +5,6 @@ import io.fotoapparat.parameter.*
 import io.fotoapparat.util.lineSeparator
 import io.fotoapparat.util.wrap
 
-
 /**
  * Parameters of [CameraDevice].
  */

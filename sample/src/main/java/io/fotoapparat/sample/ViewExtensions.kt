@@ -1,10 +1,9 @@
 package io.fotoapparat.sample
 
-import android.support.v7.widget.SwitchCompat
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.SeekBar
-
+import androidx.appcompat.widget.SwitchCompat
 
 internal infix fun SwitchCompat.onCheckedChanged(function: (CompoundButton, Boolean) -> Unit) {
     setOnCheckedChangeListener(function)

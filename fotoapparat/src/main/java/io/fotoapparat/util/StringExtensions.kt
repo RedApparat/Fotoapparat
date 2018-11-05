@@ -1,6 +1,5 @@
 package io.fotoapparat.util
 
-
 /**
  * System line separator.
  */

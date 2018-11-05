@@ -8,7 +8,6 @@ import io.fotoapparat.log.Logger
 import io.fotoapparat.parameter.camera.CameraParameters
 import java.util.concurrent.*
 
-
 /**
  * Result which might not be readily available at the given moment but will be available in the
  * future.

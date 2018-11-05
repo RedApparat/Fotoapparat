@@ -2,7 +2,7 @@ package io.fotoapparat.routine.capability
 
 import io.fotoapparat.capability.Capabilities
 import io.fotoapparat.hardware.Device
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 
 /**
  * Returns the camera [Capabilities].
