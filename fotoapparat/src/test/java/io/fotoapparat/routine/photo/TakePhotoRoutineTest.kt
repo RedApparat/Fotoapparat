@@ -6,7 +6,7 @@ import io.fotoapparat.hardware.Device
 import io.fotoapparat.result.Photo
 import io.fotoapparat.test.willReturn
 import io.fotoapparat.test.willThrow
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock

@@ -2,7 +2,6 @@ package io.fotoapparat.result.transformer
 
 import io.fotoapparat.parameter.Resolution
 
-
 typealias ResolutionTransformer = (Resolution) -> Resolution
 
 /**

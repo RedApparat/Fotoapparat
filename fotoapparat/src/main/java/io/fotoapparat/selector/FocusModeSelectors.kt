@@ -2,7 +2,6 @@ package io.fotoapparat.selector
 
 import io.fotoapparat.parameter.FocusMode
 
-
 typealias FocusModeSelector = Iterable<FocusMode>.() -> FocusMode?
 
 /**

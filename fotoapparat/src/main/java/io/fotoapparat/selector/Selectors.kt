@@ -1,6 +1,5 @@
 package io.fotoapparat.selector
 
-
 /**
  * @return Selector function which always returns `null`.
  */

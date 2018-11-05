@@ -1,6 +1,5 @@
 package io.fotoapparat.hardware.metering
 
-
 /**
  * A point in arbitrary scale.
  */

@@ -26,5 +26,5 @@ dependencies {
     implementation project(':fotoapparat')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
 
-    implementation "com.android.support:appcompat-v7:${versions.android.support}"
+    implementation "androidx.appcompat:appcompat:${versions.android.appcompat}"
 }

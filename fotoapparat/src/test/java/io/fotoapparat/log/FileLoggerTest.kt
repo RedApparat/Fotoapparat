@@ -1,11 +1,9 @@
 package io.fotoapparat.log
 
-import org.apache.commons.io.FileUtils.readFileToString
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.io.File
-import java.nio.charset.Charset
 import kotlin.test.assertEquals
 
 internal class FileLoggerTest {
@@ -29,7 +27,7 @@ internal class FileLoggerTest {
         // Then
         assertEquals(
                 "message\nmessage\n",
-                readFileToString(file, Charset.defaultCharset())
+                file.readText()
         )
     }
 

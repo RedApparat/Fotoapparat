@@ -2,7 +2,6 @@ package io.fotoapparat.util
 
 import io.fotoapparat.preview.Frame
 
-
 /**
  * Performs processing on preview frames.
  *

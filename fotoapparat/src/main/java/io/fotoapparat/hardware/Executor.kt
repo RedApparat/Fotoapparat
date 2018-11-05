@@ -4,7 +4,6 @@ import android.os.Handler
 import android.os.Looper
 import java.util.concurrent.Executors
 
-
 private val loggingExecutor = Executors.newSingleThreadExecutor()
 private val mainThreadHandler = Handler(Looper.getMainLooper())
 

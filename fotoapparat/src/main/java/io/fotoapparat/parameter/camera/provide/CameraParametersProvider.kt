@@ -10,7 +10,6 @@ import io.fotoapparat.parameter.Resolution
 import io.fotoapparat.parameter.camera.CameraParameters
 import io.fotoapparat.selector.*
 
-
 /**
  * @return [CameraParameters] which will be used by [CameraDevice].
  */

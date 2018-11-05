@@ -1,7 +1,7 @@
 package io.fotoapparat
 
 import android.content.Context
-import android.support.annotation.FloatRange
+import androidx.annotation.FloatRange
 import io.fotoapparat.concurrent.CameraExecutor
 import io.fotoapparat.concurrent.CameraExecutor.Operation
 import io.fotoapparat.configuration.CameraConfiguration

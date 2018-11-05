@@ -1,6 +1,5 @@
 package io.fotoapparat.log
 
-
 /**
  * Logger which delegates messages to multiple other loggers.
  */

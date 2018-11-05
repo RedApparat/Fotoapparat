@@ -5,7 +5,6 @@ import io.fotoapparat.hardware.Device
 import io.fotoapparat.hardware.orientation.OrientationSensor
 import io.fotoapparat.routine.orientation.stopMonitoring
 
-
 /**
  * Stops the camera completely.
  */

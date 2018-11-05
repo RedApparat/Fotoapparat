@@ -1,6 +1,6 @@
 package io.fotoapparat.parameter
 
-import android.support.annotation.IntRange
+import androidx.annotation.IntRange
 
 /**
  * Resolution. Units in pixels.

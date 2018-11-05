@@ -12,7 +12,6 @@ import io.fotoapparat.parameter.Resolution
 import io.fotoapparat.parameter.ScaleType
 import java.util.concurrent.CountDownLatch
 
-
 /**
  * Uses [android.view.TextureView] as an output for camera.
  */
