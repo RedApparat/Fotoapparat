@@ -4,8 +4,6 @@ apply plugin: 'kotlin-android'
 
 group = 'io.fotoapparat'
 
-kotlin.experimental.coroutines 'enable'
-
 android {
     buildToolsVersion versions.android.buildTools
     compileSdkVersion versions.sdk.target
