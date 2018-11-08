@@ -77,8 +77,8 @@ artifacts {
 }
 
 bintray {
-    user = project.properties["bintray.user"]
-    key = project.properties["bintray.apikey"]
+    user = project.properties["bintray.user"] ?: System.getenv('BINTRAY_USER')
+    key = project.properties["bintray.apikey"] ?: System.getenv('BINTRAY_API_KEY')
 
     configurations = ['archives']
     pkg {

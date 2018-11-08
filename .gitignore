@@ -6,4 +6,6 @@
 build
 /captures
 .externalNativeBuild
+.project
+.settings
 
