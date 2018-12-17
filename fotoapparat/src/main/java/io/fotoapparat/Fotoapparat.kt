@@ -80,12 +80,10 @@ class Fotoapparat
     fun start() {
         logger.recordMethod()
 
-        executor.execute(Operation {
-            device.bootStart(
-                    orientationSensor = orientationSensor,
-                    mainThreadErrorCallback = mainThreadErrorCallback
-            )
-        })
+        device.bootStart(
+          orientationSensor = orientationSensor,
+          mainThreadErrorCallback = mainThreadErrorCallback
+        )
     }
 
     /**
@@ -97,11 +95,9 @@ class Fotoapparat
         logger.recordMethod()
 
         executor.cancelTasks()
-        executor.execute(Operation {
-            device.shutDown(
-                    orientationSensor = orientationSensor
-            )
-        })
+        device.shutDown(
+          orientationSensor = orientationSensor
+        )
     }
 
     /**
