@@ -1,7 +1,7 @@
 package io.fotoapparat.result
 
 import android.graphics.BitmapFactory
-import java.util.Arrays
+import java.util.*
 
 /**
  * Taken photo.
