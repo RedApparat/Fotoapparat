@@ -27,22 +27,20 @@ data class Photo(
     /**
      * The height of the photo.
      */
-    val height by lazy { decodedBounds.height }
+    val height: Int
+        get() = decodedBounds.outHeight
 
     /**
      * The width of the photo.
      */
-    val width by lazy { decodedBounds.width }
+    val width: Int
+        get() = decodedBounds.outWidth
 
     private val decodedBounds by lazy {
-        BitmapFactory.decodeByteArray(
-                encodedImage,
-                0,
-                encodedImage.size,
-                BitmapFactory.Options().apply {
-                            inJustDecodeBounds = true
-                        }
-        )
+        BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+            BitmapFactory.decodeByteArray(encodedImage, 0, encodedImage.size, this)
+        }
     }
 
     override fun equals(other: Any?): Boolean {
