@@ -14,14 +14,16 @@ android {
     }
 
     archivesBaseName = 'adapter-rxjava'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     compileOnly project(':fotoapparat')
     compileOnly "io.reactivex:rxjava:${versions.rx.rxJava1}"
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
-
     testImplementation "io.reactivex:rxjava:${versions.rx.rxJava1}"
     testImplementation "junit:junit:${versions.test.junit}"
 }
