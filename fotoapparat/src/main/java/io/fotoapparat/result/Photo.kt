@@ -1,7 +1,7 @@
 package io.fotoapparat.result
 
 import android.graphics.BitmapFactory
-import java.util.*
+import java.util.Arrays
 
 /**
  * Taken photo.
@@ -62,13 +62,10 @@ data class Photo(
     }
 
     companion object {
-
-        private val EMPTY by lazy { Photo(encodedImage = ByteArray(0), rotationDegrees = 0) }
-
         /**
          * @return empty [Photo].
          */
-        internal fun empty(): Photo = EMPTY
+        internal fun empty(): Photo = Photo(encodedImage = ByteArray(0), rotationDegrees = 0)
     }
 
 }
