@@ -6,7 +6,11 @@ import io.fotoapparat.hardware.executeMainThread
 import io.fotoapparat.hardware.pendingResultExecutor
 import io.fotoapparat.log.Logger
 import io.fotoapparat.parameter.camera.CameraParameters
-import java.util.concurrent.*
+import java.util.concurrent.CancellationException
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.Executor
+import java.util.concurrent.Future
+import java.util.concurrent.FutureTask
 
 /**
  * Result which might not be readily available at the given moment but will be available in the
@@ -71,13 +75,14 @@ internal constructor(
                 resultUnsafe.notifyCallbackOnMainThread(callback)
             } catch (e: UnableToDecodeBitmapException) {
                 logger.log("Couldn't decode bitmap from byte array")
+                null.notifyCallbackOnMainThread(callback)
             } catch (e: InterruptedException) {
                 logger.log("Couldn't deliver pending result: Camera stopped before delivering result.")
             } catch (e: CancellationException) {
                 logger.log("Couldn't deliver pending result: Camera operation was cancelled.")
             } catch (e: ExecutionException) {
                 logger.log("Couldn't deliver pending result: Operation failed internally.")
-                callback(null)
+                null.notifyCallbackOnMainThread(callback)
             }
         }
     }
