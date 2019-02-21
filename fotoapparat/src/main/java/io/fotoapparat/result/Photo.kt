@@ -1,7 +1,7 @@
 package io.fotoapparat.result
 
 import android.graphics.BitmapFactory
-import java.util.*
+import java.util.Arrays
 
 /**
  * Taken photo.
@@ -60,6 +60,9 @@ data class Photo(
         result = 31 * result + rotationDegrees
         return result
     }
+
+    override fun toString(): String =
+        "Photo(encodedImage=ByteArray(${encodedImage.size}) rotationDegrees=$rotationDegrees)"
 
     companion object {
 
