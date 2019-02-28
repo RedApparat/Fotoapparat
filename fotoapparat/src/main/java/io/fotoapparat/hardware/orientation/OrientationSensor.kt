@@ -15,20 +15,25 @@ internal open class OrientationSensor(
     private val onOrientationChanged: (DeviceRotationDegrees) -> Unit = { deviceRotation ->
         deviceRotation.toClosestRightAngle()
                 .toOrientation()
-                .takeIf { it != lastKnownDeviceOrientation }
-                ?.let {
-                    val state = OrientationState(
-                            deviceOrientation = it,
-                            screenOrientation = device.getScreenOrientation()
-                    )
-
-                    lastKnownDeviceOrientation = state.deviceOrientation
-                    listener(state)
+                .let {
+                    val screenOrientation = device.getScreenOrientation()
+                    val deviceOrientation = it
+                    if(deviceOrientation != lastKnownDeviceOrientation
+                            || screenOrientation != lastKnowScreenOrientation){
+                        val state = OrientationState(
+                                deviceOrientation = deviceOrientation,
+                                screenOrientation = screenOrientation
+                        )
+                        lastKnowScreenOrientation = state.screenOrientation
+                        lastKnownDeviceOrientation = state.deviceOrientation
+                        listener(state)
+                    }
                 }
     }
 
     private lateinit var listener: (OrientationState) -> Unit
     private var lastKnownDeviceOrientation: Orientation = Portrait
+    private var lastKnowScreenOrientation: Orientation = Portrait
 
     constructor(
             context: Context,
