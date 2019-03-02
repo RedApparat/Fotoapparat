@@ -63,10 +63,12 @@ class Fotoapparat
             executor = executor
     )
 
-    private val orientationSensor = OrientationSensor(
-            context = context,
-            device = device
-    )
+    private val orientationSensor by lazy {
+        OrientationSensor(
+                context = context,
+                device = device
+        )
+    }
 
     init {
         logger.recordMethod()
@@ -220,6 +222,7 @@ class Fotoapparat
 
         executor.execute(Operation(cancellable = true) {
             device.switchCamera(
+                    orientationSensor = orientationSensor,
                     newLensPositionSelector = lensPosition,
                     newConfiguration = cameraConfiguration,
                     mainThreadErrorCallback = mainThreadErrorCallback

@@ -15,7 +15,6 @@ import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.metering.FocalRequest
 import io.fotoapparat.hardware.metering.convert.toFocusAreas
 import io.fotoapparat.hardware.orientation.*
-import io.fotoapparat.hardware.orientation.Orientation.Vertical.Portrait
 import io.fotoapparat.log.Logger
 import io.fotoapparat.parameter.FocusMode
 import io.fotoapparat.parameter.Resolution
@@ -51,9 +50,9 @@ internal open class CameraDevice(
     private lateinit var camera: Camera
 
     private var cachedCameraParameters: Camera.Parameters? = null
-    private var displayOrientation: Orientation = Portrait
-    private var imageOrientation: Orientation = Portrait
-    private var previewOrientation: Orientation = Portrait
+    private lateinit var displayOrientation: Orientation
+    private lateinit var imageOrientation: Orientation
+    private lateinit var previewOrientation: Orientation
 
     /**
      * Opens a connection to a camera.
@@ -206,9 +205,16 @@ internal open class CameraDevice(
                 cameraIsMirrored = characteristics.isMirrored
         )
 
-        logger.log("Image orientation is: $imageOrientation. " + lineSeparator +
-                "Display orientation is: $displayOrientation. " + lineSeparator +
-                "Preview orientation is: $previewOrientation."
+        logger.log("Orientations: $lineSeparator" +
+                "Screen orientation (preview) is: ${orientationState.screenOrientation}. " + lineSeparator +
+                "Camera sensor orientation is always at: ${characteristics.cameraOrientation}. " + lineSeparator +
+                "Camera is " + if (characteristics.isMirrored) "mirrored." else "not mirrored."
+        )
+
+        logger.log("Orientation adjustments: $lineSeparator" +
+                "Image orientation will be adjusted by: ${imageOrientation.degrees} degrees. " + lineSeparator +
+                "Display orientation will be adjusted by: ${displayOrientation.degrees} degrees. " + lineSeparator +
+                "Preview orientation will be adjusted by: ${previewOrientation.degrees} degrees."
         )
 
         previewStream.frameOrientation = previewOrientation
@@ -288,7 +294,6 @@ internal open class CameraDevice(
         return previewResolution
     }
 
-
     private fun setZoomSafely(@FloatRange(from = 0.0, to = 1.0) level: Float) {
         try {
             setZoomUnsafe(level)
@@ -358,15 +363,12 @@ internal open class CameraDevice(
 
     private fun Camera.clearFocusingAreas() {
         parameters = parameters.apply {
-            with(capabilities) {
-                meteringAreas = null
-                focusAreas = null
-            }
+            meteringAreas = null
+            focusAreas = null
         }
     }
 
 }
-
 
 private const val AUTOFOCUS_TIMEOUT_SECONDS = 3L
 
