@@ -6,6 +6,7 @@ import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
+import io.fotoapparat.hardware.orientation.OrientationSensor
 import io.fotoapparat.selector.LensPositionSelector
 
 /**
@@ -16,7 +17,8 @@ import io.fotoapparat.selector.LensPositionSelector
 internal fun Device.switchCamera(
         newLensPositionSelector: LensPositionSelector,
         newConfiguration: CameraConfiguration,
-        mainThreadErrorCallback: CameraErrorCallback
+        mainThreadErrorCallback: CameraErrorCallback,
+        orientationSensor: OrientationSensor
 ) {
     val oldCameraDevice = try {
         getSelectedCamera()
@@ -33,6 +35,7 @@ internal fun Device.switchCamera(
 
         restartPreview(
                 oldCameraDevice,
+                orientationSensor,
                 mainThreadErrorCallback
         )
     }
@@ -43,12 +46,13 @@ internal fun Device.switchCamera(
  */
 internal fun Device.restartPreview(
         oldCameraDevice: CameraDevice,
+        orientationSensor: OrientationSensor,
         mainThreadErrorCallback: CameraErrorCallback
 ) {
     stop(oldCameraDevice)
 
     try {
-        start()
+        start(orientationSensor)
     } catch (e: CameraException) {
         mainThreadErrorCallback(e)
     }

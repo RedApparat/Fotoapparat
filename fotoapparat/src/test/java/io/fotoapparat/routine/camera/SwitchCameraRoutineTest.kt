@@ -4,11 +4,10 @@ import io.fotoapparat.characteristic.LensPosition
 import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
-import io.fotoapparat.hardware.orientation.Orientation.Horizontal.Landscape
+import io.fotoapparat.hardware.orientation.OrientationSensor
 import io.fotoapparat.test.testConfiguration
 import io.fotoapparat.test.willReturn
 import io.fotoapparat.view.CameraRenderer
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.BDDMockito.given
@@ -27,13 +26,10 @@ internal class SwitchCameraRoutineTest {
     lateinit var device: Device
     @Mock
     lateinit var cameraRenderer: CameraRenderer
+    @Mock
+    lateinit var orientationSensor: OrientationSensor
 
     private val mainThreadErrorCallback: CameraErrorCallback = {}
-
-    @Before
-    fun setUp() {
-        device.getScreenOrientation() willReturn Landscape
-    }
 
     @Test
     fun `Switch camera, not started`() {
@@ -48,13 +44,14 @@ internal class SwitchCameraRoutineTest {
         device.switchCamera(
                 newLensPositionSelector = lensPositionSelector,
                 newConfiguration = testConfiguration,
-                mainThreadErrorCallback = mainThreadErrorCallback
+                mainThreadErrorCallback = mainThreadErrorCallback,
+                orientationSensor = orientationSensor
         )
 
         // Then
         verify(device).updateLensPositionSelector(lensPositionSelector)
         verify(device).updateConfiguration(testConfiguration)
-        verify(device, never()).restartPreview(oldCameraDevice, mainThreadErrorCallback)
+        verify(device, never()).restartPreview(oldCameraDevice, orientationSensor, mainThreadErrorCallback)
     }
 
     @Test
@@ -69,7 +66,8 @@ internal class SwitchCameraRoutineTest {
         device.switchCamera(
                 newLensPositionSelector = lensPositionSelector,
                 newConfiguration = testConfiguration,
-                mainThreadErrorCallback = mainThreadErrorCallback
+                mainThreadErrorCallback = mainThreadErrorCallback,
+                orientationSensor = orientationSensor
         )
 
         // Then
@@ -80,7 +78,7 @@ internal class SwitchCameraRoutineTest {
         inOrder.apply {
             verify(device, never()).updateLensPositionSelector(lensPositionSelector)
             verify(device, never()).updateConfiguration(testConfiguration)
-            verify(device, never()).restartPreview(oldCameraDevice, mainThreadErrorCallback)
+            verify(device, never()).restartPreview(oldCameraDevice, orientationSensor, mainThreadErrorCallback)
         }
     }
 
@@ -96,7 +94,8 @@ internal class SwitchCameraRoutineTest {
         device.switchCamera(
                 newLensPositionSelector = lensPositionSelector,
                 newConfiguration = testConfiguration,
-                mainThreadErrorCallback = mainThreadErrorCallback
+                mainThreadErrorCallback = mainThreadErrorCallback,
+                orientationSensor = orientationSensor
         )
 
         // Then
@@ -107,7 +106,7 @@ internal class SwitchCameraRoutineTest {
         inOrder.apply {
             verify(device).updateLensPositionSelector(lensPositionSelector)
             verify(device).updateConfiguration(testConfiguration)
-            verify(device).restartPreview(oldCameraDevice, mainThreadErrorCallback)
+            verify(device).restartPreview(oldCameraDevice, orientationSensor, mainThreadErrorCallback)
         }
     }
 
@@ -120,6 +119,7 @@ internal class SwitchCameraRoutineTest {
         // When
         device.restartPreview(
                 oldCameraDevice = oldCameraDevice,
+                orientationSensor = orientationSensor,
                 mainThreadErrorCallback = mainThreadErrorCallback
         )
 
@@ -128,7 +128,7 @@ internal class SwitchCameraRoutineTest {
 
         inOrder.apply {
             verify(device).stop(oldCameraDevice)
-            verify(device).start()
+            verify(device).start(orientationSensor)
         }
     }
 
@@ -141,6 +141,7 @@ internal class SwitchCameraRoutineTest {
         // When
         device.restartPreview(
                 oldCameraDevice = oldCameraDevice,
+                orientationSensor = orientationSensor,
                 mainThreadErrorCallback = mainThreadErrorCallback
         )
 
@@ -148,7 +149,7 @@ internal class SwitchCameraRoutineTest {
         val inOrder = inOrder(device)
         inOrder.apply {
             verify(device).stop(oldCameraDevice)
-            verify(device).start()
+            verify(device).start(orientationSensor)
         }
     }
 

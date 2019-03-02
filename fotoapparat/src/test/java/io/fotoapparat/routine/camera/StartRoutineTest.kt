@@ -4,10 +4,7 @@ import android.graphics.SurfaceTexture
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.CameraDevice
 import io.fotoapparat.hardware.Device
-import io.fotoapparat.hardware.orientation.Orientation.Horizontal.Landscape
-import io.fotoapparat.hardware.orientation.Orientation.Vertical.Portrait
 import io.fotoapparat.hardware.orientation.OrientationSensor
-import io.fotoapparat.hardware.orientation.OrientationState
 import io.fotoapparat.log.Logger
 import io.fotoapparat.parameter.ScaleType
 import io.fotoapparat.test.testResolution
@@ -55,7 +52,6 @@ internal class StartRoutineTest {
         // Given
         device.apply {
             getSelectedCamera() willReturn cameraDevice
-            getScreenOrientation() willReturn Landscape
             cameraRenderer willReturn cameraViewRenderer
             scaleType willReturn ScaleType.CenterCrop
         }
@@ -63,7 +59,7 @@ internal class StartRoutineTest {
         cameraViewRenderer.getPreview() willReturn preview
 
         // When
-        device.start()
+        device.start(orientationSensor)
 
         // Then
         val inOrder = inOrder(
@@ -76,10 +72,7 @@ internal class StartRoutineTest {
             verify(device).selectCamera()
             verify(cameraDevice).open()
             verify(device).updateCameraConfiguration(cameraDevice)
-            verify(cameraDevice).setDisplayOrientation(OrientationState(
-                    Portrait,
-                    Landscape
-            ))
+            verify(cameraDevice).setDisplayOrientation(orientationSensor.lastKnownOrientationState)
             verify(cameraViewRenderer).setScaleType(ScaleType.CenterCrop)
             verify(cameraViewRenderer).setPreviewResolution(testResolution)
             verify(cameraDevice).setDisplaySurface(preview)
@@ -92,7 +85,6 @@ internal class StartRoutineTest {
         // Given
         device.apply {
             getSelectedCamera() willReturn cameraDevice
-            getScreenOrientation() willReturn Landscape
             cameraRenderer willReturn cameraViewRenderer
             scaleType willReturn ScaleType.CenterCrop
             logger willReturn mockLogger
@@ -102,7 +94,7 @@ internal class StartRoutineTest {
         cameraViewRenderer.getPreview() willReturn preview
 
         // When
-        device.start()
+        device.start(orientationSensor)
 
         // Then
         verify(cameraDevice, never()).startPreview()
@@ -115,8 +107,8 @@ internal class StartRoutineTest {
 
         // When
         device.bootStart(
-                orientationSensor,
-                {}
+                orientationSensor = orientationSensor,
+                mainThreadErrorCallback = {}
         )
 
         // Then
@@ -131,8 +123,8 @@ internal class StartRoutineTest {
 
         // When
         device.bootStart(
-                orientationSensor,
-                { hasErrors.set(true) }
+                orientationSensor = orientationSensor,
+                mainThreadErrorCallback = { hasErrors.set(true) }
         )
 
         // Then
@@ -147,7 +139,6 @@ internal class StartRoutineTest {
         device.apply {
             hasSelectedCamera() willReturn false
             getSelectedCamera() willReturn cameraDevice
-            getScreenOrientation() willReturn Landscape
             cameraRenderer willReturn cameraViewRenderer
             scaleType willReturn ScaleType.CenterCrop
         }
@@ -156,14 +147,14 @@ internal class StartRoutineTest {
 
         // When
         device.bootStart(
-                orientationSensor,
-                { hasErrors = true }
+                orientationSensor = orientationSensor,
+                mainThreadErrorCallback = { hasErrors = true }
         )
 
         // Then
         assertFalse(hasErrors)
 
-        verify(device).start()
+        verify(device).start(orientationSensor)
     }
 
 }

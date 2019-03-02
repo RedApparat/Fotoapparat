@@ -4,9 +4,7 @@ import io.fotoapparat.concurrent.CameraExecutor.Operation
 import io.fotoapparat.error.CameraErrorCallback
 import io.fotoapparat.exception.camera.CameraException
 import io.fotoapparat.hardware.Device
-import io.fotoapparat.hardware.orientation.Orientation
 import io.fotoapparat.hardware.orientation.OrientationSensor
-import io.fotoapparat.hardware.orientation.OrientationState
 import io.fotoapparat.routine.focus.focusOnPoint
 import io.fotoapparat.routine.orientation.startOrientationMonitoring
 import java.io.IOException
@@ -23,7 +21,9 @@ internal fun Device.bootStart(
     }
 
     try {
-        start()
+        start(
+                orientationSensor = orientationSensor
+        )
         startOrientationMonitoring(
                 orientationSensor = orientationSensor
         )
@@ -35,7 +35,7 @@ internal fun Device.bootStart(
 /**
  * Starts the camera.
  */
-internal fun Device.start() {
+internal fun Device.start(orientationSensor: OrientationSensor) {
     selectCamera()
 
     val cameraDevice = getSelectedCamera().apply {
@@ -44,12 +44,7 @@ internal fun Device.start() {
         updateCameraConfiguration(
                 cameraDevice = this
         )
-        setDisplayOrientation(
-                orientationState = OrientationState(
-                        deviceOrientation = Orientation.Vertical.Portrait,
-                        screenOrientation = getScreenOrientation()
-                )
-        )
+        setDisplayOrientation(orientationSensor.lastKnownOrientationState)
     }
 
     val previewResolution = cameraDevice.getPreviewResolution()
