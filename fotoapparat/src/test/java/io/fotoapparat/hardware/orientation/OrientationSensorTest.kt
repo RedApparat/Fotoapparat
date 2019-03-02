@@ -2,6 +2,7 @@ package io.fotoapparat.hardware.orientation
 
 import io.fotoapparat.hardware.Device
 import io.fotoapparat.hardware.orientation.Orientation.Horizontal.Landscape
+import io.fotoapparat.hardware.orientation.Orientation.Vertical.Portrait
 import io.fotoapparat.hardware.orientation.Orientation.Vertical.ReversePortrait
 import io.fotoapparat.test.willReturn
 import org.junit.Before
@@ -25,6 +26,7 @@ internal class OrientationSensorTest {
 
     @Before
     fun setUp() {
+        device.getScreenOrientation() willReturn Portrait
         testee = OrientationSensor(
                 rotationListener,
                 device
@@ -36,7 +38,7 @@ internal class OrientationSensorTest {
         // Given
 
         // When
-        testee.start({})
+        testee.start {}
         testee.stop()
 
         // Then
