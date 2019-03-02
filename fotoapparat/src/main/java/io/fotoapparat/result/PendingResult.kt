@@ -1,6 +1,7 @@
 package io.fotoapparat.result
 
 import io.fotoapparat.capability.Capabilities
+import io.fotoapparat.concurrent.ensureBackgroundThread
 import io.fotoapparat.exception.UnableToDecodeBitmapException
 import io.fotoapparat.hardware.executeMainThread
 import io.fotoapparat.hardware.pendingResultExecutor
@@ -19,7 +20,10 @@ internal constructor(
         private val executor: Executor
 ) {
     private val resultUnsafe: T
-        get() = future.get()
+        get() {
+            ensureBackgroundThread()
+            return future.get()
+        }
 
     /**
      * Transforms result from one type to another.
@@ -68,8 +72,9 @@ internal constructor(
     fun whenAvailable(callback: (T?) -> Unit) {
         executor.execute {
             try {
+                val result = resultUnsafe
                 notifyOnMainThread {
-                    callback(resultUnsafe)
+                    callback(result)
                 }
             } catch (e: UnableToDecodeBitmapException) {
                 logger.log("Couldn't decode bitmap from byte array")
