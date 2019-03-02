@@ -65,13 +65,10 @@ data class Photo(
         "Photo(encodedImage=ByteArray(${encodedImage.size}) rotationDegrees=$rotationDegrees)"
 
     companion object {
-
-        private val EMPTY by lazy { Photo(encodedImage = ByteArray(0), rotationDegrees = 0) }
-
         /**
          * @return empty [Photo].
          */
-        internal fun empty(): Photo = EMPTY
+        internal fun empty(): Photo = Photo(encodedImage = ByteArray(0), rotationDegrees = 0)
     }
 
 }

@@ -26,7 +26,5 @@ data class FpsRange(
     /**
      * `true` if the current range is fixed (min == max).
      */
-    val isFixed by lazy {
-        max == min
-    }
+    val isFixed get() = max == min
 }
