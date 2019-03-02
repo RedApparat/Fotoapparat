@@ -161,7 +161,7 @@ fotoapparat.switchTo(
 Add dependency to your `build.gradle`
 
 ```groovy
-implementation 'io.fotoapparat:fotoapparat:2.6.1'
+implementation 'io.fotoapparat:fotoapparat:2.7.0'
 ```
 
 Camera permission will be automatically added to your `AndroidManifest.xml`. Do not forget to request this permission on Marshmallow and higher.
