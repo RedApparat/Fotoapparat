@@ -8,11 +8,15 @@ sealed class FocusResult {
     /**
      * Camera is unable to focus for some reason.
      */
-    object UnableToFocus : FocusResult()
+    object UnableToFocus : FocusResult() {
+        override fun toString(): String = "FocusResult.UnableToFocus"
+    }
 
     /**
      * Camera is focused successfully.
      */
-    object Focused : FocusResult()
+    object Focused : FocusResult() {
+        override fun toString(): String = "FocusResult.Focused"
+    }
 
 }

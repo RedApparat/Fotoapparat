@@ -8,21 +8,29 @@ sealed class AntiBandingMode : Parameter {
     /**
      * Auto adjust. This should be the default.
      */
-    object Auto : AntiBandingMode()
+    object Auto : AntiBandingMode() {
+        override fun toString(): String = "AntiBandingMode.Auto"
+    }
 
     /**
      * Anti Banding is set to 50Hz light frequency.
      */
-    object HZ50 : AntiBandingMode()
+    object HZ50 : AntiBandingMode() {
+        override fun toString(): String = "AntiBandingMode.HZ50"
+    }
 
     /**
      * Anti Banding is set to 60Hz light frequency.
      */
-    object HZ60 : AntiBandingMode()
+    object HZ60 : AntiBandingMode() {
+        override fun toString(): String = "AntiBandingMode.HZ60"
+    }
 
     /**
      * Anti Banding is not supported or ignored.
      */
-    object None : AntiBandingMode()
+    object None : AntiBandingMode() {
+        override fun toString(): String = "AntiBandingMode.None"
+    }
 
 }
