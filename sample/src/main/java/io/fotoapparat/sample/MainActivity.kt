@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.CompoundButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import com.github.anrwatchdog.ANRWatchDog
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.UpdateConfiguration
@@ -32,7 +31,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ANRWatchDog().start()
 
         permissionsGranted = permissionsDelegate.hasCameraPermission()
 
