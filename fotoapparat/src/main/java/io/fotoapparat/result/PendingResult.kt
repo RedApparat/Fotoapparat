@@ -68,16 +68,23 @@ internal constructor(
     fun whenAvailable(callback: (T?) -> Unit) {
         executor.execute {
             try {
-                resultUnsafe.notifyCallbackOnMainThread(callback)
+                notifyOnMainThread {
+                    callback(resultUnsafe)
+                }
             } catch (e: UnableToDecodeBitmapException) {
                 logger.log("Couldn't decode bitmap from byte array")
+                notifyOnMainThread {
+                    callback(null)
+                }
             } catch (e: InterruptedException) {
                 logger.log("Couldn't deliver pending result: Camera stopped before delivering result.")
             } catch (e: CancellationException) {
                 logger.log("Couldn't deliver pending result: Camera operation was cancelled.")
             } catch (e: ExecutionException) {
                 logger.log("Couldn't deliver pending result: Operation failed internally.")
-                callback(null)
+                notifyOnMainThread {
+                    callback(null)
+                }
             }
         }
     }
@@ -105,9 +112,9 @@ internal constructor(
 
 }
 
-private fun <T> T.notifyCallbackOnMainThread(callback: (T) -> Unit) {
+private fun notifyOnMainThread(function: () -> Unit) {
     executeMainThread {
-        callback(this)
+        function()
     }
 }
 
