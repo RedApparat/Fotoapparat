@@ -51,7 +51,8 @@ private fun Photo.decodeBitmap(scaleFactor: Float): Bitmap? {
     return BitmapFactory.decodeByteArray(
             encodedImage,
             0,
-            encodedImage.size
+            encodedImage.size,
+            options
     )
 }
 
