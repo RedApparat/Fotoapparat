@@ -32,6 +32,16 @@ fotoapparat
 
 ## How it works
 
+### Set up
+
+Add dependency to your `build.gradle`
+
+```groovy
+implementation 'io.fotoapparat:fotoapparat:2.7.0'
+```
+
+Camera permission will be automatically added to your `AndroidManifest.xml`. Do not forget to request this permission on Marshmallow and higher.
+
 ### Step One
 
 Add `CameraView` to your layout
@@ -155,16 +165,6 @@ fotoapparat.switchTo(
     cameraConfiguration = newConfigurationForFrontCamera
 )
 ```
-
-## Set up
-
-Add dependency to your `build.gradle`
-
-```groovy
-implementation 'io.fotoapparat:fotoapparat:2.7.0'
-```
-
-Camera permission will be automatically added to your `AndroidManifest.xml`. Do not forget to request this permission on Marshmallow and higher.
 
 ## Face detection
 
