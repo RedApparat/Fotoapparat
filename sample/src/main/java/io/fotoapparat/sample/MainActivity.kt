@@ -1,6 +1,8 @@
 package io.fotoapparat.sample
 
+import android.content.ContentValues
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
@@ -15,7 +17,6 @@ import io.fotoapparat.parameter.Zoom
 import io.fotoapparat.result.transformer.scaled
 import io.fotoapparat.selector.*
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -57,14 +58,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun takePicture(): () -> Unit = {
         val photoResult = fotoapparat
-                .autoFocus()
                 .takePicture()
 
         photoResult
-                .saveToFile(File(
-                        getExternalFilesDir("photos"),
-                        "photo.jpg"
-                ))
+                .saveToImagesMediaStore(
+                        ContentValues().apply {
+                            put(MediaStore.Images.Media.DISPLAY_NAME, "photo.jpg")
+                        },
+                        contentResolver
+                )
 
         photoResult
                 .toBitmap(scaled(scaleFactor = 0.25f))
@@ -193,7 +195,8 @@ private sealed class Camera(
                     flashMode = off(),
                     focusMode = firstAvailable(
                             continuousFocusPicture(),
-                            autoFocus()
+                            autoFocus(),
+                            fixed()
                     ),
                     frameProcessor = {
                         // Do something with the preview frame
