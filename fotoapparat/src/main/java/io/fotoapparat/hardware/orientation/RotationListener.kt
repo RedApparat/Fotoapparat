@@ -13,7 +13,7 @@ internal open class RotationListener(
     lateinit var orientationChanged: (DeviceRotationDegrees) -> Unit
 
     override fun onOrientationChanged(orientation: DeviceRotationDegrees) {
-        if (canDetectOrientation()) {
+        if (canDetectOrientation() && orientation != ORIENTATION_UNKNOWN) {
             orientationChanged(orientation)
         }
     }
