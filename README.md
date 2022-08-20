@@ -4,7 +4,7 @@
 
 ![ ](sample/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
 
-Camera API in Android is hard. Having 2 different API for new and old Camera does not make things any easier. But fret not, that is your lucky day! After several years of working with Camera, we came up with Fotoapparat.
+Camera API in Android is hard. Having 2 different API for new and old Camera does not make things any easier. But fear not, today is your lucky day! After several years of working with Camera, we came up with Fotoapparat.
 
 What it provides:
 
