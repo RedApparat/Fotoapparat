@@ -1,93 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.FitWindowsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#282828"
-    tools:activity="io.fotoapparat.sample.MainActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <io.fotoapparat.view.CameraView
-        android:id="@+id/cameraView"
+    <data>
+
+    </data>
+
+    <androidx.appcompat.widget.FitWindowsFrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp"
-        tools:visibility="visible">
+        android:background="#282828"
+        tools:activity="io.fotoapparat.sample.MainActivity">
 
-        <!--Optionally add tap to focus-->
-        <io.fotoapparat.view.FocusView
-            android:id="@+id/focusView"
+        <io.fotoapparat.view.CameraView
+            android:id="@+id/cameraView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp"
+            tools:visibility="visible">
 
-    </io.fotoapparat.view.CameraView>
+            <!--Optionally add tap to focus-->
+            <io.fotoapparat.view.FocusView
+                android:id="@+id/focusView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/no_permission"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="100dp"
-        android:text="No Camera permission granted."
-        android:textSize="20sp"
-        android:visibility="gone"
-        tools:ignore="HardcodedText"
-        tools:visibility="visible" />
+        </io.fotoapparat.view.CameraView>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        <TextView
+            android:id="@+id/no_permission"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="100dp"
+            android:text="No Camera permission granted."
+            android:textSize="20sp"
+            android:visibility="gone"
+            tools:ignore="HardcodedText"
+            tools:visibility="visible" />
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top">
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/torchSwitch"
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top">
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/torchSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:padding="20dp"
+                    tools:ignore="RtlHardcoded" />
+
+                <ImageView
+                    android:id="@+id/switchCamera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:padding="20dp"
+                    android:src="@drawable/ic_autorenew_white"
+                    tools:ignore="RtlHardcoded" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/zoomLvl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left|center_vertical"
-                android:padding="20dp"
-                tools:ignore="RtlHardcoded" />
+                android:layout_gravity="center"
+                android:textColor="#FFF"
+                android:textSize="20sp"
+                tools:text="2.4" />
 
             <ImageView
-                android:id="@+id/switchCamera"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
-                android:padding="20dp"
-                android:src="@drawable/ic_autorenew_white"
-                tools:ignore="RtlHardcoded" />
+                android:id="@+id/result"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="bottom|left"
+                tools:ignore="ContentDescription,RtlHardcoded" />
 
+            <ImageView
+                android:id="@+id/capture"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/capture"
+                tools:ignore="ContentDescription" />
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/zoomLvl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="#FFF"
-            android:textSize="20sp"
-            tools:text="2.4" />
-
-        <ImageView
-            android:id="@+id/result"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="bottom|left"
-            tools:ignore="ContentDescription,RtlHardcoded" />
-
-        <ImageView
-            android:id="@+id/capture"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/capture"
-            tools:ignore="ContentDescription" />
-    </FrameLayout>
-
-</androidx.appcompat.widget.FitWindowsFrameLayout>
+    </androidx.appcompat.widget.FitWindowsFrameLayout>
+</layout>

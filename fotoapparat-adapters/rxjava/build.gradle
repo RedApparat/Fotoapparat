@@ -1,16 +1,16 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'kotlin-android'
 
 group = 'io.fotoapparat'
 
 android {
-    buildToolsVersion versions.android.buildTools
-    compileSdkVersion versions.sdk.target
+    //buildToolsVersion versions.android.buildTools
+    compileSdkVersion 33
 
     defaultConfig {
-        minSdkVersion versions.sdk.minimum
-        targetSdkVersion versions.sdk.target
+        minSdkVersion 14
+        targetSdkVersion 33
     }
 
     archivesBaseName = 'adapter-rxjava'
@@ -22,10 +22,10 @@ android {
 
 dependencies {
     compileOnly project(':fotoapparat')
-    compileOnly "io.reactivex:rxjava:${versions.rx.rxJava1}"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
-    testImplementation "io.reactivex:rxjava:${versions.rx.rxJava1}"
-    testImplementation "junit:junit:${versions.test.junit}"
+    compileOnly "io.reactivex:rxjava:1.3.8"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.10"
+    testImplementation "io.reactivex:rxjava:1.3.8"
+    testImplementation "junit:junit:4.13.2"
 }
 
 ext {
@@ -38,4 +38,4 @@ ext {
     libraryDescription = 'RxJava1 adapter for Fotoapparat.'
 }
 
-apply from: '../../deploy.gradle'
+//apply from: '../../deploy.gradle'

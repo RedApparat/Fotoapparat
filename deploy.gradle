@@ -1,5 +1,5 @@
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'com.jfrog.bintray'
+//apply plugin: 'com.github.dcendents.android-maven'
 
 ext {
     bintrayOrganisation = 'fotoapparat'
@@ -7,12 +7,12 @@ ext {
 
     publishedGroupId = 'io.fotoapparat'
 
-    siteUrl = 'https://github.com/RedApparat/Fotoapparat'
-    gitUrl = 'https://github.com/RedApparat/Fotoapparat.git'
+    siteUrl = 'https://github.com/Devenom1/Fotoapparat'
+    gitUrl = 'https://github.com/Devenom1/Fotoapparat.git'
 
     developerId = 'fotoapparat'
     developerName = 'Fotoapparat'
-    developerEmail = 'dmitry.zaicew@gmail.com'
+    developerEmail = 'braganza.denver@gmail.com'
 
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
