@@ -2,6 +2,7 @@ package io.fotoapparat.coroutines
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.ChannelResult
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 
 /**
@@ -21,9 +22,14 @@ internal class AwaitBroadcastChannel<T>(
         return channel.value
     }
 
-    override fun offer(element: T): Boolean {
+    /*override fun offer(element: T): Boolean {
         deferred.complete(true)
-        return channel.offer(element)
+        return channel.try(element)
+    }*/
+
+    override fun trySend(element: T): ChannelResult<Unit> {
+        deferred.complete(true)
+        return channel.trySend(element)
     }
 
     override suspend fun send(element: T) {

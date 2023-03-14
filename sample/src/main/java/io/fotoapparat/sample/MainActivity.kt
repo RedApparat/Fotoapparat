@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.CompoundButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.UpdateConfiguration
@@ -13,8 +14,8 @@ import io.fotoapparat.log.logcat
 import io.fotoapparat.parameter.Flash
 import io.fotoapparat.parameter.Zoom
 import io.fotoapparat.result.transformer.scaled
+import io.fotoapparat.sample.databinding.ActivityMainBinding
 import io.fotoapparat.selector.*
-import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import kotlin.math.roundToInt
 
@@ -30,6 +31,10 @@ class MainActivity : AppCompatActivity() {
 
     private var curZoom: Float = 0f
 
+    private val binding by lazy {
+        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,24 +42,24 @@ class MainActivity : AppCompatActivity() {
         permissionsGranted = permissionsDelegate.hasCameraPermission()
 
         if (permissionsGranted) {
-            cameraView.visibility = View.VISIBLE
+            binding.cameraView.visibility = View.VISIBLE
         } else {
             permissionsDelegate.requestCameraPermission()
         }
 
         fotoapparat = Fotoapparat(
                 context = this,
-                view = cameraView,
-                focusView = focusView,
+                view = binding.cameraView,
+                focusView = binding.focusView,
                 logger = logcat(),
                 lensPosition = activeCamera.lensPosition,
                 cameraConfiguration = activeCamera.configuration,
                 cameraErrorCallback = { Log.e(LOGGING_TAG, "Camera error: ", it) }
         )
 
-        capture onClick takePicture()
-        switchCamera onClick changeCamera()
-        torchSwitch onCheckedChanged toggleFlash()
+        binding.capture onClick takePicture()
+        binding.switchCamera onClick changeCamera()
+        binding.torchSwitch onCheckedChanged toggleFlash()
     }
 
     private fun takePicture(): () -> Unit = {
@@ -97,7 +102,7 @@ class MainActivity : AppCompatActivity() {
 
         adjustViewsVisibility()
 
-        torchSwitch.isChecked = false
+        binding.torchSwitch.isChecked = false
 
         Log.i(LOGGING_TAG, "New camera position: ${if (activeCamera is Camera.Back) "back" else "front"}")
     }
@@ -140,7 +145,7 @@ class MainActivity : AppCompatActivity() {
             permissionsGranted = true
             fotoapparat.start()
             adjustViewsVisibility()
-            cameraView.visibility = View.VISIBLE
+            binding.cameraView.visibility = View.VISIBLE
         }
     }
 
@@ -152,21 +157,21 @@ class MainActivity : AppCompatActivity() {
                                 (it.zoom as? Zoom.VariableZoom)
                                         ?.let {
                                             cameraZoom = it
-                                            focusView.scaleListener = this::scaleZoom
-                                            focusView.ptrListener = this::pointerChanged
+                                            binding.focusView.scaleListener = this::scaleZoom
+                                            binding.focusView.ptrListener = this::pointerChanged
                                         }
                                         ?: run {
-                                            zoomLvl?.visibility = View.GONE
-                                            focusView.scaleListener = null
-                                            focusView.ptrListener = null
+                                            binding.zoomLvl.visibility = View.GONE
+                                            binding.focusView.scaleListener = null
+                                            binding.focusView.ptrListener = null
                                         }
 
-                                torchSwitch.visibility = if (it.flashModes.contains(Flash.Torch)) View.VISIBLE else View.GONE
+                                binding.torchSwitch.visibility = if (it.flashModes.contains(Flash.Torch)) View.VISIBLE else View.GONE
                             }
                             ?: Log.e(LOGGING_TAG, "Couldn't obtain capabilities.")
                 }
 
-        switchCamera.visibility = if (fotoapparat.isAvailable(front())) View.VISIBLE else View.GONE
+        binding.switchCamera.visibility = if (fotoapparat.isAvailable(front())) View.VISIBLE else View.GONE
     }
 
     //When zooming slowly, the values are approximately 0.9 ~ 1.1
@@ -182,13 +187,13 @@ class MainActivity : AppCompatActivity() {
         val value = cameraZoom.zoomRatios[progress]
         val roundedValue = ((value.toFloat()) / 10).roundToInt().toFloat() / 10
 
-        zoomLvl.visibility = View.VISIBLE
-        zoomLvl.text = String.format("%.1f×", roundedValue)
+        binding.zoomLvl.visibility = View.VISIBLE
+        binding.zoomLvl.text = String.format("%.1f×", roundedValue)
     }
 
     private fun pointerChanged(fingerCount: Int){
         if(fingerCount == 0) {
-            zoomLvl?.visibility = View.GONE
+            binding.zoomLvl.visibility = View.GONE
         }
     }
 }
