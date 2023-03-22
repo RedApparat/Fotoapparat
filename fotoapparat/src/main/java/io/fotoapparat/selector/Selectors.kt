@@ -19,12 +19,12 @@ fun <T> single(preference: T): Iterable<T>.() -> T? = {
 /**
  * @return Selector function which selects highest [Comparable] value.
  */
-fun <T : Comparable<T>> highest(): Iterable<T>.() -> T? = Iterable<T>::max
+fun <T : Comparable<T>> highest(): Iterable<T>.() -> T? = Iterable<T>::maxOrNull
 
 /**
  * @return Selector function which selects lowest [Comparable] value.
  */
-fun <T : Comparable<T>> lowest(): Iterable<T>.() -> T? = Iterable<T>::min
+fun <T : Comparable<T>> lowest(): Iterable<T>.() -> T? = Iterable<T>::minOrNull
 
 /**
  * @param functions functions in order of importance.
@@ -33,7 +33,7 @@ fun <T : Comparable<T>> lowest(): Iterable<T>.() -> T? = Iterable<T>::min
  */
 @SafeVarargs
 fun <Input, Output> firstAvailable(
-        vararg functions: Input.() -> Output?
+    vararg functions: Input.() -> Output?,
 ): Input.() -> Output? = {
     functions.findNonNull {
         it(this)
@@ -48,17 +48,15 @@ fun <Input, Output> firstAvailable(
  * condition.
  */
 fun <T : Any> filtered(
-        selector: Iterable<T>.() -> T?,
-        predicate: (T) -> Boolean
+    selector: Iterable<T>.() -> T?,
+    predicate: (T) -> Boolean,
 ): Iterable<T>.() -> T? = {
     selector(filter(predicate = predicate))
 }
 
 private fun <T : Any, R> Array<T>.findNonNull(selector: (T) -> R?): R? {
-    forEach {
-        selector(it)?.let {
-            return it
-        }
+    forEach { outer ->
+        selector(outer)?.let { return it }
     }
 
     return null

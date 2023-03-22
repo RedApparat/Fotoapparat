@@ -1,6 +1,0 @@
-include ':fotoapparat'
-
-include ':fotoapparat-adapters:rxjava'
-include ':fotoapparat-adapters:rxjava2'
-
-include ':sample'

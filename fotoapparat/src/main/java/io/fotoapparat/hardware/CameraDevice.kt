@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "OPT_IN_USAGE", "RemoveRedundantQualifierName", "unused")
 
 package io.fotoapparat.hardware
 
@@ -32,6 +32,7 @@ import java.io.IOException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 typealias PreviewSize = io.fotoapparat.parameter.Resolution
 
@@ -39,11 +40,12 @@ typealias PreviewSize = io.fotoapparat.parameter.Resolution
  * Camera.
  */
 internal open class CameraDevice(
-        private val logger: Logger,
-        val characteristics: Characteristics
+    private val logger: Logger,
+    val characteristics: Characteristics,
 ) {
 
     private val capabilities = CompletableDeferred<Capabilities>()
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val cameraParameters = AwaitBroadcastChannel<CameraParameters>()
     private lateinit var previewStream: PreviewStream
     private lateinit var surface: Surface
@@ -69,8 +71,8 @@ internal open class CameraDevice(
             previewStream = PreviewStream(camera)
         } catch (e: RuntimeException) {
             throw CameraException(
-                    message = "Failed to open camera with lens position: $lensPosition and id: $cameraId",
-                    cause = e
+                message = "Failed to open camera with lens position: $lensPosition and id: $cameraId",
+                cause = e
             )
         }
     }
@@ -94,9 +96,9 @@ internal open class CameraDevice(
             camera.startPreview()
         } catch (e: RuntimeException) {
             throw CameraException(
-                    message = "Failed to start preview for camera with lens " +
-                            "position: ${characteristics.lensPosition} and id: ${characteristics.cameraId}",
-                    cause = e
+                message = "Failed to start preview for camera with lens " +
+                    "position: ${characteristics.lensPosition} and id: ${characteristics.cameraId}",
+                cause = e
             )
         }
     }
@@ -168,8 +170,8 @@ internal open class CameraDevice(
         logger.log("New camera parameters are: $cameraParameters")
 
         cameraParameters.applyInto(cachedCameraParameters ?: camera.parameters)
-                .cacheLocally()
-                .setInCamera()
+            .cacheLocally()
+            .setInCamera()
     }
 
     /**
@@ -188,30 +190,32 @@ internal open class CameraDevice(
         logger.recordMethod()
 
         imageOrientation = computeImageOrientation(
-                deviceOrientation = orientationState.deviceOrientation,
-                cameraOrientation = characteristics.cameraOrientation,
-                cameraIsMirrored = characteristics.isMirrored
+            deviceOrientation = orientationState.deviceOrientation,
+            cameraOrientation = characteristics.cameraOrientation,
+            cameraIsMirrored = characteristics.isMirrored
         )
 
         displayOrientation = computeDisplayOrientation(
-                screenOrientation = orientationState.screenOrientation,
-                cameraOrientation = characteristics.cameraOrientation,
-                cameraIsMirrored = characteristics.isMirrored
+            screenOrientation = orientationState.screenOrientation,
+            cameraOrientation = characteristics.cameraOrientation,
+            cameraIsMirrored = characteristics.isMirrored
         )
 
         previewOrientation = computePreviewOrientation(
-                screenOrientation = orientationState.screenOrientation,
-                cameraOrientation = characteristics.cameraOrientation,
-                cameraIsMirrored = characteristics.isMirrored
+            screenOrientation = orientationState.screenOrientation,
+            cameraOrientation = characteristics.cameraOrientation,
+            cameraIsMirrored = characteristics.isMirrored
         )
 
-        logger.log("Orientations: $lineSeparator" +
+        logger.log(
+            "Orientations: $lineSeparator" +
                 "Screen orientation (preview) is: ${orientationState.screenOrientation}. " + lineSeparator +
                 "Camera sensor orientation is always at: ${characteristics.cameraOrientation}. " + lineSeparator +
                 "Camera is " + if (characteristics.isMirrored) "mirrored." else "not mirrored."
         )
 
-        logger.log("Orientation adjustments: $lineSeparator" +
+        logger.log(
+            "Orientation adjustments: $lineSeparator" +
                 "Image orientation will be adjusted by: ${imageOrientation.degrees} degrees. " + lineSeparator +
                 "Display orientation will be adjusted by: ${displayOrientation.degrees} degrees. " + lineSeparator +
                 "Preview orientation will be adjusted by: ${previewOrientation.degrees} degrees."
@@ -304,11 +308,11 @@ internal open class CameraDevice(
 
     private fun setZoomUnsafe(@FloatRange(from = 0.0, to = 1.0) level: Float) {
         (cachedCameraParameters ?: camera.parameters)
-                .apply {
-                    zoom = (maxZoom * level).toInt()
-                }
-                .cacheLocally()
-                .setInCamera()
+            .apply {
+                zoom = (maxZoom * level).toInt()
+            }
+            .cacheLocally()
+            .setInCamera()
     }
 
     private fun Camera.Parameters.cacheLocally() = apply {
@@ -341,8 +345,8 @@ internal open class CameraDevice(
 
     private suspend fun Camera.updateFocusingAreas(focalRequest: FocalRequest) {
         val focusingAreas = focalRequest.toFocusAreas(
-                displayOrientationDegrees = displayOrientation.degrees,
-                cameraIsMirrored = characteristics.isMirrored
+            displayOrientationDegrees = displayOrientation.degrees,
+            cameraIsMirrored = characteristics.isMirrored
         )
 
         parameters = parameters.apply {
@@ -377,17 +381,16 @@ private fun Camera.takePhoto(imageRotation: Int): Photo {
     val photoReference = AtomicReference<Photo>()
 
     takePicture(
-            null,
-            null,
-            null,
-            Camera.PictureCallback { data, _ ->
-                photoReference.set(
-                        Photo(data, imageRotation)
-                )
+        null,
+        null,
+        null
+    ) { data, _ ->
+        photoReference.set(
+            Photo(data, imageRotation)
+        )
 
-                latch.countDown()
-            }
-    )
+        latch.countDown()
+    }
 
     latch.await()
 
@@ -396,29 +399,29 @@ private fun Camera.takePhoto(imageRotation: Int): Photo {
 
 @Throws(IOException::class)
 private fun Camera.setDisplaySurface(
-        preview: Preview
+    preview: Preview,
 ): Surface = when (preview) {
     is Preview.Texture -> preview.surfaceTexture
-            .also(this::setPreviewTexture)
-            .let(::Surface)
+        .also(this::setPreviewTexture)
+        .let(::Surface)
 
     is Preview.Surface -> preview.surfaceHolder
-            .also(this::setPreviewDisplay)
-            .surface
+        .also(this::setPreviewDisplay)
+        .surface
 }
 
 private fun Camera.getPreviewResolution(previewOrientation: Orientation): Resolution {
     return parameters.previewSize
-            .run {
-                PreviewSize(width, height)
+        .run {
+            PreviewSize(width, height)
+        }
+        .run {
+            when (previewOrientation) {
+                is Orientation.Vertical -> this
+                is Orientation.Horizontal -> flipDimensions()
             }
-            .run {
-                when (previewOrientation) {
-                    is Orientation.Vertical -> this
-                    is Orientation.Horizontal -> flipDimensions()
-                }
-            }
+        }
 }
 
 private fun Capabilities.canSetFocusingAreas(): Boolean =
-        maxMeteringAreas > 0 || maxFocusAreas > 0
+    maxMeteringAreas > 0 || maxFocusAreas > 0

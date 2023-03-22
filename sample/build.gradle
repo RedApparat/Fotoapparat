@@ -1,15 +1,16 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    alias(deps.plugins.android.application)
+    alias(deps.plugins.kotlin.android)
+}
 
 android {
-    buildToolsVersion versions.android.buildTools
-    compileSdkVersion versions.sdk.target
+    buildToolsVersion deps.versions.buildTools.get()
+    compileSdkVersion deps.versions.compileSdk.get().toInteger()
 
     defaultConfig {
         applicationId "io.fotoapparat.sample"
-        minSdkVersion versions.sdk.minimum
-        targetSdkVersion versions.sdk.target
+        minSdkVersion deps.versions.minSdk.get()
+        targetSdkVersion deps.versions.compileSdk.get()
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -20,10 +21,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildFeatures {
+        viewBinding true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    namespace = "io.fotoapparat.sample"
 }
 
 dependencies {
     implementation project(':fotoapparat')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
-    implementation "androidx.appcompat:appcompat:${versions.android.appcompat}"
+    implementation deps.kotlin.stdlib
+    implementation deps.androidx.appcompat
 }
