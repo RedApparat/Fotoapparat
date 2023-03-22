@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "unused")
 
 package io.fotoapparat.hardware
 
@@ -19,6 +19,7 @@ import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.view.CameraRenderer
 import io.fotoapparat.view.FocalPointSelector
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * Phone.
@@ -93,6 +94,7 @@ internal open class Device(
      * @throws IllegalStateException If no camera has been yet selected.
      * @throws UnsupportedLensException If no camera could get selected.
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     open fun getSelectedCamera(): CameraDevice = try {
         selectedCameraDevice.getCompleted()
     } catch (e: IllegalStateException) {

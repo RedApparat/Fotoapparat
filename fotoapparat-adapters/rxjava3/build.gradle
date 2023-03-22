@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+group = 'io.fotoapparat'
+
+android {
+    buildToolsVersion deps.versions.buildTools.get()
+    compileSdkVersion deps.versions.compileSdk.get().toInteger()
+    defaultConfig {
+        minSdkVersion deps.versions.minSdk.get()
+        targetSdkVersion deps.versions.compileSdk.get()
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    namespace = "io.fotoapparat.rxjava3"
+    archivesBaseName = 'adapter-rxjava3'
+}
+
+dependencies {
+    compileOnly project(':fotoapparat')
+    compileOnly deps.rx.java
+    implementation deps.kotlin.stdlib
+    testImplementation deps.rx.java
+    testImplementation deps.junit
+}
+
+ext {
+    bintrayName = 'adapter-rxjava2'
+
+    libraryName = 'Fotoapparat Adapters - RxJava2'
+    artifact = 'adapter-rxjava2'
+    libraryVersion = artifactVersion
+
+    libraryDescription = 'RxJava2 adapter for Fotoapparat.'
+}

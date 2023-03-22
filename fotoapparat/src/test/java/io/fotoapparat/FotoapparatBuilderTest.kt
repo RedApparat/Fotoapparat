@@ -10,7 +10,9 @@ import io.fotoapparat.parameter.ScaleType
 import io.fotoapparat.selector.*
 import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.view.CameraRenderer
-import junit.framework.Assert.*
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -55,7 +57,7 @@ class FotoapparatBuilderTest {
     @Before
     fun setUp() {
         given(context.getSystemService(Context.WINDOW_SERVICE))
-                .willReturn(Mockito.mock(WindowManager::class.java))
+            .willReturn(Mockito.mock(WindowManager::class.java))
     }
 
     @Test
@@ -94,12 +96,12 @@ class FotoapparatBuilderTest {
     fun `lens position is configurable`() {
         // When
         val builder = builderWithMandatoryArguments()
-                .lensPosition(lensPositionSelector)
+            .lensPosition(lensPositionSelector)
 
         // Then
         assertEquals(
-                lensPositionSelector,
-                builder.lensPositionSelector
+            lensPositionSelector,
+            builder.lensPositionSelector
         )
     }
 
@@ -116,12 +118,12 @@ class FotoapparatBuilderTest {
     fun `logger is configurable`() {
         // When
         val builder = builderWithMandatoryArguments()
-                .logger(logger)
+            .logger(logger)
 
         // Then
         assertEquals(
-                logger,
-                builder.logger
+            logger,
+            builder.logger
         )
     }
 
@@ -138,12 +140,12 @@ class FotoapparatBuilderTest {
     fun `focusMode is configurable`() {
         // When
         val builder = builderWithMandatoryArguments()
-                .focusMode(focusModeSelector)
+            .focusMode(focusModeSelector)
 
         // Then
         assertEquals(
-                focusModeSelector,
-                builder.configuration.focusMode
+            focusModeSelector,
+            builder.configuration.focusMode
         )
     }
 
@@ -160,12 +162,12 @@ class FotoapparatBuilderTest {
     fun `previewFpsRange is configurable`() {
         // When
         val builder = builderWithMandatoryArguments()
-                .previewFpsRange(previewFpsRangeSelector)
+            .previewFpsRange(previewFpsRangeSelector)
 
         // Then
         assertEquals(
-                previewFpsRangeSelector,
-                builder.configuration.previewFpsRange
+            previewFpsRangeSelector,
+            builder.configuration.previewFpsRange
         )
     }
 
@@ -182,12 +184,12 @@ class FotoapparatBuilderTest {
     fun `flashMode is configurable`() {
         // When
         val builder = builderWithMandatoryArguments()
-                .flash(flashSelector)
+            .flash(flashSelector)
 
         // Then
         assertEquals(
-                flashSelector,
-                builder.configuration.flashMode
+            flashSelector,
+            builder.configuration.flashMode
         )
     }
 
@@ -205,12 +207,12 @@ class FotoapparatBuilderTest {
     fun `sensorSensitivity is configurable`() {
         // When
         val builder = builderWithMandatoryArguments()
-                .sensorSensitivity(sensorSensitivitySelector)
+            .sensorSensitivity(sensorSensitivitySelector)
 
         // Then
         assertEquals(
-                sensorSensitivitySelector,
-                builder.configuration.sensorSensitivity
+            sensorSensitivitySelector,
+            builder.configuration.sensorSensitivity
         )
     }
 
@@ -227,12 +229,12 @@ class FotoapparatBuilderTest {
     fun `jpegQuality is configurable`() {
         // When
         val builder = builderWithMandatoryArguments()
-                .jpegQuality(jpegQualitySelector)
+            .jpegQuality(jpegQualitySelector)
 
         // Then
         assertEquals(
-                jpegQualitySelector,
-                builder.configuration.jpegQuality
+            jpegQualitySelector,
+            builder.configuration.jpegQuality
         )
     }
 
@@ -249,12 +251,12 @@ class FotoapparatBuilderTest {
     fun `frameProcessor is configurable`() {
         // When
         val builder = builderWithMandatoryArguments()
-                .frameProcessor(frameProcessor)
+            .frameProcessor(frameProcessor)
 
         // Then
         assertEquals(
-                frameProcessor,
-                builder.configuration.frameProcessor
+            frameProcessor,
+            builder.configuration.frameProcessor
         )
     }
 
@@ -262,12 +264,12 @@ class FotoapparatBuilderTest {
     fun `photoResolution is configurable`() {
         // When
         val builder = builderWithMandatoryArguments()
-                .photoResolution(photoResolutionSelector)
+            .photoResolution(photoResolutionSelector)
 
         // Then
         assertEquals(
-                photoResolutionSelector,
-                builder.configuration.pictureResolution
+            photoResolutionSelector,
+            builder.configuration.pictureResolution
         )
     }
 
@@ -284,12 +286,12 @@ class FotoapparatBuilderTest {
     fun `previewResolution is configurable`() {
         // When
         val builder = builderWithMandatoryArguments()
-                .previewResolution(previewResolutionSelector)
+            .previewResolution(previewResolutionSelector)
 
         // Then
         assertEquals(
-                previewResolutionSelector,
-                builder.configuration.previewResolution
+            previewResolutionSelector,
+            builder.configuration.previewResolution
         )
     }
 
@@ -306,12 +308,12 @@ class FotoapparatBuilderTest {
     fun `previewStyle is configurable`() {
         // When
         val builder = builderWithMandatoryArguments()
-                .previewScaleType(ScaleType.CenterInside)
+            .previewScaleType(ScaleType.CenterInside)
 
         // Then
         assertEquals(
-                ScaleType.CenterInside,
-                builder.scaleType
+            ScaleType.CenterInside,
+            builder.scaleType
         )
     }
 
@@ -328,17 +330,17 @@ class FotoapparatBuilderTest {
     fun `cameraErrorCallback is configurable`() {
         // When
         val builder = builderWithMandatoryArguments()
-                .cameraErrorCallback(cameraErrorCallback)
+            .cameraErrorCallback(cameraErrorCallback)
 
         // Then
         assertEquals(
-                cameraErrorCallback,
-                builder.cameraErrorCallback
+            cameraErrorCallback,
+            builder.cameraErrorCallback
         )
     }
 
     private fun builderWithMandatoryArguments(): FotoapparatBuilder {
         return FotoapparatBuilder(context)
-                .into(cameraRenderer)
+            .into(cameraRenderer)
     }
 }
