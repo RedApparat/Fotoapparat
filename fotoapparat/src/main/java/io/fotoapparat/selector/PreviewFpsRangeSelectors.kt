@@ -77,8 +77,8 @@ fun lowestFixedFps(): FpsRangeSelector = filtered(
         predicate = { it.isFixed }
 )
 
-private fun highestRangeFps(): FpsRangeSelector = { maxWith(CompareFpsRangeByBounds) }
+private fun highestRangeFps(): FpsRangeSelector = { maxWithOrNull(CompareFpsRangeByBounds) }
 
-private fun lowestRangeFps(): FpsRangeSelector = { minWith(CompareFpsRangeByBounds) }
+private fun lowestRangeFps(): FpsRangeSelector = { minWithOrNull(CompareFpsRangeByBounds) }
 
 private fun Float.toFpsIntRepresentation() = (this * 1000).toInt()

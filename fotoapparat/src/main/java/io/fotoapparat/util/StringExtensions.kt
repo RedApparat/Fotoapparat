@@ -3,7 +3,7 @@ package io.fotoapparat.util
 /**
  * System line separator.
  */
-internal val lineSeparator = System.getProperty("line.separator")
+internal val lineSeparator = System.lineSeparator()
 
 /**
  * Prints a [Set] in logcat in a structured way.

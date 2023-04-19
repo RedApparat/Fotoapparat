@@ -1,0 +1,31 @@
+[versions]
+kotlin = "1.8.10"
+android-plugin = "7.4.2"
+buildTools = "33.0.2"
+compileSdk = "33"
+minSdk = "21"
+
+junit = "4.13.2"
+mockito = "4.11.0"
+appcompat = "1.6.1"
+annotation = "1.6.0"
+exifinterface = "1.3.6"
+
+
+[libraries]
+rx-java = { module = "io.reactivex.rxjava3:rxjava", version = "3.1.6" }
+rx-kotlin = { module = "io.reactivex.rxjava3:rxkotlin", version = "3.0.1" }
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
+androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "exifinterface" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.6.4" }
+junit = { module = "junit:junit", version.ref = "junit" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+
+[plugins]
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "android-plugin" }
+android-application = { id = "com.android.application", version.ref = "android-plugin" }
+
